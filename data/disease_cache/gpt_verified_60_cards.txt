@@ -1,0 +1,6664 @@
+[
+  {
+    "disease_name": "变应性鼻炎",
+    "aliases": [
+      "过敏性鼻炎",
+      "Allergic rhinitis"
+    ],
+    "source_raw_names": [
+      "变应性鼻炎",
+      "过敏性鼻炎",
+      "Allergic rhinitis"
+    ],
+    "department_or_category": "呼吸/耳鼻喉",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "变应性鼻炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "鼻痒喷嚏清水涕",
+      "过敏原暴露后加重",
+      "过敏检测/嗜酸粒细胞/IgE支持"
+    ],
+    "rule_out_features": [
+      "脓涕面痛发热提示鼻窦炎",
+      "单侧脓涕或鼻出血需排除结构病变"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "allergic_th2_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "allergic_th2_inflammation"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/immunology-allergic-disorders/allergic-autoimmune-and-other-hypersensitivity-disorders/allergic-rhinitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "慢性鼻炎",
+    "aliases": [
+      "非变应性鼻炎"
+    ],
+    "source_raw_names": [
+      "慢性鼻炎",
+      "非变应性鼻炎"
+    ],
+    "department_or_category": "呼吸/耳鼻喉",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "慢性鼻炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "长期鼻塞流涕",
+      "刺激物/温度/气味诱发",
+      "过敏检测阴性或不匹配"
+    ],
+    "rule_out_features": [
+      "鼻窦影像异常提示慢性鼻窦炎",
+      "儿童打鼾张口呼吸提示腺样体肥大"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "upper_airway_involvement",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/ear-nose-and-throat-disorders/nose-and-paranasal-sinus-disorders/nonallergic-rhinitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性鼻窦炎",
+    "aliases": [
+      "Acute sinusitis"
+    ],
+    "source_raw_names": [
+      "急性鼻窦炎",
+      "Acute sinusitis"
+    ],
+    "department_or_category": "呼吸/耳鼻喉",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性鼻窦炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "鼻塞伴脓涕",
+      "面部疼痛/压痛",
+      "症状>10天或二次加重"
+    ],
+    "rule_out_features": [
+      "短期清水涕更偏感冒/变应性鼻炎",
+      "眼眶或神经症状提示并发症"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/ear-nose-and-throat-disorders/nose-and-paranasal-sinus-disorders/sinusitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "慢性鼻窦炎",
+    "aliases": [
+      "Chronic sinusitis"
+    ],
+    "source_raw_names": [
+      "慢性鼻窦炎",
+      "Chronic sinusitis"
+    ],
+    "department_or_category": "呼吸/耳鼻喉",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "慢性鼻窦炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "鼻塞/鼻后滴漏持续",
+      "嗅觉下降或面部压迫",
+      "鼻内镜或CT慢性炎症证据"
+    ],
+    "rule_out_features": [
+      "无客观证据不宜确诊",
+      "儿童打鼾鼻阻需考虑腺样体肥大"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "upper_airway_involvement",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/ear-nose-and-throat-disorders/nose-and-paranasal-sinus-disorders/sinusitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "上气道咳嗽综合征",
+    "aliases": [
+      "UACS",
+      "鼻后滴漏相关咳嗽"
+    ],
+    "source_raw_names": [
+      "上气道咳嗽综合征",
+      "UACS",
+      "鼻后滴漏相关咳嗽"
+    ],
+    "department_or_category": "呼吸/耳鼻喉",
+    "entry_type": "western_syndrome",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "上气道咳嗽综合征 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "慢性咳嗽伴鼻塞流涕",
+      "清嗓/咽部异物感",
+      "鼻炎鼻窦炎或腺样体证据"
+    ],
+    "rule_out_features": [
+      "喘息运动诱发提示哮喘/CVA",
+      "反酸烧心提示反流相关咳嗽"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "upper_airway_involvement",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/immunology-allergic-disorders/allergic-autoimmune-and-other-hypersensitivity-disorders/allergic-rhinitis",
+      "https://www.merckmanuals.com/professional/ear-nose-and-throat-disorders/nose-and-paranasal-sinus-disorders/sinusitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "支气管哮喘",
+    "aliases": [
+      "哮喘",
+      "Asthma"
+    ],
+    "source_raw_names": [
+      "支气管哮喘",
+      "哮喘",
+      "Asthma"
+    ],
+    "department_or_category": "呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "支气管哮喘 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "反复喘息/气促/胸闷/咳嗽",
+      "夜间或清晨加重",
+      "肺功能可逆性/气道高反应"
+    ],
+    "rule_out_features": [
+      "持续高热或影像实变提示肺炎",
+      "首次婴幼儿喘息考虑毛细支气管炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "airway_hyperreactivity",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "airway_hyperreactivity"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      },
+      {
+        "axis": "allergic_th2_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "allergic_th2_inflammation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/asthma-and-related-disorders/asthma"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "咳嗽变异性哮喘",
+    "aliases": [
+      "CVA",
+      "Cough-variant asthma"
+    ],
+    "source_raw_names": [
+      "咳嗽变异性哮喘",
+      "CVA",
+      "Cough-variant asthma"
+    ],
+    "department_or_category": "呼吸",
+    "entry_type": "western_syndrome",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "咳嗽变异性哮喘 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "慢性夜间/清晨咳嗽",
+      "运动冷空气诱发",
+      "支气管激发/FeNO/嗜酸支持"
+    ],
+    "rule_out_features": [
+      "发热脓痰影像异常提示感染",
+      "鼻后滴漏提示UACS"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "airway_hyperreactivity",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "airway_hyperreactivity"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/asthma-and-related-disorders/asthma"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性支气管炎",
+    "aliases": [
+      "Acute bronchitis"
+    ],
+    "source_raw_names": [
+      "急性支气管炎",
+      "Acute bronchitis"
+    ],
+    "department_or_category": "呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性支气管炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "急性咳嗽",
+      "上呼吸道感染后出现",
+      "无肺炎影像或严重低氧"
+    ],
+    "rule_out_features": [
+      "影像浸润/低氧提示肺炎",
+      "慢性夜咳提示哮喘/CVA",
+      "痉咳咳后呕吐提示百日咳"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/acute-bronchitis/acute-bronchitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "社区获得性肺炎",
+    "aliases": [
+      "CAP"
+    ],
+    "source_raw_names": [
+      "社区获得性肺炎",
+      "CAP"
+    ],
+    "department_or_category": "呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "社区获得性肺炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "发热咳嗽伴胸片/CT浸润",
+      "呼吸频率增快或低氧",
+      "肺部局灶体征"
+    ],
+    "rule_out_features": [
+      "无影像浸润不宜诊断肺炎",
+      "鼻部症状为主提示上气道疾病"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/pneumonia/community-acquired-pneumonia"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "支原体肺炎",
+    "aliases": [
+      "肺炎支原体肺炎"
+    ],
+    "source_raw_names": [
+      "支原体肺炎",
+      "肺炎支原体肺炎"
+    ],
+    "department_or_category": "呼吸/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "支原体肺炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "支原体PCR/血清学支持",
+      "持续咳嗽伴发热",
+      "胸片/CT提示肺炎"
+    ],
+    "rule_out_features": [
+      "无影像肺炎证据不宜直接称肺炎",
+      "过敏/鼻部证据不能仅由支原体解释"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/chlamydiae-and-mycoplasmas/mycoplasmas",
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/pneumonia/community-acquired-pneumonia"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "慢性阻塞性肺疾病",
+    "aliases": [
+      "COPD"
+    ],
+    "source_raw_names": [
+      "慢性阻塞性肺疾病",
+      "COPD"
+    ],
+    "department_or_category": "呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "慢性阻塞性肺疾病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "长期吸烟/刺激物暴露",
+      "慢性咳嗽咳痰或气促",
+      "肺功能持续气流受限"
+    ],
+    "rule_out_features": [
+      "儿童或无暴露史不宜轻易诊断",
+      "可逆性强且过敏背景提示哮喘"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "lower_airway_involvement",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "fibrosis_or_tissue_remodeling",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "fibrosis_or_tissue_remodeling"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/chronic-obstructive-pulmonary-disease-and-related-disorders/chronic-obstructive-pulmonary-disease-copd"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "毛细支气管炎",
+    "aliases": [
+      "Bronchiolitis"
+    ],
+    "source_raw_names": [
+      "毛细支气管炎",
+      "Bronchiolitis"
+    ],
+    "department_or_category": "儿科/呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "毛细支气管炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "<24个月婴幼儿",
+      "急性病毒感染后喘息咳嗽",
+      "呼吸急促或三凹征"
+    ],
+    "rule_out_features": [
+      "反复发作和过敏背景提示哮喘",
+      "影像实变和持续高热提示肺炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pediatrics/respiratory-disorders-in-young-children/bronchiolitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "腺样体肥大",
+    "aliases": [
+      "Adenoid hypertrophy"
+    ],
+    "source_raw_names": [
+      "腺样体肥大",
+      "Adenoid hypertrophy"
+    ],
+    "department_or_category": "儿科/耳鼻喉",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "腺样体肥大 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "儿童长期鼻塞/张口呼吸",
+      "睡眠打鼾或憋醒",
+      "鼻咽内镜见阻塞"
+    ],
+    "rule_out_features": [
+      "鼻痒喷嚏和过敏证据提示变应性鼻炎",
+      "急性发热咽痛提示感染"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "structural_abnormality",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "structural_abnormality"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.msdmanuals.com/professional/ear-nose-and-throat-disorders/oral-and-pharyngeal-disorders/adenoid-disorders"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "阻塞性睡眠呼吸暂停",
+    "aliases": [
+      "OSA",
+      "儿童阻塞性睡眠呼吸暂停"
+    ],
+    "source_raw_names": [
+      "阻塞性睡眠呼吸暂停",
+      "OSA",
+      "儿童阻塞性睡眠呼吸暂停"
+    ],
+    "department_or_category": "睡眠/呼吸",
+    "entry_type": "western_syndrome",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "阻塞性睡眠呼吸暂停 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "睡眠打鼾",
+      "目击呼吸暂停/憋醒",
+      "多导睡眠监测异常"
+    ],
+    "rule_out_features": [
+      "单纯鼻塞无呼吸事件不支持",
+      "急性感染期短暂打鼾不能直接诊断慢性OSA"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "upper_airway_involvement",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "structural_abnormality",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "structural_abnormality"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pulmonary-disorders/sleep-apnea/obstructive-sleep-apnea-osa-in-children"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性咽炎",
+    "aliases": [
+      "Acute pharyngitis"
+    ],
+    "source_raw_names": [
+      "急性咽炎",
+      "Acute pharyngitis"
+    ],
+    "department_or_category": "耳鼻喉/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性咽炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "急性咽痛",
+      "咽部充血",
+      "发热或上呼吸道症状"
+    ],
+    "rule_out_features": [
+      "皮疹草莓舌提示猩红热",
+      "肝脾大提示EBV感染"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/ear-nose-and-throat-disorders/approach-to-the-patient-with-nasal-and-pharyngeal-symptoms/sore-throat"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性扁桃体炎",
+    "aliases": [
+      "Acute tonsillitis"
+    ],
+    "source_raw_names": [
+      "急性扁桃体炎",
+      "Acute tonsillitis"
+    ],
+    "department_or_category": "耳鼻喉/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性扁桃体炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "急性咽痛发热",
+      "扁桃体红肿/渗出",
+      "颈前淋巴结肿痛"
+    ],
+    "rule_out_features": [
+      "咳嗽流涕明显更偏病毒上感",
+      "肝脾大和异型淋巴细胞提示EBV"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/ear-nose-and-throat-disorders/approach-to-the-patient-with-nasal-and-pharyngeal-symptoms/sore-throat"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "百日咳",
+    "aliases": [
+      "Pertussis",
+      "Whooping cough"
+    ],
+    "source_raw_names": [
+      "百日咳",
+      "Pertussis",
+      "Whooping cough"
+    ],
+    "department_or_category": "感染/呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "百日咳 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "阵发性痉咳",
+      "咳后呕吐或鸡鸣样回声",
+      "百日咳PCR/培养支持"
+    ],
+    "rule_out_features": [
+      "普通支气管炎通常无典型痉咳",
+      "支原体肺炎需影像和病原证据"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      },
+      {
+        "axis": "airway_hyperreactivity",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "airway_hyperreactivity"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pediatrics/infections-in-infants-and-children/pertussis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "流行性感冒",
+    "aliases": [
+      "流感",
+      "Influenza"
+    ],
+    "source_raw_names": [
+      "流行性感冒",
+      "流感",
+      "Influenza"
+    ],
+    "department_or_category": "感染/呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "流行性感冒 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "突发高热",
+      "肌痛乏力明显",
+      "流感抗原/PCR阳性或流行接触"
+    ],
+    "rule_out_features": [
+      "普通感冒全身症状较轻",
+      "胸片浸润提示肺炎",
+      "新冠检测阳性提示COVID-19"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/respiratory-viruses/influenza"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "新型冠状病毒感染",
+    "aliases": [
+      "COVID-19"
+    ],
+    "source_raw_names": [
+      "新型冠状病毒感染",
+      "COVID-19"
+    ],
+    "department_or_category": "感染/呼吸",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "新型冠状病毒感染 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "新冠抗原/核酸阳性",
+      "发热咳嗽咽痛或鼻塞",
+      "暴露史"
+    ],
+    "rule_out_features": [
+      "流感检测阳性且新冠阴性提示流感",
+      "细菌肺炎证据强时不能仅以新冠解释"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "upper_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "upper_airway_involvement"
+        ]
+      },
+      {
+        "axis": "lower_airway_involvement",
+        "role": "location",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "lower_airway_involvement"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/covid-19/covid-19"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "手足口病",
+    "aliases": [
+      "HFMD"
+    ],
+    "source_raw_names": [
+      "手足口病",
+      "HFMD"
+    ],
+    "department_or_category": "儿科/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "手足口病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "发热",
+      "口腔疼痛性疱疹/溃疡",
+      "手足皮疹"
+    ],
+    "rule_out_features": [
+      "仅咽峡疱疹无手足皮疹提示疱疹性咽峡炎",
+      "全身水疱不同阶段提示水痘"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "immune_abnormality",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "immune_abnormality"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pediatrics/miscellaneous-viral-infections-in-infants-and-children/hand-foot-and-mouth-disease"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "水痘",
+    "aliases": [
+      "Varicella"
+    ],
+    "source_raw_names": [
+      "水痘",
+      "Varicella"
+    ],
+    "department_or_category": "儿科/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "水痘 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "发热",
+      "躯干为主水疱疹",
+      "不同阶段皮损同时存在"
+    ],
+    "rule_out_features": [
+      "手足口病以口腔和手足皮疹为主",
+      "带状疱疹通常单侧节段分布"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "immune_abnormality",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "immune_abnormality"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/herpesviruses/varicella-zoster-virus-vzv"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "传染性单核细胞增多症",
+    "aliases": [
+      "EBV infection"
+    ],
+    "source_raw_names": [
+      "传染性单核细胞增多症",
+      "EBV infection"
+    ],
+    "department_or_category": "感染/血液",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "传染性单核细胞增多症 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "发热咽痛",
+      "颈部淋巴结肿大",
+      "异型淋巴细胞/EBV抗体支持"
+    ],
+    "rule_out_features": [
+      "单纯链球菌咽炎缺乏肝脾大",
+      "进行性淋巴结需排除血液肿瘤"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "immune_abnormality",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "immune_abnormality"
+        ]
+      },
+      {
+        "axis": "hepatic_or_biliary_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "hepatic_or_biliary_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/herpesviruses/infectious-mononucleosis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "儿童热性惊厥",
+    "aliases": [
+      "Febrile seizure"
+    ],
+    "source_raw_names": [
+      "儿童热性惊厥",
+      "Febrile seizure"
+    ],
+    "department_or_category": "儿科/神经",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "儿童热性惊厥 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "6个月至5岁",
+      "发热伴短暂全身性惊厥",
+      "发作后恢复且无中枢感染证据"
+    ],
+    "rule_out_features": [
+      "局灶发作、持续意识不恢复或脑膜征提示脑炎/脑膜炎",
+      "无发热不支持热性惊厥"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "神经系统查体",
+      "必要时头颅影像/脑电/实验室",
+      "红旗头痛或神经缺损时急诊评估"
+    ],
+    "red_flags": [
+      "突发神经缺损",
+      "意识改变或惊厥持续",
+      "雷击样头痛或脑膜刺激征"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "electrophysiological_or_ion_channel_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "electrophysiological_or_ion_channel_dysfunction"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/pediatrics/neurologic-disorders-in-children/febrile-seizures"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "胃食管反流病",
+    "aliases": [
+      "GERD"
+    ],
+    "source_raw_names": [
+      "胃食管反流病",
+      "GERD"
+    ],
+    "department_or_category": "消化",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "胃食管反流病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "反酸/烧心",
+      "餐后或卧位加重",
+      "内镜或pH监测支持"
+    ],
+    "rule_out_features": [
+      "吞咽困难体重下降或呕血为警讯",
+      "劳力性胸痛需排除冠心病"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/esophageal-and-swallowing-disorders/gastroesophageal-reflux-disease-gerd"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "慢性胃炎",
+    "aliases": [
+      "Gastritis"
+    ],
+    "source_raw_names": [
+      "慢性胃炎",
+      "Gastritis"
+    ],
+    "department_or_category": "消化",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "慢性胃炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "上腹不适或消化不良",
+      "内镜/病理提示胃黏膜炎症",
+      "幽门螺杆菌或NSAID等病因支持"
+    ],
+    "rule_out_features": [
+      "典型溃疡或出血需考虑消化性溃疡",
+      "胆绞痛需考虑胆石症"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/gastritis-and-peptic-ulcer-disease/overview-of-gastritis",
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/gastritis-and-peptic-ulcer-disease/helicobacter-pylori-infection"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "消化性溃疡",
+    "aliases": [
+      "Peptic ulcer disease"
+    ],
+    "source_raw_names": [
+      "消化性溃疡",
+      "Peptic ulcer disease"
+    ],
+    "department_or_category": "消化",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "消化性溃疡 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "上腹痛或烧灼痛",
+      "内镜证实胃/十二指肠溃疡",
+      "H. pylori或NSAID风险"
+    ],
+    "rule_out_features": [
+      "无内镜证据不宜确定溃疡",
+      "黑便呕血提示出血并发症"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "coagulation_or_bleeding_disorder",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "coagulation_or_bleeding_disorder"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/gastritis-and-peptic-ulcer-disease/peptic-ulcer-disease",
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/gastritis-and-peptic-ulcer-disease/helicobacter-pylori-infection"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "功能性消化不良",
+    "aliases": [
+      "Dyspepsia"
+    ],
+    "source_raw_names": [
+      "功能性消化不良",
+      "Dyspepsia"
+    ],
+    "department_or_category": "消化",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "功能性消化不良 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "上腹痛/餐后饱胀/早饱",
+      "检查未发现可解释器质性疾病",
+      "需排除警讯"
+    ],
+    "rule_out_features": [
+      "呕血黑便、贫血、体重下降不能按功能性处理",
+      "持续呕吐或吞咽困难需外部校对"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      },
+      {
+        "axis": "autonomic_or_neurovegetative_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "autonomic_or_neurovegetative_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/symptoms-of-gastrointestinal-disorders/dyspepsia"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "肠易激综合征",
+    "aliases": [
+      "IBS"
+    ],
+    "source_raw_names": [
+      "肠易激综合征",
+      "IBS"
+    ],
+    "department_or_category": "消化",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "肠易激综合征 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "反复腹痛与排便相关",
+      "伴大便频率或性状改变",
+      "无可解释器质性病变"
+    ],
+    "rule_out_features": [
+      "血便、夜间腹泻、体重下降、贫血提示器质病",
+      "发热炎症指标高提示感染或IBD"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      },
+      {
+        "axis": "autonomic_or_neurovegetative_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "autonomic_or_neurovegetative_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/irritable-bowel-syndrome-ibs/irritable-bowel-syndrome-ibs"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "功能性便秘",
+    "aliases": [
+      "Constipation"
+    ],
+    "source_raw_names": [
+      "功能性便秘",
+      "Constipation"
+    ],
+    "department_or_category": "消化",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "功能性便秘 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "排便次数减少、排便困难或粪便干硬",
+      "无梗阻或继发原因时考虑功能性",
+      "需识别药物/内分泌/结构原因"
+    ],
+    "rule_out_features": [
+      "便血、体重下降、贫血提示器质病",
+      "急性肠梗阻表现需急查"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      },
+      {
+        "axis": "smooth_muscle_spasm_or_pain",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "smooth_muscle_spasm_or_pain"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/symptoms-of-gastrointestinal-disorders/constipation"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性胃肠炎",
+    "aliases": [
+      "Acute gastroenteritis"
+    ],
+    "source_raw_names": [
+      "急性胃肠炎",
+      "Acute gastroenteritis"
+    ],
+    "department_or_category": "消化/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性胃肠炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "急性腹泻、恶心呕吐或腹痛",
+      "常由病毒、细菌或毒素引起",
+      "需评估脱水和侵袭性感染"
+    ],
+    "rule_out_features": [
+      "血便高热剧痛提示侵袭感染/外科腹症",
+      "慢性病程不应诊断急性胃肠炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/gastroenteritis/overview-of-gastroenteritis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "炎症性肠病",
+    "aliases": [
+      "IBD"
+    ],
+    "source_raw_names": [
+      "炎症性肠病",
+      "IBD"
+    ],
+    "department_or_category": "消化/免疫",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "炎症性肠病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "慢性复发性肠道炎症",
+      "慢性腹泻、腹痛、血便、体重下降支持",
+      "内镜和病理为关键证据"
+    ],
+    "rule_out_features": [
+      "短期急性腹泻更可能感染性胃肠炎",
+      "缺乏炎症证据时考虑IBS"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "autoimmune_or_immune_complex",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "autoimmune_or_immune_complex"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/inflammatory-bowel-disease-ibd/overview-of-inflammatory-bowel-disease"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "胆石症",
+    "aliases": [
+      "Gallstones"
+    ],
+    "source_raw_names": [
+      "胆石症",
+      "Gallstones"
+    ],
+    "department_or_category": "肝胆",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "胆石症 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "胆囊或胆道结石",
+      "右上腹/上腹绞痛，脂餐后常见",
+      "超声常用于诊断"
+    ],
+    "rule_out_features": [
+      "持续发热右上腹痛需考虑胆囊炎",
+      "黄疸胆管扩张提示胆总管结石/胆管炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "structural_abnormality",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "structural_abnormality"
+        ]
+      },
+      {
+        "axis": "hepatic_or_biliary_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "hepatic_or_biliary_dysfunction"
+        ]
+      },
+      {
+        "axis": "smooth_muscle_spasm_or_pain",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "smooth_muscle_spasm_or_pain"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/hepatic-and-biliary-disorders/gallbladder-and-bile-duct-disorders/gallstones"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性胰腺炎",
+    "aliases": [
+      "Acute pancreatitis"
+    ],
+    "source_raw_names": [
+      "急性胰腺炎",
+      "Acute pancreatitis"
+    ],
+    "department_or_category": "消化急症",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性胰腺炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "急性上腹痛常向背部放射",
+      "血清淀粉酶/脂肪酶升高支持",
+      "胆石和酒精为常见病因"
+    ],
+    "rule_out_features": [
+      "单纯消化不良不应诊断",
+      "心肌梗死也可上腹痛需排除"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "病史体检",
+      "血常规/炎症指标/生化",
+      "必要时内镜、影像或病原检查"
+    ],
+    "red_flags": [
+      "消化道出血",
+      "体重下降或贫血",
+      "持续高热、脱水或腹膜刺激"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/gastrointestinal-disorders/pancreatitis/acute-pancreatitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "原发性高血压",
+    "aliases": [
+      "Hypertension"
+    ],
+    "source_raw_names": [
+      "原发性高血压",
+      "Hypertension"
+    ],
+    "department_or_category": "心血管",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "原发性高血压 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "反复规范测量血压升高",
+      "评估靶器官损害和心血管风险",
+      "排除继发性高血压线索"
+    ],
+    "rule_out_features": [
+      "单次血压升高不能确诊",
+      "阵发头痛心悸出汗需排除继发病因"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/hypertension/hypertension"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "冠心病",
+    "aliases": [
+      "CAD"
+    ],
+    "source_raw_names": [
+      "冠心病",
+      "CAD"
+    ],
+    "department_or_category": "心血管",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "冠心病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "冠状动脉粥样硬化导致心肌缺血",
+      "劳力性胸痛或缺血证据支持",
+      "需结合风险因素与检查"
+    ],
+    "rule_out_features": [
+      "急性胸痛需先排除ACS/MI",
+      "非劳力性胸痛且检查阴性不能直接定CAD"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/coronary-artery-disease/overview-of-coronary-artery-disease"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "稳定型心绞痛",
+    "aliases": [
+      "Angina"
+    ],
+    "source_raw_names": [
+      "稳定型心绞痛",
+      "Angina"
+    ],
+    "department_or_category": "心血管",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "稳定型心绞痛 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "劳力或情绪诱发胸部不适",
+      "休息或硝酸酯缓解",
+      "反映稳定冠脉缺血"
+    ],
+    "rule_out_features": [
+      "静息持续胸痛或肌钙蛋白升高提示ACS/MI",
+      "胸痛与呼吸体位相关提示非冠脉病因"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/coronary-artery-disease/angina-pectoris"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "急性心肌梗死",
+    "aliases": [
+      "AMI"
+    ],
+    "source_raw_names": [
+      "急性心肌梗死",
+      "AMI"
+    ],
+    "department_or_category": "心血管急症",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "急性心肌梗死 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "持续胸痛/胸闷",
+      "肌钙蛋白升高",
+      "心电图缺血/梗死改变"
+    ],
+    "rule_out_features": [
+      "肌钙蛋白阴性且无动态心电变化不支持",
+      "胸痛高度怀疑时不得因症状非典型排除"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      },
+      {
+        "axis": "coagulation_or_bleeding_disorder",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "coagulation_or_bleeding_disorder"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/coronary-artery-disease/acute-myocardial-infarction-mi"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "心力衰竭",
+    "aliases": [
+      "Heart failure"
+    ],
+    "source_raw_names": [
+      "心力衰竭",
+      "Heart failure"
+    ],
+    "department_or_category": "心血管",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "心力衰竭 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "气促/端坐呼吸",
+      "水肿或肺淤血",
+      "BNP升高或超声异常"
+    ],
+    "rule_out_features": [
+      "肺炎/COPD也可气促需鉴别",
+      "肾病水肿需尿检和肾功能鉴别"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      },
+      {
+        "axis": "neurohormonal_activation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "neurohormonal_activation"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/heart-failure/overview-of-heart-failure"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "心房颤动",
+    "aliases": [
+      "Atrial fibrillation"
+    ],
+    "source_raw_names": [
+      "心房颤动",
+      "Atrial fibrillation"
+    ],
+    "department_or_category": "心血管",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "心房颤动 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "心悸或脉搏不齐",
+      "心电图房颤",
+      "高龄/高血压/心衰等风险"
+    ],
+    "rule_out_features": [
+      "窦性心动过速不等于房颤",
+      "阵发心悸需动态心电图证实"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "electrophysiological_or_ion_channel_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "electrophysiological_or_ion_channel_dysfunction"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/specific-cardiac-arrhythmias/atrial-fibrillation"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "动脉粥样硬化",
+    "aliases": [
+      "Atherosclerosis"
+    ],
+    "source_raw_names": [
+      "动脉粥样硬化",
+      "Atherosclerosis"
+    ],
+    "department_or_category": "心血管",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "动脉粥样硬化 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "血脂异常/高血压/糖尿病/吸烟等风险",
+      "影像或血管检查提示斑块",
+      "ASCVD相关病史"
+    ],
+    "rule_out_features": [
+      "不能仅凭高脂血症诊断靶器官事件",
+      "急性胸痛或神经缺损需按具体急症诊断"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "规范生命体征和心血管查体",
+      "心电图/心肌标志物/BNP等关键检查",
+      "必要时超声心动图或血管影像"
+    ],
+    "red_flags": [
+      "持续胸痛",
+      "低血压/休克",
+      "晕厥、神经缺损或严重呼吸困难"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/cardiovascular-disorders/arteriosclerosis/atherosclerosis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "2型糖尿病",
+    "aliases": [
+      "Type 2 diabetes"
+    ],
+    "source_raw_names": [
+      "2型糖尿病",
+      "Type 2 diabetes"
+    ],
+    "department_or_category": "内分泌/代谢",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "2型糖尿病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "空腹/随机血糖或HbA1c升高达标",
+      "肥胖或代谢综合征背景",
+      "多饮多尿或无症状筛查发现"
+    ],
+    "rule_out_features": [
+      "应激性高血糖不能直接等同糖尿病",
+      "儿童/消瘦/酮症需考虑1型或其他类型"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "相关激素或代谢实验室检查",
+      "并发症和靶器官评估",
+      "必要时影像或自身抗体检查"
+    ],
+    "red_flags": [
+      "意识改变或危象表现",
+      "严重电解质/代谢紊乱",
+      "器官功能受损"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "metabolic_or_insulin_resistance",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "metabolic_or_insulin_resistance"
+        ]
+      },
+      {
+        "axis": "endocrine_or_hormonal_dysregulation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "endocrine_or_hormonal_dysregulation"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/endocrine-and-metabolic-disorders/diabetes-mellitus-and-hypoglycemia/type-2-diabetes-mellitus"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "1型糖尿病",
+    "aliases": [
+      "Type 1 diabetes"
+    ],
+    "source_raw_names": [
+      "1型糖尿病",
+      "Type 1 diabetes"
+    ],
+    "department_or_category": "内分泌/代谢",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "1型糖尿病 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "多饮多尿体重下降",
+      "酮症或酮症酸中毒",
+      "胰岛自身抗体/C肽支持"
+    ],
+    "rule_out_features": [
+      "肥胖中老年缓慢高血糖更偏2型但不能绝对",
+      "无酮症和抗体阴性需综合判断"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "相关激素或代谢实验室检查",
+      "并发症和靶器官评估",
+      "必要时影像或自身抗体检查"
+    ],
+    "red_flags": [
+      "意识改变或危象表现",
+      "严重电解质/代谢紊乱",
+      "器官功能受损"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "autoimmune_or_immune_complex",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "autoimmune_or_immune_complex"
+        ]
+      },
+      {
+        "axis": "endocrine_or_hormonal_dysregulation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "endocrine_or_hormonal_dysregulation"
+        ]
+      },
+      {
+        "axis": "metabolic_or_insulin_resistance",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "metabolic_or_insulin_resistance"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/endocrine-and-metabolic-disorders/diabetes-mellitus-and-hypoglycemia/type-1-diabetes-mellitus"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "甲状腺功能亢进症",
+    "aliases": [
+      "Hyperthyroidism"
+    ],
+    "source_raw_names": [
+      "甲状腺功能亢进症",
+      "Hyperthyroidism"
+    ],
+    "department_or_category": "内分泌",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "甲状腺功能亢进症 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "TSH降低、FT4/FT3升高",
+      "心悸怕热体重下降",
+      "震颤或甲状腺肿"
+    ],
+    "rule_out_features": [
+      "焦虑障碍可有心悸但甲功正常",
+      "感染发热可心率快但无甲状腺激素证据"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "相关激素或代谢实验室检查",
+      "并发症和靶器官评估",
+      "必要时影像或自身抗体检查"
+    ],
+    "red_flags": [
+      "意识改变或危象表现",
+      "严重电解质/代谢紊乱",
+      "器官功能受损"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "endocrine_or_hormonal_dysregulation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "endocrine_or_hormonal_dysregulation"
+        ]
+      },
+      {
+        "axis": "metabolic_or_insulin_resistance",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "metabolic_or_insulin_resistance"
+        ]
+      },
+      {
+        "axis": "electrophysiological_or_ion_channel_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "electrophysiological_or_ion_channel_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/endocrine-and-metabolic-disorders/thyroid-disorders/hyperthyroidism"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "甲状腺功能减退症",
+    "aliases": [
+      "Hypothyroidism"
+    ],
+    "source_raw_names": [
+      "甲状腺功能减退症",
+      "Hypothyroidism"
+    ],
+    "department_or_category": "内分泌",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "甲状腺功能减退症 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "TSH升高/FT4降低",
+      "怕冷乏力体重增加",
+      "便秘皮肤干燥或心率慢"
+    ],
+    "rule_out_features": [
+      "单纯乏力不能诊断",
+      "严重疾病状态可影响TSH解释"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "相关激素或代谢实验室检查",
+      "并发症和靶器官评估",
+      "必要时影像或自身抗体检查"
+    ],
+    "red_flags": [
+      "意识改变或危象表现",
+      "严重电解质/代谢紊乱",
+      "器官功能受损"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "endocrine_or_hormonal_dysregulation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "endocrine_or_hormonal_dysregulation"
+        ]
+      },
+      {
+        "axis": "metabolic_or_insulin_resistance",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "metabolic_or_insulin_resistance"
+        ]
+      },
+      {
+        "axis": "autonomic_or_neurovegetative_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "autonomic_or_neurovegetative_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/endocrine-and-metabolic-disorders/thyroid-disorders/hypothyroidism"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "桥本甲状腺炎",
+    "aliases": [
+      "Hashimoto thyroiditis"
+    ],
+    "source_raw_names": [
+      "桥本甲状腺炎",
+      "Hashimoto thyroiditis"
+    ],
+    "department_or_category": "内分泌/免疫",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "桥本甲状腺炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "TPO抗体阳性",
+      "无痛性甲状腺肿大",
+      "甲减或甲功波动"
+    ],
+    "rule_out_features": [
+      "疼痛发热性甲状腺肿需考虑亚急性甲状腺炎",
+      "单个结节需按甲状腺结节评估"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "相关激素或代谢实验室检查",
+      "并发症和靶器官评估",
+      "必要时影像或自身抗体检查"
+    ],
+    "red_flags": [
+      "意识改变或危象表现",
+      "严重电解质/代谢紊乱",
+      "器官功能受损"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "autoimmune_or_immune_complex",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "autoimmune_or_immune_complex"
+        ]
+      },
+      {
+        "axis": "endocrine_or_hormonal_dysregulation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "endocrine_or_hormonal_dysregulation"
+        ]
+      },
+      {
+        "axis": "structural_abnormality",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "structural_abnormality"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/endocrine-and-metabolic-disorders/thyroid-disorders/hashimoto-thyroiditis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "甲状腺结节",
+    "aliases": [
+      "Thyroid nodule"
+    ],
+    "source_raw_names": [
+      "甲状腺结节",
+      "Thyroid nodule"
+    ],
+    "department_or_category": "内分泌",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "甲状腺结节 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "超声显示结节",
+      "查体触及结节",
+      "TSH及超声风险分层"
+    ],
+    "rule_out_features": [
+      "弥漫性甲状腺肿不等于结节",
+      "甲状腺炎可出现假结节样改变"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "相关激素或代谢实验室检查",
+      "并发症和靶器官评估",
+      "必要时影像或自身抗体检查"
+    ],
+    "red_flags": [
+      "意识改变或危象表现",
+      "严重电解质/代谢紊乱",
+      "器官功能受损"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "structural_abnormality",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "structural_abnormality"
+        ]
+      },
+      {
+        "axis": "neoplastic_or_proliferative",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "neoplastic_or_proliferative"
+        ]
+      },
+      {
+        "axis": "endocrine_or_hormonal_dysregulation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "endocrine_or_hormonal_dysregulation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/endocrine-and-metabolic-disorders/thyroid-disorders/approach-to-the-patient-with-a-thyroid-nodule"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "尿路感染",
+    "aliases": [
+      "UTI"
+    ],
+    "source_raw_names": [
+      "尿路感染",
+      "UTI"
+    ],
+    "department_or_category": "泌尿/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "尿路感染 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "尿频尿急尿痛",
+      "尿白细胞/亚硝酸盐或培养阳性",
+      "女性常见"
+    ],
+    "rule_out_features": [
+      "无尿路症状的细菌尿不一定是感染主因",
+      "腰痛发热提示肾盂肾炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "尿常规",
+      "尿培养或肾功能",
+      "必要时泌尿系影像"
+    ],
+    "red_flags": [
+      "发热寒战或脓毒症",
+      "梗阻/无尿",
+      "妊娠、儿童或免疫低下"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "urinary_renal_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "urinary_renal_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/urinary-tract-infections/bacterial-urinary-tract-infections"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "膀胱炎",
+    "aliases": [
+      "Cystitis"
+    ],
+    "source_raw_names": [
+      "膀胱炎",
+      "Cystitis"
+    ],
+    "department_or_category": "泌尿/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "膀胱炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "尿频尿急尿痛",
+      "耻骨上不适",
+      "尿常规提示感染"
+    ],
+    "rule_out_features": [
+      "发热寒战腰痛提示肾盂肾炎",
+      "男性或反复发作需考虑复杂因素"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "尿常规",
+      "尿培养或肾功能",
+      "必要时泌尿系影像"
+    ],
+    "red_flags": [
+      "发热寒战或脓毒症",
+      "梗阻/无尿",
+      "妊娠、儿童或免疫低下"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "urinary_renal_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "urinary_renal_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/urinary-tract-infections/bacterial-urinary-tract-infections"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "肾盂肾炎",
+    "aliases": [
+      "Pyelonephritis"
+    ],
+    "source_raw_names": [
+      "肾盂肾炎",
+      "Pyelonephritis"
+    ],
+    "department_or_category": "泌尿/感染",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "肾盂肾炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "发热寒战",
+      "腰痛或肋脊角压痛",
+      "尿常规/尿培养阳性"
+    ],
+    "rule_out_features": [
+      "仅尿频尿痛无全身症状更偏膀胱炎",
+      "结石梗阻伴感染需按复杂感染处理"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "尿常规",
+      "尿培养或肾功能",
+      "必要时泌尿系影像"
+    ],
+    "red_flags": [
+      "发热寒战或脓毒症",
+      "梗阻/无尿",
+      "妊娠、儿童或免疫低下"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "urinary_renal_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "urinary_renal_risk"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/infectious-diseases/urinary-tract-infections/bacterial-urinary-tract-infections"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "泌尿系结石",
+    "aliases": [
+      "Urinary calculi"
+    ],
+    "source_raw_names": [
+      "泌尿系结石",
+      "Urinary calculi"
+    ],
+    "department_or_category": "泌尿",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "泌尿系结石 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "突发绞痛向腹股沟放射",
+      "血尿",
+      "影像显示结石"
+    ],
+    "rule_out_features": [
+      "发热寒战提示感染性梗阻",
+      "持续无痛肉眼血尿需排除肿瘤"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "尿常规",
+      "尿培养或肾功能",
+      "必要时泌尿系影像"
+    ],
+    "red_flags": [
+      "发热寒战或脓毒症",
+      "梗阻/无尿",
+      "妊娠、儿童或免疫低下"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "structural_abnormality",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "structural_abnormality"
+        ]
+      },
+      {
+        "axis": "urinary_renal_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "urinary_renal_risk"
+        ]
+      },
+      {
+        "axis": "smooth_muscle_spasm_or_pain",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "smooth_muscle_spasm_or_pain"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/genitourinary-disorders/urinary-calculi/urinary-calculi"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "缺铁性贫血",
+    "aliases": [
+      "Iron deficiency anemia"
+    ],
+    "source_raw_names": [
+      "缺铁性贫血",
+      "Iron deficiency anemia"
+    ],
+    "department_or_category": "血液",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "缺铁性贫血 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "血红蛋白低",
+      "MCV降低或铁蛋白低",
+      "慢性失血或铁摄入不足"
+    ],
+    "rule_out_features": [
+      "炎症性贫血可铁蛋白正常/高",
+      "地中海贫血需结合家族史和红细胞指数"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "hematopoietic_or_marrow_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "hematopoietic_or_marrow_dysfunction"
+        ]
+      },
+      {
+        "axis": "coagulation_or_bleeding_disorder",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "coagulation_or_bleeding_disorder"
+        ]
+      },
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "digestive_reflux_or_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/hematology-and-oncology/anemias-caused-by-deficient-erythropoiesis/iron-deficiency-anemia"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "贫血",
+    "aliases": [
+      "Anemia"
+    ],
+    "source_raw_names": [
+      "贫血",
+      "Anemia"
+    ],
+    "department_or_category": "血液",
+    "entry_type": "western_syndrome",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "贫血 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "Hb/Hct低于参考范围",
+      "乏力气短苍白",
+      "实验室提示红细胞生成不足/失血/溶血"
+    ],
+    "rule_out_features": [
+      "贫血是综合征，不应替代病因诊断",
+      "急性胸痛低氧需评估心肺急症"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "体温/呼吸频率/氧饱和度",
+      "肺部/耳鼻喉查体",
+      "必要时病原、肺功能或影像检查"
+    ],
+    "red_flags": [
+      "低氧/呼吸困难",
+      "持续高热或精神差",
+      "咯血、胸痛或意识改变"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "hematopoietic_or_marrow_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "hematopoietic_or_marrow_dysfunction"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/hematology-and-oncology/approach-to-the-patient-with-anemia/etiology-of-anemia"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "荨麻疹",
+    "aliases": [
+      "Urticaria"
+    ],
+    "source_raw_names": [
+      "荨麻疹",
+      "Urticaria"
+    ],
+    "department_or_category": "皮肤/过敏",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "荨麻疹 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "瘙痒性风团",
+      "皮损迁移且单个皮损短时消退",
+      "可能伴血管性水肿"
+    ],
+    "rule_out_features": [
+      "固定不退紫癜样皮疹需考虑血管炎",
+      "喘憋低血压提示过敏性休克"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "皮肤查体",
+      "暴露/药物/过敏史",
+      "必要时实验室、斑贴试验或病原检查"
+    ],
+    "red_flags": [
+      "呼吸困难/低血压",
+      "广泛水疱或黏膜受累",
+      "继发感染或全身症状"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "allergic_th2_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "allergic_th2_inflammation"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "immune_abnormality",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "immune_abnormality"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/dermatologic-disorders/approach-to-the-dermatologic-patient/urticaria"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "特应性皮炎",
+    "aliases": [
+      "Atopic dermatitis"
+    ],
+    "source_raw_names": [
+      "特应性皮炎",
+      "Atopic dermatitis"
+    ],
+    "department_or_category": "皮肤/过敏",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "特应性皮炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "慢性或反复瘙痒性湿疹",
+      "年龄相关分布",
+      "皮肤干燥和特应性病史"
+    ],
+    "rule_out_features": [
+      "接触部位局限且暴露明确提示接触性皮炎",
+      "银白鳞屑斑块提示银屑病"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "皮肤查体",
+      "暴露/药物/过敏史",
+      "必要时实验室、斑贴试验或病原检查"
+    ],
+    "red_flags": [
+      "呼吸困难/低血压",
+      "广泛水疱或黏膜受累",
+      "继发感染或全身症状"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "allergic_th2_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "allergic_th2_inflammation"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/dermatologic-disorders/dermatitis/atopic-dermatitis-eczema"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "接触性皮炎",
+    "aliases": [
+      "Contact dermatitis"
+    ],
+    "source_raw_names": [
+      "接触性皮炎",
+      "Contact dermatitis"
+    ],
+    "department_or_category": "皮肤",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "接触性皮炎 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "暴露部位红斑瘙痒灼痛或水疱",
+      "明确接触史",
+      "斑贴试验支持变应性接触皮炎"
+    ],
+    "rule_out_features": [
+      "全身泛发且无接触部位规律需考虑其他皮炎/药疹",
+      "感染性皮损需另行评估"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "皮肤查体",
+      "暴露/药物/过敏史",
+      "必要时实验室、斑贴试验或病原检查"
+    ],
+    "red_flags": [
+      "呼吸困难/低血压",
+      "广泛水疱或黏膜受累",
+      "继发感染或全身症状"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      },
+      {
+        "axis": "allergic_th2_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "allergic_th2_inflammation"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/dermatologic-disorders/dermatitis/contact-dermatitis"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "痤疮",
+    "aliases": [
+      "Acne vulgaris"
+    ],
+    "source_raw_names": [
+      "痤疮",
+      "Acne vulgaris"
+    ],
+    "department_or_category": "皮肤",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "痤疮 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "粉刺、丘疹、脓疱或结节",
+      "面部/胸背好发",
+      "青春期或油脂分泌相关"
+    ],
+    "rule_out_features": [
+      "单纯红斑毛细血管扩张提示玫瑰痤疮",
+      "突发单一形态脓疱需考虑药物/毛囊炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "皮肤查体",
+      "暴露/药物/过敏史",
+      "必要时实验室、斑贴试验或病原检查"
+    ],
+    "red_flags": [
+      "呼吸困难/低血压",
+      "广泛水疱或黏膜受累",
+      "继发感染或全身症状"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "infection_or_inflammation",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "infection_or_inflammation"
+        ]
+      },
+      {
+        "axis": "secretion_or_retention",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "secretion_or_retention"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "mucosal_barrier_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/dermatologic-disorders/acne-and-related-disorders/acne-vulgaris"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "偏头痛",
+    "aliases": [
+      "Migraine"
+    ],
+    "source_raw_names": [
+      "偏头痛",
+      "Migraine"
+    ],
+    "department_or_category": "神经",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "偏头痛 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "反复发作性头痛",
+      "恶心或畏光畏声",
+      "活动加重、休息睡眠缓解"
+    ],
+    "rule_out_features": [
+      "突发雷击样头痛需排除蛛网膜下腔出血",
+      "发热颈强直提示脑膜炎"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "神经系统查体",
+      "必要时头颅影像/脑电/实验室",
+      "红旗头痛或神经缺损时急诊评估"
+    ],
+    "red_flags": [
+      "突发神经缺损",
+      "意识改变或惊厥持续",
+      "雷击样头痛或脑膜刺激征"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "neurovascular_or_cortical_spreading",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "neurovascular_or_cortical_spreading"
+        ]
+      },
+      {
+        "axis": "autonomic_or_neurovegetative_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "autonomic_or_neurovegetative_dysfunction"
+        ]
+      },
+      {
+        "axis": "visual_or_ocular_neuropathy",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "visual_or_ocular_neuropathy"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/neurologic-disorders/headache/migraine"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "紧张型头痛",
+    "aliases": [
+      "Tension-type headache"
+    ],
+    "source_raw_names": [
+      "紧张型头痛",
+      "Tension-type headache"
+    ],
+    "department_or_category": "神经",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "紧张型头痛 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "双侧压迫性头痛",
+      "轻中度",
+      "无明显恶心呕吐或神经缺损"
+    ],
+    "rule_out_features": [
+      "雷击样头痛、发热、神经缺损需排除继发性头痛",
+      "单侧搏动伴畏光恶心更偏偏头痛"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "神经系统查体",
+      "必要时头颅影像/脑电/实验室",
+      "红旗头痛或神经缺损时急诊评估"
+    ],
+    "red_flags": [
+      "突发神经缺损",
+      "意识改变或惊厥持续",
+      "雷击样头痛或脑膜刺激征"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "smooth_muscle_spasm_or_pain",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "smooth_muscle_spasm_or_pain"
+        ]
+      },
+      {
+        "axis": "neurotransmitter_or_synaptic_dysfunction",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "neurotransmitter_or_synaptic_dysfunction"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/neurologic-disorders/headache/approach-to-the-patient-with-headache"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "脑梗死",
+    "aliases": [
+      "Ischemic stroke"
+    ],
+    "source_raw_names": [
+      "脑梗死",
+      "Ischemic stroke"
+    ],
+    "department_or_category": "神经急症",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "脑梗死 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "突发局灶神经缺损",
+      "脑影像支持缺血性卒中",
+      "房颤/动脉粥样硬化等风险"
+    ],
+    "rule_out_features": [
+      "症状完全短暂且无梗死证据更偏TIA",
+      "低血糖可模拟卒中需排除"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "神经系统查体",
+      "必要时头颅影像/脑电/实验室",
+      "红旗头痛或神经缺损时急诊评估"
+    ],
+    "red_flags": [
+      "突发神经缺损",
+      "意识改变或惊厥持续",
+      "雷击样头痛或脑膜刺激征"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "neurovascular_or_cortical_spreading",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "neurovascular_or_cortical_spreading"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/neurologic-disorders/stroke/ischemic-stroke"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  },
+  {
+    "disease_name": "短暂性脑缺血发作",
+    "aliases": [
+      "TIA"
+    ],
+    "source_raw_names": [
+      "短暂性脑缺血发作",
+      "TIA"
+    ],
+    "department_or_category": "神经急症",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "diagnostic_key_points": [
+      "短暂性脑缺血发作 的诊断必须以典型临床表现与关键检查证据共同支持，不得仅凭用户输入病名作为主诊断。",
+      "本卡仅用于 M1 西医诊断候选、鉴别诊断、rule-in/rule-out 和风险识别。",
+      "出现红旗信号、证据不足或候选分数接近时，应触发 external_check_required 或 human_review_required。"
+    ],
+    "primary_diagnosis_allowed_only_if": [
+      "rule_in_features 至少命中2项，或命中1项强客观证据",
+      "无 rule_out_features 中的强排除证据",
+      "病程、年龄/人群和关键系统受累与本病一致"
+    ],
+    "rule_in_features": [
+      "短暂局灶神经缺损",
+      "症状短时间完全缓解",
+      "存在血管危险因素"
+    ],
+    "rule_out_features": [
+      "症状持续或影像梗死提示缺血性卒中",
+      "非局灶性头晕乏力不支持TIA"
+    ],
+    "differential_diagnoses": [
+      {
+        "disease_name": "相似常见病",
+        "distinguishing_points": [
+          "根据主导症状、病程、客观检查和系统受累部位区分"
+        ]
+      },
+      {
+        "disease_name": "急危重症",
+        "distinguishing_points": [
+          "出现低氧、休克、意识改变、急性胸痛、神经缺损、消化道出血等红旗信号时优先排除"
+        ]
+      },
+      {
+        "disease_name": "功能性或非器质性问题",
+        "distinguishing_points": [
+          "缺乏客观器质性证据且无红旗信号时才可考虑"
+        ]
+      }
+    ],
+    "required_checks": [
+      "神经系统查体",
+      "必要时头颅影像/脑电/实验室",
+      "红旗头痛或神经缺损时急诊评估"
+    ],
+    "red_flags": [
+      "突发神经缺损",
+      "意识改变或惊厥持续",
+      "雷击样头痛或脑膜刺激征"
+    ],
+    "typical_age_or_population": [],
+    "typical_course": "",
+    "pathology_axes": [
+      {
+        "axis": "neurovascular_or_cortical_spreading",
+        "role": "primary",
+        "weight": 0.9,
+        "confidence": "high",
+        "typical_findings": [
+          "neurovascular_or_cortical_spreading"
+        ]
+      },
+      {
+        "axis": "vascular_or_microcirculatory",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "vascular_or_microcirculatory"
+        ]
+      },
+      {
+        "axis": "cardiovascular_or_circulatory_risk",
+        "role": "secondary",
+        "weight": 0.65,
+        "confidence": "medium",
+        "typical_findings": [
+          "cardiovascular_or_circulatory_risk"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "关键客观证据缺失且存在更特异诊断证据",
+      "出现本病不能解释的红旗信号",
+      "用户输入病名与客观证据冲突"
+    ],
+    "need_external_check_if": [
+      "儿童/孕产妇/老年/免疫低下/急重症场景",
+      "第一候选和第二候选分差小",
+      "本地证据不足或存在关键未覆盖问题"
+    ],
+    "source_summary": [
+      "依据 Merck/MSD Manual Professional 相关页面整理；不含中医病名、证型、方药、治法或治疗处方。"
+    ],
+    "source_urls": [
+      "https://www.merckmanuals.com/professional/neurologic-disorders/stroke/transient-ischemic-attack"
+    ],
+    "evidence_level": "merck_msd_source_attached",
+    "confidence": "high",
+    "status": "verified_pending",
+    "created_at": "2026-05-26T14:35:00",
+    "updated_at": "2026-05-26T14:35:00"
+  }
+]
