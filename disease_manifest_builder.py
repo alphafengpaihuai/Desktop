@@ -43,7 +43,7 @@ SYNONYM_NORMALIZATION = {
 
 NON_WESTERN_HINTS = [
     "证型", "方剂", "汤", "丸", "散", "中药", "治法", "治则", "辨证",
-    "病机", "加减", "处方", "用药", "剂量",
+    "病机", "加减", "处方", "用药", "剂量", "痹证",
 ]
 
 
@@ -69,6 +69,23 @@ def _split_aliases(text: str) -> list[str]:
     return aliases
 
 
+def _normalize_name_piece(piece: str) -> tuple[str, list[str]]:
+    aliases: list[str] = []
+    text = _clean(piece).strip("-：: ")
+    text = text.strip("【】[]")
+    for paren in re.findall(r"[（(]([^）)]+)[）)]", text):
+        for alias in _split_aliases(paren):
+            if alias and alias not in aliases:
+                aliases.append(alias)
+    primary = re.sub(r"[（(][^）)]*[）)]", "", text).strip()
+    primary = primary.strip("【】[]")
+    if not re.search(r"[\u4e00-\u9fff]", primary) and re.fullmatch(r"[A-Za-z0-9 -]{1,12}[）)]?", primary):
+        if primary and primary not in aliases:
+            aliases.append(primary.rstrip("）)"))
+        primary = ""
+    return primary, aliases
+
+
 def _extract_names(cell: str) -> tuple[list[str], list[str], list[str]]:
     text = _clean(cell)
     warnings: list[str] = []
@@ -81,8 +98,10 @@ def _extract_names(cell: str) -> tuple[list[str], list[str], list[str]]:
         raw = _clean(match.group(1))
         raw = re.split(r"(?:别名|基础方|方案|证型|全病程|终端药店)[：:]", raw)[0]
         for item in _split_aliases(raw):
-            if item and item not in names:
-                names.append(item)
+            primary, piece_aliases = _normalize_name_piece(item)
+            aliases.extend(a for a in piece_aliases if a not in aliases)
+            if primary and primary not in names:
+                names.append(primary)
 
     for match in re.finditer(r"别名[：:]\s*([^\n]+)", text):
         aliases.extend(a for a in _split_aliases(match.group(1)) if a not in aliases)
@@ -91,8 +110,10 @@ def _extract_names(cell: str) -> tuple[list[str], list[str], list[str]]:
         first = re.split(r"\n|；|;", text)[0]
         first = re.sub(r"^(?:主病名|病名)[：:]", "", first).strip()
         for item in _split_aliases(first):
-            if item and len(item) <= 30:
-                names.append(item)
+            primary, piece_aliases = _normalize_name_piece(item)
+            aliases.extend(a for a in piece_aliases if a not in aliases)
+            if primary and len(primary) <= 30:
+                names.append(primary)
 
     if any(h in text for h in NON_WESTERN_HINTS):
         warnings.append("cell_contains_tcm_or_plan_noise")

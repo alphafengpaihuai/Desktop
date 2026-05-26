@@ -1,84 +1,16 @@
 {
-  "created_at": "2026-05-26T15:41:09.958729+00:00",
+  "created_at": "2026-05-26T15:57:02.920254+00:00",
   "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
   "raw_row_count": 11109,
   "raw_disease_cell_count": 643,
-  "cleaned_disease_count": 673,
+  "cleaned_disease_count": 663,
   "raw_detail_cell_count": 633,
   "rows_with_kept_western_detail": 633,
-  "diseases_with_any_western_detail": 664,
-  "diseases_with_required_checks": 464,
+  "diseases_with_any_western_detail": 654,
+  "diseases_with_required_checks": 460,
   "diseases_with_differential_text": 75,
-  "diseases_with_complications": 230,
+  "diseases_with_complications": 228,
   "diseases": [
-    {
-      "standard_western_name": "CTS）",
-      "aliases": [],
-      "source_raw_names": [
-        "CTS）"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "好发 40–60 岁女性",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "【西医分期标签】：感觉障碍期/间歇期 (Sensory/Intermittent Stage)",
-        "【量化指标参考】：",
-        "影像学表现：肌电图/神经传导速度（EMG/NCV）可见正中神经感觉传导速度减慢。",
-        "【西医分期标签】：运动障碍早期 (Early Motor Stage)",
-        "【西医分期标签】：肌肉萎缩期/功能不全期 (Atrophy/Severe Stage)",
-        "影像学表现：EMG/NCV 提示神经严重受损。",
-        "疼痛评分：VAS 评分 2∼5 分，以麻木、刺痛为主，常在夜间或晨起时加重。",
-        "关键体征：斐伦试验（Phalen's test）阳性，蒂内尔征（Tinel's sign）阳性。",
-        "疼痛评分：VAS 评分 4∼7 分，麻木疼痛变为持续性。",
-        "关键体征：出现拇指对掌无力，抓握力下降，大鱼际肌可有轻度萎缩。"
-      ],
-      "clinical_manifestations": [
-        "疼痛评分：VAS 评分 2∼5 分，以麻木、刺痛为主，常在夜间或晨起时加重。",
-        "关键体征：斐伦试验（Phalen's test）阳性，蒂内尔征（Tinel's sign）阳性。",
-        "疼痛评分：VAS 评分 4∼7 分，麻木疼痛变为持续性。",
-        "关键体征：出现拇指对掌无力，抓握力下降，大鱼际肌可有轻度萎缩。",
-        "若严格保守治疗 3∼6 个月无效或症状加重，需考虑手术减压的必要性。",
-        "疼痛评分：疼痛感可能减轻，但麻木感和功能障碍显著加重。",
-        "关键体征：大鱼际肌明显萎缩、平坦，拇指不能完成对掌，出现“猿形手”。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [
-        "影像学表现：肌电图/神经传导速度（EMG/NCV）可见正中神经感觉传导速度减慢。",
-        "影像学表现：EMG/NCV 提示神经严重受损。"
-      ],
-      "red_flags": [],
-      "objective_markers": [
-        "影像学表现：肌电图/神经传导速度（EMG/NCV）可见正中神经感觉传导速度减慢。",
-        "影像学表现：EMG/NCV 提示神经严重受损。"
-      ],
-      "pathology_axes": [],
-      "raw_western_detail_excerpt": [
-        "Then 出现灾难性后果：不可逆的神经损伤 → 手部功能永久性丧失。",
-        "【西医分期标签】：感觉障碍期/间歇期 (Sensory/Intermittent Stage)",
-        "【量化指标参考】：",
-        "疼痛评分：VAS 评分 2∼5 分，以麻木、刺痛为主，常在夜间或晨起时加重。",
-        "关键体征：斐伦试验（Phalen's test）阳性，蒂内尔征（Tinel's sign）阳性。",
-        "影像学表现：肌电图/神经传导速度（EMG/NCV）可见正中神经感觉传导速度减慢。",
-        "【西医分期标签】：运动障碍早期 (Early Motor Stage)",
-        "疼痛评分：VAS 评分 4∼7 分，麻木疼痛变为持续性。",
-        "关键体征：出现拇指对掌无力，抓握力下降，大鱼际肌可有轻度萎缩。",
-        "若严格保守治疗 3∼6 个月无效或症状加重，需考虑手术减压的必要性。",
-        "【西医分期标签】：肌肉萎缩期/功能不全期 (Atrophy/Severe Stage)",
-        "疼痛评分：疼痛感可能减轻，但麻木感和功能障碍显著加重。",
-        "关键体征：大鱼际肌明显萎缩、平坦，拇指不能完成对掌，出现“猿形手”。",
-        "影像学表现：EMG/NCV 提示神经严重受损。",
-        "【🚨 阶段警示】：神经损伤往往已不可逆。"
-      ],
-      "source_row_numbers": [
-        10488
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "low"
-    },
     {
       "standard_western_name": "Hunt综合征",
       "aliases": [
@@ -179,129 +111,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "ITP）",
-      "aliases": [],
-      "source_raw_names": [
-        "ITP）"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0-18岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "第一阶段：急性期 (新诊断/持续性)",
-        "【西医分期标签】: 新诊断的/持续性免疫性血小板减少症 (病程小于12个月)",
-        "【[量化指标参考]】",
-        "炎性指标: 正常。",
-        "实验室检查: 血常规示孤立性血小板减少（通常小于100×10⁹/升），骨髓象检查可排除其他血液系统疾病。",
-        "【西医分期标签】: 慢性免疫性血小板减少症 (病程大于等于12个月)",
-        "实验室检查: 血小板计数持续低于100×10⁹/升。",
-        "疼痛评分: 不适用。",
-        "关键体征: 皮肤黏膜出现瘀点、瘀斑，甚至鼻衄、齿衄等出血表现。",
-        "必须指导家长进行安全教育，限制剧烈活动，并告知颅内出血的警示症状（剧烈头痛、呕吐、嗜睡等）。",
-        "关键体征: 血小板持续低下，紫癜反复发作。"
-      ],
-      "clinical_manifestations": [
-        "疼痛评分: 不适用。",
-        "关键体征: 皮肤黏膜出现瘀点、瘀斑，甚至鼻衄、齿衄等出血表现。",
-        "必须指导家长进行安全教育，限制剧烈活动，并告知颅内出血的警示症状（剧烈头痛、呕吐、嗜睡等）。",
-        "关键体征: 血小板持续低下，紫癜反复发作。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [
-        "实验室检查: 血常规示孤立性血小板减少（通常小于100×10⁹/升），骨髓象检查可排除其他血液系统疾病。"
-      ],
-      "red_flags": [],
-      "objective_markers": [
-        "实验室检查: 血常规示孤立性血小板减少（通常小于100×10⁹/升），骨髓象检查可排除其他血液系统疾病。"
-      ],
-      "pathology_axes": [
-        {
-          "axis": "upper_airway_involvement",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "low",
-          "typical_findings": [
-            "鼻"
-          ]
-        },
-        {
-          "axis": "mucosal_barrier_dysfunction",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "黏膜"
-          ]
-        },
-        {
-          "axis": "coagulation_or_bleeding_disorder",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "出血",
-            "紫癜",
-            "血小板"
-          ]
-        },
-        {
-          "axis": "digestive_reflux_or_dysfunction",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "呕吐"
-          ]
-        },
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "急性期:",
-        "不理想转归 (迁延慢性): If 急性期热毒耗伤气阴，或反复发作, Then 病情转为慢性，由实转虚。",
-        "慢性后期:",
-        "If 热毒极盛，或血小板极低, Then 可发生颅内出血，危及生命。",
-        "第一阶段：急性期 (新诊断/持续性)",
-        "【西医分期标签】: 新诊断的/持续性免疫性血小板减少症 (病程小于12个月)",
-        "【[量化指标参考]】",
-        "疼痛评分: 不适用。",
-        "炎性指标: 正常。",
-        "关键体征: 皮肤黏膜出现瘀点、瘀斑，甚至鼻衄、齿衄等出血表现。",
-        "实验室检查: 血常规示孤立性血小板减少（通常小于100×10⁹/升），骨髓象检查可排除其他血液系统疾病。",
-        "核心风险: 严重出血，尤其是颅内出血。",
-        "紧急措施: 根据出血严重程度和血小板计数决定治疗方案（观察、糖皮质激素或静脉注射免疫球蛋白）。",
-        "必须指导家长进行安全教育，限制剧烈活动，并告知颅内出血的警示症状（剧烈头痛、呕吐、嗜睡等）。",
-        "第二阶段：慢性期",
-        "【西医分期标签】: 慢性免疫性血小板减少症 (病程大于等于12个月)",
-        "关键体征: 血小板持续低下，紫癜反复发作。",
-        "实验室检查: 血小板计数持续低于100×10⁹/升。",
-        "核心风险: 长期出血风险、治疗相关副作用及心理负担。",
-        "紧急措施: 治疗目标是维持安全的血小板水平以预防严重出血，而非追求正常化。"
-      ],
-      "source_row_numbers": [
-        1094
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "IgA肾病 (IgA Nephropathy)",
+      "standard_western_name": "IgA肾病",
       "aliases": [
+        "IgA Nephropathy",
         "Berger病"
       ],
       "source_raw_names": [
-        "IgA肾病 (IgA Nephropathy)"
+        "IgA肾病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -805,136 +621,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "UACS）",
-      "aliases": [],
-      "source_raw_names": [
-        "UACS）"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "3-70岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "【西医分期标签：急性上气道炎症期】",
-        "[量化指标参考]",
-        "实验室指标：过敏原测试可阳性；",
-        "【西医分期标签：慢性上气道炎症期】",
-        "理想转归: If 经滋阴润燥治疗，Then 干咳、口干咽燥等症状缓解，进入巩固期。",
-        "关键体征：刺激性干咳为主，咳剧易喘；",
-        "可伴有鼻塞、鼻痒、喷嚏、流涕等鼻部症状。",
-        "[触发条件]：久咳，以干咳为主，遇冷空气或活动后加重，伴鼻塞鼻痒、流涕喷嚏，舌质淡红脉浮数。",
-        "呼出气一氧化碳（FeNO）可升高。"
-      ],
-      "clinical_manifestations": [
-        "理想转归: If 经滋阴润燥治疗，Then 干咳、口干咽燥等症状缓解，进入巩固期。",
-        "关键体征：刺激性干咳为主，咳剧易喘；",
-        "可伴有鼻塞、鼻痒、喷嚏、流涕等鼻部症状。",
-        "[触发条件]：久咳，以干咳为主，遇冷空气或活动后加重，伴鼻塞鼻痒、流涕喷嚏，舌质淡红脉浮数。",
-        "关键体征：干咳剧烈，口干咽燥；"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [
-        "若伴有高热、胸闷、呼吸困难，需警惕并发肺炎或1号退热（牛膝）"
-      ],
-      "required_checks": [
-        "呼出气一氧化碳（FeNO）可升高。"
-      ],
-      "red_flags": [
-        "若伴有高热、胸闷、呼吸困难，需警惕并发肺炎或1号退热（牛膝）"
-      ],
-      "objective_markers": [
-        "呼出气一氧化碳（FeNO）可升高。"
-      ],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "low",
-          "typical_findings": [
-            "炎症"
-          ]
-        },
-        {
-          "axis": "allergic_th2_inflammation",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "过敏",
-            "FeNO"
-          ]
-        },
-        {
-          "axis": "upper_airway_involvement",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "鼻",
-            "咽",
-            "上气道"
-          ]
-        },
-        {
-          "axis": "lower_airway_involvement",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "肺"
-          ]
-        },
-        {
-          "axis": "airway_hyperreactivity",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "胸闷"
-          ]
-        },
-        {
-          "axis": "secretion_or_retention",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "流涕"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "理想转归: If 经滋阴润燥治疗，Then 干咳、口干咽燥等症状缓解，进入巩固期。",
-        "急性期",
-        "【西医分期标签：急性上气道炎症期】",
-        "[量化指标参考]",
-        "关键体征：刺激性干咳为主，咳剧易喘；",
-        "可伴有鼻塞、鼻痒、喷嚏、流涕等鼻部症状。",
-        "实验室指标：过敏原测试可阳性；",
-        "呼出气一氧化碳（FeNO）可升高。",
-        "[触发条件]：久咳，以干咳为主，遇冷空气或活动后加重，伴鼻塞鼻痒、流涕喷嚏，舌质淡红脉浮数。",
-        "若伴有高热、胸闷、呼吸困难，需警惕并发肺炎或1号退热（牛膝）",
-        "【西医分期标签：慢性上气道炎症期】",
-        "关键体征：干咳剧烈，口干咽燥；",
-        "需长期滋阴润燥，以修复慢性炎症损伤。"
-      ],
-      "source_row_numbers": [
-        622
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "Vogt-小柳-原田综合征 (Vogt-Koyanagi-Harada Syndrome)",
+      "standard_western_name": "Vogt-小柳-原田综合征",
       "aliases": [
+        "Vogt-Koyanagi-Harada Syndrome",
         "VKH综合征",
         "特发性葡萄膜大脑炎"
       ],
       "source_raw_names": [
-        "Vogt-小柳-原田综合征 (Vogt-Koyanagi-Harada Syndrome)"
+        "Vogt-小柳-原田综合征"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -1139,348 +833,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "【丹毒】 【erysipelas】",
-      "aliases": [],
+      "standard_western_name": "三叉神经痛",
+      "aliases": [
+        "Trigeminal Neuralgia"
+      ],
       "source_raw_names": [
-        "【丹毒】 【erysipelas】"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0-80岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "【西医分期标签】：急性丹毒（急性炎症期） (Acute Erysipelas)",
-        "【[量化指标参考]】",
-        "炎性指标: WBC 及中性粒细胞比例显著升高；",
-        "影像学表现: 超声 可见皮下组织增厚、水肿。",
-        "【西医分期标签】：脓毒症休克期 (Septic Shock Stage)",
-        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
-        "影像学表现: 无特殊。",
-        "疼痛评分: VAS 评分 7−9 分，局部红肿灼热疼痛。",
-        "关键体征: 皮肤鲜红肿胀的斑块，边缘清晰且隆起，表面紧张发亮；",
-        "【[触发条件]】: 丹毒发于下肢，红赤肿胀灼热疼痛；",
-        "关键体征: 皮损迅速蔓延，呈暗紫色，出现血疱、皮肤坏死；",
-        "CRP 显著升高。"
-      ],
-      "clinical_manifestations": [
-        "疼痛评分: VAS 评分 7−9 分，局部红肿灼热疼痛。",
-        "关键体征: 皮肤鲜红肿胀的斑块，边缘清晰且隆起，表面紧张发亮；",
-        "【[触发条件]】: 丹毒发于下肢，红赤肿胀灼热疼痛；",
-        "关键体征: 皮损迅速蔓延，呈暗紫色，出现血疱、皮肤坏死；"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [
-        "CRP 显著升高。",
-        "影像学表现: 超声 可见皮下组织增厚、水肿。",
-        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
-        "影像学表现: 无特殊。"
-      ],
-      "red_flags": [
-        "【西医分期标签】：脓毒症休克期 (Septic Shock Stage)"
-      ],
-      "objective_markers": [
-        "CRP 显著升高。",
-        "影像学表现: 超声 可见皮下组织增厚、水肿。",
-        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
-        "影像学表现: 无特殊。"
-      ],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "medium",
-          "typical_findings": [
-            "感染",
-            "炎症",
-            "CRP",
-            "PCT"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "初始触发： 皮肤破损（足癣、外伤） → 链球菌感染 → 邪毒入侵。",
-        "理想转归： 经早期抗感染和清热解毒治疗，感染迅速控制，皮损消退，不留后遗症。",
-        "不理想转归： 反复发作 → 淋巴管破坏 → 慢性淋巴水肿 → 患肢增粗、皮肤增厚。",
-        "急性期",
-        "【西医分期标签】：急性丹毒（急性炎症期） (Acute Erysipelas)",
-        "【[量化指标参考]】",
-        "疼痛评分: VAS 评分 7−9 分，局部红肿灼热疼痛。",
-        "炎性指标: WBC 及中性粒细胞比例显著升高；",
-        "CRP 显著升高。",
-        "关键体征: 皮肤鲜红肿胀的斑块，边缘清晰且隆起，表面紧张发亮；",
-        "影像学表现: 超声 可见皮下组织增厚、水肿。",
-        "【[触发条件]】: 丹毒发于下肢，红赤肿胀灼热疼痛；",
-        "丹毒是链球菌感染，必须立即启动足量抗生素。",
-        "【西医分期标签】：脓毒症休克期 (Septic Shock Stage)",
-        "关键体征: 皮损迅速蔓延，呈暗紫色，出现血疱、皮肤坏死；",
-        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
-        "影像学表现: 无特殊。"
-      ],
-      "source_row_numbers": [
-        1864
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "【痹证】",
-      "aliases": [],
-      "source_raw_names": [
-        "【痹证】"
-      ],
-      "department_or_category": "中医内科学-肢体经络系统",
-      "sex": "男女均可",
-      "typical_age": "20~70岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "【西医分期标签】：急性关节炎",
-        "【量化指标参考】：",
-        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
-        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
-        "【西医分期标签】：慢性关节炎活动期（如类风湿关节炎）",
-        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
-        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
-        "西医治疗上，使用改善病情抗风湿药（DMARDs）是阻止关节破坏的关键。",
-        "【西医分期标签】：关节炎缓解期 / 骨关节炎",
-        "炎性指标：CRP、ESR 通常正常。",
-        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。",
-        "若关节疼痛呈游走性，痛无定处，提示为行痹，以风邪为主。",
-        "若关节疼痛剧烈，痛有定处，遇寒加重，得热则减，提示为痛痹，以寒邪为主。",
-        "疼痛评分：视觉模拟评分 (VAS) 6∼10 分。",
-        "【触发条件】：肢体关节肌肉疼痛，呈游走性，一日之内可在多个关节间转移。",
-        "超声可见关节积液、滑膜增厚。"
-      ],
-      "clinical_manifestations": [
-        "若关节疼痛呈游走性，痛无定处，提示为行痹，以风邪为主。",
-        "若关节疼痛剧烈，痛有定处，遇寒加重，得热则减，提示为痛痹，以寒邪为主。",
-        "疼痛评分：视觉模拟评分 (VAS) 6∼10 分。",
-        "【触发条件】：肢体关节肌肉疼痛，呈游走性，一日之内可在多个关节间转移。",
-        "【触发条件】：关节疼痛剧烈、痛有定处，有明确的遇寒加重、得热痛减。",
-        "【触发条件】：关节疼痛以酸楚、重着、麻木为主要特征，常伴关节肿胀。",
-        "【触发条件】：关节出现明确的红、肿、热、痛，痛不可触，可伴发热、口渴等全身热象。",
-        "疼痛评分：VAS 3∼7 分。",
-        "疼痛评分：VAS 1∼5 分，多为劳累后出现的酸痛、隐痛。",
-        "【触发条件】：关节疼痛日久，伴腰膝酸软、筋骨痿软或肌肉萎缩，脉沉细。",
-        "治疗重点从控制炎症转向改善功能、减轻疼痛、延缓退变。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [
-        "需警惕因长期活动受限导致的肌肉萎缩、骨质疏松等并发症。"
-      ],
-      "required_checks": [
-        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
-        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
-        "超声可见关节积液、滑膜增厚。",
-        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
-        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
-        "炎性指标：CRP、ESR 通常正常。",
-        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。"
-      ],
-      "red_flags": [
-        "需警惕因长期活动受限导致的肌肉萎缩、骨质疏松等并发症。"
-      ],
-      "objective_markers": [
-        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
-        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
-        "超声可见关节积液、滑膜增厚。",
-        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
-        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
-        "炎性指标：CRP、ESR 通常正常。",
-        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。"
-      ],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "medium",
-          "typical_findings": [
-            "炎症",
-            "发热",
-            "CRP"
-          ]
-        },
-        {
-          "axis": "secretion_or_retention",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "痰"
-          ]
-        },
-        {
-          "axis": "structural_abnormality",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "畸形",
-            "结构"
-          ]
-        },
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        },
-        {
-          "axis": "neoplastic_or_proliferative",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "增生"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "不理想转归：邪恋日久，正气大伤，痰瘀胶结，深入骨节，导致关节肿大、僵硬、畸形，最终功能丧失，是为“尪痹”。",
-        "若关节疼痛呈游走性，痛无定处，提示为行痹，以风邪为主。",
-        "若关节疼痛剧烈，痛有定处，遇寒加重，得热则减，提示为痛痹，以寒邪为主。",
-        "第一阶段：邪实为主期（急性期）",
-        "【西医分期标签】：急性关节炎",
-        "【量化指标参考】：",
-        "疼痛评分：视觉模拟评分 (VAS) 6∼10 分。",
-        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
-        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
-        "超声可见关节积液、滑膜增厚。",
-        "【触发条件】：肢体关节肌肉疼痛，呈游走性，一日之内可在多个关节间转移。",
-        "【触发条件】：关节疼痛剧烈、痛有定处，有明确的遇寒加重、得热痛减。",
-        "【触发条件】：关节疼痛以酸楚、重着、麻木为主要特征，常伴关节肿胀。",
-        "【触发条件】：关节出现明确的红、肿、热、痛，痛不可触，可伴发热、口渴等全身热象。",
-        "【🚨 阶段警示】：核心风险是漏诊特异性关节炎。",
-        "第二阶段：虚实夹杂期（慢性活动期）",
-        "【西医分期标签】：慢性关节炎活动期（如类风湿关节炎）",
-        "疼痛评分：VAS 3∼7 分。",
-        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
-        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
-        "【🚨 阶段警示】：核心风险是不可逆的关节结构损伤。",
-        "西医治疗上，使用改善病情抗风湿药（DMARDs）是阻止关节破坏的关键。",
-        "第三阶段：正虚为主期（慢性稳定/退变期）",
-        "【西医分期标签】：关节炎缓解期 / 骨关节炎",
-        "疼痛评分：VAS 1∼5 分，多为劳累后出现的酸痛、隐痛。",
-        "炎性指标：CRP、ESR 通常正常。",
-        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。",
-        "【触发条件】：关节疼痛日久，伴腰膝酸软、筋骨痿软或肌肉萎缩，脉沉细。",
-        "【🚨 阶段警示】：核心风险是功能障碍和生活质量下降。",
-        "治疗重点从控制炎症转向改善功能、减轻疼痛、延缓退变。",
-        "需警惕因长期活动受限导致的肌肉萎缩、骨质疏松等并发症。"
-      ],
-      "source_row_numbers": [
-        9653
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "【类天疱疮】",
-      "aliases": [],
-      "source_raw_names": [
-        "【类天疱疮】"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "60-90岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "规范性: “类天疱疮”（特指大疱性类天疱疮）为中西医结合领域的标准术语，与ICD编码（L",
-        "【西医分期标签：活动性大疱性类天疱疮 (Active Bullous Pemphigoid)】",
-        "[量化指标参考]",
-        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
-        "【西医分期标签：缓解期类天疱疮 (Bullous Pemphigoid in Remission)】",
-        "实验室检查: 血清抗体滴度下降或转阴。",
-        "关键体征: 皮肤出现张力性大疱，疱壁厚，不易破溃，Nikolsky征阴性。",
-        "关键体征: 无新发水疱，瘙痒基本控制，原有皮损愈合。"
-      ],
-      "clinical_manifestations": [
-        "关键体征: 皮肤出现张力性大疱，疱壁厚，不易破溃，Nikolsky征阴性。",
-        "关键体征: 无新发水疱，瘙痒基本控制，原有皮损愈合。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [
-        "老年患者需特别关注感染、骨质疏松、高血糖等并发症。"
-      ],
-      "required_checks": [
-        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
-        "实验室检查: 血清抗体滴度下降或转阴。"
-      ],
-      "red_flags": [
-        "老年患者需特别关注感染、骨质疏松、高血糖等并发症。"
-      ],
-      "objective_markers": [
-        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
-        "实验室检查: 血清抗体滴度下降或转阴。"
-      ],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "low",
-          "typical_findings": [
-            "感染"
-          ]
-        },
-        {
-          "axis": "autoimmune_or_immune_complex",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "抗体"
-          ]
-        },
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "规范性: “类天疱疮”（特指大疱性类天疱疮）为中西医结合领域的标准术语，与ICD编码（L",
-        "【核心一】中描述的“急性期（实证）”向“维持期（虚证）”的转化，以及病情复发的逻辑，与",
-        "急性活动期 (火毒炽盛 / 血热夹湿)",
-        "不理想转归 (病情复发): If 因感染、劳累或药物减量不当等因素诱发, Then 病情复发，再次出现新发水疱，必须退回急性活动期，重新按火毒炽盛或血热夹湿证论治。",
-        "第一阶段：急性活动期",
-        "【西医分期标签：活动性大疱性类天疱疮 (Active Bullous Pemphigoid)】",
-        "[量化指标参考]",
-        "关键体征: 皮肤出现张力性大疱，疱壁厚，不易破溃，Nikolsky征阴性。",
-        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
-        "大面积皮损需注意继发感染和护理。",
-        "【西医分期标签：缓解期类天疱疮 (Bullous Pemphigoid in Remission)】",
-        "关键体征: 无新发水疱，瘙痒基本控制，原有皮损愈合。",
-        "实验室检查: 血清抗体滴度下降或转阴。",
-        "核心风险是复发和药物副作用。",
-        "老年患者需特别关注感染、骨质疏松、高血糖等并发症。"
-      ],
-      "source_row_numbers": [
-        2212
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "三叉神经痛 (Trigeminal Neuralgia)",
-      "aliases": [],
-      "source_raw_names": [
-        "三叉神经痛 (Trigeminal Neuralgia)"
+        "三叉神经痛"
       ],
       "department_or_category": "中西医结合内科学-神经系统疾病",
       "sex": "男女均可",
@@ -1547,12 +905,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "上消化道出血 (Upper Gastrointestinal Hemorrhage)",
+      "standard_western_name": "上消化道出血",
       "aliases": [
-        "上消化道出血"
+        "Upper Gastrointestinal Hemorrhage"
       ],
       "source_raw_names": [
-        "上消化道出血 (Upper Gastrointestinal Hemorrhage)"
+        "上消化道出血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -1632,10 +990,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "上睑下垂 (Ptosis)",
-      "aliases": [],
+      "standard_western_name": "上睑下垂",
+      "aliases": [
+        "Ptosis"
+      ],
       "source_raw_names": [
-        "上睑下垂 (Ptosis)"
+        "上睑下垂"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -2259,10 +1619,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "不射精 (Anejaculation)",
-      "aliases": [],
+      "standard_western_name": "不射精",
+      "aliases": [
+        "Anejaculation"
+      ],
       "source_raw_names": [
-        "不射精 (Anejaculation)"
+        "不射精"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -2448,12 +1810,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "中心性浆液性脉络膜视网膜病变 (Central Serous Chorioretinopathy)",
+      "standard_western_name": "中心性浆液性脉络膜视网膜病变",
       "aliases": [
+        "Central Serous Chorioretinopathy",
         "CSC"
       ],
       "source_raw_names": [
-        "中心性浆液性脉络膜视网膜病变 (Central Serous Chorioretinopathy)"
+        "中心性浆液性脉络膜视网膜病变"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -2646,10 +2009,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "中间葡萄膜炎 (Intermediate Uveitis)",
-      "aliases": [],
+      "standard_western_name": "中间葡萄膜炎",
+      "aliases": [
+        "Intermediate Uveitis"
+      ],
       "source_raw_names": [
-        "中间葡萄膜炎 (Intermediate Uveitis)"
+        "中间葡萄膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -2750,12 +2115,101 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "乙型肝炎 (Hepatitis B)",
+      "standard_western_name": "丹毒】 【erysipelas",
+      "aliases": [],
+      "source_raw_names": [
+        "丹毒】 【erysipelas"
+      ],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "0-80岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "diagnostic_key_points": [
+        "【西医分期标签】：急性丹毒（急性炎症期） (Acute Erysipelas)",
+        "【[量化指标参考]】",
+        "炎性指标: WBC 及中性粒细胞比例显著升高；",
+        "影像学表现: 超声 可见皮下组织增厚、水肿。",
+        "【西医分期标签】：脓毒症休克期 (Septic Shock Stage)",
+        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
+        "影像学表现: 无特殊。",
+        "疼痛评分: VAS 评分 7−9 分，局部红肿灼热疼痛。",
+        "关键体征: 皮肤鲜红肿胀的斑块，边缘清晰且隆起，表面紧张发亮；",
+        "【[触发条件]】: 丹毒发于下肢，红赤肿胀灼热疼痛；",
+        "关键体征: 皮损迅速蔓延，呈暗紫色，出现血疱、皮肤坏死；",
+        "CRP 显著升高。"
+      ],
+      "clinical_manifestations": [
+        "疼痛评分: VAS 评分 7−9 分，局部红肿灼热疼痛。",
+        "关键体征: 皮肤鲜红肿胀的斑块，边缘清晰且隆起，表面紧张发亮；",
+        "【[触发条件]】: 丹毒发于下肢，红赤肿胀灼热疼痛；",
+        "关键体征: 皮损迅速蔓延，呈暗紫色，出现血疱、皮肤坏死；"
+      ],
+      "differential_diagnoses_text": [],
+      "complications": [],
+      "required_checks": [
+        "CRP 显著升高。",
+        "影像学表现: 超声 可见皮下组织增厚、水肿。",
+        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
+        "影像学表现: 无特殊。"
+      ],
+      "red_flags": [
+        "【西医分期标签】：脓毒症休克期 (Septic Shock Stage)"
+      ],
+      "objective_markers": [
+        "CRP 显著升高。",
+        "影像学表现: 超声 可见皮下组织增厚、水肿。",
+        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
+        "影像学表现: 无特殊。"
+      ],
+      "pathology_axes": [
+        {
+          "axis": "infection_or_inflammation",
+          "role": "primary",
+          "weight": 0.75,
+          "confidence": "medium",
+          "typical_findings": [
+            "感染",
+            "炎症",
+            "CRP",
+            "PCT"
+          ]
+        }
+      ],
+      "raw_western_detail_excerpt": [
+        "初始触发： 皮肤破损（足癣、外伤） → 链球菌感染 → 邪毒入侵。",
+        "理想转归： 经早期抗感染和清热解毒治疗，感染迅速控制，皮损消退，不留后遗症。",
+        "不理想转归： 反复发作 → 淋巴管破坏 → 慢性淋巴水肿 → 患肢增粗、皮肤增厚。",
+        "急性期",
+        "【西医分期标签】：急性丹毒（急性炎症期） (Acute Erysipelas)",
+        "【[量化指标参考]】",
+        "疼痛评分: VAS 评分 7−9 分，局部红肿灼热疼痛。",
+        "炎性指标: WBC 及中性粒细胞比例显著升高；",
+        "CRP 显著升高。",
+        "关键体征: 皮肤鲜红肿胀的斑块，边缘清晰且隆起，表面紧张发亮；",
+        "影像学表现: 超声 可见皮下组织增厚、水肿。",
+        "【[触发条件]】: 丹毒发于下肢，红赤肿胀灼热疼痛；",
+        "丹毒是链球菌感染，必须立即启动足量抗生素。",
+        "【西医分期标签】：脓毒症休克期 (Septic Shock Stage)",
+        "关键体征: 皮损迅速蔓延，呈暗紫色，出现血疱、皮肤坏死；",
+        "实验室指标: 血乳酸（Lactate）显著升高，PCT 极高；",
+        "影像学表现: 无特殊。"
+      ],
+      "source_row_numbers": [
+        1864
+      ],
+      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
+      "status": "pending_review",
+      "confidence": "medium"
+    },
+    {
+      "standard_western_name": "乙型肝炎",
       "aliases": [
+        "Hepatitis B",
         "慢性乙型肝炎"
       ],
       "source_raw_names": [
-        "乙型肝炎 (Hepatitis B)"
+        "乙型肝炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -3572,14 +3026,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "亚急性甲状腺炎 (Subacute Thyroiditis)",
+      "standard_western_name": "亚急性甲状腺炎",
       "aliases": [
+        "Subacute Thyroiditis",
         "SAT",
         "亚甲炎",
         "de Quervain甲状腺炎"
       ],
       "source_raw_names": [
-        "亚急性甲状腺炎 (Subacute Thyroiditis)"
+        "亚急性甲状腺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -4247,12 +3702,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "人工流产术后出血 (Post-Abortion Bleeding)",
+      "standard_western_name": "人工流产术后出血",
       "aliases": [
+        "Post-Abortion Bleeding",
         "人流术后出血"
       ],
       "source_raw_names": [
-        "人工流产术后出血 (Post-Abortion Bleeding)"
+        "人工流产术后出血"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -4529,12 +3985,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "代谢综合征 (Metabolic Syndrome)",
+      "standard_western_name": "代谢综合征",
       "aliases": [
+        "Metabolic Syndrome",
         "MS"
       ],
       "source_raw_names": [
-        "代谢综合征 (Metabolic Syndrome)"
+        "代谢综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -4889,12 +4346,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "体位性低血压 (Orthostatic Hypotension)",
+      "standard_western_name": "体位性低血压",
       "aliases": [
+        "Orthostatic Hypotension",
         "OH"
       ],
       "source_raw_names": [
-        "体位性低血压 (Orthostatic Hypotension)"
+        "体位性低血压"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -4947,13 +4405,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "便秘 (Constipation)",
+      "standard_western_name": "便秘",
       "aliases": [
+        "Constipation",
         "功能性便秘",
         "慢传输型便秘"
       ],
       "source_raw_names": [
-        "便秘 (Constipation)"
+        "便秘"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -5058,10 +4517,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "便血 (Hematochezia)",
-      "aliases": [],
+      "standard_western_name": "便血",
+      "aliases": [
+        "Hematochezia"
+      ],
       "source_raw_names": [
-        "便血 (Hematochezia)"
+        "便血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -5842,10 +5303,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "儿童腹痛（以非特异性肠系膜淋巴结炎／功能性腹痛为核心）",
-      "aliases": [],
+      "standard_western_name": "儿童腹痛",
+      "aliases": [
+        "以非特异性肠系膜淋巴结炎／功能性腹痛为核心"
+      ],
       "source_raw_names": [
-        "儿童腹痛（以非特异性肠系膜淋巴结炎／功能性腹痛为核心）"
+        "儿童腹痛"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -5963,13 +5426,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "充血性心力衰竭 (Congestive Heart Failure)",
+      "standard_western_name": "充血性心力衰竭",
       "aliases": [
+        "Congestive Heart Failure",
         "CHF",
         "心力衰竭"
       ],
       "source_raw_names": [
-        "充血性心力衰竭 (Congestive Heart Failure)"
+        "充血性心力衰竭"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -6264,10 +5728,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "先天性青光眼 (Congenital Glaucoma)",
-      "aliases": [],
+      "standard_western_name": "先天性青光眼",
+      "aliases": [
+        "Congenital Glaucoma"
+      ],
       "source_raw_names": [
-        "先天性青光眼 (Congenital Glaucoma)"
+        "先天性青光眼"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -6332,12 +5798,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "克罗恩病 (Crohn's Disease)",
+      "standard_western_name": "克罗恩病",
       "aliases": [
+        "Crohn's Disease",
         "CD"
       ],
       "source_raw_names": [
-        "克罗恩病 (Crohn's Disease)"
+        "克罗恩病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -6459,10 +5926,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "共同性内斜视 (Esotropia)",
-      "aliases": [],
+      "standard_western_name": "共同性内斜视",
+      "aliases": [
+        "Esotropia"
+      ],
       "source_raw_names": [
-        "共同性内斜视 (Esotropia)"
+        "共同性内斜视"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -6512,10 +5981,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "内伤发热 (Internal Injury Fever)",
-      "aliases": [],
+      "standard_western_name": "内伤发热",
+      "aliases": [
+        "Internal Injury Fever"
+      ],
       "source_raw_names": [
-        "内伤发热 (Internal Injury Fever)"
+        "内伤发热"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -6820,12 +6291,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "再生障碍性贫血 (Aplastic Anemia)",
+      "standard_western_name": "再生障碍性贫血",
       "aliases": [
+        "Aplastic Anemia",
         "AA"
       ],
       "source_raw_names": [
-        "再生障碍性贫血 (Aplastic Anemia)"
+        "再生障碍性贫血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -6938,8 +6410,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "冠状动脉粥样硬化性心脏病 (Coronary Atherosclerotic Heart Disease)",
+      "standard_western_name": "冠状动脉粥样硬化性心脏病",
       "aliases": [
+        "Coronary Atherosclerotic Heart Disease",
         "冠心病",
         "缺血性心脏病",
         "CHD",
@@ -6947,7 +6420,7 @@
         "冠状动脉粥样硬化"
       ],
       "source_raw_names": [
-        "冠状动脉粥样硬化性心脏病 (Coronary Atherosclerotic Heart Disease)"
+        "冠状动脉粥样硬化性心脏病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -7653,10 +7126,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "前葡萄膜炎 (Anterior Uveitis)",
-      "aliases": [],
+      "standard_western_name": "前葡萄膜炎",
+      "aliases": [
+        "Anterior Uveitis"
+      ],
       "source_raw_names": [
-        "前葡萄膜炎 (Anterior Uveitis)"
+        "前葡萄膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -7845,13 +7320,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "功能性消化不良 (Functional Dyspepsia)",
+      "standard_western_name": "功能性消化不良",
       "aliases": [
+        "Functional Dyspepsia",
         "FD",
         "非溃疡性消化不良"
       ],
       "source_raw_names": [
-        "功能性消化不良 (Functional Dyspepsia)"
+        "功能性消化不良"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -7989,12 +7465,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "动脉粥样硬化 (Atherosclerosis)",
+      "standard_western_name": "动脉粥样硬化",
       "aliases": [
+        "Atherosclerosis",
         "AS"
       ],
       "source_raw_names": [
-        "动脉粥样硬化 (Atherosclerosis)"
+        "动脉粥样硬化"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -8093,12 +7570,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "勃起功能障碍 (Erectile Dysfunction)",
+      "standard_western_name": "勃起功能障碍",
       "aliases": [
+        "Erectile Dysfunction",
         "阳痿"
       ],
       "source_raw_names": [
-        "勃起功能障碍 (Erectile Dysfunction)"
+        "勃起功能障碍"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -8304,10 +7782,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "化脓性关节炎 (Suppurative Arthritis)",
-      "aliases": [],
+      "standard_western_name": "化脓性关节炎",
+      "aliases": [
+        "Suppurative Arthritis"
+      ],
       "source_raw_names": [
-        "化脓性关节炎 (Suppurative Arthritis)"
+        "化脓性关节炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9101,12 +8581,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "单纯疱疹病毒性角膜炎 (Herpes Simplex Keratitis)",
+      "standard_western_name": "单纯疱疹病毒性角膜炎",
       "aliases": [
+        "Herpes Simplex Keratitis",
         "HSK"
       ],
       "source_raw_names": [
-        "单纯疱疹病毒性角膜炎 (Herpes Simplex Keratitis)"
+        "单纯疱疹病毒性角膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9330,12 +8811,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "压疮 (Pressure Ulcer)",
+      "standard_western_name": "压疮",
       "aliases": [
+        "Pressure Ulcer",
         "褥疮"
       ],
       "source_raw_names": [
-        "压疮 (Pressure Ulcer)"
+        "压疮"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9419,12 +8901,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "原发免疫性血小板减少症 (Primary Immune Thrombocytopenia)",
+      "standard_western_name": "原发免疫性血小板减少症",
       "aliases": [
+        "Primary Immune Thrombocytopenia",
         "ITP"
       ],
       "source_raw_names": [
-        "原发免疫性血小板减少症 (Primary Immune Thrombocytopenia)"
+        "原发免疫性血小板减少症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9538,12 +9021,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "原发性开角型青光眼 (Primary Open-Angle Glaucoma)",
+      "standard_western_name": "原发性开角型青光眼",
       "aliases": [
+        "Primary Open-Angle Glaucoma",
         "慢性单纯性青光眼"
       ],
       "source_raw_names": [
-        "原发性开角型青光眼 (Primary Open-Angle Glaucoma)"
+        "原发性开角型青光眼"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9702,10 +9186,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "原发性肝癌 (Liver Cancer)",
-      "aliases": [],
+      "standard_western_name": "原发性肝癌",
+      "aliases": [
+        "Liver Cancer"
+      ],
       "source_raw_names": [
-        "原发性肝癌 (Liver Cancer)"
+        "原发性肝癌"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9809,12 +9295,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "原发性视网膜色素变性 (Retinitis Pigmentosa)",
+      "standard_western_name": "原发性视网膜色素变性",
       "aliases": [
+        "Retinitis Pigmentosa",
         "RP"
       ],
       "source_raw_names": [
-        "原发性视网膜色素变性 (Retinitis Pigmentosa)"
+        "原发性视网膜色素变性"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9876,10 +9363,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "原发性闭角型青光眼 (Primary Angle-Closure Glaucoma)",
-      "aliases": [],
+      "standard_western_name": "原发性闭角型青光眼",
+      "aliases": [
+        "Primary Angle-Closure Glaucoma"
+      ],
       "source_raw_names": [
-        "原发性闭角型青光眼 (Primary Angle-Closure Glaucoma)"
+        "原发性闭角型青光眼"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -10036,14 +9525,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "反流性食管炎 (Reflux Esophagitis)",
+      "standard_western_name": "反流性食管炎",
       "aliases": [
+        "Reflux Esophagitis",
         "吐酸",
         "反酸",
         "胃食管反流病"
       ],
       "source_raw_names": [
-        "反流性食管炎 (Reflux Esophagitis)"
+        "反流性食管炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -10164,12 +9654,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "发作性睡病 (Narcolepsy)",
+      "standard_western_name": "发作性睡病",
       "aliases": [
+        "Narcolepsy",
         "多寐"
       ],
       "source_raw_names": [
-        "发作性睡病 (Narcolepsy)"
+        "发作性睡病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -10869,10 +10360,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "后葡萄膜炎 (Posterior Uveitis)",
-      "aliases": [],
+      "standard_western_name": "后葡萄膜炎",
+      "aliases": [
+        "Posterior Uveitis"
+      ],
       "source_raw_names": [
-        "后葡萄膜炎 (Posterior Uveitis)"
+        "后葡萄膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -10984,12 +10477,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "呃逆 (Hiccups)",
+      "standard_western_name": "呃逆",
       "aliases": [
+        "Hiccups",
         "膈肌痉挛 (作为可能的原因)"
       ],
       "source_raw_names": [
-        "呃逆 (Hiccups)"
+        "呃逆"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -11088,10 +10582,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "呕吐 (Vomiting)",
-      "aliases": [],
+      "standard_western_name": "呕吐",
+      "aliases": [
+        "Vomiting"
+      ],
       "source_raw_names": [
-        "呕吐 (Vomiting)"
+        "呕吐"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -11240,12 +10736,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "呕血 (Hematemesis)",
+      "standard_western_name": "呕血",
       "aliases": [
+        "Hematemesis",
         "吐血"
       ],
       "source_raw_names": [
-        "呕血 (Hematemesis)"
+        "呕血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -11356,8 +10853,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "周围血管疾病 (Peripheral Vascular Disease)",
+      "standard_western_name": "周围血管疾病",
       "aliases": [
+        "Peripheral Vascular Disease",
         "PVD",
         "血栓闭塞性脉管炎",
         "雷诺病",
@@ -11370,7 +10868,7 @@
         "雷诺现象"
       ],
       "source_raw_names": [
-        "周围血管疾病 (Peripheral Vascular Disease)"
+        "周围血管疾病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -11414,13 +10912,14 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "呼吸衰竭 (Respiratory Failure)",
+      "standard_western_name": "呼吸衰竭",
       "aliases": [
+        "Respiratory Failure",
         "RF",
         "呼吸功能衰竭"
       ],
       "source_raw_names": [
-        "呼吸衰竭 (Respiratory Failure)"
+        "呼吸衰竭"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -11478,12 +10977,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "咯血 (Hemoptysis)",
+      "standard_western_name": "咯血",
       "aliases": [
+        "Hemoptysis",
         "咳血"
       ],
       "source_raw_names": [
-        "咯血 (Hemoptysis)"
+        "咯血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -12879,10 +12379,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "嗜铬细胞瘤 (Pheochromocytoma)",
-      "aliases": [],
+      "standard_western_name": "嗜铬细胞瘤",
+      "aliases": [
+        "Pheochromocytoma"
+      ],
       "source_raw_names": [
-        "嗜铬细胞瘤 (Pheochromocytoma)"
+        "嗜铬细胞瘤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -13086,10 +12588,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "嘈杂 (Heartburn)",
-      "aliases": [],
+      "standard_western_name": "嘈杂",
+      "aliases": [
+        "Heartburn"
+      ],
       "source_raw_names": [
-        "嘈杂 (Heartburn)"
+        "嘈杂"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -13555,10 +13059,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "增殖性玻璃体视网膜病变 (Proliferative Vitreoretinopathy)",
-      "aliases": [],
+      "standard_western_name": "增殖性玻璃体视网膜病变",
+      "aliases": [
+        "Proliferative Vitreoretinopathy"
+      ],
       "source_raw_names": [
-        "增殖性玻璃体视网膜病变 (Proliferative Vitreoretinopathy)"
+        "增殖性玻璃体视网膜病变"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -13883,12 +13389,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "备孕（计划行辅助生殖技术）",
+      "standard_western_name": "备孕",
       "aliases": [
+        "计划行辅助生殖技术",
         "ART（辅助生殖技术）准备期"
       ],
       "source_raw_names": [
-        "备孕（计划行辅助生殖技术）"
+        "备孕"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -15314,14 +14821,15 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "多器官功能障碍综合征 (Multiple Organ Dysfunction Syndrome)",
+      "standard_western_name": "多器官功能障碍综合征",
       "aliases": [
+        "Multiple Organ Dysfunction Syndrome",
         "MODS",
         "老年多器官功能不全综合征",
         "老年多器官功能衰竭"
       ],
       "source_raw_names": [
-        "多器官功能障碍综合征 (Multiple Organ Dysfunction Syndrome)"
+        "多器官功能障碍综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -15632,12 +15140,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "多汗症 (Hyperhidrosis)",
+      "standard_western_name": "多汗症",
       "aliases": [
+        "Hyperhidrosis",
         "汗证"
       ],
       "source_raw_names": [
-        "多汗症 (Hyperhidrosis)"
+        "多汗症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -15739,13 +15248,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "大肠癌 (Colorectal Cancer)",
+      "standard_western_name": "大肠癌",
       "aliases": [
+        "Colorectal Cancer",
         "直肠癌",
         "结肠癌"
       ],
       "source_raw_names": [
-        "大肠癌 (Colorectal Cancer)"
+        "大肠癌"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -16044,15 +15554,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "头痛 (Headache)",
+      "standard_western_name": "头痛",
       "aliases": [
+        "Headache",
         "偏头痛",
         "紧张性头痛",
         "丛集性头痛",
         "急性外伤性头痛"
       ],
       "source_raw_names": [
-        "头痛 (Headache)"
+        "头痛"
       ],
       "department_or_category": "中医内科学-脑系疾病",
       "sex": "男女均可",
@@ -20801,10 +20312,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "少精子症 (Oligospermia)",
-      "aliases": [],
+      "standard_western_name": "少精子症",
+      "aliases": [
+        "Oligospermia"
+      ],
       "source_raw_names": [
-        "少精子症 (Oligospermia)"
+        "少精子症"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -20864,10 +20377,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "尖锐湿疣 (Condyloma Acuminatum)",
-      "aliases": [],
+      "standard_western_name": "尖锐湿疣",
+      "aliases": [
+        "Condyloma Acuminatum"
+      ],
       "source_raw_names": [
-        "尖锐湿疣 (Condyloma Acuminatum)"
+        "尖锐湿疣"
       ],
       "department_or_category": "",
       "sex": "男，女",
@@ -20945,13 +20460,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "尿失禁 (Urinary Incontinence)",
+      "standard_western_name": "尿失禁",
       "aliases": [
+        "Urinary Incontinence",
         "UI",
         "老年人尿失禁"
       ],
       "source_raw_names": [
-        "尿失禁 (Urinary Incontinence)"
+        "尿失禁"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -20998,12 +20514,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "尿崩症 (Diabetes Insipidus)",
+      "standard_western_name": "尿崩症",
       "aliases": [
+        "Diabetes Insipidus",
         "中枢性尿崩症"
       ],
       "source_raw_names": [
-        "尿崩症 (Diabetes Insipidus)"
+        "尿崩症"
       ],
       "department_or_category": "内分泌系统疾病",
       "sex": "男女均可",
@@ -21079,12 +20596,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "尿浊 (Turbid Urine)",
+      "standard_western_name": "尿浊",
       "aliases": [
+        "Turbid Urine",
         "乳糜尿"
       ],
       "source_raw_names": [
-        "尿浊 (Turbid Urine)"
+        "尿浊"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -21194,12 +20712,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "尿潴留（Urinary Retention）",
+      "standard_western_name": "尿潴留",
       "aliases": [
+        "Urinary Retention",
         "尿闭"
       ],
       "source_raw_names": [
-        "尿潴留（Urinary Retention）"
+        "尿潴留"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -21419,13 +20938,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "尿路感染 (Urinary Tract Infection)",
+      "standard_western_name": "尿路感染",
       "aliases": [
+        "Urinary Tract Infection",
         "UTI",
         "急性膀胱炎"
       ],
       "source_raw_names": [
-        "尿路感染 (Urinary Tract Infection)"
+        "尿路感染"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -21629,10 +21149,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "巩膜外层炎 (Episcleritis)",
-      "aliases": [],
+      "standard_western_name": "巩膜外层炎",
+      "aliases": [
+        "Episcleritis"
+      ],
       "source_raw_names": [
-        "巩膜外层炎 (Episcleritis)"
+        "巩膜外层炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -21768,10 +21290,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "巩膜炎 (Scleritis)",
-      "aliases": [],
+      "standard_western_name": "巩膜炎",
+      "aliases": [
+        "Scleritis"
+      ],
       "source_raw_names": [
-        "巩膜炎 (Scleritis)"
+        "巩膜炎"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -21859,13 +21383,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "帕金森病 (Parkinson's Disease)",
+      "standard_western_name": "帕金森病",
       "aliases": [
+        "Parkinson's Disease",
         "PD",
         "震颤麻痹"
       ],
       "source_raw_names": [
-        "帕金森病 (Parkinson's Disease)"
+        "帕金森病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -22282,10 +21807,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "干眼症 (Dry Eye Syndrome)",
-      "aliases": [],
+      "standard_western_name": "干眼症",
+      "aliases": [
+        "Dry Eye Syndrome"
+      ],
       "source_raw_names": [
-        "干眼症 (Dry Eye Syndrome)"
+        "干眼症"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -22375,12 +21902,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "年龄相关性白内障 (Age-Related Cataract)",
+      "standard_western_name": "年龄相关性白内障",
       "aliases": [
+        "Age-Related Cataract",
         "老年性白内障"
       ],
       "source_raw_names": [
-        "年龄相关性白内障 (Age-Related Cataract)"
+        "年龄相关性白内障"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -22453,13 +21981,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "年龄相关性黄斑变性 (Age-Related Macular Degeneration)",
+      "standard_western_name": "年龄相关性黄斑变性",
       "aliases": [
+        "Age-Related Macular Degeneration",
         "老年性黄斑变性",
         "ARMD"
       ],
       "source_raw_names": [
-        "年龄相关性黄斑变性 (Age-Related Macular Degeneration)"
+        "年龄相关性黄斑变性"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -22763,12 +22292,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "幽门梗阻 (Pyloric Obstruction)",
+      "standard_western_name": "幽门梗阻",
       "aliases": [
+        "Pyloric Obstruction",
         "无"
       ],
       "source_raw_names": [
-        "幽门梗阻 (Pyloric Obstruction)"
+        "幽门梗阻"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -22896,10 +22426,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "库欣综合征 (Cushing's Syndrome)",
-      "aliases": [],
+      "standard_western_name": "库欣综合征",
+      "aliases": [
+        "Cushing's Syndrome"
+      ],
       "source_raw_names": [
-        "库欣综合征 (Cushing's Syndrome)"
+        "库欣综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -23215,12 +22747,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "弥散性血管内凝血 (Disseminated Intravascular Coagulation)",
+      "standard_western_name": "弥散性血管内凝血",
       "aliases": [
+        "Disseminated Intravascular Coagulation",
         "DIC"
       ],
       "source_raw_names": [
-        "弥散性血管内凝血 (Disseminated Intravascular Coagulation)"
+        "弥散性血管内凝血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -23429,10 +22962,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "弱视 (Amblyopia)",
-      "aliases": [],
+      "standard_western_name": "弱视",
+      "aliases": [
+        "Amblyopia"
+      ],
       "source_raw_names": [
-        "弱视 (Amblyopia)"
+        "弱视"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -23489,10 +23024,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "强直性脊柱炎 (Ankylosing Spondylitis)",
-      "aliases": [],
+      "standard_western_name": "强直性脊柱炎",
+      "aliases": [
+        "Ankylosing Spondylitis"
+      ],
       "source_raw_names": [
-        "强直性脊柱炎 (Ankylosing Spondylitis)"
+        "强直性脊柱炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -23613,12 +23150,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "心律失常 (Cardiac Arrhythmia)",
+      "standard_western_name": "心律失常",
       "aliases": [
+        "Cardiac Arrhythmia",
         "心律不齐"
       ],
       "source_raw_names": [
-        "心律失常 (Cardiac Arrhythmia)"
+        "心律失常"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -23690,12 +23228,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "心肌梗死 (Myocardial Infarction)",
+      "standard_western_name": "心肌梗死",
       "aliases": [
+        "Myocardial Infarction",
         "MI"
       ],
       "source_raw_names": [
-        "心肌梗死 (Myocardial Infarction)"
+        "心肌梗死"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -23770,8 +23309,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "心肌病 (Cardiomyopathy)",
+      "standard_western_name": "心肌病",
       "aliases": [
+        "Cardiomyopathy",
         "扩张型心肌病",
         "肥厚型心肌病",
         "右室心肌病",
@@ -23780,7 +23320,7 @@
         "致心律失常型右室心肌病"
       ],
       "source_raw_names": [
-        "心肌病 (Cardiomyopathy)"
+        "心肌病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -23880,8 +23420,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "心脏瓣膜病 (Valvular Heart Disease)",
+      "standard_western_name": "心脏瓣膜病",
       "aliases": [
+        "Valvular Heart Disease",
         "风湿性心脏病",
         "风心病",
         "先天性二尖瓣狭窄",
@@ -23897,7 +23438,7 @@
         "主动脉瓣狭窄"
       ],
       "source_raw_names": [
-        "心脏瓣膜病 (Valvular Heart Disease)"
+        "心脏瓣膜病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -24019,12 +23560,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "心脏骤停 (Cardiac Arrest)",
+      "standard_western_name": "心脏骤停",
       "aliases": [
+        "Cardiac Arrest",
         "心脏性猝死"
       ],
       "source_raw_names": [
-        "心脏骤停 (Cardiac Arrest)"
+        "心脏骤停"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -24867,13 +24409,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性呼吸窘迫综合征 (Acute Respiratory Distress Syndrome)",
+      "standard_western_name": "急性呼吸窘迫综合征",
       "aliases": [
+        "Acute Respiratory Distress Syndrome",
         "ARDS",
         "急性呼吸窘迫症"
       ],
       "source_raw_names": [
-        "急性呼吸窘迫综合征 (Acute Respiratory Distress Syndrome)"
+        "急性呼吸窘迫综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -25120,13 +24663,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性心包炎 (Acute Pericarditis)",
+      "standard_western_name": "急性心包炎",
       "aliases": [
+        "Acute Pericarditis",
         "病毒性心包炎",
         "细菌性心包炎"
       ],
       "source_raw_names": [
-        "急性心包炎 (Acute Pericarditis)"
+        "急性心包炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -25431,10 +24975,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性泪囊炎 (Acute Dacryocystitis)",
-      "aliases": [],
+      "standard_western_name": "急性泪囊炎",
+      "aliases": [
+        "Acute Dacryocystitis"
+      ],
       "source_raw_names": [
-        "急性泪囊炎 (Acute Dacryocystitis)"
+        "急性泪囊炎"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -25659,12 +25205,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性白血病 (Acute Leukemia)",
+      "standard_western_name": "急性白血病",
       "aliases": [
+        "Acute Leukemia",
         "AL"
       ],
       "source_raw_names": [
-        "急性白血病 (Acute Leukemia)"
+        "急性白血病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -25873,13 +25420,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性细菌性结膜炎 (Acute Bacterial Conjunctivitis)",
+      "standard_western_name": "急性细菌性结膜炎",
       "aliases": [
+        "Acute Bacterial Conjunctivitis",
         "急性卡他性结膜炎",
         "红眼病"
       ],
       "source_raw_names": [
-        "急性细菌性结膜炎 (Acute Bacterial Conjunctivitis)"
+        "急性细菌性结膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -26110,12 +25658,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性肾小球肾炎 (Acute Glomerulonephritis)",
+      "standard_western_name": "急性肾小球肾炎",
       "aliases": [
+        "Acute Glomerulonephritis",
         "急性肾炎"
       ],
       "source_raw_names": [
-        "急性肾小球肾炎 (Acute Glomerulonephritis)"
+        "急性肾小球肾炎"
       ],
       "department_or_category": "泌尿系统疾病",
       "sex": "男女均可",
@@ -26236,12 +25785,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性肾损伤 (Acute Kidney Injury)",
+      "standard_western_name": "急性肾损伤",
       "aliases": [
+        "Acute Kidney Injury",
         "AKI"
       ],
       "source_raw_names": [
-        "急性肾损伤 (Acute Kidney Injury)"
+        "急性肾损伤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -26286,12 +25836,13 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "急性胰腺炎 (Acute Pancreatitis)",
+      "standard_western_name": "急性胰腺炎",
       "aliases": [
+        "Acute Pancreatitis",
         "AP"
       ],
       "source_raw_names": [
-        "急性胰腺炎 (Acute Pancreatitis)"
+        "急性胰腺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -26389,12 +25940,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性视网膜坏死综合征 (Acute Retinal Necrosis Syndrome)",
+      "standard_western_name": "急性视网膜坏死综合征",
       "aliases": [
+        "Acute Retinal Necrosis Syndrome",
         "ARN"
       ],
       "source_raw_names": [
-        "急性视网膜坏死综合征 (Acute Retinal Necrosis Syndrome)"
+        "急性视网膜坏死综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -26489,13 +26041,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性间质性肾炎 (Acute Interstitial Nephritis)",
+      "standard_western_name": "急性间质性肾炎",
       "aliases": [
+        "Acute Interstitial Nephritis",
         "AIN",
         "急性肾小管间质性肾炎"
       ],
       "source_raw_names": [
-        "急性间质性肾炎 (Acute Interstitial Nephritis)"
+        "急性间质性肾炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -26595,10 +26148,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急性骨髓炎 (Acute Osteomyelitis)",
-      "aliases": [],
+      "standard_western_name": "急性骨髓炎",
+      "aliases": [
+        "Acute Osteomyelitis"
+      ],
       "source_raw_names": [
-        "急性骨髓炎 (Acute Osteomyelitis)"
+        "急性骨髓炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -26904,13 +26459,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "急进性肾小球肾炎 (Rapidly Progressive Glomerulonephritis)",
+      "standard_western_name": "急进性肾小球肾炎",
       "aliases": [
+        "Rapidly Progressive Glomerulonephritis",
         "急进性肾炎",
         "新月体肾小球肾炎"
       ],
       "source_raw_names": [
-        "急进性肾小球肾炎 (Rapidly Progressive Glomerulonephritis)"
+        "急进性肾小球肾炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -27137,10 +26693,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "性欲亢进 (Hypersexual Disorder)",
-      "aliases": [],
+      "standard_western_name": "性欲亢进",
+      "aliases": [
+        "Hypersexual Disorder"
+      ],
       "source_raw_names": [
-        "性欲亢进 (Hypersexual Disorder)"
+        "性欲亢进"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -27186,10 +26744,12 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "性欲低下 (Hypoactive Sexual Desire Disorder)",
-      "aliases": [],
+      "standard_western_name": "性欲低下",
+      "aliases": [
+        "Hypoactive Sexual Desire Disorder"
+      ],
       "source_raw_names": [
-        "性欲低下 (Hypoactive Sexual Desire Disorder)"
+        "性欲低下"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -27501,8 +27061,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "感染性心内膜炎 (Infective Endocarditis)",
+      "standard_western_name": "感染性心内膜炎",
       "aliases": [
+        "Infective Endocarditis",
         "IE",
         "急性感染性心内膜炎",
         "亚急性感染性心内膜炎",
@@ -27510,7 +27071,7 @@
         "细菌性心内膜炎"
       ],
       "source_raw_names": [
-        "感染性心内膜炎 (Infective Endocarditis)"
+        "感染性心内膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -28003,13 +27564,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性单纯性苔藓 (Lichen Simplex Chronicus)",
+      "standard_western_name": "慢性单纯性苔藓",
       "aliases": [
+        "Lichen Simplex Chronicus",
         "神经性皮炎",
         "顽癣"
       ],
       "source_raw_names": [
-        "慢性单纯性苔藓 (Lichen Simplex Chronicus)"
+        "慢性单纯性苔藓"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -28392,15 +27954,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性心力衰竭 (Chronic Heart Failure)",
+      "standard_western_name": "慢性心力衰竭",
       "aliases": [
+        "Chronic Heart Failure",
         "HF",
         "心衰",
         "充血性心力衰竭",
         "慢性心功能不全"
       ],
       "source_raw_names": [
-        "慢性心力衰竭 (Chronic Heart Failure)"
+        "慢性心力衰竭"
       ],
       "department_or_category": "循环系统疾病",
       "sex": "男女均可",
@@ -28641,12 +28204,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性支气管炎 (Chronic Bronchitis)",
+      "standard_western_name": "慢性支气管炎",
       "aliases": [
+        "Chronic Bronchitis",
         "老慢支"
       ],
       "source_raw_names": [
-        "慢性支气管炎 (Chronic Bronchitis)"
+        "慢性支气管炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -28783,10 +28347,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性泪囊炎 (Chronic Dacryocystitis)",
-      "aliases": [],
+      "standard_western_name": "慢性泪囊炎",
+      "aliases": [
+        "Chronic Dacryocystitis"
+      ],
       "source_raw_names": [
-        "慢性泪囊炎 (Chronic Dacryocystitis)"
+        "慢性泪囊炎"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -28882,15 +28448,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性淋巴细胞性甲状腺炎 (Chronic Lymphocytic Thyroiditis)",
+      "standard_western_name": "慢性淋巴细胞性甲状腺炎",
       "aliases": [
+        "Chronic Lymphocytic Thyroiditis",
         "自身免疫性甲状腺炎",
         "桥本甲状腺炎",
         "桥本病",
         "萎缩性甲状腺炎"
       ],
       "source_raw_names": [
-        "慢性淋巴细胞性甲状腺炎 (Chronic Lymphocytic Thyroiditis)"
+        "慢性淋巴细胞性甲状腺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -28973,12 +28540,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性淋巴细胞白血病 (Chronic Lymphocytic Leukemia)",
+      "standard_western_name": "慢性淋巴细胞白血病",
       "aliases": [
+        "Chronic Lymphocytic Leukemia",
         "CLL"
       ],
       "source_raw_names": [
-        "慢性淋巴细胞白血病 (Chronic Lymphocytic Leukemia)"
+        "慢性淋巴细胞白血病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29057,12 +28625,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性疲劳综合征 (Chronic Fatigue Syndrome)",
+      "standard_western_name": "慢性疲劳综合征",
       "aliases": [
+        "Chronic Fatigue Syndrome",
         "慢性疲劳"
       ],
       "source_raw_names": [
-        "慢性疲劳综合征 (Chronic Fatigue Syndrome)"
+        "慢性疲劳综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29368,10 +28937,12 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "慢性结膜炎 (Chronic Conjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "慢性结膜炎",
+      "aliases": [
+        "Chronic Conjunctivitis"
+      ],
       "source_raw_names": [
-        "慢性结膜炎 (Chronic Conjunctivitis)"
+        "慢性结膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29556,12 +29127,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性肾上腺皮质功能减退症 (Chronic Adrenocortical Insufficiency)",
+      "standard_western_name": "慢性肾上腺皮质功能减退症",
       "aliases": [
+        "Chronic Adrenocortical Insufficiency",
         "Addison病"
       ],
       "source_raw_names": [
-        "慢性肾上腺皮质功能减退症 (Chronic Adrenocortical Insufficiency)"
+        "慢性肾上腺皮质功能减退症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29658,13 +29230,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性肾小球肾炎 (Chronic Glomerulonephritis)",
+      "standard_western_name": "慢性肾小球肾炎",
       "aliases": [
+        "Chronic Glomerulonephritis",
         "CGN",
         "慢性肾炎"
       ],
       "source_raw_names": [
-        "慢性肾小球肾炎 (Chronic Glomerulonephritis)"
+        "慢性肾小球肾炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29749,13 +29322,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性肾衰竭 (Chronic Kidney Failure)",
+      "standard_western_name": "慢性肾衰竭",
       "aliases": [
+        "Chronic Kidney Failure",
         "CRF",
         "慢性肾衰"
       ],
       "source_raw_names": [
-        "慢性肾衰竭 (Chronic Kidney Failure)"
+        "慢性肾衰竭"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29850,8 +29424,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性胃炎 (Chronic Gastritis)",
+      "standard_western_name": "慢性胃炎",
       "aliases": [
+        "Chronic Gastritis",
         "浅表性胃炎",
         "非萎缩性胃炎",
         "慢性浅表性胃炎",
@@ -29861,7 +29436,7 @@
         "应激性胃炎"
       ],
       "source_raw_names": [
-        "慢性胃炎 (Chronic Gastritis)"
+        "慢性胃炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -29986,12 +29561,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性胰腺炎 (Chronic Pancreatitis)",
+      "standard_western_name": "慢性胰腺炎",
       "aliases": [
+        "Chronic Pancreatitis",
         "CP"
       ],
       "source_raw_names": [
-        "慢性胰腺炎 (Chronic Pancreatitis)"
+        "慢性胰腺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -30126,12 +29702,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性萎缩性胃炎 (Chronic Atrophic Gastritis)",
+      "standard_western_name": "慢性萎缩性胃炎",
       "aliases": [
+        "Chronic Atrophic Gastritis",
         "萎缩性胃炎"
       ],
       "source_raw_names": [
-        "慢性萎缩性胃炎 (Chronic Atrophic Gastritis)"
+        "慢性萎缩性胃炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -30252,14 +29829,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性间质性肾炎 (Chronic Interstitial Nephritis)",
+      "standard_western_name": "慢性间质性肾炎",
       "aliases": [
+        "Chronic Interstitial Nephritis",
         "CIN",
         "慢性肾小管-间质性肾病",
         "CTIN"
       ],
       "source_raw_names": [
-        "慢性间质性肾炎 (Chronic Interstitial Nephritis)"
+        "慢性间质性肾炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -30453,10 +30031,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性骨髓炎 (Chronic Osteomyelitis)",
-      "aliases": [],
+      "standard_western_name": "慢性骨髓炎",
+      "aliases": [
+        "Chronic Osteomyelitis"
+      ],
       "source_raw_names": [
-        "慢性骨髓炎 (Chronic Osteomyelitis)"
+        "慢性骨髓炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -30543,12 +30123,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "慢性髓细胞白血病 (Chronic Myelogenous Leukemia)",
+      "standard_western_name": "慢性髓细胞白血病",
       "aliases": [
+        "Chronic Myelogenous Leukemia",
         "CML"
       ],
       "source_raw_names": [
-        "慢性髓细胞白血病 (Chronic Myelogenous Leukemia)"
+        "慢性髓细胞白血病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -31711,12 +31292,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "抑郁症 (Depression)",
+      "standard_western_name": "抑郁障碍",
       "aliases": [
-        "抑郁"
+        "Depression",
+        "抑郁",
+        "抑郁症"
       ],
       "source_raw_names": [
-        "抑郁症 (Depression)"
+        "抑郁症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -32379,15 +31962,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "支气管扩张 (Bronchiectasis)",
+      "standard_western_name": "支气管扩张",
       "aliases": [
+        "Bronchiectasis",
         "支气管扩张症",
         "肺络张",
         "支气管扩张伴咯血",
         "细支气管扩张"
       ],
       "source_raw_names": [
-        "支气管扩张 (Bronchiectasis)"
+        "支气管扩张"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -32751,10 +32335,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "斜视 (Strabismus)",
-      "aliases": [],
+      "standard_western_name": "斜视",
+      "aliases": [
+        "Strabismus"
+      ],
       "source_raw_names": [
-        "斜视 (Strabismus)"
+        "斜视"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -33526,10 +33112,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "新生血管性青光眼 (Neovascular Glaucoma)",
-      "aliases": [],
+      "standard_western_name": "新生血管性青光眼",
+      "aliases": [
+        "Neovascular Glaucoma"
+      ],
       "source_raw_names": [
-        "新生血管性青光眼 (Neovascular Glaucoma)"
+        "新生血管性青光眼"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -33601,12 +33189,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "无症状性血尿或蛋白尿 (Asymptomatic Hematuria or Proteinuria)",
+      "standard_western_name": "无症状性血尿或蛋白尿",
       "aliases": [
+        "Asymptomatic Hematuria or Proteinuria",
         "隐匿性肾小球肾炎"
       ],
       "source_raw_names": [
-        "无症状性血尿或蛋白尿 (Asymptomatic Hematuria or Proteinuria)"
+        "无症状性血尿或蛋白尿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -33704,10 +33293,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "无精子症 (Azoospermia)",
-      "aliases": [],
+      "standard_western_name": "无精子症",
+      "aliases": [
+        "Azoospermia"
+      ],
       "source_raw_names": [
-        "无精子症 (Azoospermia)"
+        "无精子症"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -33876,10 +33467,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "早泄 (Premature Ejaculation)",
-      "aliases": [],
+      "standard_western_name": "早泄",
+      "aliases": [
+        "Premature Ejaculation"
+      ],
       "source_raw_names": [
-        "早泄 (Premature Ejaculation)"
+        "早泄"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -33938,10 +33531,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "春季结膜炎 (Vernal Keratoconjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "春季结膜炎",
+      "aliases": [
+        "Vernal Keratoconjunctivitis"
+      ],
       "source_raw_names": [
-        "春季结膜炎 (Vernal Keratoconjunctivitis)"
+        "春季结膜炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -34038,12 +33633,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "晕厥 (Syncope)",
+      "standard_western_name": "晕厥",
       "aliases": [
+        "Syncope",
         "厥证"
       ],
       "source_raw_names": [
-        "晕厥 (Syncope)"
+        "晕厥"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -34760,7 +34356,11 @@
     },
     {
       "standard_western_name": "梅毒",
-      "aliases": [],
+      "aliases": [
+        "Syphilis",
+        "杨梅疮",
+        "霉疮"
+      ],
       "source_raw_names": [
         "梅毒"
       ],
@@ -34792,7 +34392,20 @@
         "IF [及时、足量注射苄星青霉素G], THEN → 理想转归: 梅毒螺旋体被清除，皮疹黏膜损害消退，进入血清学随访期，疾病终止。",
         "IF [失于治疗], THEN → 不理想转归: 症状可自行消退，但毒邪深伏体内，进入潜伏期梅毒，为晚期梅毒埋下隐患。",
         "关键体征: 外生殖器、肛周或口唇出现无痛性、质硬、边缘隆起的圆形或椭圆形溃疡（硬下疳）；",
-        "治疗后可能出现吉海氏反应（Jarisch-Herxheimer reaction），表现为发热、寒战、皮疹加重等，通常为一过性。"
+        "治疗后可能出现吉海氏反应（Jarisch-Herxheimer reaction），表现为发热、寒战、皮疹加重等，通常为一过性。",
+        "理想转归: If 立即接受规范、足量、足疗程的青霉素治疗，并辅以中医药清热解毒，Then 疫毒得清，硬下疳及梅毒疹消退，血清学指标转阴或滴度显著下降，疾病治愈。",
+        "【西医分期标签】: 一期梅毒 (硬下疳) / 二期梅毒 (梅毒疹)",
+        "【量化指标参考】",
+        "实验室: RPR/TRUST 滴度阳性，TPPA/TPHA 阳性。",
+        "暗视野显微镜检查可见梅毒螺旋体。",
+        "传染性极强，必须立即治疗！ 诊断一旦成立或高度怀疑，需立即转诊皮肤性病科。",
+        "【西医分期标签】: 三期梅毒 (神经梅毒、心血管梅毒、树胶肿)",
+        "实验室: TPPA/TPHA 持续阳性。",
+        "脑脊液检查（VDRL、细胞数、蛋白）是诊断神经梅毒的金标准。",
+        "关键体征: 外生殖器、肛周或口唇出现单个无痛性、质地坚硬如软骨的溃疡（硬下疳）；",
+        "关键体征: 皮肤黏膜出现破坏性结节或溃疡（树胶样肿）；",
+        "骨骼关节疼痛，尤以夜间为甚；",
+        "或出现主动脉瓣杂音、瞳孔异常、共济失调、性格改变、痴呆等心血管或神经系统体征。"
       ],
       "clinical_manifestations": [
         "IF [及时、足量注射苄星青霉素G], THEN → 理想转归: 梅毒螺旋体被清除，皮疹黏膜损害消退，进入血清学随访期，疾病终止。",
@@ -34804,10 +34417,17 @@
         "【[触发条件]】: 以皮肤、筋骨出现树胶样肿，以及固定不移、夜间加重的骨骼关节疼痛为核心。",
         "关键体征: 闪电样痛；",
         "关键体征: 主动脉瓣关闭不全的舒张期杂音；",
-        "可出现心力衰竭体征（颈静脉怒张、肝大、双下肢水肿）。"
+        "可出现心力衰竭体征（颈静脉怒张、肝大、双下肢水肿）。",
+        "关键体征: 外生殖器、肛周或口唇出现单个无痛性、质地坚硬如软骨的溃疡（硬下疳）；",
+        "关键体征: 皮肤黏膜出现破坏性结节或溃疡（树胶样肿）；",
+        "骨骼关节疼痛，尤以夜间为甚；",
+        "或出现主动脉瓣杂音、瞳孔异常、共济失调、性格改变、痴呆等心血管或神经系统体征。"
       ],
       "differential_diagnoses_text": [],
-      "complications": [],
+      "complications": [
+        "灾难性后果: If 毒邪侵犯心血管或中枢神经系统，Then 可导致主动脉瘤破裂、主动脉瓣关闭不全、麻痹性痴呆、脊髓痨等严重并发症，造成不可逆的功能损伤甚至死亡。",
+        "苄星青霉素是唯一可以根治早期梅毒、并有效预防晚期并发症的药物。"
+      ],
       "required_checks": [
         "血清学指标: 非螺旋体抗体试验(如RPR)可能为阴性或低滴度；",
         "病原学检查: 暗视野显微镜检查可在硬下疳渗出液中找到梅毒螺旋体。",
@@ -34818,7 +34438,9 @@
         "超声心动图是诊断主动脉瓣病变及心功能的主要手段。"
       ],
       "red_flags": [
-        "病情危重，以西医抢救心衰和对症支持为主。"
+        "病情危重，以西医抢救心衰和对症支持为主。",
+        "灾难性后果: If 毒邪侵犯心血管或中枢神经系统，Then 可导致主动脉瘤破裂、主动脉瓣关闭不全、麻痹性痴呆、脊髓痨等严重并发症，造成不可逆的功能损伤甚至死亡。",
+        "苄星青霉素是唯一可以根治早期梅毒、并有效预防晚期并发症的药物。"
       ],
       "objective_markers": [
         "血清学指标: 非螺旋体抗体试验(如RPR)可能为阴性或低滴度；",
@@ -34834,8 +34456,9 @@
           "axis": "infection_or_inflammation",
           "role": "primary",
           "weight": 0.75,
-          "confidence": "low",
+          "confidence": "medium",
           "typical_findings": [
+            "感染",
             "发热"
           ]
         },
@@ -34909,92 +34532,7 @@
         "超声心动图是诊断主动脉瓣病变及心功能的主要手段。",
         "实验室检查: B型钠尿肽(BNP)或NT−proBNP水平显著升高。",
         "病情危重，以西医抢救心衰和对症支持为主。",
-        "治疗同样无法逆转已形成的主动脉瘤或瓣膜损伤，必要时需外科手术干预。"
-      ],
-      "source_row_numbers": [
-        2559
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "梅毒 (Syphilis)",
-      "aliases": [
-        "杨梅疮",
-        "霉疮"
-      ],
-      "source_raw_names": [
-        "梅毒 (Syphilis)"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "全年龄段",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "理想转归: If 立即接受规范、足量、足疗程的青霉素治疗，并辅以中医药清热解毒，Then 疫毒得清，硬下疳及梅毒疹消退，血清学指标转阴或滴度显著下降，疾病治愈。",
-        "【西医分期标签】: 一期梅毒 (硬下疳) / 二期梅毒 (梅毒疹)",
-        "【量化指标参考】",
-        "实验室: RPR/TRUST 滴度阳性，TPPA/TPHA 阳性。",
-        "暗视野显微镜检查可见梅毒螺旋体。",
-        "传染性极强，必须立即治疗！ 诊断一旦成立或高度怀疑，需立即转诊皮肤性病科。",
-        "【西医分期标签】: 三期梅毒 (神经梅毒、心血管梅毒、树胶肿)",
-        "实验室: TPPA/TPHA 持续阳性。",
-        "脑脊液检查（VDRL、细胞数、蛋白）是诊断神经梅毒的金标准。",
-        "关键体征: 外生殖器、肛周或口唇出现单个无痛性、质地坚硬如软骨的溃疡（硬下疳）；",
-        "关键体征: 皮肤黏膜出现破坏性结节或溃疡（树胶样肿）；",
-        "骨骼关节疼痛，尤以夜间为甚；",
-        "或出现主动脉瓣杂音、瞳孔异常、共济失调、性格改变、痴呆等心血管或神经系统体征。"
-      ],
-      "clinical_manifestations": [
-        "关键体征: 外生殖器、肛周或口唇出现单个无痛性、质地坚硬如软骨的溃疡（硬下疳）；",
-        "关键体征: 皮肤黏膜出现破坏性结节或溃疡（树胶样肿）；",
-        "骨骼关节疼痛，尤以夜间为甚；",
-        "或出现主动脉瓣杂音、瞳孔异常、共济失调、性格改变、痴呆等心血管或神经系统体征。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [
-        "灾难性后果: If 毒邪侵犯心血管或中枢神经系统，Then 可导致主动脉瘤破裂、主动脉瓣关闭不全、麻痹性痴呆、脊髓痨等严重并发症，造成不可逆的功能损伤甚至死亡。",
-        "苄星青霉素是唯一可以根治早期梅毒、并有效预防晚期并发症的药物。"
-      ],
-      "required_checks": [],
-      "red_flags": [
-        "灾难性后果: If 毒邪侵犯心血管或中枢神经系统，Then 可导致主动脉瘤破裂、主动脉瓣关闭不全、麻痹性痴呆、脊髓痨等严重并发症，造成不可逆的功能损伤甚至死亡。",
-        "苄星青霉素是唯一可以根治早期梅毒、并有效预防晚期并发症的药物。"
-      ],
-      "objective_markers": [],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "low",
-          "typical_findings": [
-            "感染"
-          ]
-        },
-        {
-          "axis": "mucosal_barrier_dysfunction",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "黏膜",
-            "溃疡"
-          ]
-        },
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
+        "治疗同样无法逆转已形成的主动脉瘤或瓣膜损伤，必要时需外科手术干预。",
         "此为感染初期，秽浊疫毒从皮毛、精窍侵入，与气血搏结于肝经所过之处，腐肉成疮。",
         "理想转归: If 立即接受规范、足量、足疗程的青霉素治疗，并辅以中医药清热解毒，Then 疫毒得清，硬下疳及梅毒疹消退，血清学指标转阴或滴度显著下降，疾病治愈。",
         "灾难性后果: If 毒邪侵犯心血管或中枢神经系统，Then 可导致主动脉瘤破裂、主动脉瓣关闭不全、麻痹性痴呆、脊髓痨等严重并发症，造成不可逆的功能损伤甚至死亡。",
@@ -35016,6 +34554,7 @@
         "脏器功能不可逆损害是核心风险！ 必须进行多学科会诊（MDT），尤其是神经科和心血管科。"
       ],
       "source_row_numbers": [
+        2559,
         10986
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -35023,10 +34562,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "梨状肌综合征 (Piriformis Syndrome)",
-      "aliases": [],
+      "standard_western_name": "梨状肌综合征",
+      "aliases": [
+        "Piriformis Syndrome"
+      ],
       "source_raw_names": [
-        "梨状肌综合征 (Piriformis Syndrome)"
+        "梨状肌综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -35086,10 +34627,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "死精子症 (Necrozoospermia)",
-      "aliases": [],
+      "standard_western_name": "死精子症",
+      "aliases": [
+        "Necrozoospermia"
+      ],
       "source_raw_names": [
-        "死精子症 (Necrozoospermia)"
+        "死精子症"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -35216,10 +34759,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "毒蛇咬伤 (Venomous Snake Bite)",
-      "aliases": [],
+      "standard_western_name": "毒蛇咬伤",
+      "aliases": [
+        "Venomous Snake Bite"
+      ],
       "source_raw_names": [
-        "毒蛇咬伤 (Venomous Snake Bite)"
+        "毒蛇咬伤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -36064,10 +35609,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "水肿 (Edema)",
-      "aliases": [],
+      "standard_western_name": "水肿",
+      "aliases": [
+        "Edema"
+      ],
       "source_raw_names": [
-        "水肿 (Edema)"
+        "水肿"
       ],
       "department_or_category": "中医内科学-肾系疾病",
       "sex": "男女均可",
@@ -36365,10 +35912,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "泡性角结膜炎 (Phlyctenular Keratoconjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "泡性角结膜炎",
+      "aliases": [
+        "Phlyctenular Keratoconjunctivitis"
+      ],
       "source_raw_names": [
-        "泡性角结膜炎 (Phlyctenular Keratoconjunctivitis)"
+        "泡性角结膜炎"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -36497,10 +36046,12 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "泪溢 (Epiphora)",
-      "aliases": [],
+      "standard_western_name": "泪溢",
+      "aliases": [
+        "Epiphora"
+      ],
       "source_raw_names": [
-        "泪溢 (Epiphora)"
+        "泪溢"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -36572,10 +36123,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "泪腺炎 (Dacryoadenitis)",
-      "aliases": [],
+      "standard_western_name": "泪腺炎",
+      "aliases": [
+        "Dacryoadenitis"
+      ],
       "source_raw_names": [
-        "泪腺炎 (Dacryoadenitis)"
+        "泪腺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -36699,10 +36252,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "流行性出血性结膜炎 (Epidemic Hemorrhagic Conjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "流行性出血性结膜炎",
+      "aliases": [
+        "Epidemic Hemorrhagic Conjunctivitis"
+      ],
       "source_raw_names": [
-        "流行性出血性结膜炎 (Epidemic Hemorrhagic Conjunctivitis)"
+        "流行性出血性结膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -36934,10 +36489,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "流行性角结膜炎 (Epidemic Keratoconjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "流行性角结膜炎",
+      "aliases": [
+        "Epidemic Keratoconjunctivitis"
+      ],
       "source_raw_names": [
-        "流行性角结膜炎 (Epidemic Keratoconjunctivitis)"
+        "流行性角结膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -37237,8 +36794,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "消化性溃疡 (Peptic Ulcer)",
+      "standard_western_name": "消化性溃疡",
       "aliases": [
+        "Peptic Ulcer",
         "PU",
         "胃溃疡",
         "十二指肠溃疡",
@@ -37250,7 +36808,7 @@
         "十二指肠球部溃疡"
       ],
       "source_raw_names": [
-        "消化性溃疡 (Peptic Ulcer)"
+        "消化性溃疡"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -37425,15 +36983,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "淋巴瘤 (Lymphoma)",
+      "standard_western_name": "淋巴瘤",
       "aliases": [
+        "Lymphoma",
         "霍奇金淋巴瘤",
         "Hodgkin Lymphoma",
         "非霍奇金淋巴瘤",
         "Non-Hodgkin Lymphoma"
       ],
       "source_raw_names": [
-        "淋巴瘤 (Lymphoma)"
+        "淋巴瘤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -37870,13 +37429,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "溃疡性结肠炎 (Ulcerative Colitis)",
+      "standard_western_name": "溃疡性结肠炎",
       "aliases": [
+        "Ulcerative Colitis",
         "UC",
         "慢性溃疡性结肠炎"
       ],
       "source_raw_names": [
-        "溃疡性结肠炎 (Ulcerative Colitis)"
+        "溃疡性结肠炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -38031,12 +37591,13 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "溶血性贫血 (Hemolytic Anemia)",
+      "standard_western_name": "溶血性贫血",
       "aliases": [
+        "Hemolytic Anemia",
         "HA"
       ],
       "source_raw_names": [
-        "溶血性贫血 (Hemolytic Anemia)"
+        "溶血性贫血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -38186,15 +37747,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "烧伤 (Burn)",
+      "standard_western_name": "烧伤",
       "aliases": [
+        "Burn",
         "水火烫伤",
         "化学烧伤",
         "放射性烧伤",
         "电击伤"
       ],
       "source_raw_names": [
-        "烧伤 (Burn)"
+        "烧伤"
       ],
       "department_or_category": "中医外科学-其他外科疾病",
       "sex": "男女均可",
@@ -38269,13 +37831,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "热射病 (Heat Stroke)",
+      "standard_western_name": "热射病",
       "aliases": [
+        "Heat Stroke",
         "中暑",
         "热衰竭"
       ],
       "source_raw_names": [
-        "热射病 (Heat Stroke)"
+        "热射病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -38703,14 +38266,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "特发性面神经麻痹 (Idiopathic Facial Paralysis)",
+      "standard_western_name": "特发性面神经麻痹",
       "aliases": [
+        "Idiopathic Facial Paralysis",
         "面神经炎",
         "贝尔面瘫",
         "面瘫"
       ],
       "source_raw_names": [
-        "特发性面神经麻痹 (Idiopathic Facial Paralysis)"
+        "特发性面神经麻痹"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -39098,10 +38662,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "玻璃体积血 (Vitreous Hemorrhage)",
-      "aliases": [],
+      "standard_western_name": "玻璃体积血",
+      "aliases": [
+        "Vitreous Hemorrhage"
+      ],
       "source_raw_names": [
-        "玻璃体积血 (Vitreous Hemorrhage)"
+        "玻璃体积血"
       ],
       "department_or_category": "中西医结合眼科",
       "sex": "男女均可",
@@ -39216,10 +38782,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "球后视神经炎 (Retrobulbar Neuritis)",
-      "aliases": [],
+      "standard_western_name": "球后视神经炎",
+      "aliases": [
+        "Retrobulbar Neuritis"
+      ],
       "source_raw_names": [
-        "球后视神经炎 (Retrobulbar Neuritis)"
+        "球后视神经炎"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -39300,7 +38868,8 @@
     {
       "standard_western_name": "生殖器疱疹",
       "aliases": [
-        "genital herpes"
+        "genital herpes",
+        "Genital Herpes"
       ],
       "source_raw_names": [
         "生殖器疱疹"
@@ -39318,73 +38887,7 @@
         "关键体征：生殖器部位出现红斑基础上的群集性水疱、糜烂或溃疡；",
         "伴随症状：初次发作时，可伴有发热、头痛等全身症状。",
         "关键体征：生殖器部位无皮损，或仅有轻微的瘢痕、色素沉着。",
-        "伴随症状：患者常伴有神疲乏力、腰膝酸软、失眠多梦等全身虚损症状。"
-      ],
-      "clinical_manifestations": [
-        "关键体征：生殖器部位出现红斑基础上的群集性水疱、糜烂或溃疡；",
-        "伴随症状：初次发作时，可伴有发热、头痛等全身症状。",
-        "关键体征：生殖器部位无皮损，或仅有轻微的瘢痕、色素沉着。",
-        "伴随症状：患者常伴有神疲乏力、腰膝酸软、失眠多梦等全身虚损症状。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [],
-      "red_flags": [],
-      "objective_markers": [],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "low",
-          "typical_findings": [
-            "发热"
-          ]
-        },
-        {
-          "axis": "mucosal_barrier_dysfunction",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "糜烂",
-            "溃疡"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "不理想转归: If 患者因劳累、情绪波动等因素再次复发，Then 需重新返回急性期治疗方案。",
-        "急性期",
-        "【西医分期标签：初发或复发急性期】",
-        "[量化指标参考]",
-        "关键体征：生殖器部位出现红斑基础上的群集性水疱、糜烂或溃疡；",
-        "可伴有腹股沟淋巴结肿大、压痛。",
-        "实验室指标：PCR检测疱液中HSV DNA阳性是确诊金标准。",
-        "伴随症状：初次发作时，可伴有发热、头痛等全身症状。",
-        "【西医分期标签：病毒潜伏期】",
-        "关键体征：生殖器部位无皮损，或仅有轻微的瘢痕、色素沉着。",
         "伴随症状：患者常伴有神疲乏力、腰膝酸软、失眠多梦等全身虚损症状。",
-        "中医药在此阶段的重点是体质调理，以降低复发率，不能单独用于急性发作。"
-      ],
-      "source_row_numbers": [
-        2600
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "生殖器疱疹 (Genital Herpes)",
-      "aliases": [],
-      "source_raw_names": [
-        "生殖器疱疹 (Genital Herpes)"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "25~45岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
         "Then 出现灾难性后果：病毒性脑膜炎或脊髓炎（须紧急西医会诊）。",
         "【西医分期标签】：急性原发感染或复发活动期",
         "【量化指标参考】：",
@@ -39397,6 +38900,10 @@
         "关键体征：可有腹股沟淋巴结肿大。"
       ],
       "clinical_manifestations": [
+        "关键体征：生殖器部位出现红斑基础上的群集性水疱、糜烂或溃疡；",
+        "伴随症状：初次发作时，可伴有发热、头痛等全身症状。",
+        "关键体征：生殖器部位无皮损，或仅有轻微的瘢痕、色素沉着。",
+        "伴随症状：患者常伴有神疲乏力、腰膝酸软、失眠多梦等全身虚损症状。",
         "If 彻底清热利湿解毒得当（配合抗病毒药），Then 转归至理想转归：皮损愈合，进入无症状潜伏期。",
         "Then 演变为热毒内蕴证（伴全身症状，高风险）。",
         "临床表现：生殖器出现群集小疱、糜烂或溃疡，伴有剧烈灼热痛。",
@@ -39468,6 +38975,18 @@
         }
       ],
       "raw_western_detail_excerpt": [
+        "不理想转归: If 患者因劳累、情绪波动等因素再次复发，Then 需重新返回急性期治疗方案。",
+        "急性期",
+        "【西医分期标签：初发或复发急性期】",
+        "[量化指标参考]",
+        "关键体征：生殖器部位出现红斑基础上的群集性水疱、糜烂或溃疡；",
+        "可伴有腹股沟淋巴结肿大、压痛。",
+        "实验室指标：PCR检测疱液中HSV DNA阳性是确诊金标准。",
+        "伴随症状：初次发作时，可伴有发热、头痛等全身症状。",
+        "【西医分期标签：病毒潜伏期】",
+        "关键体征：生殖器部位无皮损，或仅有轻微的瘢痕、色素沉着。",
+        "伴随症状：患者常伴有神疲乏力、腰膝酸软、失眠多梦等全身虚损症状。",
+        "中医药在此阶段的重点是体质调理，以降低复发率，不能单独用于急性发作。",
         "If 彻底清热利湿解毒得当（配合抗病毒药），Then 转归至理想转归：皮损愈合，进入无症状潜伏期。",
         "Then 演变为热毒内蕴证（伴全身症状，高风险）。",
         "Then 出现灾难性后果：病毒性脑膜炎或脊髓炎（须紧急西医会诊）。",
@@ -39485,6 +39004,7 @@
         "【🚨 阶段警示】：核心风险是复发对生活质量的影响。"
       ],
       "source_row_numbers": [
+        2600,
         10989
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -39492,14 +39012,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "甲状腺功能亢进症 (Hyperthyroidism)",
+      "standard_western_name": "甲状腺功能亢进症",
       "aliases": [
+        "Hyperthyroidism",
         "甲亢",
         "Graves病",
         "GD"
       ],
       "source_raw_names": [
-        "甲状腺功能亢进症 (Hyperthyroidism)"
+        "甲状腺功能亢进症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -39573,12 +39094,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "甲状腺功能减退症 (Hypothyroidism)",
+      "standard_western_name": "甲状腺功能减退症",
       "aliases": [
+        "Hypothyroidism",
         "甲减"
       ],
       "source_raw_names": [
-        "甲状腺功能减退症 (Hypothyroidism)"
+        "甲状腺功能减退症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -39934,10 +39456,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "甲状腺相关性眼病 (Thyroid Eye Disease)",
-      "aliases": [],
+      "standard_western_name": "甲状腺相关性眼病",
+      "aliases": [
+        "Thyroid Eye Disease"
+      ],
       "source_raw_names": [
-        "甲状腺相关性眼病 (Thyroid Eye Disease)"
+        "甲状腺相关性眼病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -40476,12 +40000,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "男性迟发性性腺功能减退症 (Late-Onset Hypogonadism)",
+      "standard_western_name": "男性迟发性性腺功能减退症",
       "aliases": [
+        "Late-Onset Hypogonadism",
         "男性更年期综合征"
       ],
       "source_raw_names": [
-        "男性迟发性性腺功能减退症 (Late-Onset Hypogonadism)"
+        "男性迟发性性腺功能减退症"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -40568,10 +40093,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "畸形精子症 (Teratozoospermia)",
-      "aliases": [],
+      "standard_western_name": "畸形精子症",
+      "aliases": [
+        "Teratozoospermia"
+      ],
       "source_raw_names": [
-        "畸形精子症 (Teratozoospermia)"
+        "畸形精子症"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -40989,12 +40516,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "病毒性心肌炎 (Viral Myocarditis)",
+      "standard_western_name": "病毒性心肌炎",
       "aliases": [
+        "Viral Myocarditis",
         "VMC"
       ],
       "source_raw_names": [
-        "病毒性心肌炎 (Viral Myocarditis)"
+        "病毒性心肌炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -41113,10 +40641,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "病毒性睑皮炎 (Viral Blepharitis)",
-      "aliases": [],
+      "standard_western_name": "病毒性睑皮炎",
+      "aliases": [
+        "Viral Blepharitis"
+      ],
       "source_raw_names": [
-        "病毒性睑皮炎 (Viral Blepharitis)"
+        "病毒性睑皮炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -41210,10 +40740,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "病毒性睾丸炎 (Viral Orchitis)",
-      "aliases": [],
+      "standard_western_name": "病毒性睾丸炎",
+      "aliases": [
+        "Viral Orchitis"
+      ],
       "source_raw_names": [
-        "病毒性睾丸炎 (Viral Orchitis)"
+        "病毒性睾丸炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -41574,13 +41106,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "痛风 (Gout)",
+      "standard_western_name": "痛风",
       "aliases": [
+        "Gout",
         "痛风性关节炎",
         "高尿酸血症"
       ],
       "source_raw_names": [
-        "痛风 (Gout)"
+        "痛风"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -41704,10 +41237,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "痢疾 (Dysentery)",
-      "aliases": [],
+      "standard_western_name": "痢疾",
+      "aliases": [
+        "Dysentery"
+      ],
       "source_raw_names": [
-        "痢疾 (Dysentery)"
+        "痢疾"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -41899,6 +41434,163 @@
       "confidence": "medium"
     },
     {
+      "standard_western_name": "痹证",
+      "aliases": [],
+      "source_raw_names": [
+        "痹证"
+      ],
+      "department_or_category": "中医内科学-肢体经络系统",
+      "sex": "男女均可",
+      "typical_age": "20~70岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": false,
+      "diagnostic_key_points": [
+        "【西医分期标签】：急性关节炎",
+        "【量化指标参考】：",
+        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
+        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
+        "【西医分期标签】：慢性关节炎活动期（如类风湿关节炎）",
+        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
+        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
+        "西医治疗上，使用改善病情抗风湿药（DMARDs）是阻止关节破坏的关键。",
+        "【西医分期标签】：关节炎缓解期 / 骨关节炎",
+        "炎性指标：CRP、ESR 通常正常。",
+        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。",
+        "若关节疼痛呈游走性，痛无定处，提示为行痹，以风邪为主。",
+        "若关节疼痛剧烈，痛有定处，遇寒加重，得热则减，提示为痛痹，以寒邪为主。",
+        "疼痛评分：视觉模拟评分 (VAS) 6∼10 分。",
+        "【触发条件】：肢体关节肌肉疼痛，呈游走性，一日之内可在多个关节间转移。",
+        "超声可见关节积液、滑膜增厚。"
+      ],
+      "clinical_manifestations": [
+        "若关节疼痛呈游走性，痛无定处，提示为行痹，以风邪为主。",
+        "若关节疼痛剧烈，痛有定处，遇寒加重，得热则减，提示为痛痹，以寒邪为主。",
+        "疼痛评分：视觉模拟评分 (VAS) 6∼10 分。",
+        "【触发条件】：肢体关节肌肉疼痛，呈游走性，一日之内可在多个关节间转移。",
+        "【触发条件】：关节疼痛剧烈、痛有定处，有明确的遇寒加重、得热痛减。",
+        "【触发条件】：关节疼痛以酸楚、重着、麻木为主要特征，常伴关节肿胀。",
+        "【触发条件】：关节出现明确的红、肿、热、痛，痛不可触，可伴发热、口渴等全身热象。",
+        "疼痛评分：VAS 3∼7 分。",
+        "疼痛评分：VAS 1∼5 分，多为劳累后出现的酸痛、隐痛。",
+        "【触发条件】：关节疼痛日久，伴腰膝酸软、筋骨痿软或肌肉萎缩，脉沉细。",
+        "治疗重点从控制炎症转向改善功能、减轻疼痛、延缓退变。"
+      ],
+      "differential_diagnoses_text": [],
+      "complications": [
+        "需警惕因长期活动受限导致的肌肉萎缩、骨质疏松等并发症。"
+      ],
+      "required_checks": [
+        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
+        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
+        "超声可见关节积液、滑膜增厚。",
+        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
+        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
+        "炎性指标：CRP、ESR 通常正常。",
+        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。"
+      ],
+      "red_flags": [
+        "需警惕因长期活动受限导致的肌肉萎缩、骨质疏松等并发症。"
+      ],
+      "objective_markers": [
+        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
+        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
+        "超声可见关节积液、滑膜增厚。",
+        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
+        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
+        "炎性指标：CRP、ESR 通常正常。",
+        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。"
+      ],
+      "pathology_axes": [
+        {
+          "axis": "infection_or_inflammation",
+          "role": "primary",
+          "weight": 0.75,
+          "confidence": "medium",
+          "typical_findings": [
+            "炎症",
+            "发热",
+            "CRP"
+          ]
+        },
+        {
+          "axis": "secretion_or_retention",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "痰"
+          ]
+        },
+        {
+          "axis": "structural_abnormality",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "medium",
+          "typical_findings": [
+            "畸形",
+            "结构"
+          ]
+        },
+        {
+          "axis": "cardiovascular_or_circulatory_risk",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "心"
+          ]
+        },
+        {
+          "axis": "neoplastic_or_proliferative",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "增生"
+          ]
+        }
+      ],
+      "raw_western_detail_excerpt": [
+        "不理想转归：邪恋日久，正气大伤，痰瘀胶结，深入骨节，导致关节肿大、僵硬、畸形，最终功能丧失，是为“尪痹”。",
+        "若关节疼痛呈游走性，痛无定处，提示为行痹，以风邪为主。",
+        "若关节疼痛剧烈，痛有定处，遇寒加重，得热则减，提示为痛痹，以寒邪为主。",
+        "第一阶段：邪实为主期（急性期）",
+        "【西医分期标签】：急性关节炎",
+        "【量化指标参考】：",
+        "疼痛评分：视觉模拟评分 (VAS) 6∼10 分。",
+        "炎性指标：C 反应蛋白 (CRP)、血沉 (ESR) 明显升高。",
+        "影像学表现：X 光片多无明显骨质改变，可见软组织肿胀；",
+        "超声可见关节积液、滑膜增厚。",
+        "【触发条件】：肢体关节肌肉疼痛，呈游走性，一日之内可在多个关节间转移。",
+        "【触发条件】：关节疼痛剧烈、痛有定处，有明确的遇寒加重、得热痛减。",
+        "【触发条件】：关节疼痛以酸楚、重着、麻木为主要特征，常伴关节肿胀。",
+        "【触发条件】：关节出现明确的红、肿、热、痛，痛不可触，可伴发热、口渴等全身热象。",
+        "【🚨 阶段警示】：核心风险是漏诊特异性关节炎。",
+        "第二阶段：虚实夹杂期（慢性活动期）",
+        "【西医分期标签】：慢性关节炎活动期（如类风湿关节炎）",
+        "疼痛评分：VAS 3∼7 分。",
+        "炎性指标：CRP、ESR 可持续性轻中度升高或反复波动。",
+        "影像学表现：X 光片可见关节间隙变窄、骨质侵蚀。",
+        "【🚨 阶段警示】：核心风险是不可逆的关节结构损伤。",
+        "西医治疗上，使用改善病情抗风湿药（DMARDs）是阻止关节破坏的关键。",
+        "第三阶段：正虚为主期（慢性稳定/退变期）",
+        "【西医分期标签】：关节炎缓解期 / 骨关节炎",
+        "疼痛评分：VAS 1∼5 分，多为劳累后出现的酸痛、隐痛。",
+        "炎性指标：CRP、ESR 通常正常。",
+        "影像学表现：X 光片可见明显的关节畸形、强直或骨质增生。",
+        "【触发条件】：关节疼痛日久，伴腰膝酸软、筋骨痿软或肌肉萎缩，脉沉细。",
+        "【🚨 阶段警示】：核心风险是功能障碍和生活质量下降。",
+        "治疗重点从控制炎症转向改善功能、减轻疼痛、延缓退变。",
+        "需警惕因长期活动受限导致的肌肉萎缩、骨质疏松等并发症。"
+      ],
+      "source_row_numbers": [
+        9653
+      ],
+      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
+      "status": "pending_review",
+      "confidence": "medium"
+    },
+    {
       "standard_western_name": "瘘管",
       "aliases": [
         "窦道"
@@ -42020,12 +41712,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "癌 (Cancer)",
+      "standard_western_name": "癌",
       "aliases": [
+        "Cancer",
         "癌病"
       ],
       "source_raw_names": [
-        "癌 (Cancer)"
+        "癌"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -42425,12 +42118,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "癫痫 (Epilepsy)",
+      "standard_western_name": "癫痫",
       "aliases": [
+        "Epilepsy",
         "羊癫风"
       ],
       "source_raw_names": [
-        "癫痫 (Epilepsy)"
+        "癫痫"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -42778,10 +42472,12 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "白细胞减少症 (Leukopenia)",
-      "aliases": [],
+      "standard_western_name": "白细胞减少症",
+      "aliases": [
+        "Leukopenia"
+      ],
       "source_raw_names": [
-        "白细胞减少症 (Leukopenia)"
+        "白细胞减少症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -42892,10 +42588,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "百日咳 (Pertussis)",
-      "aliases": [],
+      "standard_western_name": "百日咳",
+      "aliases": [
+        "Pertussis"
+      ],
       "source_raw_names": [
-        "百日咳 (Pertussis)"
+        "百日咳"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -43166,12 +42864,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "皮肤浅表脓肿 (Superficial Skin Abscess)",
+      "standard_western_name": "皮肤浅表脓肿",
       "aliases": [
+        "Superficial Skin Abscess",
         "急性淋巴结炎 (Acute Lymphadenitis)"
       ],
       "source_raw_names": [
-        "皮肤浅表脓肿 (Superficial Skin Abscess)"
+        "皮肤浅表脓肿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -43928,12 +43627,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "真菌性角膜炎 (Fungal Keratitis)",
+      "standard_western_name": "真菌性角膜炎",
       "aliases": [
+        "Fungal Keratitis",
         "角膜真菌病"
       ],
       "source_raw_names": [
-        "真菌性角膜炎 (Fungal Keratitis)"
+        "真菌性角膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44013,13 +43713,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "眩晕 (Vertigo)",
+      "standard_western_name": "眩晕",
       "aliases": [
+        "Vertigo",
         "良性阵发性位置性眩晕",
         "耳石症"
       ],
       "source_raw_names": [
-        "眩晕 (Vertigo)"
+        "眩晕"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44118,10 +43819,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "眶蜂窝织炎 (Orbital Cellulitis)",
-      "aliases": [],
+      "standard_western_name": "眶蜂窝织炎",
+      "aliases": [
+        "Orbital Cellulitis"
+      ],
       "source_raw_names": [
-        "眶蜂窝织炎 (Orbital Cellulitis)"
+        "眶蜂窝织炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44232,10 +43935,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "眼化学伤 (Ocular Chemical Injury)",
-      "aliases": [],
+      "standard_western_name": "眼化学伤",
+      "aliases": [
+        "Ocular Chemical Injury"
+      ],
       "source_raw_names": [
-        "眼化学伤 (Ocular Chemical Injury)"
+        "眼化学伤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44320,10 +44025,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "眼异物 (Foreign Body of Eye)",
-      "aliases": [],
+      "standard_western_name": "眼异物",
+      "aliases": [
+        "Foreign Body of Eye"
+      ],
       "source_raw_names": [
-        "眼异物 (Foreign Body of Eye)"
+        "眼异物"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44381,10 +44088,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "眼球穿通伤 (Penetrating Eye Injury)",
-      "aliases": [],
+      "standard_western_name": "眼球穿通伤",
+      "aliases": [
+        "Penetrating Eye Injury"
+      ],
       "source_raw_names": [
-        "眼球穿通伤 (Penetrating Eye Injury)"
+        "眼球穿通伤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44473,10 +44182,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "眼部钝挫伤 (Blunt Trauma)",
-      "aliases": [],
+      "standard_western_name": "眼部钝挫伤",
+      "aliases": [
+        "Blunt Trauma"
+      ],
       "source_raw_names": [
-        "眼部钝挫伤 (Blunt Trauma)"
+        "眼部钝挫伤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44579,12 +44290,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睑板腺囊肿 (Chalazion)",
+      "standard_western_name": "睑板腺囊肿",
       "aliases": [
+        "Chalazion",
         "霰粒肿"
       ],
       "source_raw_names": [
-        "睑板腺囊肿 (Chalazion)"
+        "睑板腺囊肿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44662,10 +44374,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睑缘炎 (Blepharitis)",
-      "aliases": [],
+      "standard_western_name": "睑缘炎",
+      "aliases": [
+        "Blepharitis"
+      ],
       "source_raw_names": [
-        "睑缘炎 (Blepharitis)"
+        "睑缘炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44759,13 +44473,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睑腺炎 (Hordeolum)",
+      "standard_western_name": "睑腺炎",
       "aliases": [
+        "Hordeolum",
         "麦粒肿",
         "针眼"
       ],
       "source_raw_names": [
-        "睑腺炎 (Hordeolum)"
+        "睑腺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44892,12 +44607,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睫状环阻滞性青光眼 (Aqueous Misdirection Glaucoma)",
+      "standard_western_name": "睫状环阻滞性青光眼",
       "aliases": [
+        "Aqueous Misdirection Glaucoma",
         "恶性青光眼"
       ],
       "source_raw_names": [
-        "睫状环阻滞性青光眼 (Aqueous Misdirection Glaucoma)"
+        "睫状环阻滞性青光眼"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -44955,10 +44671,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睾丸扭转 (Testicular Torsion)",
-      "aliases": [],
+      "standard_western_name": "睾丸扭转",
+      "aliases": [
+        "Testicular Torsion"
+      ],
       "source_raw_names": [
-        "睾丸扭转 (Testicular Torsion)"
+        "睾丸扭转"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -45012,10 +44730,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睾丸肿瘤 (Testicular Neoplasm)",
-      "aliases": [],
+      "standard_western_name": "睾丸肿瘤",
+      "aliases": [
+        "Testicular Neoplasm"
+      ],
       "source_raw_names": [
-        "睾丸肿瘤 (Testicular Neoplasm)"
+        "睾丸肿瘤"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -45097,10 +44817,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "睾丸鞘膜积液 (Hydrocele of Testis)",
-      "aliases": [],
+      "standard_western_name": "睾丸鞘膜积液",
+      "aliases": [
+        "Hydrocele of Testis"
+      ],
       "source_raw_names": [
-        "睾丸鞘膜积液 (Hydrocele of Testis)"
+        "睾丸鞘膜积液"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -45174,12 +44896,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "短暂性脑缺血发作 (Transient Ischemic Attack)",
+      "standard_western_name": "短暂性脑缺血发作",
       "aliases": [
+        "Transient Ischemic Attack",
         "TIA"
       ],
       "source_raw_names": [
-        "短暂性脑缺血发作 (Transient Ischemic Attack)"
+        "短暂性脑缺血发作"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -45250,10 +44973,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "破伤风 (Tetanus)",
-      "aliases": [],
+      "standard_western_name": "破伤风",
+      "aliases": [
+        "Tetanus"
+      ],
       "source_raw_names": [
-        "破伤风 (Tetanus)"
+        "破伤风"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -45409,10 +45134,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "第三腰椎横突综合征 (Third Lumbar Transverse Process Syndrome)",
-      "aliases": [],
+      "standard_western_name": "第三腰椎横突综合征",
+      "aliases": [
+        "Third Lumbar Transverse Process Syndrome"
+      ],
       "source_raw_names": [
-        "第三腰椎横突综合征 (Third Lumbar Transverse Process Syndrome)"
+        "第三腰椎横突综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -45496,12 +45223,106 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "类风湿性关节炎 (Rheumatoid Arthritis)",
+      "standard_western_name": "类天疱疮",
+      "aliases": [],
+      "source_raw_names": [
+        "类天疱疮"
+      ],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "60-90岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "diagnostic_key_points": [
+        "规范性: “类天疱疮”（特指大疱性类天疱疮）为中西医结合领域的标准术语，与ICD编码（L",
+        "【西医分期标签：活动性大疱性类天疱疮 (Active Bullous Pemphigoid)】",
+        "[量化指标参考]",
+        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
+        "【西医分期标签：缓解期类天疱疮 (Bullous Pemphigoid in Remission)】",
+        "实验室检查: 血清抗体滴度下降或转阴。",
+        "关键体征: 皮肤出现张力性大疱，疱壁厚，不易破溃，Nikolsky征阴性。",
+        "关键体征: 无新发水疱，瘙痒基本控制，原有皮损愈合。"
+      ],
+      "clinical_manifestations": [
+        "关键体征: 皮肤出现张力性大疱，疱壁厚，不易破溃，Nikolsky征阴性。",
+        "关键体征: 无新发水疱，瘙痒基本控制，原有皮损愈合。"
+      ],
+      "differential_diagnoses_text": [],
+      "complications": [
+        "老年患者需特别关注感染、骨质疏松、高血糖等并发症。"
+      ],
+      "required_checks": [
+        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
+        "实验室检查: 血清抗体滴度下降或转阴。"
+      ],
+      "red_flags": [
+        "老年患者需特别关注感染、骨质疏松、高血糖等并发症。"
+      ],
+      "objective_markers": [
+        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
+        "实验室检查: 血清抗体滴度下降或转阴。"
+      ],
+      "pathology_axes": [
+        {
+          "axis": "infection_or_inflammation",
+          "role": "primary",
+          "weight": 0.75,
+          "confidence": "low",
+          "typical_findings": [
+            "感染"
+          ]
+        },
+        {
+          "axis": "autoimmune_or_immune_complex",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "抗体"
+          ]
+        },
+        {
+          "axis": "cardiovascular_or_circulatory_risk",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "心"
+          ]
+        }
+      ],
+      "raw_western_detail_excerpt": [
+        "规范性: “类天疱疮”（特指大疱性类天疱疮）为中西医结合领域的标准术语，与ICD编码（L",
+        "【核心一】中描述的“急性期（实证）”向“维持期（虚证）”的转化，以及病情复发的逻辑，与",
+        "急性活动期 (火毒炽盛 / 血热夹湿)",
+        "不理想转归 (病情复发): If 因感染、劳累或药物减量不当等因素诱发, Then 病情复发，再次出现新发水疱，必须退回急性活动期，重新按火毒炽盛或血热夹湿证论治。",
+        "第一阶段：急性活动期",
+        "【西医分期标签：活动性大疱性类天疱疮 (Active Bullous Pemphigoid)】",
+        "[量化指标参考]",
+        "关键体征: 皮肤出现张力性大疱，疱壁厚，不易破溃，Nikolsky征阴性。",
+        "实验室检查: 血清抗BP180和/或BP230抗体阳性。",
+        "大面积皮损需注意继发感染和护理。",
+        "【西医分期标签：缓解期类天疱疮 (Bullous Pemphigoid in Remission)】",
+        "关键体征: 无新发水疱，瘙痒基本控制，原有皮损愈合。",
+        "实验室检查: 血清抗体滴度下降或转阴。",
+        "核心风险是复发和药物副作用。",
+        "老年患者需特别关注感染、骨质疏松、高血糖等并发症。"
+      ],
+      "source_row_numbers": [
+        2212
+      ],
+      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
+      "status": "pending_review",
+      "confidence": "medium"
+    },
+    {
+      "standard_western_name": "类风湿性关节炎",
       "aliases": [
+        "Rheumatoid Arthritis",
         "老年人类风湿性关节炎"
       ],
       "source_raw_names": [
-        "类风湿性关节炎 (Rheumatoid Arthritis)"
+        "类风湿性关节炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -45732,7 +45553,8 @@
     {
       "standard_western_name": "精囊炎",
       "aliases": [
-        "血精"
+        "血精",
+        "Seminal Vesiculitis"
       ],
       "source_raw_names": [
         "精囊炎"
@@ -45764,131 +45586,7 @@
         "【理想转归】: 症状控制，病情稳定。",
         "IF 调理期间症状反复或加重，",
         "血常规白细胞可升高。",
-        "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。"
-      ],
-      "clinical_manifestations": [
-        "IF 经足疗程抗生素及中医药清热利湿治疗后，症状完全消失，",
-        "IF 经相应中医药调理后，血精消失，全身症状改善，",
-        "【理想转归】: 症状控制，病情稳定。",
-        "IF 调理期间症状反复或加重，",
-        "关键体征: 肉眼血精，伴尿频、尿急、尿痛等尿路刺激征；"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [
-        "【阶段一：诊断与评估期】，通过体检、实验室检查及影像学（TRUS/MRI）评估病因，",
-        "血常规白细胞可升高。",
-        "影像学表现: 经直肠超声（TRUS）可见精囊增大、壁增厚、回声不均。",
-        "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。"
-      ],
-      "red_flags": [],
-      "objective_markers": [
-        "【阶段一：诊断与评估期】，通过体检、实验室检查及影像学（TRUS/MRI）评估病因，",
-        "血常规白细胞可升高。",
-        "影像学表现: 经直肠超声（TRUS）可见精囊增大、壁增厚、回声不均。",
-        "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。"
-      ],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "medium",
-          "typical_findings": [
-            "感染",
-            "白细胞"
-          ]
-        },
-        {
-          "axis": "secretion_or_retention",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "分泌"
-          ]
-        },
-        {
-          "axis": "urinary_renal_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "尿"
-          ]
-        },
-        {
-          "axis": "digestive_reflux_or_dysfunction",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "肠"
-          ]
-        },
-        {
-          "axis": "neoplastic_or_proliferative",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "肿瘤"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "【阶段一：诊断与评估期】，通过体检、实验室检查及影像学（TRUS/MRI）评估病因，",
-        "IF 检查发现严重器质性病变（如肿瘤、需手术解除的梗阻），",
-        "【风险路径】: 立即转诊专科进行手术或针对性治疗。",
-        "IF 诊断为炎性或特发性血精，THEN → 进入",
-        "IF 表现为急性发作，伴尿路刺激征和全身热象，",
-        "IF 经足疗程抗生素及中医药清热利湿治疗后，症状完全消失，",
-        "IF 表现为慢性、反复发作，无急性感染征象，",
-        "【路径B：慢性迁延】，需进一步辨析：",
-        "IF 经相应中医药调理后，血精消失，全身症状改善，",
-        "【理想转归】: 症状控制，病情稳定。",
-        "IF 调理期间症状反复或加重，",
-        "【风险演变】: 必须",
-        "【退回诊断评估期】，重新排查有无遗漏的器质性病变。",
-        "一、 急性感染期",
-        "【西医分期标签】：急性精囊炎/附睾炎/】号34号）eminal Vesiculitis)",
-        "【[量化指标参考]】",
-        "炎性指标: 精液或尿液分析可见大量白细胞、红细胞。",
-        "血常规白细胞可升高。",
-        "关键体征: 肉眼血精，伴尿频、尿急、尿痛等尿路刺激征；",
-        "影像学表现: 经直肠超声（TRUS）可见精囊增大、壁增厚、回声不均。",
-        "不规范的抗感染是病情转慢的主要原因。",
-        "二、 慢性 / 迁延期",
-        "【西医分期标签】：慢性精囊炎 / 特发性血精 (Chronic Seminal Vesiculitis / Idiopathic Hematospermia)",
-        "【[量化指标参考]】: 精液分析可见红细胞，但白细胞通常正常。",
-        "TRUS可正常或仅见慢性改变。",
-        "【🚨 阶段警示】: 调理前必须完成泌尿外科的全面检查，以排除肿瘤等器质性病变。",
-        "【西医分期标签】：慢性/创伤后/梗阻性血精 (Chronic/Post-traumatic/Obstructive Hematospermia)",
-        "【[量化指标参考]】: 精液可呈棕褐色或含血块。",
         "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。",
-        "【西医分期标签】：特发性血精，伴性腺功能减退或慢性疲劳综合征",
-        "【[量化指标参考]】: 精液可呈淡红色或仅镜下见红细胞。",
-        "【🚨 阶段警示】: 必须完成全面的泌尿外科和内分泌科检查，以排除所有可能的器质"
-      ],
-      "source_row_numbers": [
-        2823
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "精囊炎 (Seminal Vesiculitis)",
-      "aliases": [],
-      "source_raw_names": [
-        "精囊炎 (Seminal Vesiculitis)"
-      ],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "20~40岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
         "If 顽固性血精 → 需精囊镜检查排除结石、梗阻。",
         "分期一：急性期",
         "【西医分期标签】：急性精囊炎 / 首次发作血精期 (Acute Seminal Vesiculitis / First-episode Hematospermia)",
@@ -45904,6 +45602,11 @@
         "核心体征：血精颜色多暗淡。"
       ],
       "clinical_manifestations": [
+        "IF 经足疗程抗生素及中医药清热利湿治疗后，症状完全消失，",
+        "IF 经相应中医药调理后，血精消失，全身症状改善，",
+        "【理想转归】: 症状控制，病情稳定。",
+        "IF 调理期间症状反复或加重，",
+        "关键体征: 肉眼血精，伴尿频、尿急、尿痛等尿路刺激征；",
         "核心体征：血精颜色多鲜红。",
         "【触发条件】：以血精鲜红伴有尿频尿痛、会阴或直肠疼痛、甚至发热为核心，感染征象明显。",
         "核心体征：血精颜色多暗淡。"
@@ -45914,6 +45617,10 @@
         "【🚨 阶段警示】：年龄 >40 岁患者，尤其是持续性血精，必须进行 PSA 检测和影像学检查，排除】号34号）热寒战，警惕并发脓毒血症。"
       ],
       "required_checks": [
+        "【阶段一：诊断与评估期】，通过体检、实验室检查及影像学（TRUS/MRI）评估病因，",
+        "血常规白细胞可升高。",
+        "影像学表现: 经直肠超声（TRUS）可见精囊增大、壁增厚、回声不均。",
+        "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。",
         "炎性指标：C 反应蛋白和血常规白细胞可升高。",
         "影像学：经直肠腔内超声（TRUS）可见精囊壁增厚、管腔扩张积液。",
         "【🚨 阶段警示】：年龄 >40 岁患者，尤其是持续性血精，必须进行 PSA 检测和影像学检查，排除】号34号）热寒战，警惕并发脓毒血症。"
@@ -45922,6 +45629,10 @@
         "If 出现严重感染迹象（高热寒战） → 并发症：急性附睾炎、脓毒血症。"
       ],
       "objective_markers": [
+        "【阶段一：诊断与评估期】，通过体检、实验室检查及影像学（TRUS/MRI）评估病因，",
+        "血常规白细胞可升高。",
+        "影像学表现: 经直肠超声（TRUS）可见精囊增大、壁增厚、回声不均。",
+        "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。",
         "炎性指标：C 反应蛋白和血常规白细胞可升高。",
         "影像学：经直肠腔内超声（TRUS）可见精囊壁增厚、管腔扩张积液。",
         "【🚨 阶段警示】：年龄 >40 岁患者，尤其是持续性血精，必须进行 PSA 检测和影像学检查，排除】号34号）热寒战，警惕并发脓毒血症。"
@@ -45936,6 +45647,15 @@
             "感染",
             "发热",
             "白细胞"
+          ]
+        },
+        {
+          "axis": "secretion_or_retention",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "分泌"
           ]
         },
         {
@@ -45976,6 +45696,38 @@
         }
       ],
       "raw_western_detail_excerpt": [
+        "【阶段一：诊断与评估期】，通过体检、实验室检查及影像学（TRUS/MRI）评估病因，",
+        "IF 检查发现严重器质性病变（如肿瘤、需手术解除的梗阻），",
+        "【风险路径】: 立即转诊专科进行手术或针对性治疗。",
+        "IF 诊断为炎性或特发性血精，THEN → 进入",
+        "IF 表现为急性发作，伴尿路刺激征和全身热象，",
+        "IF 经足疗程抗生素及中医药清热利湿治疗后，症状完全消失，",
+        "IF 表现为慢性、反复发作，无急性感染征象，",
+        "【路径B：慢性迁延】，需进一步辨析：",
+        "IF 经相应中医药调理后，血精消失，全身症状改善，",
+        "【理想转归】: 症状控制，病情稳定。",
+        "IF 调理期间症状反复或加重，",
+        "【风险演变】: 必须",
+        "【退回诊断评估期】，重新排查有无遗漏的器质性病变。",
+        "一、 急性感染期",
+        "【西医分期标签】：急性精囊炎/附睾炎/】号34号）eminal Vesiculitis)",
+        "【[量化指标参考]】",
+        "炎性指标: 精液或尿液分析可见大量白细胞、红细胞。",
+        "血常规白细胞可升高。",
+        "关键体征: 肉眼血精，伴尿频、尿急、尿痛等尿路刺激征；",
+        "影像学表现: 经直肠超声（TRUS）可见精囊增大、壁增厚、回声不均。",
+        "不规范的抗感染是病情转慢的主要原因。",
+        "二、 慢性 / 迁延期",
+        "【西医分期标签】：慢性精囊炎 / 特发性血精 (Chronic Seminal Vesiculitis / Idiopathic Hematospermia)",
+        "【[量化指标参考]】: 精液分析可见红细胞，但白细胞通常正常。",
+        "TRUS可正常或仅见慢性改变。",
+        "【🚨 阶段警示】: 调理前必须完成泌尿外科的全面检查，以排除肿瘤等器质性病变。",
+        "【西医分期标签】：慢性/创伤后/梗阻性血精 (Chronic/Post-traumatic/Obstructive Hematospermia)",
+        "【[量化指标参考]】: 精液可呈棕褐色或含血块。",
+        "TRUS或盆腔MRI对于发现结石、囊肿或射精管梗阻至关重要。",
+        "【西医分期标签】：特发性血精，伴性腺功能减退或慢性疲劳综合征",
+        "【[量化指标参考]】: 精液可呈淡红色或仅镜下见红细胞。",
+        "【🚨 阶段警示】: 必须完成全面的泌尿外科和内分泌科检查，以排除所有可能的器质",
         "If 出现严重感染迹象（高热寒战） → 并发症：急性附睾炎、脓毒血症。",
         "If 顽固性血精 → 需精囊镜检查排除结石、梗阻。",
         "分期一：急性期",
@@ -45993,6 +45745,7 @@
         "【🚨 阶段警示】：顽固性血精需再次全面评估，可考虑精囊镜检查，以明确有无结石、梗阻、憩室等结构性病变。"
       ],
       "source_row_numbers": [
+        2823,
         10816
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -46000,10 +45753,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "精囊结核 (Tuberculosis of Seminal Vesicle)",
-      "aliases": [],
+      "standard_western_name": "精囊结核",
+      "aliases": [
+        "Tuberculosis of Seminal Vesicle"
+      ],
       "source_raw_names": [
-        "精囊结核 (Tuberculosis of Seminal Vesicle)"
+        "精囊结核"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -46093,12 +45848,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "精子活力不足 (Asthenozoospermia)",
+      "standard_western_name": "精子活力不足",
       "aliases": [
+        "Asthenozoospermia",
         "弱精子症"
       ],
       "source_raw_names": [
-        "精子活力不足 (Asthenozoospermia)"
+        "精子活力不足"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -46143,12 +45899,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "精液不液化 (Semen Liquefaction Failure)",
+      "standard_western_name": "精液不液化",
       "aliases": [
+        "Semen Liquefaction Failure",
         "精液液化异常"
       ],
       "source_raw_names": [
-        "精液不液化 (Semen Liquefaction Failure)"
+        "精液不液化"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -46213,12 +45970,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "精液量过少 (Hypovolemia of Semen)",
+      "standard_western_name": "精液量过少",
       "aliases": [
+        "Hypovolemia of Semen",
         "少精液症"
       ],
       "source_raw_names": [
-        "精液量过少 (Hypovolemia of Semen)"
+        "精液量过少"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -46311,12 +46069,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "精神分裂症 (Schizophrenia)",
+      "standard_western_name": "精神分裂症",
       "aliases": [
+        "Schizophrenia",
         "躁狂抑郁症"
       ],
       "source_raw_names": [
-        "精神分裂症 (Schizophrenia)"
+        "精神分裂症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -46435,10 +46194,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "精索静脉曲张 (Varicocele)",
-      "aliases": [],
+      "standard_western_name": "精索静脉曲张",
+      "aliases": [
+        "Varicocele"
+      ],
       "source_raw_names": [
-        "精索静脉曲张 (Varicocele)"
+        "精索静脉曲张"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -46560,15 +46321,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "糖尿病 (Diabetes Mellitus)",
+      "standard_western_name": "糖尿病",
       "aliases": [
+        "Diabetes Mellitus",
         "2型糖尿病",
         "消渴病",
         "代谢性高血糖症",
         "DM"
       ],
       "source_raw_names": [
-        "糖尿病 (Diabetes Mellitus)"
+        "糖尿病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -46662,12 +46424,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "糖尿病肾病 (Diabetic Nephropathy)",
+      "standard_western_name": "糖尿病肾病",
       "aliases": [
+        "Diabetic Nephropathy",
         "DN"
       ],
       "source_raw_names": [
-        "糖尿病肾病 (Diabetic Nephropathy)"
+        "糖尿病肾病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -46745,10 +46508,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "糖尿病视网膜病变 (Diabetic Retinopathy)",
-      "aliases": [],
+      "standard_western_name": "糖尿病视网膜病变",
+      "aliases": [
+        "Diabetic Retinopathy"
+      ],
       "source_raw_names": [
-        "糖尿病视网膜病变 (Diabetic Retinopathy)"
+        "糖尿病视网膜病变"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -47087,12 +46852,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "系统性红斑狼疮 (Systemic Lupus Erythematosus)",
+      "standard_western_name": "系统性红斑狼疮",
       "aliases": [
+        "Systemic Lupus Erythematosus",
         "SLE"
       ],
       "source_raw_names": [
-        "系统性红斑狼疮 (Systemic Lupus Erythematosus)"
+        "系统性红斑狼疮"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -47198,10 +46964,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "细菌性睾丸炎 (Bacterial Orchitis)",
-      "aliases": [],
+      "standard_western_name": "细菌性睾丸炎",
+      "aliases": [
+        "Bacterial Orchitis"
+      ],
       "source_raw_names": [
-        "细菌性睾丸炎 (Bacterial Orchitis)"
+        "细菌性睾丸炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -47254,10 +47022,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "细菌性角膜炎 (Bacterial Keratitis)",
-      "aliases": [],
+      "standard_western_name": "细菌性角膜炎",
+      "aliases": [
+        "Bacterial Keratitis"
+      ],
       "source_raw_names": [
-        "细菌性角膜炎 (Bacterial Keratitis)"
+        "细菌性角膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -48598,10 +48368,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "结膜下出血 (Subconjunctival Hemorrhage)",
-      "aliases": [],
+      "standard_western_name": "结膜下出血",
+      "aliases": [
+        "Subconjunctival Hemorrhage"
+      ],
       "source_raw_names": [
-        "结膜下出血 (Subconjunctival Hemorrhage)"
+        "结膜下出血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -48669,10 +48441,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "结膜结石 (Conjunctival Concretion)",
-      "aliases": [],
+      "standard_western_name": "结膜结石",
+      "aliases": [
+        "Conjunctival Concretion"
+      ],
       "source_raw_names": [
-        "结膜结石 (Conjunctival Concretion)"
+        "结膜结石"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -48915,10 +48689,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "继发性视网膜脱离 (Secondary Retinal Detachment)",
-      "aliases": [],
+      "standard_western_name": "继发性视网膜脱离",
+      "aliases": [
+        "Secondary Retinal Detachment"
+      ],
       "source_raw_names": [
-        "继发性视网膜脱离 (Secondary Retinal Detachment)"
+        "继发性视网膜脱离"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -49082,13 +48858,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "缓慢性心律失常 (Bradyarrhythmia)",
+      "standard_western_name": "缓慢性心律失常",
       "aliases": [
+        "Bradyarrhythmia",
         "慢速型心律失常",
         "心动过缓"
       ],
       "source_raw_names": [
-        "缓慢性心律失常 (Bradyarrhythmia)"
+        "缓慢性心律失常"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -49174,12 +48951,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "缩窄性心包炎 (Constrictive Pericarditis)",
+      "standard_western_name": "缩窄性心包炎",
       "aliases": [
+        "Constrictive Pericarditis",
         "心包缩窄 (Pericardial Constriction)"
       ],
       "source_raw_names": [
-        "缩窄性心包炎 (Constrictive Pericarditis)"
+        "缩窄性心包炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -49267,10 +49045,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "缺血性视神经病变 (Ischemic Optic Neuropathy)",
-      "aliases": [],
+      "standard_western_name": "缺血性视神经病变",
+      "aliases": [
+        "Ischemic Optic Neuropathy"
+      ],
       "source_raw_names": [
-        "缺血性视神经病变 (Ischemic Optic Neuropathy)"
+        "缺血性视神经病变"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -49347,12 +49127,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "缺铁性贫血 (Iron Deficiency Anemia)",
+      "standard_western_name": "缺铁性贫血",
       "aliases": [
+        "Iron Deficiency Anemia",
         "IDA"
       ],
       "source_raw_names": [
-        "缺铁性贫血 (Iron Deficiency Anemia)"
+        "缺铁性贫血"
       ],
       "department_or_category": "血液系统疾病",
       "sex": "男女均可",
@@ -49571,10 +49352,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "翼状胬肉 (Pterygium)",
-      "aliases": [],
+      "standard_western_name": "翼状胬肉",
+      "aliases": [
+        "Pterygium"
+      ],
       "source_raw_names": [
-        "翼状胬肉 (Pterygium)"
+        "翼状胬肉"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -49648,12 +49431,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "老年性皮肤瘙痒症 (Senile Pruritus)",
+      "standard_western_name": "老年性皮肤瘙痒症",
       "aliases": [
+        "Senile Pruritus",
         "老年瘙痒症"
       ],
       "source_raw_names": [
-        "老年性皮肤瘙痒症 (Senile Pruritus)"
+        "老年性皮肤瘙痒症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -49730,12 +49514,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "老年性耳聋 (Presbycusis)",
+      "standard_western_name": "老年性耳聋",
       "aliases": [
+        "Presbycusis",
         "老年性听力下降"
       ],
       "source_raw_names": [
-        "老年性耳聋 (Presbycusis)"
+        "老年性耳聋"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -50038,12 +49823,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "老视 (Presbyopia)",
+      "standard_western_name": "老视",
       "aliases": [
+        "Presbyopia",
         "老花眼"
       ],
       "source_raw_names": [
-        "老视 (Presbyopia)"
+        "老视"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -51445,10 +51231,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肝囊肿 (Liver Cyst)",
-      "aliases": [],
+      "standard_western_name": "肝囊肿",
+      "aliases": [
+        "Liver Cyst"
+      ],
       "source_raw_names": [
-        "肝囊肿 (Liver Cyst)"
+        "肝囊肿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -51579,13 +51367,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肝性脑病 (Hepatic Encephalopathy)",
+      "standard_western_name": "肝性脑病",
       "aliases": [
+        "Hepatic Encephalopathy",
         "HE",
         "肝性昏迷"
       ],
       "source_raw_names": [
-        "肝性脑病 (Hepatic Encephalopathy)"
+        "肝性脑病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -51675,10 +51464,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肝硬化 (Liver Cirrhosis)",
-      "aliases": [],
+      "standard_western_name": "肝硬化",
+      "aliases": [
+        "Liver Cirrhosis"
+      ],
       "source_raw_names": [
-        "肝硬化 (Liver Cirrhosis)"
+        "肝硬化"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -51768,12 +51559,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肠易激综合征 (Irritable Bowel Syndrome)",
+      "standard_western_name": "肠易激综合征",
       "aliases": [
+        "Irritable Bowel Syndrome",
         "IBS"
       ],
       "source_raw_names": [
-        "肠易激综合征 (Irritable Bowel Syndrome)"
+        "肠易激综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -51946,13 +51738,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "股骨头坏死 (Osteonecrosis of the Femoral Head)",
+      "standard_western_name": "股骨头坏死",
       "aliases": [
+        "Osteonecrosis of the Femoral Head",
         "ONFH",
         "股骨头无菌性坏死"
       ],
       "source_raw_names": [
-        "股骨头坏死 (Osteonecrosis of the Femoral Head)"
+        "股骨头坏死"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -52061,12 +51854,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肥胖症 (Obesity)",
+      "standard_western_name": "肥胖症",
       "aliases": [
+        "Obesity",
         "原发性肥胖"
       ],
       "source_raw_names": [
-        "肥胖症 (Obesity)"
+        "肥胖症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52307,10 +52101,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肱骨外上髁炎 (Lateral Epicondylitis)",
-      "aliases": [],
+      "standard_western_name": "肱骨外上髁炎",
+      "aliases": [
+        "Lateral Epicondylitis"
+      ],
       "source_raw_names": [
-        "肱骨外上髁炎 (Lateral Epicondylitis)"
+        "肱骨外上髁炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52379,15 +52175,16 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肺炎 (Pneumonia)",
+      "standard_western_name": "肺炎",
       "aliases": [
+        "Pneumonia",
         "细菌性肺炎",
         "病毒性肺炎",
         "大叶性肺炎",
         "支气管肺炎"
       ],
       "source_raw_names": [
-        "肺炎 (Pneumonia)"
+        "肺炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52509,12 +52306,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肺癌 (Lung Cancer)",
+      "standard_western_name": "肺癌",
       "aliases": [
+        "Lung Cancer",
         "原发性支气管肺癌"
       ],
       "source_raw_names": [
-        "肺癌 (Lung Cancer)"
+        "肺癌"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52624,14 +52422,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肺结核 (Pulmonary Tuberculosis)",
+      "standard_western_name": "肺结核",
       "aliases": [
+        "Pulmonary Tuberculosis",
         "TB",
         "肺痨",
         "侵润性肺结核"
       ],
       "source_raw_names": [
-        "肺结核 (Pulmonary Tuberculosis)"
+        "肺结核"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52732,13 +52531,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肺结节 (Pulmonary Nodule)",
+      "standard_western_name": "肺结节",
       "aliases": [
+        "Pulmonary Nodule",
         "肺小结节",
         "肺结节病"
       ],
       "source_raw_names": [
-        "肺结节 (Pulmonary Nodule)"
+        "肺结节"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52845,12 +52645,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肺脓肿 (Lung Abscess)",
+      "standard_western_name": "肺脓肿",
       "aliases": [
+        "Lung Abscess",
         "肺痈"
       ],
       "source_raw_names": [
-        "肺脓肿 (Lung Abscess)"
+        "肺脓肿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -52998,10 +52799,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肾囊肿 (Renal Cyst)",
-      "aliases": [],
+      "standard_western_name": "肾囊肿",
+      "aliases": [
+        "Renal Cyst"
+      ],
       "source_raw_names": [
-        "肾囊肿 (Renal Cyst)"
+        "肾囊肿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -53134,12 +52937,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "肾病综合征 (Nephrotic Syndrome)",
+      "standard_western_name": "肾病综合征",
       "aliases": [
+        "Nephrotic Syndrome",
         "NS"
       ],
       "source_raw_names": [
-        "肾病综合征 (Nephrotic Syndrome)"
+        "肾病综合征"
       ],
       "department_or_category": "",
       "sex": "性别：男女均可",
@@ -53278,12 +53082,13 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "胁痛 (Hypochondriac Pain)",
+      "standard_western_name": "胁痛",
       "aliases": [
+        "Hypochondriac Pain",
         "肋间神经痛"
       ],
       "source_raw_names": [
-        "胁痛 (Hypochondriac Pain)"
+        "胁痛"
       ],
       "department_or_category": "中医内科学-肝胆系疾病",
       "sex": "男女均可",
@@ -53393,12 +53198,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "胃痛 (Gastric Pain)",
+      "standard_western_name": "胃痛",
       "aliases": [
+        "Gastric Pain",
         "胃脘痛"
       ],
       "source_raw_names": [
-        "胃痛 (Gastric Pain)"
+        "胃痛"
       ],
       "department_or_category": "中医内科学-脾胃系疾病",
       "sex": "男女均可",
@@ -53532,10 +53338,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "胃癌 (Gastric Cancer)",
-      "aliases": [],
+      "standard_western_name": "胃癌",
+      "aliases": [
+        "Gastric Cancer"
+      ],
       "source_raw_names": [
-        "胃癌 (Gastric Cancer)"
+        "胃癌"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -53666,10 +53474,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "胆石症 (Cholelithiasis)",
-      "aliases": [],
+      "standard_western_name": "胆石症",
+      "aliases": [
+        "Cholelithiasis"
+      ],
       "source_raw_names": [
-        "胆石症 (Cholelithiasis)"
+        "胆石症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -53854,10 +53664,12 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "胸腔积液 (Pleural Effusion)",
-      "aliases": [],
+      "standard_western_name": "胸腔积液",
+      "aliases": [
+        "Pleural Effusion"
+      ],
       "source_raw_names": [
-        "胸腔积液 (Pleural Effusion)"
+        "胸腔积液"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -54391,14 +54203,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "脑出血 (Intracerebral Hemorrhage)",
+      "standard_western_name": "脑出血",
       "aliases": [
+        "Intracerebral Hemorrhage",
         "脑溢血",
         "出血性脑卒中",
         "高血压性脑出血"
       ],
       "source_raw_names": [
-        "脑出血 (Intracerebral Hemorrhage)"
+        "脑出血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -54577,8 +54390,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "脑梗死 (Cerebral Infarction)",
+      "standard_western_name": "脑梗死",
       "aliases": [
+        "Cerebral Infarction",
         "CI",
         "缺血性脑卒中",
         "CIS",
@@ -54586,7 +54400,7 @@
         "脑梗塞"
       ],
       "source_raw_names": [
-        "脑梗死 (Cerebral Infarction)"
+        "脑梗死"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -55041,7 +54855,9 @@
     },
     {
       "standard_western_name": "腕管综合征（Carpal Tunnel Syndrome",
-      "aliases": [],
+      "aliases": [
+        "CTS"
+      ],
       "source_raw_names": [
         "腕管综合征（Carpal Tunnel Syndrome"
       ],
@@ -55237,10 +55053,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "腰椎管狭窄症 (Lumbar Spinal Stenosis)",
-      "aliases": [],
+      "standard_western_name": "腰椎管狭窄症",
+      "aliases": [
+        "Lumbar Spinal Stenosis"
+      ],
       "source_raw_names": [
-        "腰椎管狭窄症 (Lumbar Spinal Stenosis)"
+        "腰椎管狭窄症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -55327,10 +55145,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "腰椎间盘突出症 (Lumbar Disc Herniation)",
-      "aliases": [],
+      "standard_western_name": "腰椎间盘突出症",
+      "aliases": [
+        "Lumbar Disc Herniation"
+      ],
       "source_raw_names": [
-        "腰椎间盘突出症 (Lumbar Disc Herniation)"
+        "腰椎间盘突出症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -55400,10 +55220,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "腰痛 (Low Back Pain)",
-      "aliases": [],
+      "standard_western_name": "腰痛",
+      "aliases": [
+        "Low Back Pain"
+      ],
       "source_raw_names": [
-        "腰痛 (Low Back Pain)"
+        "腰痛"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -55517,10 +55339,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "腰肌劳损 (Lumbar Muscle Strain)",
-      "aliases": [],
+      "standard_western_name": "腰肌劳损",
+      "aliases": [
+        "Lumbar Muscle Strain"
+      ],
       "source_raw_names": [
-        "腰肌劳损 (Lumbar Muscle Strain)"
+        "腰肌劳损"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -55587,12 +55411,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "腹水 (Ascites)",
+      "standard_western_name": "腹水",
       "aliases": [
+        "Ascites",
         "肝硬化腹水"
       ],
       "source_raw_names": [
-        "腹水 (Ascites)"
+        "腹水"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -55690,7 +55515,9 @@
       "standard_western_name": "腹泻",
       "aliases": [
         "幼儿腹泻",
-        "婴儿肠炎"
+        "婴儿肠炎",
+        "Diarrhea",
+        "泄泻"
       ],
       "source_raw_names": [
         "腹泻"
@@ -55707,131 +55534,7 @@
         "小儿腹泻-全病程管理方案（含动态迁移逻辑）",
         "[起点] 急性腹泻发作",
         "→ 路径 C: 乳食停滞: IF 腹泻有明确的喂养不当史，大便酸臭、夹有不消化物，THEN 证属",
-        "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属"
-      ],
-      "clinical_manifestations": [
-        "小儿腹泻-全病程管理方案（含动态迁移逻辑）",
-        "[起点] 急性腹泻发作",
-        "→ 路径 C: 乳食停滞: IF 腹泻有明确的喂养不当史，大便酸臭、夹有不消化物，THEN 证属",
         "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属",
-        "动态迁移逻辑: IF 急性腹泻迁延不愈，或患儿素体脾胃虚弱，THEN 病情将由实转虚，演变为以“食后即泻、久泻不愈”为特征的",
-        "IF 及时祛除病因（解表、清热、消食），THEN 腹泻可止。",
-        "【西医分期标签】: 慢性/迁延性腹泻",
-        "脾虚泻: IF 腹泻病程迁延、时轻时重，以“食后即泻”为特点，伴神疲、面黄，THEN 即可确诊。",
-        "关注生长发育: 慢性腹泻的核心危害是导致营养不良，影响患儿的体重和身高增长。",
-        "排除继发性病因: 对于慢性腹泻，需警惕并排除乳糖不耐受、食物过敏、炎症性肠病等继发性病因。",
-        "气阴两伤: IF 患儿在剧烈吐泻后，出现哭无泪、小便短少、囟门/眼眶凹陷、皮肤弹性差等明确脱水体征，THEN 即可确诊。",
-        "最高级别儿科急症: 脱水和休克是导致婴幼儿腹泻死亡的最主要原因。",
-        "【气阴两伤】的任何体征，应立即送往医院。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [],
-      "red_flags": [
-        "本病的演变以“病因”为起点，以“正气（津液、阳气）”的损伤程度为进展主线，从急性实证，可发展为慢性虚证，或急转直下为危重急症。",
-        "[共同通路 1] 急性重症演变 (脱水与休克)",
-        "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属",
-        "三、 急性重症期（脱水/休克）",
-        "【西医分期标签】: 中重度脱水 / 低血容量性休克",
-        "气阴两伤: IF 患儿在剧烈吐泻后，出现哭无泪、小便短少、囟门/眼眶凹陷、皮肤弹性差等明确脱水体征，THEN 即可确诊。",
-        "最高级别儿科急症: 脱水和休克是导致婴幼儿腹泻死亡的最主要原因。"
-      ],
-      "objective_markers": [],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "medium",
-          "typical_findings": [
-            "感染",
-            "炎症"
-          ]
-        },
-        {
-          "axis": "allergic_th2_inflammation",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "过敏"
-          ]
-        },
-        {
-          "axis": "urinary_renal_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "肾"
-          ]
-        },
-        {
-          "axis": "digestive_reflux_or_dysfunction",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "胃",
-            "肠",
-            "腹泻"
-          ]
-        },
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "小儿腹泻-全病程管理方案（含动态迁移逻辑）",
-        "本病的演变以“病因”为起点，以“正气（津液、阳气）”的损伤程度为进展主线，从急性实证，可发展为慢性虚证，或急转直下为危重急症。",
-        "[起点] 急性腹泻发作",
-        "→ 路径 C: 乳食停滞: IF 腹泻有明确的喂养不当史，大便酸臭、夹有不消化物，THEN 证属",
-        "[共同通路 1] 急性重症演变 (脱水与休克)",
-        "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属",
-        "[共同通路 2] 慢性迁延演变 (脾虚与肾虚)",
-        "动态迁移逻辑: IF 急性腹泻迁延不愈，或患儿素体脾胃虚弱，THEN 病情将由实转虚，演变为以“食后即泻、久泻不愈”为特征的",
-        "一、 急性发作期（辨别病因）",
-        "【西医分期标签】: 急性胃肠炎 (Acute Gastroenteritis)",
-        "IF 及时祛除病因（解表、清热、消食），THEN 腹泻可止。",
-        "切忌滥用止泻药: 在病因（尤其是感染性病因）未明之前，滥用止泻药可能导致病邪留恋，加重病情。",
-        "二、 慢性迁延期（辨别虚损）",
-        "【西医分期标签】: 慢性/迁延性腹泻",
-        "脾虚泻: IF 腹泻病程迁延、时轻时重，以“食后即泻”为特点，伴神疲、面黄，THEN 即可确诊。",
-        "关注生长发育: 慢性腹泻的核心危害是导致营养不良，影响患儿的体重和身高增长。",
-        "排除继发性病因: 对于慢性腹泻，需警惕并排除乳糖不耐受、食物过敏、炎症性肠病等继发性病因。",
-        "三、 急性重症期（脱水/休克）",
-        "【西医分期标签】: 中重度脱水 / 低血容量性休克",
-        "气阴两伤: IF 患儿在剧烈吐泻后，出现哭无泪、小便短少、囟门/眼眶凹陷、皮肤弹性差等明确脱水体征，THEN 即可确诊。",
-        "最高级别儿科急症: 脱水和休克是导致婴幼儿腹泻死亡的最主要原因。",
-        "【气阴两伤】的任何体征，应立即送往医院。"
-      ],
-      "source_row_numbers": [
-        523
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "腹泻 (Diarrhea)",
-      "aliases": [
-        "泄泻"
-      ],
-      "source_raw_names": [
-        "腹泻 (Diarrhea)"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0~79岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
         "【西医分期标签】：急性肠胃炎 / 感染性腹泻 (病程 < 2周)",
         "【量化指标参考】：",
         "炎性指标：血常规中白细胞或中性粒细胞可升高；",
@@ -55845,6 +55548,19 @@
         "C反应蛋白（CRP）升高。"
       ],
       "clinical_manifestations": [
+        "小儿腹泻-全病程管理方案（含动态迁移逻辑）",
+        "[起点] 急性腹泻发作",
+        "→ 路径 C: 乳食停滞: IF 腹泻有明确的喂养不当史，大便酸臭、夹有不消化物，THEN 证属",
+        "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属",
+        "动态迁移逻辑: IF 急性腹泻迁延不愈，或患儿素体脾胃虚弱，THEN 病情将由实转虚，演变为以“食后即泻、久泻不愈”为特征的",
+        "IF 及时祛除病因（解表、清热、消食），THEN 腹泻可止。",
+        "【西医分期标签】: 慢性/迁延性腹泻",
+        "脾虚泻: IF 腹泻病程迁延、时轻时重，以“食后即泻”为特点，伴神疲、面黄，THEN 即可确诊。",
+        "关注生长发育: 慢性腹泻的核心危害是导致营养不良，影响患儿的体重和身高增长。",
+        "排除继发性病因: 对于慢性腹泻，需警惕并排除乳糖不耐受、食物过敏、炎症性肠病等继发性病因。",
+        "气阴两伤: IF 患儿在剧烈吐泻后，出现哭无泪、小便短少、囟门/眼眶凹陷、皮肤弹性差等明确脱水体征，THEN 即可确诊。",
+        "最高级别儿科急症: 脱水和休克是导致婴幼儿腹泻死亡的最主要原因。",
+        "【气阴两伤】的任何体征，应立即送往医院。",
         "腹泻 (Diarrhea)",
         "【西医分期标签】：急性肠胃炎 / 感染性腹泻 (病程 < 2周)",
         "关键体征：腹部压痛，肠鸣音高度活跃。",
@@ -55862,6 +55578,13 @@
         "C反应蛋白（CRP）升高。"
       ],
       "red_flags": [
+        "本病的演变以“病因”为起点，以“正气（津液、阳气）”的损伤程度为进展主线，从急性实证，可发展为慢性虚证，或急转直下为危重急症。",
+        "[共同通路 1] 急性重症演变 (脱水与休克)",
+        "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属",
+        "三、 急性重症期（脱水/休克）",
+        "【西医分期标签】: 中重度脱水 / 低血容量性休克",
+        "气阴两伤: IF 患儿在剧烈吐泻后，出现哭无泪、小便短少、囟门/眼眶凹陷、皮肤弹性差等明确脱水体征，THEN 即可确诊。",
+        "最高级别儿科急症: 脱水和休克是导致婴幼儿腹泻死亡的最主要原因。",
         "并发症：If 严重泄泻，Then 可导致脱水、电解质紊乱、酸中毒，甚至休克。",
         "需评估脱水体征（皮肤弹性差、眼窝凹陷、尿少、心率增快、血压下降）。",
         "【🚨 阶段警示】：核心风险是脱水和电解质紊乱，尤其是婴幼儿和老年患者，可能迅速危及生命。",
@@ -55886,11 +55609,21 @@
           ]
         },
         {
-          "axis": "urinary_renal_risk",
+          "axis": "allergic_th2_inflammation",
           "role": "secondary",
           "weight": 0.45,
           "confidence": "low",
           "typical_findings": [
+            "过敏"
+          ]
+        },
+        {
+          "axis": "urinary_renal_risk",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "medium",
+          "typical_findings": [
+            "肾",
             "尿"
           ]
         },
@@ -55926,6 +55659,28 @@
         }
       ],
       "raw_western_detail_excerpt": [
+        "小儿腹泻-全病程管理方案（含动态迁移逻辑）",
+        "本病的演变以“病因”为起点，以“正气（津液、阳气）”的损伤程度为进展主线，从急性实证，可发展为慢性虚证，或急转直下为危重急症。",
+        "[起点] 急性腹泻发作",
+        "→ 路径 C: 乳食停滞: IF 腹泻有明确的喂养不当史，大便酸臭、夹有不消化物，THEN 证属",
+        "[共同通路 1] 急性重症演变 (脱水与休克)",
+        "动态迁移逻辑: IF 任何急性腹泻导致液体大量丢失，未能及时补充，THEN 将出现脱水，证属",
+        "[共同通路 2] 慢性迁延演变 (脾虚与肾虚)",
+        "动态迁移逻辑: IF 急性腹泻迁延不愈，或患儿素体脾胃虚弱，THEN 病情将由实转虚，演变为以“食后即泻、久泻不愈”为特征的",
+        "一、 急性发作期（辨别病因）",
+        "【西医分期标签】: 急性胃肠炎 (Acute Gastroenteritis)",
+        "IF 及时祛除病因（解表、清热、消食），THEN 腹泻可止。",
+        "切忌滥用止泻药: 在病因（尤其是感染性病因）未明之前，滥用止泻药可能导致病邪留恋，加重病情。",
+        "二、 慢性迁延期（辨别虚损）",
+        "【西医分期标签】: 慢性/迁延性腹泻",
+        "脾虚泻: IF 腹泻病程迁延、时轻时重，以“食后即泻”为特点，伴神疲、面黄，THEN 即可确诊。",
+        "关注生长发育: 慢性腹泻的核心危害是导致营养不良，影响患儿的体重和身高增长。",
+        "排除继发性病因: 对于慢性腹泻，需警惕并排除乳糖不耐受、食物过敏、炎症性肠病等继发性病因。",
+        "三、 急性重症期（脱水/休克）",
+        "【西医分期标签】: 中重度脱水 / 低血容量性休克",
+        "气阴两伤: IF 患儿在剧烈吐泻后，出现哭无泪、小便短少、囟门/眼眶凹陷、皮肤弹性差等明确脱水体征，THEN 即可确诊。",
+        "最高级别儿科急症: 脱水和休克是导致婴幼儿腹泻死亡的最主要原因。",
+        "【气阴两伤】的任何体征，应立即送往医院。",
         "腹泻 (Diarrhea)",
         "初期/急性期：邪阻肠胃（实证）",
         "If 急性泄泻失治或迁延，损伤脾阳，Then 演变为脾胃虚弱。",
@@ -55950,6 +55705,7 @@
         "对于慢性腹泻，特别是伴有便血、夜间腹泻、持续性腹痛、体重下降、贫血、发热等“报警信号”时，必须进行肠镜等检查，以排除炎症性肠病和肿瘤。"
       ],
       "source_row_numbers": [
+        523,
         8867
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -56258,12 +56014,13 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "膜性肾病 (Membranous Nephropathy)",
+      "standard_western_name": "膜性肾病",
       "aliases": [
+        "Membranous Nephropathy",
         "MN"
       ],
       "source_raw_names": [
-        "膜性肾病 (Membranous Nephropathy)"
+        "膜性肾病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -57192,12 +56949,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "药物性肾损伤 (Drug-Induced Kidney Injury)",
+      "standard_western_name": "药物性肾损伤",
       "aliases": [
+        "Drug-Induced Kidney Injury",
         "药物相关性肾损害"
       ],
       "source_raw_names": [
-        "药物性肾损伤 (Drug-Induced Kidney Injury)"
+        "药物性肾损伤"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -57578,12 +57336,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "虚损 (Debility)",
+      "standard_western_name": "虚损",
       "aliases": [
+        "Debility",
         "虚劳"
       ],
       "source_raw_names": [
-        "虚损 (Debility)"
+        "虚损"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -57808,10 +57567,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "蚕食性角膜溃疡 (Mooren's Ulcer)",
-      "aliases": [],
+      "standard_western_name": "蚕食性角膜溃疡",
+      "aliases": [
+        "Mooren's Ulcer"
+      ],
       "source_raw_names": [
-        "蚕食性角膜溃疡 (Mooren's Ulcer)"
+        "蚕食性角膜溃疡"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -58162,12 +57923,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "蛛网膜下腔出血 (Subarachnoid Hemorrhage)",
+      "standard_western_name": "蛛网膜下腔出血",
       "aliases": [
+        "Subarachnoid Hemorrhage",
         "原发性蛛网膜下腔出血"
       ],
       "source_raw_names": [
-        "蛛网膜下腔出血 (Subarachnoid Hemorrhage)"
+        "蛛网膜下腔出血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -58388,12 +58150,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "血尿 (Hematuria)",
+      "standard_western_name": "血尿",
       "aliases": [
+        "Hematuria",
         "尿血"
       ],
       "source_raw_names": [
-        "血尿 (Hematuria)"
+        "血尿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -58746,8 +58509,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "血管性痴呆 (Vascular Dementia)",
+      "standard_western_name": "血管性痴呆",
       "aliases": [
+        "Vascular Dementia",
         "VaD",
         "多发性梗死性痴呆",
         "特殊部位单发性梗死性痴呆",
@@ -58755,7 +58519,7 @@
         "动脉硬化性痴呆"
       ],
       "source_raw_names": [
-        "血管性痴呆 (Vascular Dementia)"
+        "血管性痴呆"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -58911,12 +58675,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "视盘水肿 (Papilledema)",
+      "standard_western_name": "视盘水肿",
       "aliases": [
+        "Papilledema",
         "视乳头水肿"
       ],
       "source_raw_names": [
-        "视盘水肿 (Papilledema)"
+        "视盘水肿"
       ],
       "department_or_category": "",
       "sex": "女",
@@ -59018,10 +58783,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "视神经乳头炎 (Optic Papillitis)",
-      "aliases": [],
+      "standard_western_name": "视神经乳头炎",
+      "aliases": [
+        "Optic Papillitis"
+      ],
       "source_raw_names": [
-        "视神经乳头炎 (Optic Papillitis)"
+        "视神经乳头炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -59124,10 +58891,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "视神经萎缩 (Optic Atrophy)",
-      "aliases": [],
+      "standard_western_name": "视神经萎缩",
+      "aliases": [
+        "Optic Atrophy"
+      ],
       "source_raw_names": [
-        "视神经萎缩 (Optic Atrophy)"
+        "视神经萎缩"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -59214,10 +58983,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "视网膜动脉阻塞 (Retinal Artery Occlusion)",
-      "aliases": [],
+      "standard_western_name": "视网膜动脉阻塞",
+      "aliases": [
+        "Retinal Artery Occlusion"
+      ],
       "source_raw_names": [
-        "视网膜动脉阻塞 (Retinal Artery Occlusion)"
+        "视网膜动脉阻塞"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -59302,10 +59073,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "视网膜静脉周围炎 (Retinal Periphlebitis)",
-      "aliases": [],
+      "standard_western_name": "视网膜静脉周围炎",
+      "aliases": [
+        "Retinal Periphlebitis"
+      ],
       "source_raw_names": [
-        "视网膜静脉周围炎 (Retinal Periphlebitis)"
+        "视网膜静脉周围炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -59416,10 +59189,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "视网膜静脉阻塞 (Retinal Vein Occlusion)",
-      "aliases": [],
+      "standard_western_name": "视网膜静脉阻塞",
+      "aliases": [
+        "Retinal Vein Occlusion"
+      ],
       "source_raw_names": [
-        "视网膜静脉阻塞 (Retinal Vein Occlusion)"
+        "视网膜静脉阻塞"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -59525,10 +59300,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "角膜基质炎 (Interstitial Keratitis)",
-      "aliases": [],
+      "standard_western_name": "角膜基质炎",
+      "aliases": [
+        "Interstitial Keratitis"
+      ],
       "source_raw_names": [
-        "角膜基质炎 (Interstitial Keratitis)"
+        "角膜基质炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -59610,10 +59387,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "角膜瘢痕 (Corneal Scar)",
-      "aliases": [],
+      "standard_western_name": "角膜瘢痕",
+      "aliases": [
+        "Corneal Scar"
+      ],
       "source_raw_names": [
-        "角膜瘢痕 (Corneal Scar)"
+        "角膜瘢痕"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -59809,10 +59588,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "超急性细菌性结膜炎 (Hyperacute Bacterial Conjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "超急性细菌性结膜炎",
+      "aliases": [
+        "Hyperacute Bacterial Conjunctivitis"
+      ],
       "source_raw_names": [
-        "超急性细菌性结膜炎 (Hyperacute Bacterial Conjunctivitis)"
+        "超急性细菌性结膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60111,12 +59892,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "足背蜂窝组织炎或脓肿 (Cellulitis or Abscess of the Dorsum of the Foot)",
+      "standard_western_name": "足背蜂窝组织炎或脓肿",
       "aliases": [
+        "Cellulitis or Abscess of the Dorsum of the Foot",
         "足发背"
       ],
       "source_raw_names": [
-        "足背蜂窝组织炎或脓肿 (Cellulitis or Abscess of the Dorsum of the Foot)"
+        "足背蜂窝组织炎或脓肿"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60183,12 +59965,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "软下疳 (Chancroid)",
+      "standard_western_name": "软下疳",
       "aliases": [
+        "Chancroid",
         "杜克雷嗜血杆菌感染"
       ],
       "source_raw_names": [
-        "软下疳 (Chancroid)"
+        "软下疳"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60290,10 +60073,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "过敏性结膜炎 (Allergic Conjunctivitis)",
-      "aliases": [],
+      "standard_western_name": "过敏性结膜炎",
+      "aliases": [
+        "Allergic Conjunctivitis"
+      ],
       "source_raw_names": [
-        "过敏性结膜炎 (Allergic Conjunctivitis)"
+        "过敏性结膜炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60450,10 +60235,12 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "运动神经元病 (Motor Neuron Disease)",
-      "aliases": [],
+      "standard_western_name": "运动神经元病",
+      "aliases": [
+        "Motor Neuron Disease"
+      ],
       "source_raw_names": [
-        "运动神经元病 (Motor Neuron Disease)"
+        "运动神经元病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60512,10 +60299,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "近视 (Myopia)",
-      "aliases": [],
+      "standard_western_name": "近视",
+      "aliases": [
+        "Myopia"
+      ],
       "source_raw_names": [
-        "近视 (Myopia)"
+        "近视"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60667,10 +60456,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "远视 (Hyperopia)",
-      "aliases": [],
+      "standard_western_name": "远视",
+      "aliases": [
+        "Hyperopia"
+      ],
       "source_raw_names": [
-        "远视 (Hyperopia)"
+        "远视"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -60734,10 +60525,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "逆行射精 (Retrograde Ejaculation)",
-      "aliases": [],
+      "standard_western_name": "逆行射精",
+      "aliases": [
+        "Retrograde Ejaculation"
+      ],
       "source_raw_names": [
-        "逆行射精 (Retrograde Ejaculation)"
+        "逆行射精"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -60894,10 +60687,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "遗精 (Nocturnal Emission)",
-      "aliases": [],
+      "standard_western_name": "遗精",
+      "aliases": [
+        "Nocturnal Emission"
+      ],
       "source_raw_names": [
-        "遗精 (Nocturnal Emission)"
+        "遗精"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -61082,12 +60877,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "重症肌无力 (Myasthenia Gravis)",
+      "standard_western_name": "重症肌无力",
       "aliases": [
+        "Myasthenia Gravis",
         "MG"
       ],
       "source_raw_names": [
-        "重症肌无力 (Myasthenia Gravis)"
+        "重症肌无力"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -61341,8 +61137,9 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "间质性肺疾病 (Interstitial Lung Disease)",
+      "standard_western_name": "间质性肺疾病",
       "aliases": [
+        "Interstitial Lung Disease",
         "ILD",
         "间质性肺炎",
         "肺间质纤维化",
@@ -61351,7 +61148,7 @@
         "急性间质性肺炎"
       ],
       "source_raw_names": [
-        "间质性肺疾病 (Interstitial Lung Disease)"
+        "间质性肺疾病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -61432,13 +61229,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "阑尾炎 (Appendicitis)",
+      "standard_western_name": "阑尾炎",
       "aliases": [
+        "Appendicitis",
         "急性阑尾炎",
         "慢性阑尾炎"
       ],
       "source_raw_names": [
-        "阑尾炎 (Appendicitis)"
+        "阑尾炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -61536,10 +61334,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "阴囊湿疹 (Scrotal Eczema)",
-      "aliases": [],
+      "standard_western_name": "阴囊湿疹",
+      "aliases": [
+        "Scrotal Eczema"
+      ],
       "source_raw_names": [
-        "阴囊湿疹 (Scrotal Eczema)"
+        "阴囊湿疹"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -61611,10 +61411,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "阴囊蜂窝织炎 (Scrotal Cellulitis)",
-      "aliases": [],
+      "standard_western_name": "阴囊蜂窝织炎",
+      "aliases": [
+        "Scrotal Cellulitis"
+      ],
       "source_raw_names": [
-        "阴囊蜂窝织炎 (Scrotal Cellulitis)"
+        "阴囊蜂窝织炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -61684,7 +61486,8 @@
     {
       "standard_western_name": "阴茎癌",
       "aliases": [
-        "肾岩"
+        "肾岩",
+        "Penile Cancer"
       ],
       "source_raw_names": [
         "阴茎癌"
@@ -61708,12 +61511,26 @@
         "病程相对缓和，全身症状尚不明显。",
         "关键体征: 身体极度消瘦、持续性低热或潮热、口干、皮肤干燥、神疲乏力。",
         "胸腹盆CT、MRI或PET-CT用于评估有无远处转移。",
-        "【火毒炽盛】证中，可见血常规白细胞和C反应蛋白（CRP）升高。"
+        "【火毒炽盛】证中，可见血常规白细胞和C反应蛋白（CRP）升高。",
+        "If 配合西医治疗，肿瘤切除彻底，Then 转归至理想转归：五年生存率高，功能部分保留。",
+        "【西医分期标签】：局部病灶期",
+        "【量化指标参考】：",
+        "【西医分期标签】：区域转移期",
+        "【西医分期标签】：恶病质期",
+        "If 姑息治疗，症状控制，Then 转归至理想转归：减轻痛苦，维持尊严。",
+        "体征：阴茎、冠状沟附近出现丘疹、结节或疣状肿物。",
+        "体征：阴茎部出现溃疡，肿胀疼痛，有血样渗出物，味臭。",
+        "全身症状：出现恶病质、形体极度消瘦、不思饮食。"
       ],
       "clinical_manifestations": [
         "病程相对缓和，全身症状尚不明显。",
         "【[触发条件]】: IF 在上述肿物基础上，出现明显的红肿胀痛、溃烂如翻花、渗液腐臭难闻，并伴有发热等全身火毒内攻征象，THEN 即可诊断。",
-        "关键体征: 身体极度消瘦、持续性低热或潮热、口干、皮肤干燥、神疲乏力。"
+        "关键体征: 身体极度消瘦、持续性低热或潮热、口干、皮肤干燥、神疲乏力。",
+        "If 姑息治疗，症状控制，Then 转归至理想转归：减轻痛苦，维持尊严。",
+        "体征：阴茎、冠状沟附近出现丘疹、结节或疣状肿物。",
+        "体征：阴茎部出现溃疡，肿胀疼痛，有血样渗出物，味臭。",
+        "全身症状：出现恶病质、形体极度消瘦、不思饮食。",
+        "【🚨 阶段警示】：此阶段的核心管理目标是临终关怀（Hospice Care），控制疼痛，维持基本尊严。"
       ],
       "differential_diagnoses_text": [],
       "complications": [],
@@ -61744,86 +61561,9 @@
           ]
         },
         {
-          "axis": "urinary_renal_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "肾"
-          ]
-        },
-        {
-          "axis": "neoplastic_or_proliferative",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "癌"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
-        "病程相对缓和，全身症状尚不明显。",
-        "【西医分期标签】: 局限性 / 局部晚期阴茎癌 (Localized / Locally Advanced Penile Cancer)",
-        "【[量化指标参考]】",
-        "分期检查: 腹股沟淋巴结触诊与超声；",
-        "胸腹盆CT、MRI或PET-CT用于评估有无远处转移。",
-        "感染指标: 在",
-        "【火毒炽盛】证中，可见血常规白细胞和C反应蛋白（CRP）升高。",
-        "【[触发条件]】: IF 在上述肿物基础上，出现明显的红肿胀痛、溃烂如翻花、渗液腐臭难闻，并伴有发热等全身火毒内攻征象，THEN 即可诊断。",
-        "诊断与分期是第一要务: 任何中医治疗都必须在明确的病理诊断和TNM分期之后，作为辅助手段进行。",
-        "遵循标准治疗: 阴茎癌是预后相对较好的实体瘤，早期发现并接受规范的西医综合治疗是治愈的关键。",
-        "【西医分期标签】: 治疗后恢复期 / 晚期姑息治疗期 / 癌症恶病质",
-        "影像学检查: 定期复查CT/MRI/PET-CT以监测有无复发或转移。",
-        "营养指标: 在恶病质状态下，可见进行性体重下降、血清白蛋白降低、贫血等。",
-        "关键体征: 身体极度消瘦、持续性低热或潮热、口干、皮肤干燥、神疲乏力。"
-      ],
-      "source_row_numbers": [
-        2745
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "阴茎癌 (Penile Cancer)",
-      "aliases": [],
-      "source_raw_names": [
-        "阴茎癌 (Penile Cancer)"
-      ],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "50~70岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "If 配合西医治疗，肿瘤切除彻底，Then 转归至理想转归：五年生存率高，功能部分保留。",
-        "【西医分期标签】：局部病灶期",
-        "【量化指标参考】：",
-        "【西医分期标签】：区域转移期",
-        "【西医分期标签】：恶病质期",
-        "If 姑息治疗，症状控制，Then 转归至理想转归：减轻痛苦，维持尊严。",
-        "体征：阴茎、冠状沟附近出现丘疹、结节或疣状肿物。",
-        "体征：阴茎部出现溃疡，肿胀疼痛，有血样渗出物，味臭。",
-        "全身症状：出现恶病质、形体极度消瘦、不思饮食。"
-      ],
-      "clinical_manifestations": [
-        "If 姑息治疗，症状控制，Then 转归至理想转归：减轻痛苦，维持尊严。",
-        "体征：阴茎、冠状沟附近出现丘疹、结节或疣状肿物。",
-        "体征：阴茎部出现溃疡，肿胀疼痛，有血样渗出物，味臭。",
-        "全身症状：出现恶病质、形体极度消瘦、不思饮食。",
-        "【🚨 阶段警示】：此阶段的核心管理目标是临终关怀（Hospice Care），控制疼痛，维持基本尊严。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [],
-      "red_flags": [],
-      "objective_markers": [],
-      "pathology_axes": [
-        {
           "axis": "airway_hyperreactivity",
-          "role": "primary",
-          "weight": 0.75,
+          "role": "secondary",
+          "weight": 0.45,
           "confidence": "low",
           "typical_findings": [
             "胸闷"
@@ -61836,6 +61576,15 @@
           "confidence": "low",
           "typical_findings": [
             "溃疡"
+          ]
+        },
+        {
+          "axis": "urinary_renal_risk",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "肾"
           ]
         },
         {
@@ -61859,6 +61608,20 @@
         }
       ],
       "raw_western_detail_excerpt": [
+        "病程相对缓和，全身症状尚不明显。",
+        "【西医分期标签】: 局限性 / 局部晚期阴茎癌 (Localized / Locally Advanced Penile Cancer)",
+        "【[量化指标参考]】",
+        "分期检查: 腹股沟淋巴结触诊与超声；",
+        "胸腹盆CT、MRI或PET-CT用于评估有无远处转移。",
+        "感染指标: 在",
+        "【火毒炽盛】证中，可见血常规白细胞和C反应蛋白（CRP）升高。",
+        "【[触发条件]】: IF 在上述肿物基础上，出现明显的红肿胀痛、溃烂如翻花、渗液腐臭难闻，并伴有发热等全身火毒内攻征象，THEN 即可诊断。",
+        "诊断与分期是第一要务: 任何中医治疗都必须在明确的病理诊断和TNM分期之后，作为辅助手段进行。",
+        "遵循标准治疗: 阴茎癌是预后相对较好的实体瘤，早期发现并接受规范的西医综合治疗是治愈的关键。",
+        "【西医分期标签】: 治疗后恢复期 / 晚期姑息治疗期 / 癌症恶病质",
+        "影像学检查: 定期复查CT/MRI/PET-CT以监测有无复发或转移。",
+        "营养指标: 在恶病质状态下，可见进行性体重下降、血清白蛋白降低、贫血等。",
+        "关键体征: 身体极度消瘦、持续性低热或潮热、口干、皮肤干燥、神疲乏力。",
         "If 配合西医治疗，肿瘤切除彻底，Then 转归至理想转归：五年生存率高，功能部分保留。",
         "If 出现腹股沟淋巴结肿大 → 提示淋巴结转移。",
         "If 姑息治疗，症状控制，Then 转归至理想转归：减轻痛苦，维持尊严。",
@@ -61874,6 +61637,7 @@
         "【🚨 阶段警示】：此阶段的核心管理目标是临终关怀（Hospice Care），控制疼痛，维持基本尊严。"
       ],
       "source_row_numbers": [
+        2745,
         10849
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -61881,10 +61645,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "阴茎硬化性淋巴管炎 (Sclerosing Lymphangitis of Penis)",
-      "aliases": [],
+      "standard_western_name": "阴茎硬化性淋巴管炎",
+      "aliases": [
+        "Sclerosing Lymphangitis of Penis"
+      ],
       "source_raw_names": [
-        "阴茎硬化性淋巴管炎 (Sclerosing Lymphangitis of Penis)"
+        "阴茎硬化性淋巴管炎"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -61956,10 +61722,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "阴茎硬结症 (Peyronie's Disease)",
-      "aliases": [],
+      "standard_western_name": "阴茎硬结症",
+      "aliases": [
+        "Peyronie's Disease"
+      ],
       "source_raw_names": [
-        "阴茎硬结症 (Peyronie's Disease)"
+        "阴茎硬结症"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -62338,13 +62106,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "阿尔茨海默病 (Alzheimer's Disease)",
+      "standard_western_name": "阿尔茨海默病",
       "aliases": [
+        "Alzheimer's Disease",
         "AD",
         "阿尔兹海默症"
       ],
       "source_raw_names": [
-        "阿尔茨海默病 (Alzheimer's Disease)"
+        "阿尔茨海默病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -62425,7 +62194,8 @@
         "子痈",
         "急性附睾炎",
         "慢性附睾炎",
-        "睾丸炎"
+        "睾丸炎",
+        "Epididymitis"
       ],
       "source_raw_names": [
         "附睾炎"
@@ -62447,18 +62217,32 @@
         "关键体征: Prehn征阳性（托起阴囊疼痛缓解），附睾显著肿大、变硬、触痛剧烈，阴囊皮肤红肿、皮温升高。",
         "【[触发条件]】: 局部焮热疼痛尤甚，皮温极高，肿胀范围扩大，呈丹毒或蜂窝织炎样表现。",
         "疼痛评分: VAS≤4，多为轻微坠胀不适、隐痛或无痛。",
-        "【[触发条件]】: 高热持续不退，局部肿胀加剧并出现波动感（按之应指），超声证实附睾脓肿形成。"
+        "【[触发条件]】: 高热持续不退，局部肿胀加剧并出现波动感（按之应指），超声证实附睾脓肿形成。",
+        "【西医分期标签】：急性炎症期 (Acute Inflammatory Phase)",
+        "【量化指标参考】：",
+        "【西医分期标签】：慢性期 (Chronic Stage)",
+        "If 治疗 48∼72 小时后症状不缓解 → 不理想转归：脓肿形成或抗生素耐药。",
+        "If 因劳累、饮酒等诱因 → 不理想转归：症状急性加重 → 转回急性期处理。",
+        "核心体征：附睾头或尾肿大疼痛，阴囊皮肤红肿、发热。",
+        "伴随恶寒发热。"
       ],
       "clinical_manifestations": [
         "疼痛评分: VAS>6，常为剧烈疼痛，可放射至同侧腹股沟及下腹部。",
         "关键体征: Prehn征阳性（托起阴囊疼痛缓解），附睾显著肿大、变硬、触痛剧烈，阴囊皮肤红肿、皮温升高。",
         "【[触发条件]】: 局部焮热疼痛尤甚，皮温极高，肿胀范围扩大，呈丹毒或蜂窝织炎样表现。",
         "疼痛评分: VAS≤4，多为轻微坠胀不适、隐痛或无痛。",
-        "关键体征: 附睾（多见于尾部）可触及边界清晰、质地偏硬、轻微触痛或无痛的结节。"
+        "关键体征: 附睾（多见于尾部）可触及边界清晰、质地偏硬、轻微触痛或无痛的结节。",
+        "If 治疗 48∼72 小时后症状不缓解 → 不理想转归：脓肿形成或抗生素耐药。",
+        "If 因劳累、饮酒等诱因 → 不理想转归：症状急性加重 → 转回急性期处理。",
+        "核心体征：附睾头或尾肿大疼痛，阴囊皮肤红肿、发热。",
+        "伴随恶寒发热。",
+        "核心体征：附睾肿大，可触及硬结，但无急性红肿热痛。",
+        "【触发条件】：阴囊隐痛、坠胀、发胀，疼痛可放射至下腹部，附睾头或附睾尾肿大，有触痛。"
       ],
       "differential_diagnoses_text": [],
       "complications": [
-        "IF [治疗过程中，高热不退，局部肿痛加剧，出现明显波动感], THEN → 并发症: 热毒炽盛，肉腐成脓，形成附睾脓肿。"
+        "IF [治疗过程中，高热不退，局部肿痛加剧，出现明显波动感], THEN → 并发症: 热毒炽盛，肉腐成脓，形成附睾脓肿。",
+        "If 遗留双侧硬结 → 并发症：男性不育。"
       ],
       "required_checks": [
         "炎性指标: C反应蛋白(CRP)显著升高，血常规白细胞总数(WBC)及中性粒细胞比例(N%)升高。",
@@ -62469,7 +62253,8 @@
       ],
       "red_flags": [
         "IF [治疗过程中，高热不退，局部肿痛加剧，出现明显波动感], THEN → 并发症: 热毒炽盛，肉腐成脓，形成附睾脓肿。",
-        "【[触发条件]】: 高热持续不退，局部肿胀加剧并出现波动感（按之应指），超声证实附睾脓肿形成。"
+        "【[触发条件]】: 高热持续不退，局部肿胀加剧并出现波动感（按之应指），超声证实附睾脓肿形成。",
+        "If 遗留双侧硬结 → 并发症：男性不育。"
       ],
       "objective_markers": [
         "炎性指标: C反应蛋白(CRP)显著升高，血常规白细胞总数(WBC)及中性粒细胞比例(N%)升高。",
@@ -62485,6 +62270,9 @@
           "weight": 0.75,
           "confidence": "medium",
           "typical_findings": [
+            "感染",
+            "炎症",
+            "发热",
             "CRP",
             "白细胞"
           ]
@@ -62496,6 +62284,15 @@
           "confidence": "low",
           "typical_findings": [
             "痰"
+          ]
+        },
+        {
+          "axis": "cardiovascular_or_circulatory_risk",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "low",
+          "typical_findings": [
+            "心"
           ]
         }
       ],
@@ -62516,75 +62313,7 @@
         "疼痛评分: VAS≤4，多为轻微坠胀不适、隐痛或无痛。",
         "炎性指标: CRP及血常规多在正常范围内。",
         "关键体征: 附睾（多见于尾部）可触及边界清晰、质地偏硬、轻微触痛或无痛的结节。",
-        "影像学表现: 彩色多普勒超声可见附睾局部增厚、回声不均或钙化，血流信号不丰富或正常。"
-      ],
-      "source_row_numbers": [
-        2749
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "附睾炎 (Epididymitis)",
-      "aliases": [],
-      "source_raw_names": [
-        "附睾炎 (Epididymitis)"
-      ],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "20~40岁，>50岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "【西医分期标签】：急性炎症期 (Acute Inflammatory Phase)",
-        "【量化指标参考】：",
-        "【西医分期标签】：慢性期 (Chronic Stage)",
-        "If 治疗 48∼72 小时后症状不缓解 → 不理想转归：脓肿形成或抗生素耐药。",
-        "If 因劳累、饮酒等诱因 → 不理想转归：症状急性加重 → 转回急性期处理。",
-        "核心体征：附睾头或尾肿大疼痛，阴囊皮肤红肿、发热。",
-        "伴随恶寒发热。"
-      ],
-      "clinical_manifestations": [
-        "If 治疗 48∼72 小时后症状不缓解 → 不理想转归：脓肿形成或抗生素耐药。",
-        "If 因劳累、饮酒等诱因 → 不理想转归：症状急性加重 → 转回急性期处理。",
-        "核心体征：附睾头或尾肿大疼痛，阴囊皮肤红肿、发热。",
-        "伴随恶寒发热。",
-        "核心体征：附睾肿大，可触及硬结，但无急性红肿热痛。",
-        "【触发条件】：阴囊隐痛、坠胀、发胀，疼痛可放射至下腹部，附睾头或附睾尾肿大，有触痛。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [
-        "If 遗留双侧硬结 → 并发症：男性不育。"
-      ],
-      "required_checks": [],
-      "red_flags": [
-        "If 遗留双侧硬结 → 并发症：男性不育。"
-      ],
-      "objective_markers": [],
-      "pathology_axes": [
-        {
-          "axis": "infection_or_inflammation",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "medium",
-          "typical_findings": [
-            "感染",
-            "炎症",
-            "发热"
-          ]
-        },
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
+        "影像学表现: 彩色多普勒超声可见附睾局部增厚、回声不均或钙化，血流信号不丰富或正常。",
         "If 清热利湿，抗感染 → 理想转归：炎症消退，痊愈。",
         "If 治疗 48∼72 小时后症状不缓解 → 不理想转归：脓肿形成或抗生素耐药。",
         "If 因劳累、饮酒等诱因 → 不理想转归：症状急性加重 → 转回急性期处理。",
@@ -62600,6 +62329,7 @@
         "【触发条件】：阴囊隐痛、坠胀、发胀，疼痛可放射至下腹部，附睾头或附睾尾肿大，有触痛。"
       ],
       "source_row_numbers": [
+        2749,
         10910
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -62610,7 +62340,8 @@
       "standard_western_name": "附睾结核",
       "aliases": [
         "子痰",
-        "穿囊漏"
+        "穿囊漏",
+        "Tuberculosis of Epididymis"
       ],
       "source_raw_names": [
         "附睾结核"
@@ -62635,7 +62366,16 @@
         "IF 治疗不及时或无效，结核菌持续繁殖，正气被耗伤，硬结逐渐软化、出现波动感，并伴有午后低热、盗汗等全身症状，",
         "【理想转归】: 脓液（“毒邪”）被清除，全身虚热症状消退，进入术后恢复和抗结核巩固期。",
         "此时结核菌虽为实邪，但临床表现一派虚寒。",
-        "疼痛评分: 无痛或仅有轻微坠胀不适。"
+        "疼痛评分: 无痛或仅有轻微坠胀不适。",
+        "【西医分期标签】：结节浸润期",
+        "【量化指标参考】：",
+        "实验室：PPD 试验阳性。",
+        "【西医分期标签】：脓肿溃破期",
+        "【西医分期标签】：慢性窦道期",
+        "If 抗痨，滋阴降火 → 理想转归：全身症状消退，进入恢复期。",
+        "核心体征：附睾肿大，多位于尾部，质地坚硬，可触及输精管呈条索状改变。",
+        "核心体征：附睾处形成窦道，流出稀薄脓液。",
+        "伴随潮热盗汗、腰膝酸软、午后低热等结核中毒症状。"
       ],
       "clinical_manifestations": [
         "IF 治疗不及时或无效，结核菌持续繁殖，正气被耗伤，硬结逐渐软化、出现波动感，并伴有午后低热、盗汗等全身症状，",
@@ -62647,7 +62387,12 @@
         "疼痛评分: 可有胀痛或隐痛。",
         "关键体征: 附睾硬结增大并与阴囊皮肤粘连，皮色暗红，中央变软，可有波动感；",
         "疼痛评分: 窦道口周围可有慢性炎性疼痛。",
-        "关键体征: 阴囊部疮口凹陷、经久不愈，流出稀薄脓液，夹有败絮样物质（干酪样坏死物）；"
+        "关键体征: 阴囊部疮口凹陷、经久不愈，流出稀薄脓液，夹有败絮样物质（干酪样坏死物）；",
+        "If 抗痨，滋阴降火 → 理想转归：全身症状消退，进入恢复期。",
+        "核心体征：附睾肿大，多位于尾部，质地坚硬，可触及输精管呈条索状改变。",
+        "核心体征：附睾处形成窦道，流出稀薄脓液。",
+        "伴随潮热盗汗、腰膝酸软、午后低热等结核中毒症状。",
+        "全身症状：神疲乏力、头晕、面色不华。"
       ],
       "differential_diagnoses_text": [],
       "complications": [],
@@ -62681,6 +62426,16 @@
           "confidence": "low",
           "typical_findings": [
             "心"
+          ]
+        },
+        {
+          "axis": "neoplastic_or_proliferative",
+          "role": "secondary",
+          "weight": 0.45,
+          "confidence": "medium",
+          "typical_findings": [
+            "癌",
+            "增生"
           ]
         }
       ],
@@ -62709,71 +62464,7 @@
         "炎性指标: ESR可逐渐恢复正常。",
         "关键体征: 阴囊部疮口凹陷、经久不愈，流出稀薄脓液，夹有败絮样物质（干酪样坏死物）；",
         "影像学表现: 窦道造影可明确窦道范围。",
-        "首要警示: 慢性窦道的形成常提示深部有残留的坏死组织，根治往往需要再次行彻底的病灶清除+窦道切除术。"
-      ],
-      "source_row_numbers": [
-        2758
-      ],
-      "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
-      "status": "pending_review",
-      "confidence": "medium"
-    },
-    {
-      "standard_western_name": "附睾结核 (Tuberculosis of Epididymis)",
-      "aliases": [],
-      "source_raw_names": [
-        "附睾结核 (Tuberculosis of Epididymis)"
-      ],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "20~40岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "diagnostic_key_points": [
-        "【西医分期标签】：结节浸润期",
-        "【量化指标参考】：",
-        "实验室：PPD 试验阳性。",
-        "【西医分期标签】：脓肿溃破期",
-        "【西医分期标签】：慢性窦道期",
-        "If 抗痨，滋阴降火 → 理想转归：全身症状消退，进入恢复期。",
-        "核心体征：附睾肿大，多位于尾部，质地坚硬，可触及输精管呈条索状改变。",
-        "核心体征：附睾处形成窦道，流出稀薄脓液。",
-        "伴随潮热盗汗、腰膝酸软、午后低热等结核中毒症状。"
-      ],
-      "clinical_manifestations": [
-        "If 抗痨，滋阴降火 → 理想转归：全身症状消退，进入恢复期。",
-        "核心体征：附睾肿大，多位于尾部，质地坚硬，可触及输精管呈条索状改变。",
-        "核心体征：附睾处形成窦道，流出稀薄脓液。",
-        "伴随潮热盗汗、腰膝酸软、午后低热等结核中毒症状。",
-        "全身症状：神疲乏力、头晕、面色不华。"
-      ],
-      "differential_diagnoses_text": [],
-      "complications": [],
-      "required_checks": [],
-      "red_flags": [],
-      "objective_markers": [],
-      "pathology_axes": [
-        {
-          "axis": "cardiovascular_or_circulatory_risk",
-          "role": "primary",
-          "weight": 0.75,
-          "confidence": "low",
-          "typical_findings": [
-            "心"
-          ]
-        },
-        {
-          "axis": "neoplastic_or_proliferative",
-          "role": "secondary",
-          "weight": 0.45,
-          "confidence": "medium",
-          "typical_findings": [
-            "癌",
-            "增生"
-          ]
-        }
-      ],
-      "raw_western_detail_excerpt": [
+        "首要警示: 慢性窦道的形成常提示深部有残留的坏死组织，根治往往需要再次行彻底的病灶清除+窦道切除术。",
         "If 抗痨，滋阴降火 → 理想转归：全身症状消退，进入恢复期。",
         "【西医分期标签】：结节浸润期",
         "【量化指标参考】：",
@@ -62787,6 +62478,7 @@
         "全身症状：神疲乏力、头晕、面色不华。"
       ],
       "source_row_numbers": [
+        2758,
         10914
       ],
       "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
@@ -63065,10 +62757,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "青光眼睫状体炎综合征 (Glaucomatocyclitic Crisis)",
-      "aliases": [],
+      "standard_western_name": "青光眼睫状体炎综合征",
+      "aliases": [
+        "Glaucomatocyclitic Crisis"
+      ],
       "source_raw_names": [
-        "青光眼睫状体炎综合征 (Glaucomatocyclitic Crisis)"
+        "青光眼睫状体炎综合征"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -63541,13 +63235,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "颈动脉斑块 (Carotid Plaque)",
+      "standard_western_name": "颈动脉斑块",
       "aliases": [
+        "Carotid Plaque",
         "颈动脉粥样硬化斑块",
         "颈动脉狭窄斑块"
       ],
       "source_raw_names": [
-        "颈动脉斑块 (Carotid Plaque)"
+        "颈动脉斑块"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -63619,10 +63314,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "颈椎病 (Cervical Spondylosis)",
-      "aliases": [],
+      "standard_western_name": "颈椎病",
+      "aliases": [
+        "Cervical Spondylosis"
+      ],
       "source_raw_names": [
-        "颈椎病 (Cervical Spondylosis)"
+        "颈椎病"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -64283,12 +63980,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "食管-贲门失弛缓症 (Esophageal Achalasia)",
+      "standard_western_name": "食管-贲门失弛缓症",
       "aliases": [
+        "Esophageal Achalasia",
         "贲门痉挛"
       ],
       "source_raw_names": [
-        "食管-贲门失弛缓症 (Esophageal Achalasia)"
+        "食管-贲门失弛缓症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -64418,12 +64116,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "食管癌 (Esophageal Cancer)",
+      "standard_western_name": "食管癌",
       "aliases": [
+        "Esophageal Cancer",
         "食道癌"
       ],
       "source_raw_names": [
-        "食管癌 (Esophageal Cancer)"
+        "食管癌"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -64731,13 +64430,14 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "骨关节炎 (Osteoarthritis)",
+      "standard_western_name": "骨关节炎",
       "aliases": [
+        "Osteoarthritis",
         "OA",
         "退行性关节炎"
       ],
       "source_raw_names": [
-        "骨关节炎 (Osteoarthritis)"
+        "骨关节炎"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -64806,14 +64506,15 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "骨质疏松症 (Osteoporosis)",
+      "standard_western_name": "骨质疏松症",
       "aliases": [
+        "Osteoporosis",
         "OP",
         "骨质疏松",
         "绝经后骨质疏松"
       ],
       "source_raw_names": [
-        "骨质疏松症 (Osteoporosis)"
+        "骨质疏松症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -64853,15 +64554,16 @@
       "confidence": "low"
     },
     {
-      "standard_western_name": "高脂血症 (Hyperlipidemia)",
+      "standard_western_name": "高脂血症",
       "aliases": [
+        "Hyperlipidemia",
         "高脂蛋白血症",
         "高血脂",
         "血脂异常",
         "脂蛋白异常血症"
       ],
       "source_raw_names": [
-        "高脂血症 (Hyperlipidemia)"
+        "高脂血症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -64952,8 +64654,9 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "高血压 (Hypertension)",
+      "standard_western_name": "高血压",
       "aliases": [
+        "Hypertension",
         "原发性高血压",
         "继发性高血压",
         "essential hypertension",
@@ -64961,7 +64664,7 @@
         "老年收缩期高血压"
       ],
       "source_raw_names": [
-        "高血压 (Hypertension)"
+        "高血压"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -65103,10 +64806,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "高血压性视网膜病变 (Hypertensive Retinopathy)",
-      "aliases": [],
+      "standard_western_name": "高血压性视网膜病变",
+      "aliases": [
+        "Hypertensive Retinopathy"
+      ],
       "source_raw_names": [
-        "高血压性视网膜病变 (Hypertensive Retinopathy)"
+        "高血压性视网膜病变"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -65534,10 +65239,12 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "黄疸(Jaundice)",
-      "aliases": [],
+      "standard_western_name": "黄疸",
+      "aliases": [
+        "Jaundice"
+      ],
       "source_raw_names": [
-        "黄疸(Jaundice)"
+        "黄疸"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -66849,12 +66556,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "齿龈出血 (Gingival Bleeding)",
+      "standard_western_name": "齿龈出血",
       "aliases": [
+        "Gingival Bleeding",
         "齿衄"
       ],
       "source_raw_names": [
-        "齿龈出血 (Gingival Bleeding)"
+        "齿龈出血"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -66955,12 +66663,13 @@
       "confidence": "medium"
     },
     {
-      "standard_western_name": "龟头炎和包皮炎 (Balanoposthitis)",
+      "standard_western_name": "龟头炎和包皮炎",
       "aliases": [
+        "Balanoposthitis",
         "龟头包皮炎"
       ],
       "source_raw_names": [
-        "龟头炎和包皮炎 (Balanoposthitis)"
+        "龟头炎和包皮炎"
       ],
       "department_or_category": "",
       "sex": "男",

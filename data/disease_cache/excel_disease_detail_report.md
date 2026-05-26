@@ -1,15 +1,15 @@
 # Excel Disease Diagnostic Detail Report
 
-- generated_at: 2026-05-26T15:41:09.958729+00:00
+- generated_at: 2026-05-26T15:57:02.920254+00:00
 - source_file: /Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx
 - raw_disease_cell_count: 643
-- cleaned_disease_count: 673
+- cleaned_disease_count: 663
 - raw_detail_cell_count: 633
 - rows_with_kept_western_detail: 633
-- diseases_with_any_western_detail: 664
-- diseases_with_required_checks: 464
+- diseases_with_any_western_detail: 654
+- diseases_with_required_checks: 460
 - diseases_with_differential_text: 75
-- diseases_with_complications: 230
+- diseases_with_complications: 228
 
 ## Scope
 

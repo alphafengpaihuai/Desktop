@@ -452,6 +452,7 @@ def _merge_details_into_pending_cards(details: list[dict[str, Any]]) -> None:
             for item in incoming["differential_diagnoses"]:
                 if item not in existing["differential_diagnoses"]:
                     existing["differential_diagnoses"].append(item)
+        existing["pathology_axes"] = existing.get("pathology_axes", [])[:6]
         existing["status"] = "pending_review"
         existing["updated_at"] = _now()
         existing["excel_diagnostic_detail_source"] = incoming["excel_diagnostic_detail_source"]

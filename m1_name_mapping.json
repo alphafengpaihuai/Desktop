@@ -90,7 +90,7 @@
   "1型糖尿病": "Type 1 Diabetes Mellitus",
   "Graves病": "Graves Disease",
   "GERD": "Gastroesophageal Reflux Disease (GERD)",
-  "肝硬化": "Cirrhosis",
+  "肝硬化": "Liver Cirrhosis",
   "憩室炎": "Diverticulitis",
   "缺血性脑卒中": "Ischemic Stroke",
   "脑梗塞": "Ischemic Stroke",
@@ -152,5 +152,14 @@
   "肾盂肾炎": "Pyelonephritis",
   "接触性皮炎": "Contact Dermatitis",
   "儿童热性惊厥": "Febrile Seizure",
-  "水痘": "Chickenpox"
+  "水痘": "Chickenpox",
+  "肝细胞癌": "Hepatocellular Carcinoma",
+  "肝癌": "Hepatocellular Carcinoma",
+  "原发性肝癌": "Hepatocellular Carcinoma",
+  "肝CA": "Hepatocellular Carcinoma",
+  "慢性咽喉炎": "Chronic Pharyngitis",
+  "Cirrhosis": "Liver Cirrhosis",
+  "liver cirrhosis": "Liver Cirrhosis",
+  "hepatic cirrhosis": "Liver Cirrhosis",
+  "肝纤维化": "Liver Cirrhosis"
 }

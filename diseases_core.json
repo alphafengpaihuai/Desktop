@@ -18658,5 +18658,115 @@
       "意识改变或惊厥持续",
       "雷击样头痛或脑膜刺激征"
     ]
+  },
+  {
+    "disease_name": "Hepatocellular Carcinoma",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "notes": "原发性肝细胞癌，最常见的肝脏恶性肿瘤。与HBV/HCV感染、肝硬化、酗酒、非酒精性脂肪肝(NAFLD)高度相关。",
+    "axes": [
+      {
+        "axis": "neoplastic_or_proliferative",
+        "role": "primary",
+        "weight": 0.95,
+        "confidence": "high",
+        "typical_findings": [
+          "liver mass on imaging",
+          "arterial hyperenhancement with washout on CT/MRI",
+          "elevated AFP",
+          "liver biopsy showing HCC"
+        ]
+      },
+      {
+        "axis": "hepatic_or_biliary_dysfunction",
+        "role": "primary",
+        "weight": 0.85,
+        "confidence": "high",
+        "typical_findings": [
+          "cirrhosis background",
+          "elevated liver enzymes",
+          "portal hypertension",
+          "decreased liver synthetic function"
+        ]
+      },
+      {
+        "axis": "fibrosis_or_tissue_remodeling",
+        "role": "pathogenesis",
+        "weight": 0.75,
+        "confidence": "high",
+        "typical_findings": [
+          "liver cirrhosis",
+          "bridging fibrosis",
+          "HBV/HCV related cirrhosis",
+          "alcoholic cirrhosis"
+        ]
+      },
+      {
+        "axis": "infection_or_inflammation",
+        "role": "pathogenesis",
+        "weight": 0.65,
+        "confidence": "high",
+        "typical_findings": [
+          "chronic HBV infection",
+          "chronic HCV infection",
+          "chronic hepatic inflammation"
+        ]
+      }
+    ],
+    "need_external_check_if": [
+      "AFP >400 with liver mass",
+      "vascular invasion on imaging",
+      "ECOG performance status for treatment planning",
+      "Child-Pugh stage for prognosis"
+    ]
+  },
+  {
+    "disease_name": "Chronic Pharyngitis",
+    "entry_type": "standard_western_disease",
+    "m1_diagnosis_entry_allowed": true,
+    "notes": "咽部黏膜慢性炎症，病程超过3个月。常见病因包括：鼻后滴漏（UACS）、胃食管反流（LPR）、慢性刺激物暴露（烟酒/粉尘）、过敏等。",
+    "axes": [
+      {
+        "axis": "upper_airway_involvement",
+        "role": "primary",
+        "weight": 0.85,
+        "confidence": "high",
+        "typical_findings": [
+          "chronic throat discomfort",
+          "throat clearing",
+          "foreign body sensation",
+          "chronic cough"
+        ]
+      },
+      {
+        "axis": "mucosal_barrier_dysfunction",
+        "role": "primary",
+        "weight": 0.75,
+        "confidence": "high",
+        "typical_findings": [
+          "pharyngeal mucosal inflammation",
+          "erythema",
+          "granular pharyngitis",
+          "mucous secretion"
+        ]
+      },
+      {
+        "axis": "digestive_reflux_or_dysfunction",
+        "role": "pathogenesis",
+        "weight": 0.6,
+        "confidence": "medium",
+        "typical_findings": [
+          "laryngopharyngeal reflux",
+          "morning hoarseness",
+          "acid taste",
+          "spicy food exacerbation"
+        ]
+      }
+    ],
+    "must_not_be_primary_when": [
+      "streptococcal acute pharyngitis with exudate",
+      "retropharyngeal abscess",
+      "epiglottitis with stridor"
+    ]
   }
 ]

@@ -1,24 +1,12 @@
 {
-  "created_at": "2026-05-26T15:41:09.308531+00:00",
+  "created_at": "2026-05-26T15:57:02.288949+00:00",
   "source_file": "/Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx",
   "raw_row_count": 11109,
   "raw_disease_cell_count": 643,
-  "cleaned_disease_count": 673,
-  "duplicate_disease_count": 2,
-  "non_western_or_blocked_count": 6,
+  "cleaned_disease_count": 663,
+  "duplicate_disease_count": 9,
+  "non_western_or_blocked_count": 7,
   "diseases": [
-    {
-      "raw_text": "CTS）",
-      "standard_western_name": "CTS）",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "好发 40–60 岁女性",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
     {
       "raw_text": "Hunt综合征",
       "standard_western_name": "Hunt综合征",
@@ -36,21 +24,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "ITP）",
-      "standard_western_name": "ITP）",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0-18岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "IgA肾病 (IgA Nephropathy)",
-      "standard_western_name": "IgA肾病 (IgA Nephropathy)",
+      "raw_text": "IgA肾病",
+      "standard_western_name": "IgA肾病",
       "aliases": [
+        "IgA Nephropathy",
         "Berger病"
       ],
       "department_or_category": "",
@@ -104,21 +81,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "UACS）",
-      "standard_western_name": "UACS）",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "3-70岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "Vogt-小柳-原田综合征 (Vogt-Koyanagi-Harada Syndrome)",
-      "standard_western_name": "Vogt-小柳-原田综合征 (Vogt-Koyanagi-Harada Syndrome)",
+      "raw_text": "Vogt-小柳-原田综合征",
+      "standard_western_name": "Vogt-小柳-原田综合征",
       "aliases": [
+        "Vogt-Koyanagi-Harada Syndrome",
         "VKH综合征",
         "特发性葡萄膜大脑炎"
       ],
@@ -143,45 +109,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "【丹毒】 【erysipelas】",
-      "standard_western_name": "【丹毒】 【erysipelas】",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0-80岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "【痹证】",
-      "standard_western_name": "【痹证】",
-      "aliases": [],
-      "department_or_category": "中医内科学-肢体经络系统",
-      "sex": "男女均可",
-      "typical_age": "20~70岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "【类天疱疮】",
-      "standard_western_name": "【类天疱疮】",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "60-90岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "三叉神经痛 (Trigeminal Neuralgia)",
-      "standard_western_name": "三叉神经痛 (Trigeminal Neuralgia)",
-      "aliases": [],
+      "raw_text": "三叉神经痛",
+      "standard_western_name": "三叉神经痛",
+      "aliases": [
+        "Trigeminal Neuralgia"
+      ],
       "department_or_category": "中西医结合内科学-神经系统疾病",
       "sex": "男女均可",
       "typical_age": "40~80岁",
@@ -191,10 +123,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "上消化道出血 (Upper Gastrointestinal Hemorrhage)",
-      "standard_western_name": "上消化道出血 (Upper Gastrointestinal Hemorrhage)",
+      "raw_text": "上消化道出血",
+      "standard_western_name": "上消化道出血",
       "aliases": [
-        "上消化道出血"
+        "Upper Gastrointestinal Hemorrhage"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -205,9 +137,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "上睑下垂 (Ptosis)",
-      "standard_western_name": "上睑下垂 (Ptosis)",
-      "aliases": [],
+      "raw_text": "上睑下垂",
+      "standard_western_name": "上睑下垂",
+      "aliases": [
+        "Ptosis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -275,9 +209,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "不射精 (Anejaculation)",
-      "standard_western_name": "不射精 (Anejaculation)",
-      "aliases": [],
+      "raw_text": "不射精",
+      "standard_western_name": "不射精",
+      "aliases": [
+        "Anejaculation"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": ">18岁",
@@ -303,9 +239,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "中心性浆液性脉络膜视网膜病变 (Central Serous Chorioretinopathy)",
-      "standard_western_name": "中心性浆液性脉络膜视网膜病变 (Central Serous Chorioretinopathy)",
+      "raw_text": "中心性浆液性脉络膜视网膜病变",
+      "standard_western_name": "中心性浆液性脉络膜视网膜病变",
       "aliases": [
+        "Central Serous Chorioretinopathy",
         "CSC"
       ],
       "department_or_category": "",
@@ -331,9 +268,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "中间葡萄膜炎 (Intermediate Uveitis)",
-      "standard_western_name": "中间葡萄膜炎 (Intermediate Uveitis)",
-      "aliases": [],
+      "raw_text": "中间葡萄膜炎",
+      "standard_western_name": "中间葡萄膜炎",
+      "aliases": [
+        "Intermediate Uveitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "10~40岁",
@@ -343,9 +282,22 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "乙型肝炎 (Hepatitis B)",
-      "standard_western_name": "乙型肝炎 (Hepatitis B)",
+      "raw_text": "丹毒】 【erysipelas",
+      "standard_western_name": "丹毒】 【erysipelas",
+      "aliases": [],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "0-80岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": []
+    },
+    {
+      "raw_text": "乙型肝炎",
+      "standard_western_name": "乙型肝炎",
       "aliases": [
+        "Hepatitis B",
         "慢性乙型肝炎"
       ],
       "department_or_category": "",
@@ -463,9 +415,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "亚急性甲状腺炎 (Subacute Thyroiditis)",
-      "standard_western_name": "亚急性甲状腺炎 (Subacute Thyroiditis)",
+      "raw_text": "亚急性甲状腺炎",
+      "standard_western_name": "亚急性甲状腺炎",
       "aliases": [
+        "Subacute Thyroiditis",
         "SAT",
         "亚甲炎",
         "de Quervain甲状腺炎"
@@ -570,7 +523,9 @@
       "entry_type": "standard_western_disease",
       "m1_diagnosis_entry_allowed": true,
       "needs_external_enrichment": true,
-      "cleaning_warnings": []
+      "cleaning_warnings": [
+        "cell_contains_tcm_or_plan_noise"
+      ]
     },
     {
       "raw_text": "产褥感染",
@@ -587,9 +542,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "人工流产术后出血 (Post-Abortion Bleeding)",
-      "standard_western_name": "人工流产术后出血 (Post-Abortion Bleeding)",
+      "raw_text": "人工流产术后出血",
+      "standard_western_name": "人工流产术后出血",
       "aliases": [
+        "Post-Abortion Bleeding",
         "人流术后出血"
       ],
       "department_or_category": "",
@@ -638,9 +594,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "代谢综合征 (Metabolic Syndrome)",
-      "standard_western_name": "代谢综合征 (Metabolic Syndrome)",
+      "raw_text": "代谢综合征",
+      "standard_western_name": "代谢综合征",
       "aliases": [
+        "Metabolic Syndrome",
         "MS"
       ],
       "department_or_category": "",
@@ -681,9 +638,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "体位性低血压 (Orthostatic Hypotension)",
-      "standard_western_name": "体位性低血压 (Orthostatic Hypotension)",
+      "raw_text": "体位性低血压",
+      "standard_western_name": "体位性低血压",
       "aliases": [
+        "Orthostatic Hypotension",
         "OH"
       ],
       "department_or_category": "",
@@ -695,9 +653,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "便秘 (Constipation)",
-      "standard_western_name": "便秘 (Constipation)",
+      "raw_text": "便秘",
+      "standard_western_name": "便秘",
       "aliases": [
+        "Constipation",
         "功能性便秘",
         "慢传输型便秘"
       ],
@@ -710,9 +669,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "便血 (Hematochezia)",
-      "standard_western_name": "便血 (Hematochezia)",
-      "aliases": [],
+      "raw_text": "便血",
+      "standard_western_name": "便血",
+      "aliases": [
+        "Hematochezia"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "1~79岁",
@@ -792,9 +753,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "儿童腹痛（以非特异性肠系膜淋巴结炎／功能性腹痛为核心）",
-      "standard_western_name": "儿童腹痛（以非特异性肠系膜淋巴结炎／功能性腹痛为核心）",
-      "aliases": [],
+      "raw_text": "儿童腹痛",
+      "standard_western_name": "儿童腹痛",
+      "aliases": [
+        "以非特异性肠系膜淋巴结炎／功能性腹痛为核心"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "3-14岁",
@@ -804,9 +767,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "充血性心力衰竭 (Congestive Heart Failure)",
-      "standard_western_name": "充血性心力衰竭 (Congestive Heart Failure)",
+      "raw_text": "充血性心力衰竭",
+      "standard_western_name": "充血性心力衰竭",
       "aliases": [
+        "Congestive Heart Failure",
         "CHF",
         "心力衰竭"
       ],
@@ -867,9 +831,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "先天性青光眼 (Congenital Glaucoma)",
-      "standard_western_name": "先天性青光眼 (Congenital Glaucoma)",
-      "aliases": [],
+      "raw_text": "先天性青光眼",
+      "standard_western_name": "先天性青光眼",
+      "aliases": [
+        "Congenital Glaucoma"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~3岁",
@@ -879,9 +845,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "克罗恩病 (Crohn's Disease)",
-      "standard_western_name": "克罗恩病 (Crohn's Disease)",
+      "raw_text": "克罗恩病",
+      "standard_western_name": "克罗恩病",
       "aliases": [
+        "Crohn's Disease",
         "CD"
       ],
       "department_or_category": "",
@@ -893,9 +860,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "共同性内斜视 (Esotropia)",
-      "standard_western_name": "共同性内斜视 (Esotropia)",
-      "aliases": [],
+      "raw_text": "共同性内斜视",
+      "standard_western_name": "共同性内斜视",
+      "aliases": [
+        "Esotropia"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "<7岁",
@@ -905,9 +874,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "内伤发热 (Internal Injury Fever)",
-      "standard_western_name": "内伤发热 (Internal Injury Fever)",
-      "aliases": [],
+      "raw_text": "内伤发热",
+      "standard_western_name": "内伤发热",
+      "aliases": [
+        "Internal Injury Fever"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "14~75岁",
@@ -929,9 +900,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "再生障碍性贫血 (Aplastic Anemia)",
-      "standard_western_name": "再生障碍性贫血 (Aplastic Anemia)",
+      "raw_text": "再生障碍性贫血",
+      "standard_western_name": "再生障碍性贫血",
       "aliases": [
+        "Aplastic Anemia",
         "AA"
       ],
       "department_or_category": "",
@@ -943,9 +915,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "冠状动脉粥样硬化性心脏病 (Coronary Atherosclerotic Heart Disease)",
-      "standard_western_name": "冠状动脉粥样硬化性心脏病 (Coronary Atherosclerotic Heart Disease)",
+      "raw_text": "冠状动脉粥样硬化性心脏病",
+      "standard_western_name": "冠状动脉粥样硬化性心脏病",
       "aliases": [
+        "Coronary Atherosclerotic Heart Disease",
         "冠心病",
         "缺血性心脏病",
         "CHD",
@@ -1057,9 +1030,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "前葡萄膜炎 (Anterior Uveitis)",
-      "standard_western_name": "前葡萄膜炎 (Anterior Uveitis)",
-      "aliases": [],
+      "raw_text": "前葡萄膜炎",
+      "standard_western_name": "前葡萄膜炎",
+      "aliases": [
+        "Anterior Uveitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~50岁",
@@ -1086,9 +1061,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "功能性消化不良 (Functional Dyspepsia)",
-      "standard_western_name": "功能性消化不良 (Functional Dyspepsia)",
+      "raw_text": "功能性消化不良",
+      "standard_western_name": "功能性消化不良",
       "aliases": [
+        "Functional Dyspepsia",
         "FD",
         "非溃疡性消化不良"
       ],
@@ -1101,9 +1077,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "动脉粥样硬化 (Atherosclerosis)",
-      "standard_western_name": "动脉粥样硬化 (Atherosclerosis)",
+      "raw_text": "动脉粥样硬化",
+      "standard_western_name": "动脉粥样硬化",
       "aliases": [
+        "Atherosclerosis",
         "AS"
       ],
       "department_or_category": "",
@@ -1115,9 +1092,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "勃起功能障碍 (Erectile Dysfunction)",
-      "standard_western_name": "勃起功能障碍 (Erectile Dysfunction)",
+      "raw_text": "勃起功能障碍",
+      "standard_western_name": "勃起功能障碍",
       "aliases": [
+        "Erectile Dysfunction",
         "阳痿"
       ],
       "department_or_category": "",
@@ -1144,9 +1122,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "化脓性关节炎 (Suppurative Arthritis)",
-      "standard_western_name": "化脓性关节炎 (Suppurative Arthritis)",
-      "aliases": [],
+      "raw_text": "化脓性关节炎",
+      "standard_western_name": "化脓性关节炎",
+      "aliases": [
+        "Suppurative Arthritis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~70岁",
@@ -1237,9 +1217,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "单纯疱疹病毒性角膜炎 (Herpes Simplex Keratitis)",
-      "standard_western_name": "单纯疱疹病毒性角膜炎 (Herpes Simplex Keratitis)",
+      "raw_text": "单纯疱疹病毒性角膜炎",
+      "standard_western_name": "单纯疱疹病毒性角膜炎",
       "aliases": [
+        "Herpes Simplex Keratitis",
         "HSK"
       ],
       "department_or_category": "",
@@ -1283,9 +1264,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "压疮 (Pressure Ulcer)",
-      "standard_western_name": "压疮 (Pressure Ulcer)",
+      "raw_text": "压疮",
+      "standard_western_name": "压疮",
       "aliases": [
+        "Pressure Ulcer",
         "褥疮"
       ],
       "department_or_category": "",
@@ -1297,9 +1279,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "原发免疫性血小板减少症 (Primary Immune Thrombocytopenia)",
-      "standard_western_name": "原发免疫性血小板减少症 (Primary Immune Thrombocytopenia)",
+      "raw_text": "原发免疫性血小板减少症",
+      "standard_western_name": "原发免疫性血小板减少症",
       "aliases": [
+        "Primary Immune Thrombocytopenia",
         "ITP"
       ],
       "department_or_category": "",
@@ -1311,9 +1294,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "原发性开角型青光眼 (Primary Open-Angle Glaucoma)",
-      "standard_western_name": "原发性开角型青光眼 (Primary Open-Angle Glaucoma)",
+      "raw_text": "原发性开角型青光眼",
+      "standard_western_name": "原发性开角型青光眼",
       "aliases": [
+        "Primary Open-Angle Glaucoma",
         "慢性单纯性青光眼"
       ],
       "department_or_category": "",
@@ -1339,9 +1323,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "原发性肝癌 (Liver Cancer)",
-      "standard_western_name": "原发性肝癌 (Liver Cancer)",
-      "aliases": [],
+      "raw_text": "原发性肝癌",
+      "standard_western_name": "原发性肝癌",
+      "aliases": [
+        "Liver Cancer"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "35-79岁",
@@ -1351,9 +1337,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "原发性视网膜色素变性 (Retinitis Pigmentosa)",
-      "standard_western_name": "原发性视网膜色素变性 (Retinitis Pigmentosa)",
+      "raw_text": "原发性视网膜色素变性",
+      "standard_western_name": "原发性视网膜色素变性",
       "aliases": [
+        "Retinitis Pigmentosa",
         "RP"
       ],
       "department_or_category": "",
@@ -1365,9 +1352,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "原发性闭角型青光眼 (Primary Angle-Closure Glaucoma)",
-      "standard_western_name": "原发性闭角型青光眼 (Primary Angle-Closure Glaucoma)",
-      "aliases": [],
+      "raw_text": "原发性闭角型青光眼",
+      "standard_western_name": "原发性闭角型青光眼",
+      "aliases": [
+        "Primary Angle-Closure Glaucoma"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": ">50岁",
@@ -1391,9 +1380,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "反流性食管炎 (Reflux Esophagitis)",
-      "standard_western_name": "反流性食管炎 (Reflux Esophagitis)",
+      "raw_text": "反流性食管炎",
+      "standard_western_name": "反流性食管炎",
       "aliases": [
+        "Reflux Esophagitis",
         "吐酸",
         "反酸",
         "胃食管反流病"
@@ -1407,9 +1397,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "发作性睡病 (Narcolepsy)",
-      "standard_western_name": "发作性睡病 (Narcolepsy)",
+      "raw_text": "发作性睡病",
+      "standard_western_name": "发作性睡病",
       "aliases": [
+        "Narcolepsy",
         "多寐"
       ],
       "department_or_category": "",
@@ -1513,9 +1504,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "后葡萄膜炎 (Posterior Uveitis)",
-      "standard_western_name": "后葡萄膜炎 (Posterior Uveitis)",
-      "aliases": [],
+      "raw_text": "后葡萄膜炎",
+      "standard_western_name": "后葡萄膜炎",
+      "aliases": [
+        "Posterior Uveitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~50岁",
@@ -1525,9 +1518,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "呃逆 (Hiccups)",
-      "standard_western_name": "呃逆 (Hiccups)",
+      "raw_text": "呃逆",
+      "standard_western_name": "呃逆",
       "aliases": [
+        "Hiccups",
         "膈肌痉挛 (作为可能的原因)"
       ],
       "department_or_category": "",
@@ -1539,9 +1533,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "呕吐 (Vomiting)",
-      "standard_western_name": "呕吐 (Vomiting)",
-      "aliases": [],
+      "raw_text": "呕吐",
+      "standard_western_name": "呕吐",
+      "aliases": [
+        "Vomiting"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~79岁",
@@ -1551,9 +1547,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "呕血 (Hematemesis)",
-      "standard_western_name": "呕血 (Hematemesis)",
+      "raw_text": "呕血",
+      "standard_western_name": "呕血",
       "aliases": [
+        "Hematemesis",
         "吐血"
       ],
       "department_or_category": "",
@@ -1565,9 +1562,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "周围血管疾病 (Peripheral Vascular Disease)",
-      "standard_western_name": "周围血管疾病 (Peripheral Vascular Disease)",
+      "raw_text": "周围血管疾病",
+      "standard_western_name": "周围血管疾病",
       "aliases": [
+        "Peripheral Vascular Disease",
         "PVD",
         "血栓闭塞性脉管炎",
         "雷诺病",
@@ -1588,9 +1586,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "呼吸衰竭 (Respiratory Failure)",
-      "standard_western_name": "呼吸衰竭 (Respiratory Failure)",
+      "raw_text": "呼吸衰竭",
+      "standard_western_name": "呼吸衰竭",
       "aliases": [
+        "Respiratory Failure",
         "RF",
         "呼吸功能衰竭"
       ],
@@ -1603,9 +1602,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "咯血 (Hemoptysis)",
-      "standard_western_name": "咯血 (Hemoptysis)",
+      "raw_text": "咯血",
+      "standard_western_name": "咯血",
       "aliases": [
+        "Hemoptysis",
         "咳血"
       ],
       "department_or_category": "",
@@ -1782,9 +1782,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "嗜铬细胞瘤 (Pheochromocytoma)",
-      "standard_western_name": "嗜铬细胞瘤 (Pheochromocytoma)",
-      "aliases": [],
+      "raw_text": "嗜铬细胞瘤",
+      "standard_western_name": "嗜铬细胞瘤",
+      "aliases": [
+        "Pheochromocytoma"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "5~75岁",
@@ -1794,9 +1796,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "嘈杂 (Heartburn)",
-      "standard_western_name": "嘈杂 (Heartburn)",
-      "aliases": [],
+      "raw_text": "嘈杂",
+      "standard_western_name": "嘈杂",
+      "aliases": [
+        "Heartburn"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "5~79岁",
@@ -1874,9 +1878,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "增殖性玻璃体视网膜病变 (Proliferative Vitreoretinopathy)",
-      "standard_western_name": "增殖性玻璃体视网膜病变 (Proliferative Vitreoretinopathy)",
-      "aliases": [],
+      "raw_text": "增殖性玻璃体视网膜病变",
+      "standard_western_name": "增殖性玻璃体视网膜病变",
+      "aliases": [
+        "Proliferative Vitreoretinopathy"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -1928,9 +1934,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "备孕（计划行辅助生殖技术）",
-      "standard_western_name": "备孕（计划行辅助生殖技术）",
+      "raw_text": "备孕",
+      "standard_western_name": "备孕",
       "aliases": [
+        "计划行辅助生殖技术",
         "ART（辅助生殖技术）准备期"
       ],
       "department_or_category": "",
@@ -2141,9 +2148,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "多器官功能障碍综合征 (Multiple Organ Dysfunction Syndrome)",
-      "standard_western_name": "多器官功能障碍综合征 (Multiple Organ Dysfunction Syndrome)",
+      "raw_text": "多器官功能障碍综合征",
+      "standard_western_name": "多器官功能障碍综合征",
       "aliases": [
+        "Multiple Organ Dysfunction Syndrome",
         "MODS",
         "老年多器官功能不全综合征",
         "老年多器官功能衰竭"
@@ -2189,9 +2197,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "多汗症 (Hyperhidrosis)",
-      "standard_western_name": "多汗症 (Hyperhidrosis)",
+      "raw_text": "多汗症",
+      "standard_western_name": "多汗症",
       "aliases": [
+        "Hyperhidrosis",
         "汗证"
       ],
       "department_or_category": "",
@@ -2203,9 +2212,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "大肠癌 (Colorectal Cancer)",
-      "standard_western_name": "大肠癌 (Colorectal Cancer)",
+      "raw_text": "大肠癌",
+      "standard_western_name": "大肠癌",
       "aliases": [
+        "Colorectal Cancer",
         "直肠癌",
         "结肠癌"
       ],
@@ -2251,9 +2261,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "头痛 (Headache)",
-      "standard_western_name": "头痛 (Headache)",
+      "raw_text": "头痛",
+      "standard_western_name": "头痛",
       "aliases": [
+        "Headache",
         "偏头痛",
         "紧张性头痛",
         "丛集性头痛",
@@ -2954,9 +2965,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "少精子症 (Oligospermia)",
-      "standard_western_name": "少精子症 (Oligospermia)",
-      "aliases": [],
+      "raw_text": "少精子症",
+      "standard_western_name": "少精子症",
+      "aliases": [
+        "Oligospermia"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20-50岁",
@@ -2966,9 +2979,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "尖锐湿疣 (Condyloma Acuminatum)",
-      "standard_western_name": "尖锐湿疣 (Condyloma Acuminatum)",
-      "aliases": [],
+      "raw_text": "尖锐湿疣",
+      "standard_western_name": "尖锐湿疣",
+      "aliases": [
+        "Condyloma Acuminatum"
+      ],
       "department_or_category": "",
       "sex": "男，女",
       "typical_age": "全年龄段",
@@ -2978,9 +2993,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "尿失禁 (Urinary Incontinence)",
-      "standard_western_name": "尿失禁 (Urinary Incontinence)",
+      "raw_text": "尿失禁",
+      "standard_western_name": "尿失禁",
       "aliases": [
+        "Urinary Incontinence",
         "UI",
         "老年人尿失禁"
       ],
@@ -2993,9 +3009,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "尿崩症 (Diabetes Insipidus)",
-      "standard_western_name": "尿崩症 (Diabetes Insipidus)",
+      "raw_text": "尿崩症",
+      "standard_western_name": "尿崩症",
       "aliases": [
+        "Diabetes Insipidus",
         "中枢性尿崩症"
       ],
       "department_or_category": "内分泌系统疾病",
@@ -3007,9 +3024,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "尿浊 (Turbid Urine)",
-      "standard_western_name": "尿浊 (Turbid Urine)",
+      "raw_text": "尿浊",
+      "standard_western_name": "尿浊",
       "aliases": [
+        "Turbid Urine",
         "乳糜尿"
       ],
       "department_or_category": "",
@@ -3021,9 +3039,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "尿潴留（Urinary Retention）",
-      "standard_western_name": "尿潴留（Urinary Retention）",
+      "raw_text": "尿潴留",
+      "standard_western_name": "尿潴留",
       "aliases": [
+        "Urinary Retention",
         "尿闭"
       ],
       "department_or_category": "",
@@ -3052,9 +3071,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "尿路感染 (Urinary Tract Infection)",
-      "standard_western_name": "尿路感染 (Urinary Tract Infection)",
+      "raw_text": "尿路感染",
+      "standard_western_name": "尿路感染",
       "aliases": [
+        "Urinary Tract Infection",
         "UTI",
         "急性膀胱炎"
       ],
@@ -3081,9 +3101,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "巩膜外层炎 (Episcleritis)",
-      "standard_western_name": "巩膜外层炎 (Episcleritis)",
-      "aliases": [],
+      "raw_text": "巩膜外层炎",
+      "standard_western_name": "巩膜外层炎",
+      "aliases": [
+        "Episcleritis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~50岁",
@@ -3093,9 +3115,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "巩膜炎 (Scleritis)",
-      "standard_western_name": "巩膜炎 (Scleritis)",
-      "aliases": [],
+      "raw_text": "巩膜炎",
+      "standard_western_name": "巩膜炎",
+      "aliases": [
+        "Scleritis"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": "40~60岁",
@@ -3105,9 +3129,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "帕金森病 (Parkinson's Disease)",
-      "standard_western_name": "帕金森病 (Parkinson's Disease)",
+      "raw_text": "帕金森病",
+      "standard_western_name": "帕金森病",
       "aliases": [
+        "Parkinson's Disease",
         "PD",
         "震颤麻痹"
       ],
@@ -3174,9 +3199,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "干眼症 (Dry Eye Syndrome)",
-      "standard_western_name": "干眼症 (Dry Eye Syndrome)",
-      "aliases": [],
+      "raw_text": "干眼症",
+      "standard_western_name": "干眼症",
+      "aliases": [
+        "Dry Eye Syndrome"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": ">40岁",
@@ -3186,9 +3213,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "年龄相关性白内障 (Age-Related Cataract)",
-      "standard_western_name": "年龄相关性白内障 (Age-Related Cataract)",
+      "raw_text": "年龄相关性白内障",
+      "standard_western_name": "年龄相关性白内障",
       "aliases": [
+        "Age-Related Cataract",
         "老年性白内障"
       ],
       "department_or_category": "",
@@ -3200,9 +3228,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "年龄相关性黄斑变性 (Age-Related Macular Degeneration)",
-      "standard_western_name": "年龄相关性黄斑变性 (Age-Related Macular Degeneration)",
+      "raw_text": "年龄相关性黄斑变性",
+      "standard_western_name": "年龄相关性黄斑变性",
       "aliases": [
+        "Age-Related Macular Degeneration",
         "老年性黄斑变性",
         "ARMD"
       ],
@@ -3248,9 +3277,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "幽门梗阻 (Pyloric Obstruction)",
-      "standard_western_name": "幽门梗阻 (Pyloric Obstruction)",
+      "raw_text": "幽门梗阻",
+      "standard_western_name": "幽门梗阻",
       "aliases": [
+        "Pyloric Obstruction",
         "无"
       ],
       "department_or_category": "",
@@ -3262,9 +3292,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "库欣综合征 (Cushing's Syndrome)",
-      "standard_western_name": "库欣综合征 (Cushing's Syndrome)",
-      "aliases": [],
+      "raw_text": "库欣综合征",
+      "standard_western_name": "库欣综合征",
+      "aliases": [
+        "Cushing's Syndrome"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "5~70岁",
@@ -3304,9 +3336,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "弥散性血管内凝血 (Disseminated Intravascular Coagulation)",
-      "standard_western_name": "弥散性血管内凝血 (Disseminated Intravascular Coagulation)",
+      "raw_text": "弥散性血管内凝血",
+      "standard_western_name": "弥散性血管内凝血",
       "aliases": [
+        "Disseminated Intravascular Coagulation",
         "DIC"
       ],
       "department_or_category": "",
@@ -3335,9 +3368,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "弱视 (Amblyopia)",
-      "standard_western_name": "弱视 (Amblyopia)",
-      "aliases": [],
+      "raw_text": "弱视",
+      "standard_western_name": "弱视",
+      "aliases": [
+        "Amblyopia"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "<8岁",
@@ -3347,9 +3382,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "强直性脊柱炎 (Ankylosing Spondylitis)",
-      "standard_western_name": "强直性脊柱炎 (Ankylosing Spondylitis)",
-      "aliases": [],
+      "raw_text": "强直性脊柱炎",
+      "standard_western_name": "强直性脊柱炎",
+      "aliases": [
+        "Ankylosing Spondylitis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20~40岁",
@@ -3359,9 +3396,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "心律失常 (Cardiac Arrhythmia)",
-      "standard_western_name": "心律失常 (Cardiac Arrhythmia)",
+      "raw_text": "心律失常",
+      "standard_western_name": "心律失常",
       "aliases": [
+        "Cardiac Arrhythmia",
         "心律不齐"
       ],
       "department_or_category": "",
@@ -3373,9 +3411,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "心肌梗死 (Myocardial Infarction)",
-      "standard_western_name": "心肌梗死 (Myocardial Infarction)",
+      "raw_text": "心肌梗死",
+      "standard_western_name": "心肌梗死",
       "aliases": [
+        "Myocardial Infarction",
         "MI"
       ],
       "department_or_category": "",
@@ -3387,9 +3426,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "心肌病 (Cardiomyopathy)",
-      "standard_western_name": "心肌病 (Cardiomyopathy)",
+      "raw_text": "心肌病",
+      "standard_western_name": "心肌病",
       "aliases": [
+        "Cardiomyopathy",
         "扩张型心肌病",
         "肥厚型心肌病",
         "右室心肌病",
@@ -3406,9 +3446,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "心脏瓣膜病 (Valvular Heart Disease)",
-      "standard_western_name": "心脏瓣膜病 (Valvular Heart Disease)",
+      "raw_text": "心脏瓣膜病",
+      "standard_western_name": "心脏瓣膜病",
       "aliases": [
+        "Valvular Heart Disease",
         "风湿性心脏病",
         "风心病",
         "先天性二尖瓣狭窄",
@@ -3432,9 +3473,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "心脏骤停 (Cardiac Arrest)",
-      "standard_western_name": "心脏骤停 (Cardiac Arrest)",
+      "raw_text": "心脏骤停",
+      "standard_western_name": "心脏骤停",
       "aliases": [
+        "Cardiac Arrest",
         "心脏性猝死"
       ],
       "department_or_category": "",
@@ -3541,9 +3583,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性呼吸窘迫综合征 (Acute Respiratory Distress Syndrome)",
-      "standard_western_name": "急性呼吸窘迫综合征 (Acute Respiratory Distress Syndrome)",
+      "raw_text": "急性呼吸窘迫综合征",
+      "standard_western_name": "急性呼吸窘迫综合征",
       "aliases": [
+        "Acute Respiratory Distress Syndrome",
         "ARDS",
         "急性呼吸窘迫症"
       ],
@@ -3587,9 +3630,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性心包炎 (Acute Pericarditis)",
-      "standard_western_name": "急性心包炎 (Acute Pericarditis)",
+      "raw_text": "急性心包炎",
+      "standard_western_name": "急性心包炎",
       "aliases": [
+        "Acute Pericarditis",
         "病毒性心包炎",
         "细菌性心包炎"
       ],
@@ -3616,9 +3660,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性泪囊炎 (Acute Dacryocystitis)",
-      "standard_western_name": "急性泪囊炎 (Acute Dacryocystitis)",
-      "aliases": [],
+      "raw_text": "急性泪囊炎",
+      "standard_western_name": "急性泪囊炎",
+      "aliases": [
+        "Acute Dacryocystitis"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": ">40岁",
@@ -3642,9 +3688,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性白血病 (Acute Leukemia)",
-      "standard_western_name": "急性白血病 (Acute Leukemia)",
+      "raw_text": "急性白血病",
+      "standard_western_name": "急性白血病",
       "aliases": [
+        "Acute Leukemia",
         "AL"
       ],
       "department_or_category": "",
@@ -3668,9 +3715,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性细菌性结膜炎 (Acute Bacterial Conjunctivitis)",
-      "standard_western_name": "急性细菌性结膜炎 (Acute Bacterial Conjunctivitis)",
+      "raw_text": "急性细菌性结膜炎",
+      "standard_western_name": "急性细菌性结膜炎",
       "aliases": [
+        "Acute Bacterial Conjunctivitis",
         "急性卡他性结膜炎",
         "红眼病"
       ],
@@ -3695,9 +3743,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性肾小球肾炎 (Acute Glomerulonephritis)",
-      "standard_western_name": "急性肾小球肾炎 (Acute Glomerulonephritis)",
+      "raw_text": "急性肾小球肾炎",
+      "standard_western_name": "急性肾小球肾炎",
       "aliases": [
+        "Acute Glomerulonephritis",
         "急性肾炎"
       ],
       "department_or_category": "泌尿系统疾病",
@@ -3709,9 +3758,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性肾损伤 (Acute Kidney Injury)",
-      "standard_western_name": "急性肾损伤 (Acute Kidney Injury)",
+      "raw_text": "急性肾损伤",
+      "standard_western_name": "急性肾损伤",
       "aliases": [
+        "Acute Kidney Injury",
         "AKI"
       ],
       "department_or_category": "",
@@ -3723,9 +3773,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性胰腺炎 (Acute Pancreatitis)",
-      "standard_western_name": "急性胰腺炎 (Acute Pancreatitis)",
+      "raw_text": "急性胰腺炎",
+      "standard_western_name": "急性胰腺炎",
       "aliases": [
+        "Acute Pancreatitis",
         "AP"
       ],
       "department_or_category": "",
@@ -3737,9 +3788,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性视网膜坏死综合征 (Acute Retinal Necrosis Syndrome)",
-      "standard_western_name": "急性视网膜坏死综合征 (Acute Retinal Necrosis Syndrome)",
+      "raw_text": "急性视网膜坏死综合征",
+      "standard_western_name": "急性视网膜坏死综合征",
       "aliases": [
+        "Acute Retinal Necrosis Syndrome",
         "ARN"
       ],
       "department_or_category": "",
@@ -3751,9 +3803,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性间质性肾炎 (Acute Interstitial Nephritis)",
-      "standard_western_name": "急性间质性肾炎 (Acute Interstitial Nephritis)",
+      "raw_text": "急性间质性肾炎",
+      "standard_western_name": "急性间质性肾炎",
       "aliases": [
+        "Acute Interstitial Nephritis",
         "AIN",
         "急性肾小管间质性肾炎"
       ],
@@ -3766,9 +3819,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急性骨髓炎 (Acute Osteomyelitis)",
-      "standard_western_name": "急性骨髓炎 (Acute Osteomyelitis)",
-      "aliases": [],
+      "raw_text": "急性骨髓炎",
+      "standard_western_name": "急性骨髓炎",
+      "aliases": [
+        "Acute Osteomyelitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~60岁",
@@ -3811,9 +3866,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "急进性肾小球肾炎 (Rapidly Progressive Glomerulonephritis)",
-      "standard_western_name": "急进性肾小球肾炎 (Rapidly Progressive Glomerulonephritis)",
+      "raw_text": "急进性肾小球肾炎",
+      "standard_western_name": "急进性肾小球肾炎",
       "aliases": [
+        "Rapidly Progressive Glomerulonephritis",
         "急进性肾炎",
         "新月体肾小球肾炎"
       ],
@@ -3840,9 +3896,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "性欲亢进 (Hypersexual Disorder)",
-      "standard_western_name": "性欲亢进 (Hypersexual Disorder)",
-      "aliases": [],
+      "raw_text": "性欲亢进",
+      "standard_western_name": "性欲亢进",
+      "aliases": [
+        "Hypersexual Disorder"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "18-35岁",
@@ -3852,9 +3910,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "性欲低下 (Hypoactive Sexual Desire Disorder)",
-      "standard_western_name": "性欲低下 (Hypoactive Sexual Desire Disorder)",
-      "aliases": [],
+      "raw_text": "性欲低下",
+      "standard_western_name": "性欲低下",
+      "aliases": [
+        "Hypoactive Sexual Desire Disorder"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "18~60岁",
@@ -3905,9 +3965,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "感染性心内膜炎 (Infective Endocarditis)",
-      "standard_western_name": "感染性心内膜炎 (Infective Endocarditis)",
+      "raw_text": "感染性心内膜炎",
+      "standard_western_name": "感染性心内膜炎",
       "aliases": [
+        "Infective Endocarditis",
         "IE",
         "急性感染性心内膜炎",
         "亚急性感染性心内膜炎",
@@ -3982,9 +4043,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性单纯性苔藓 (Lichen Simplex Chronicus)",
-      "standard_western_name": "慢性单纯性苔藓 (Lichen Simplex Chronicus)",
+      "raw_text": "慢性单纯性苔藓",
+      "standard_western_name": "慢性单纯性苔藓",
       "aliases": [
+        "Lichen Simplex Chronicus",
         "神经性皮炎",
         "顽癣"
       ],
@@ -4046,9 +4108,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性心力衰竭 (Chronic Heart Failure)",
-      "standard_western_name": "慢性心力衰竭 (Chronic Heart Failure)",
+      "raw_text": "慢性心力衰竭",
+      "standard_western_name": "慢性心力衰竭",
       "aliases": [
+        "Chronic Heart Failure",
         "HF",
         "心衰",
         "充血性心力衰竭",
@@ -4079,9 +4142,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性支气管炎 (Chronic Bronchitis)",
-      "standard_western_name": "慢性支气管炎 (Chronic Bronchitis)",
+      "raw_text": "慢性支气管炎",
+      "standard_western_name": "慢性支气管炎",
       "aliases": [
+        "Chronic Bronchitis",
         "老慢支"
       ],
       "department_or_category": "",
@@ -4093,9 +4157,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性泪囊炎 (Chronic Dacryocystitis)",
-      "standard_western_name": "慢性泪囊炎 (Chronic Dacryocystitis)",
-      "aliases": [],
+      "raw_text": "慢性泪囊炎",
+      "standard_western_name": "慢性泪囊炎",
+      "aliases": [
+        "Chronic Dacryocystitis"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": ">40岁",
@@ -4105,9 +4171,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性淋巴细胞性甲状腺炎 (Chronic Lymphocytic Thyroiditis)",
-      "standard_western_name": "慢性淋巴细胞性甲状腺炎 (Chronic Lymphocytic Thyroiditis)",
+      "raw_text": "慢性淋巴细胞性甲状腺炎",
+      "standard_western_name": "慢性淋巴细胞性甲状腺炎",
       "aliases": [
+        "Chronic Lymphocytic Thyroiditis",
         "自身免疫性甲状腺炎",
         "桥本甲状腺炎",
         "桥本病",
@@ -4122,9 +4189,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性淋巴细胞白血病 (Chronic Lymphocytic Leukemia)",
-      "standard_western_name": "慢性淋巴细胞白血病 (Chronic Lymphocytic Leukemia)",
+      "raw_text": "慢性淋巴细胞白血病",
+      "standard_western_name": "慢性淋巴细胞白血病",
       "aliases": [
+        "Chronic Lymphocytic Leukemia",
         "CLL"
       ],
       "department_or_category": "",
@@ -4136,9 +4204,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性疲劳综合征 (Chronic Fatigue Syndrome)",
-      "standard_western_name": "慢性疲劳综合征 (Chronic Fatigue Syndrome)",
+      "raw_text": "慢性疲劳综合征",
+      "standard_western_name": "慢性疲劳综合征",
       "aliases": [
+        "Chronic Fatigue Syndrome",
         "慢性疲劳"
       ],
       "department_or_category": "",
@@ -4190,9 +4259,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性结膜炎 (Chronic Conjunctivitis)",
-      "standard_western_name": "慢性结膜炎 (Chronic Conjunctivitis)",
-      "aliases": [],
+      "raw_text": "慢性结膜炎",
+      "standard_western_name": "慢性结膜炎",
+      "aliases": [
+        "Chronic Conjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">18岁",
@@ -4217,9 +4288,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性肾上腺皮质功能减退症 (Chronic Adrenocortical Insufficiency)",
-      "standard_western_name": "慢性肾上腺皮质功能减退症 (Chronic Adrenocortical Insufficiency)",
+      "raw_text": "慢性肾上腺皮质功能减退症",
+      "standard_western_name": "慢性肾上腺皮质功能减退症",
       "aliases": [
+        "Chronic Adrenocortical Insufficiency",
         "Addison病"
       ],
       "department_or_category": "",
@@ -4231,9 +4303,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性肾小球肾炎 (Chronic Glomerulonephritis)",
-      "standard_western_name": "慢性肾小球肾炎 (Chronic Glomerulonephritis)",
+      "raw_text": "慢性肾小球肾炎",
+      "standard_western_name": "慢性肾小球肾炎",
       "aliases": [
+        "Chronic Glomerulonephritis",
         "CGN",
         "慢性肾炎"
       ],
@@ -4246,9 +4319,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性肾衰竭 (Chronic Kidney Failure)",
-      "standard_western_name": "慢性肾衰竭 (Chronic Kidney Failure)",
+      "raw_text": "慢性肾衰竭",
+      "standard_western_name": "慢性肾衰竭",
       "aliases": [
+        "Chronic Kidney Failure",
         "CRF",
         "慢性肾衰"
       ],
@@ -4261,9 +4335,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性胃炎 (Chronic Gastritis)",
-      "standard_western_name": "慢性胃炎 (Chronic Gastritis)",
+      "raw_text": "慢性胃炎",
+      "standard_western_name": "慢性胃炎",
       "aliases": [
+        "Chronic Gastritis",
         "浅表性胃炎",
         "非萎缩性胃炎",
         "慢性浅表性胃炎",
@@ -4281,9 +4356,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性胰腺炎 (Chronic Pancreatitis)",
-      "standard_western_name": "慢性胰腺炎 (Chronic Pancreatitis)",
+      "raw_text": "慢性胰腺炎",
+      "standard_western_name": "慢性胰腺炎",
       "aliases": [
+        "Chronic Pancreatitis",
         "CP"
       ],
       "department_or_category": "",
@@ -4295,9 +4371,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性萎缩性胃炎 (Chronic Atrophic Gastritis)",
-      "standard_western_name": "慢性萎缩性胃炎 (Chronic Atrophic Gastritis)",
+      "raw_text": "慢性萎缩性胃炎",
+      "standard_western_name": "慢性萎缩性胃炎",
       "aliases": [
+        "Chronic Atrophic Gastritis",
         "萎缩性胃炎"
       ],
       "department_or_category": "",
@@ -4309,9 +4386,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性间质性肾炎 (Chronic Interstitial Nephritis)",
-      "standard_western_name": "慢性间质性肾炎 (Chronic Interstitial Nephritis)",
+      "raw_text": "慢性间质性肾炎",
+      "standard_western_name": "慢性间质性肾炎",
       "aliases": [
+        "Chronic Interstitial Nephritis",
         "CIN",
         "慢性肾小管-间质性肾病",
         "CTIN"
@@ -4342,9 +4420,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性骨髓炎 (Chronic Osteomyelitis)",
-      "standard_western_name": "慢性骨髓炎 (Chronic Osteomyelitis)",
-      "aliases": [],
+      "raw_text": "慢性骨髓炎",
+      "standard_western_name": "慢性骨髓炎",
+      "aliases": [
+        "Chronic Osteomyelitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "5~70岁",
@@ -4354,9 +4434,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "慢性髓细胞白血病 (Chronic Myelogenous Leukemia)",
-      "standard_western_name": "慢性髓细胞白血病 (Chronic Myelogenous Leukemia)",
+      "raw_text": "慢性髓细胞白血病",
+      "standard_western_name": "慢性髓细胞白血病",
       "aliases": [
+        "Chronic Myelogenous Leukemia",
         "CML"
       ],
       "department_or_category": "",
@@ -4521,10 +4602,12 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "抑郁症 (Depression)",
-      "standard_western_name": "抑郁症 (Depression)",
+      "raw_text": "抑郁症",
+      "standard_western_name": "抑郁障碍",
       "aliases": [
-        "抑郁"
+        "Depression",
+        "抑郁",
+        "抑郁症"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -4622,9 +4705,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "支气管扩张 (Bronchiectasis)",
-      "standard_western_name": "支气管扩张 (Bronchiectasis)",
+      "raw_text": "支气管扩张",
+      "standard_western_name": "支气管扩张",
       "aliases": [
+        "Bronchiectasis",
         "支气管扩张症",
         "肺络张",
         "支气管扩张伴咯血",
@@ -4673,9 +4757,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "斜视 (Strabismus)",
-      "standard_western_name": "斜视 (Strabismus)",
-      "aliases": [],
+      "raw_text": "斜视",
+      "standard_western_name": "斜视",
+      "aliases": [
+        "Strabismus"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -4781,9 +4867,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "新生血管性青光眼 (Neovascular Glaucoma)",
-      "standard_western_name": "新生血管性青光眼 (Neovascular Glaucoma)",
-      "aliases": [],
+      "raw_text": "新生血管性青光眼",
+      "standard_western_name": "新生血管性青光眼",
+      "aliases": [
+        "Neovascular Glaucoma"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">50岁",
@@ -4793,9 +4881,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "无症状性血尿或蛋白尿 (Asymptomatic Hematuria or Proteinuria)",
-      "standard_western_name": "无症状性血尿或蛋白尿 (Asymptomatic Hematuria or Proteinuria)",
+      "raw_text": "无症状性血尿或蛋白尿",
+      "standard_western_name": "无症状性血尿或蛋白尿",
       "aliases": [
+        "Asymptomatic Hematuria or Proteinuria",
         "隐匿性肾小球肾炎"
       ],
       "department_or_category": "",
@@ -4807,9 +4896,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "无精子症 (Azoospermia)",
-      "standard_western_name": "无精子症 (Azoospermia)",
-      "aliases": [],
+      "raw_text": "无精子症",
+      "standard_western_name": "无精子症",
+      "aliases": [
+        "Azoospermia"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20-50岁",
@@ -4841,9 +4932,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "早泄 (Premature Ejaculation)",
-      "standard_western_name": "早泄 (Premature Ejaculation)",
-      "aliases": [],
+      "raw_text": "早泄",
+      "standard_western_name": "早泄",
+      "aliases": [
+        "Premature Ejaculation"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "18-60岁",
@@ -4853,9 +4946,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "春季结膜炎 (Vernal Keratoconjunctivitis)",
-      "standard_western_name": "春季结膜炎 (Vernal Keratoconjunctivitis)",
-      "aliases": [],
+      "raw_text": "春季结膜炎",
+      "standard_western_name": "春季结膜炎",
+      "aliases": [
+        "Vernal Keratoconjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "5~20岁",
@@ -4865,9 +4960,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "晕厥 (Syncope)",
-      "standard_western_name": "晕厥 (Syncope)",
+      "raw_text": "晕厥",
+      "standard_western_name": "晕厥",
       "aliases": [
+        "Syncope",
         "厥证"
       ],
       "department_or_category": "",
@@ -4987,7 +5083,11 @@
     {
       "raw_text": "梅毒",
       "standard_western_name": "梅毒",
-      "aliases": [],
+      "aliases": [
+        "Syphilis",
+        "杨梅疮",
+        "霉疮"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "15-70岁",
@@ -4997,24 +5097,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "梅毒 (Syphilis)",
-      "standard_western_name": "梅毒 (Syphilis)",
+      "raw_text": "梨状肌综合征",
+      "standard_western_name": "梨状肌综合征",
       "aliases": [
-        "杨梅疮",
-        "霉疮"
+        "Piriformis Syndrome"
       ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "全年龄段",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "梨状肌综合征 (Piriformis Syndrome)",
-      "standard_western_name": "梨状肌综合征 (Piriformis Syndrome)",
-      "aliases": [],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~60岁",
@@ -5024,9 +5111,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "死精子症 (Necrozoospermia)",
-      "standard_western_name": "死精子症 (Necrozoospermia)",
-      "aliases": [],
+      "raw_text": "死精子症",
+      "standard_western_name": "死精子症",
+      "aliases": [
+        "Necrozoospermia"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20-50岁",
@@ -5051,9 +5140,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "毒蛇咬伤 (Venomous Snake Bite)",
-      "standard_western_name": "毒蛇咬伤 (Venomous Snake Bite)",
-      "aliases": [],
+      "raw_text": "毒蛇咬伤",
+      "standard_western_name": "毒蛇咬伤",
+      "aliases": [
+        "Venomous Snake Bite"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "1~89岁",
@@ -5179,9 +5270,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "水肿 (Edema)",
-      "standard_western_name": "水肿 (Edema)",
-      "aliases": [],
+      "raw_text": "水肿",
+      "standard_western_name": "水肿",
+      "aliases": [
+        "Edema"
+      ],
       "department_or_category": "中医内科学-肾系疾病",
       "sex": "男女均可",
       "typical_age": "0~79 岁",
@@ -5224,9 +5317,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "泡性角结膜炎 (Phlyctenular Keratoconjunctivitis)",
-      "standard_western_name": "泡性角结膜炎 (Phlyctenular Keratoconjunctivitis)",
-      "aliases": [],
+      "raw_text": "泡性角结膜炎",
+      "standard_western_name": "泡性角结膜炎",
+      "aliases": [
+        "Phlyctenular Keratoconjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": "5~20岁",
@@ -5253,9 +5348,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "泪溢 (Epiphora)",
-      "standard_western_name": "泪溢 (Epiphora)",
-      "aliases": [],
+      "raw_text": "泪溢",
+      "standard_western_name": "泪溢",
+      "aliases": [
+        "Epiphora"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": ">50岁",
@@ -5265,9 +5362,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "泪腺炎 (Dacryoadenitis)",
-      "standard_western_name": "泪腺炎 (Dacryoadenitis)",
-      "aliases": [],
+      "raw_text": "泪腺炎",
+      "standard_western_name": "泪腺炎",
+      "aliases": [
+        "Dacryoadenitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -5277,9 +5376,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "流行性出血性结膜炎 (Epidemic Hemorrhagic Conjunctivitis)",
-      "standard_western_name": "流行性出血性结膜炎 (Epidemic Hemorrhagic Conjunctivitis)",
-      "aliases": [],
+      "raw_text": "流行性出血性结膜炎",
+      "standard_western_name": "流行性出血性结膜炎",
+      "aliases": [
+        "Epidemic Hemorrhagic Conjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -5305,9 +5406,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "流行性角结膜炎 (Epidemic Keratoconjunctivitis)",
-      "standard_western_name": "流行性角结膜炎 (Epidemic Keratoconjunctivitis)",
-      "aliases": [],
+      "raw_text": "流行性角结膜炎",
+      "standard_western_name": "流行性角结膜炎",
+      "aliases": [
+        "Epidemic Keratoconjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -5343,9 +5446,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "消化性溃疡 (Peptic Ulcer)",
-      "standard_western_name": "消化性溃疡 (Peptic Ulcer)",
+      "raw_text": "消化性溃疡",
+      "standard_western_name": "消化性溃疡",
       "aliases": [
+        "Peptic Ulcer",
         "PU",
         "胃溃疡",
         "十二指肠溃疡",
@@ -5380,9 +5484,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "淋巴瘤 (Lymphoma)",
-      "standard_western_name": "淋巴瘤 (Lymphoma)",
+      "raw_text": "淋巴瘤",
+      "standard_western_name": "淋巴瘤",
       "aliases": [
+        "Lymphoma",
         "霍奇金淋巴瘤",
         "Hodgkin Lymphoma",
         "非霍奇金淋巴瘤",
@@ -5441,9 +5546,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "溃疡性结肠炎 (Ulcerative Colitis)",
-      "standard_western_name": "溃疡性结肠炎 (Ulcerative Colitis)",
+      "raw_text": "溃疡性结肠炎",
+      "standard_western_name": "溃疡性结肠炎",
       "aliases": [
+        "Ulcerative Colitis",
         "UC",
         "慢性溃疡性结肠炎"
       ],
@@ -5471,9 +5577,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "溶血性贫血 (Hemolytic Anemia)",
-      "standard_western_name": "溶血性贫血 (Hemolytic Anemia)",
+      "raw_text": "溶血性贫血",
+      "standard_western_name": "溶血性贫血",
       "aliases": [
+        "Hemolytic Anemia",
         "HA"
       ],
       "department_or_category": "",
@@ -5497,9 +5604,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "烧伤 (Burn)",
-      "standard_western_name": "烧伤 (Burn)",
+      "raw_text": "烧伤",
+      "standard_western_name": "烧伤",
       "aliases": [
+        "Burn",
         "水火烫伤",
         "化学烧伤",
         "放射性烧伤",
@@ -5514,9 +5622,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "热射病 (Heat Stroke)",
-      "standard_western_name": "热射病 (Heat Stroke)",
+      "raw_text": "热射病",
+      "standard_western_name": "热射病",
       "aliases": [
+        "Heat Stroke",
         "中暑",
         "热衰竭"
       ],
@@ -5593,9 +5702,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "特发性面神经麻痹 (Idiopathic Facial Paralysis)",
-      "standard_western_name": "特发性面神经麻痹 (Idiopathic Facial Paralysis)",
+      "raw_text": "特发性面神经麻痹",
+      "standard_western_name": "特发性面神经麻痹",
       "aliases": [
+        "Idiopathic Facial Paralysis",
         "面神经炎",
         "贝尔面瘫",
         "面瘫"
@@ -5651,9 +5761,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "玻璃体积血 (Vitreous Hemorrhage)",
-      "standard_western_name": "玻璃体积血 (Vitreous Hemorrhage)",
-      "aliases": [],
+      "raw_text": "玻璃体积血",
+      "standard_western_name": "玻璃体积血",
+      "aliases": [
+        "Vitreous Hemorrhage"
+      ],
       "department_or_category": "中西医结合眼科",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -5663,9 +5775,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "球后视神经炎 (Retrobulbar Neuritis)",
-      "standard_western_name": "球后视神经炎 (Retrobulbar Neuritis)",
-      "aliases": [],
+      "raw_text": "球后视神经炎",
+      "standard_western_name": "球后视神经炎",
+      "aliases": [
+        "Retrobulbar Neuritis"
+      ],
       "department_or_category": "",
       "sex": "女",
       "typical_age": "20~45岁",
@@ -5678,7 +5792,8 @@
       "raw_text": "生殖器疱疹",
       "standard_western_name": "生殖器疱疹",
       "aliases": [
-        "genital herpes"
+        "genital herpes",
+        "Genital Herpes"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -5689,21 +5804,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "生殖器疱疹 (Genital Herpes)",
-      "standard_western_name": "生殖器疱疹 (Genital Herpes)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "25~45岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "甲状腺功能亢进症 (Hyperthyroidism)",
-      "standard_western_name": "甲状腺功能亢进症 (Hyperthyroidism)",
+      "raw_text": "甲状腺功能亢进症",
+      "standard_western_name": "甲状腺功能亢进症",
       "aliases": [
+        "Hyperthyroidism",
         "甲亢",
         "Graves病",
         "GD"
@@ -5717,9 +5821,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "甲状腺功能减退症 (Hypothyroidism)",
-      "standard_western_name": "甲状腺功能减退症 (Hypothyroidism)",
+      "raw_text": "甲状腺功能减退症",
+      "standard_western_name": "甲状腺功能减退症",
       "aliases": [
+        "Hypothyroidism",
         "甲减"
       ],
       "department_or_category": "",
@@ -5760,9 +5865,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "甲状腺相关性眼病 (Thyroid Eye Disease)",
-      "standard_western_name": "甲状腺相关性眼病 (Thyroid Eye Disease)",
-      "aliases": [],
+      "raw_text": "甲状腺相关性眼病",
+      "standard_western_name": "甲状腺相关性眼病",
+      "aliases": [
+        "Thyroid Eye Disease"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "<8岁",
@@ -5826,9 +5933,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "男性迟发性性腺功能减退症 (Late-Onset Hypogonadism)",
-      "standard_western_name": "男性迟发性性腺功能减退症 (Late-Onset Hypogonadism)",
+      "raw_text": "男性迟发性性腺功能减退症",
+      "standard_western_name": "男性迟发性性腺功能减退症",
       "aliases": [
+        "Late-Onset Hypogonadism",
         "男性更年期综合征"
       ],
       "department_or_category": "",
@@ -5840,9 +5948,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "畸形精子症 (Teratozoospermia)",
-      "standard_western_name": "畸形精子症 (Teratozoospermia)",
-      "aliases": [],
+      "raw_text": "畸形精子症",
+      "standard_western_name": "畸形精子症",
+      "aliases": [
+        "Teratozoospermia"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20~50岁",
@@ -5902,9 +6012,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "病毒性心肌炎 (Viral Myocarditis)",
-      "standard_western_name": "病毒性心肌炎 (Viral Myocarditis)",
+      "raw_text": "病毒性心肌炎",
+      "standard_western_name": "病毒性心肌炎",
       "aliases": [
+        "Viral Myocarditis",
         "VMC"
       ],
       "department_or_category": "",
@@ -5916,9 +6027,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "病毒性睑皮炎 (Viral Blepharitis)",
-      "standard_western_name": "病毒性睑皮炎 (Viral Blepharitis)",
-      "aliases": [],
+      "raw_text": "病毒性睑皮炎",
+      "standard_western_name": "病毒性睑皮炎",
+      "aliases": [
+        "Viral Blepharitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -5928,9 +6041,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "病毒性睾丸炎 (Viral Orchitis)",
-      "standard_western_name": "病毒性睾丸炎 (Viral Orchitis)",
-      "aliases": [],
+      "raw_text": "病毒性睾丸炎",
+      "standard_western_name": "病毒性睾丸炎",
+      "aliases": [
+        "Viral Orchitis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "15~35岁",
@@ -5991,9 +6106,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "痛风 (Gout)",
-      "standard_western_name": "痛风 (Gout)",
+      "raw_text": "痛风",
+      "standard_western_name": "痛风",
       "aliases": [
+        "Gout",
         "痛风性关节炎",
         "高尿酸血症"
       ],
@@ -6006,9 +6122,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "痢疾 (Dysentery)",
-      "standard_western_name": "痢疾 (Dysentery)",
-      "aliases": [],
+      "raw_text": "痢疾",
+      "standard_western_name": "痢疾",
+      "aliases": [
+        "Dysentery"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~79岁",
@@ -6030,6 +6148,21 @@
       "cleaning_warnings": []
     },
     {
+      "raw_text": "痹证",
+      "standard_western_name": "痹证",
+      "aliases": [],
+      "department_or_category": "中医内科学-肢体经络系统",
+      "sex": "男女均可",
+      "typical_age": "20~70岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": false,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": [
+        "cell_contains_tcm_or_plan_noise",
+        "non_western_or_plan_noise"
+      ]
+    },
+    {
       "raw_text": "瘘管",
       "standard_western_name": "瘘管",
       "aliases": [
@@ -6044,9 +6177,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "癌 (Cancer)",
-      "standard_western_name": "癌 (Cancer)",
+      "raw_text": "癌",
+      "standard_western_name": "癌",
       "aliases": [
+        "Cancer",
         "癌病"
       ],
       "department_or_category": "",
@@ -6111,9 +6245,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "癫痫 (Epilepsy)",
-      "standard_western_name": "癫痫 (Epilepsy)",
+      "raw_text": "癫痫",
+      "standard_western_name": "癫痫",
       "aliases": [
+        "Epilepsy",
         "羊癫风"
       ],
       "department_or_category": "",
@@ -6177,9 +6312,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "白细胞减少症 (Leukopenia)",
-      "standard_western_name": "白细胞减少症 (Leukopenia)",
-      "aliases": [],
+      "raw_text": "白细胞减少症",
+      "standard_western_name": "白细胞减少症",
+      "aliases": [
+        "Leukopenia"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~79岁",
@@ -6189,9 +6326,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "百日咳 (Pertussis)",
-      "standard_western_name": "百日咳 (Pertussis)",
-      "aliases": [],
+      "raw_text": "百日咳",
+      "standard_western_name": "百日咳",
+      "aliases": [
+        "Pertussis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0-14岁（高发于婴幼儿及学龄前儿童）",
@@ -6217,9 +6356,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "皮肤浅表脓肿 (Superficial Skin Abscess)",
-      "standard_western_name": "皮肤浅表脓肿 (Superficial Skin Abscess)",
+      "raw_text": "皮肤浅表脓肿",
+      "standard_western_name": "皮肤浅表脓肿",
       "aliases": [
+        "Superficial Skin Abscess",
         "急性淋巴结炎 (Acute Lymphadenitis)"
       ],
       "department_or_category": "",
@@ -6353,9 +6493,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "真菌性角膜炎 (Fungal Keratitis)",
-      "standard_western_name": "真菌性角膜炎 (Fungal Keratitis)",
+      "raw_text": "真菌性角膜炎",
+      "standard_western_name": "真菌性角膜炎",
       "aliases": [
+        "Fungal Keratitis",
         "角膜真菌病"
       ],
       "department_or_category": "",
@@ -6367,9 +6508,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "眩晕 (Vertigo)",
-      "standard_western_name": "眩晕 (Vertigo)",
+      "raw_text": "眩晕",
+      "standard_western_name": "眩晕",
       "aliases": [
+        "Vertigo",
         "良性阵发性位置性眩晕",
         "耳石症"
       ],
@@ -6382,9 +6524,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "眶蜂窝织炎 (Orbital Cellulitis)",
-      "standard_western_name": "眶蜂窝织炎 (Orbital Cellulitis)",
-      "aliases": [],
+      "raw_text": "眶蜂窝织炎",
+      "standard_western_name": "眶蜂窝织炎",
+      "aliases": [
+        "Orbital Cellulitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "30~60岁",
@@ -6394,57 +6538,66 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "眼化学伤 (Ocular Chemical Injury)",
-      "standard_western_name": "眼化学伤 (Ocular Chemical Injury)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0~99岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "眼异物 (Foreign Body of Eye)",
-      "standard_western_name": "眼异物 (Foreign Body of Eye)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0~99岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "眼球穿通伤 (Penetrating Eye Injury)",
-      "standard_western_name": "眼球穿通伤 (Penetrating Eye Injury)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0~99岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "眼部钝挫伤 (Blunt Trauma)",
-      "standard_western_name": "眼部钝挫伤 (Blunt Trauma)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0~99岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "睑板腺囊肿 (Chalazion)",
-      "standard_western_name": "睑板腺囊肿 (Chalazion)",
+      "raw_text": "眼化学伤",
+      "standard_western_name": "眼化学伤",
       "aliases": [
+        "Ocular Chemical Injury"
+      ],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "0~99岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": []
+    },
+    {
+      "raw_text": "眼异物",
+      "standard_western_name": "眼异物",
+      "aliases": [
+        "Foreign Body of Eye"
+      ],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "0~99岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": []
+    },
+    {
+      "raw_text": "眼球穿通伤",
+      "standard_western_name": "眼球穿通伤",
+      "aliases": [
+        "Penetrating Eye Injury"
+      ],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "0~99岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": []
+    },
+    {
+      "raw_text": "眼部钝挫伤",
+      "standard_western_name": "眼部钝挫伤",
+      "aliases": [
+        "Blunt Trauma"
+      ],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "0~99岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": []
+    },
+    {
+      "raw_text": "睑板腺囊肿",
+      "standard_western_name": "睑板腺囊肿",
+      "aliases": [
+        "Chalazion",
         "霰粒肿"
       ],
       "department_or_category": "",
@@ -6456,9 +6609,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "睑缘炎 (Blepharitis)",
-      "standard_western_name": "睑缘炎 (Blepharitis)",
-      "aliases": [],
+      "raw_text": "睑缘炎",
+      "standard_western_name": "睑缘炎",
+      "aliases": [
+        "Blepharitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -6468,9 +6623,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "睑腺炎 (Hordeolum)",
-      "standard_western_name": "睑腺炎 (Hordeolum)",
+      "raw_text": "睑腺炎",
+      "standard_western_name": "睑腺炎",
       "aliases": [
+        "Hordeolum",
         "麦粒肿",
         "针眼"
       ],
@@ -6497,9 +6653,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "睫状环阻滞性青光眼 (Aqueous Misdirection Glaucoma)",
-      "standard_western_name": "睫状环阻滞性青光眼 (Aqueous Misdirection Glaucoma)",
+      "raw_text": "睫状环阻滞性青光眼",
+      "standard_western_name": "睫状环阻滞性青光眼",
       "aliases": [
+        "Aqueous Misdirection Glaucoma",
         "恶性青光眼"
       ],
       "department_or_category": "",
@@ -6511,9 +6668,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "睾丸扭转 (Testicular Torsion)",
-      "standard_western_name": "睾丸扭转 (Testicular Torsion)",
-      "aliases": [],
+      "raw_text": "睾丸扭转",
+      "standard_western_name": "睾丸扭转",
+      "aliases": [
+        "Testicular Torsion"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "<1个月及12-18岁",
@@ -6526,9 +6685,11 @@
       ]
     },
     {
-      "raw_text": "睾丸肿瘤 (Testicular Neoplasm)",
-      "standard_western_name": "睾丸肿瘤 (Testicular Neoplasm)",
-      "aliases": [],
+      "raw_text": "睾丸肿瘤",
+      "standard_western_name": "睾丸肿瘤",
+      "aliases": [
+        "Testicular Neoplasm"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "15~40岁",
@@ -6541,9 +6702,11 @@
       ]
     },
     {
-      "raw_text": "睾丸鞘膜积液 (Hydrocele of Testis)",
-      "standard_western_name": "睾丸鞘膜积液 (Hydrocele of Testis)",
-      "aliases": [],
+      "raw_text": "睾丸鞘膜积液",
+      "standard_western_name": "睾丸鞘膜积液",
+      "aliases": [
+        "Hydrocele of Testis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "<2岁及>40岁",
@@ -6556,9 +6719,10 @@
       ]
     },
     {
-      "raw_text": "短暂性脑缺血发作 (Transient Ischemic Attack)",
-      "standard_western_name": "短暂性脑缺血发作 (Transient Ischemic Attack)",
+      "raw_text": "短暂性脑缺血发作",
+      "standard_western_name": "短暂性脑缺血发作",
       "aliases": [
+        "Transient Ischemic Attack",
         "TIA"
       ],
       "department_or_category": "",
@@ -6570,9 +6734,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "破伤风 (Tetanus)",
-      "standard_western_name": "破伤风 (Tetanus)",
-      "aliases": [],
+      "raw_text": "破伤风",
+      "standard_western_name": "破伤风",
+      "aliases": [
+        "Tetanus"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -6596,9 +6762,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "第三腰椎横突综合征 (Third Lumbar Transverse Process Syndrome)",
-      "standard_western_name": "第三腰椎横突综合征 (Third Lumbar Transverse Process Syndrome)",
-      "aliases": [],
+      "raw_text": "第三腰椎横突综合征",
+      "standard_western_name": "第三腰椎横突综合征",
+      "aliases": [
+        "Third Lumbar Transverse Process Syndrome"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~50岁",
@@ -6608,9 +6776,22 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "类风湿性关节炎 (Rheumatoid Arthritis)",
-      "standard_western_name": "类风湿性关节炎 (Rheumatoid Arthritis)",
+      "raw_text": "类天疱疮",
+      "standard_western_name": "类天疱疮",
+      "aliases": [],
+      "department_or_category": "",
+      "sex": "男女均可",
+      "typical_age": "60-90岁",
+      "entry_type": "standard_western_disease",
+      "m1_diagnosis_entry_allowed": true,
+      "needs_external_enrichment": true,
+      "cleaning_warnings": []
+    },
+    {
+      "raw_text": "类风湿性关节炎",
+      "standard_western_name": "类风湿性关节炎",
       "aliases": [
+        "Rheumatoid Arthritis",
         "老年人类风湿性关节炎"
       ],
       "department_or_category": "",
@@ -6646,7 +6827,8 @@
       "raw_text": "精囊炎",
       "standard_western_name": "精囊炎",
       "aliases": [
-        "血精"
+        "血精",
+        "Seminal Vesiculitis"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -6657,21 +6839,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "精囊炎 (Seminal Vesiculitis)",
-      "standard_western_name": "精囊炎 (Seminal Vesiculitis)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "20~40岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "精囊结核 (Tuberculosis of Seminal Vesicle)",
-      "standard_western_name": "精囊结核 (Tuberculosis of Seminal Vesicle)",
-      "aliases": [],
+      "raw_text": "精囊结核",
+      "standard_western_name": "精囊结核",
+      "aliases": [
+        "Tuberculosis of Seminal Vesicle"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20~50岁",
@@ -6681,9 +6853,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "精子活力不足 (Asthenozoospermia)",
-      "standard_western_name": "精子活力不足 (Asthenozoospermia)",
+      "raw_text": "精子活力不足",
+      "standard_western_name": "精子活力不足",
       "aliases": [
+        "Asthenozoospermia",
         "弱精子症"
       ],
       "department_or_category": "",
@@ -6695,9 +6868,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "精液不液化 (Semen Liquefaction Failure)",
-      "standard_western_name": "精液不液化 (Semen Liquefaction Failure)",
+      "raw_text": "精液不液化",
+      "standard_western_name": "精液不液化",
       "aliases": [
+        "Semen Liquefaction Failure",
         "精液液化异常"
       ],
       "department_or_category": "",
@@ -6709,9 +6883,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "精液量过少 (Hypovolemia of Semen)",
-      "standard_western_name": "精液量过少 (Hypovolemia of Semen)",
+      "raw_text": "精液量过少",
+      "standard_western_name": "精液量过少",
       "aliases": [
+        "Hypovolemia of Semen",
         "少精液症"
       ],
       "department_or_category": "",
@@ -6723,9 +6898,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "精神分裂症 (Schizophrenia)",
-      "standard_western_name": "精神分裂症 (Schizophrenia)",
+      "raw_text": "精神分裂症",
+      "standard_western_name": "精神分裂症",
       "aliases": [
+        "Schizophrenia",
         "躁狂抑郁症"
       ],
       "department_or_category": "",
@@ -6753,9 +6929,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "精索静脉曲张 (Varicocele)",
-      "standard_western_name": "精索静脉曲张 (Varicocele)",
-      "aliases": [],
+      "raw_text": "精索静脉曲张",
+      "standard_western_name": "精索静脉曲张",
+      "aliases": [
+        "Varicocele"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "15~30岁",
@@ -6779,9 +6957,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "糖尿病 (Diabetes Mellitus)",
-      "standard_western_name": "糖尿病 (Diabetes Mellitus)",
+      "raw_text": "糖尿病",
+      "standard_western_name": "糖尿病",
       "aliases": [
+        "Diabetes Mellitus",
         "2型糖尿病",
         "消渴病",
         "代谢性高血糖症",
@@ -6796,9 +6975,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "糖尿病肾病 (Diabetic Nephropathy)",
-      "standard_western_name": "糖尿病肾病 (Diabetic Nephropathy)",
+      "raw_text": "糖尿病肾病",
+      "standard_western_name": "糖尿病肾病",
       "aliases": [
+        "Diabetic Nephropathy",
         "DN"
       ],
       "department_or_category": "",
@@ -6810,9 +6990,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "糖尿病视网膜病变 (Diabetic Retinopathy)",
-      "standard_western_name": "糖尿病视网膜病变 (Diabetic Retinopathy)",
-      "aliases": [],
+      "raw_text": "糖尿病视网膜病变",
+      "standard_western_name": "糖尿病视网膜病变",
+      "aliases": [
+        "Diabetic Retinopathy"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -6853,9 +7035,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "系统性红斑狼疮 (Systemic Lupus Erythematosus)",
-      "standard_western_name": "系统性红斑狼疮 (Systemic Lupus Erythematosus)",
+      "raw_text": "系统性红斑狼疮",
+      "standard_western_name": "系统性红斑狼疮",
       "aliases": [
+        "Systemic Lupus Erythematosus",
         "SLE"
       ],
       "department_or_category": "",
@@ -6867,9 +7050,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "细菌性睾丸炎 (Bacterial Orchitis)",
-      "standard_western_name": "细菌性睾丸炎 (Bacterial Orchitis)",
-      "aliases": [],
+      "raw_text": "细菌性睾丸炎",
+      "standard_western_name": "细菌性睾丸炎",
+      "aliases": [
+        "Bacterial Orchitis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "全年龄段",
@@ -6882,9 +7067,11 @@
       ]
     },
     {
-      "raw_text": "细菌性角膜炎 (Bacterial Keratitis)",
-      "standard_western_name": "细菌性角膜炎 (Bacterial Keratitis)",
-      "aliases": [],
+      "raw_text": "细菌性角膜炎",
+      "standard_western_name": "细菌性角膜炎",
+      "aliases": [
+        "Bacterial Keratitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">18岁",
@@ -7065,9 +7252,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "结膜下出血 (Subconjunctival Hemorrhage)",
-      "standard_western_name": "结膜下出血 (Subconjunctival Hemorrhage)",
-      "aliases": [],
+      "raw_text": "结膜下出血",
+      "standard_western_name": "结膜下出血",
+      "aliases": [
+        "Subconjunctival Hemorrhage"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -7077,9 +7266,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "结膜结石 (Conjunctival Concretion)",
-      "standard_western_name": "结膜结石 (Conjunctival Concretion)",
-      "aliases": [],
+      "raw_text": "结膜结石",
+      "standard_western_name": "结膜结石",
+      "aliases": [
+        "Conjunctival Concretion"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">60岁",
@@ -7119,9 +7310,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "继发性视网膜脱离 (Secondary Retinal Detachment)",
-      "standard_western_name": "继发性视网膜脱离 (Secondary Retinal Detachment)",
-      "aliases": [],
+      "raw_text": "继发性视网膜脱离",
+      "standard_western_name": "继发性视网膜脱离",
+      "aliases": [
+        "Secondary Retinal Detachment"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -7145,9 +7338,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "缓慢性心律失常 (Bradyarrhythmia)",
-      "standard_western_name": "缓慢性心律失常 (Bradyarrhythmia)",
+      "raw_text": "缓慢性心律失常",
+      "standard_western_name": "缓慢性心律失常",
       "aliases": [
+        "Bradyarrhythmia",
         "慢速型心律失常",
         "心动过缓"
       ],
@@ -7160,9 +7354,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "缩窄性心包炎 (Constrictive Pericarditis)",
-      "standard_western_name": "缩窄性心包炎 (Constrictive Pericarditis)",
+      "raw_text": "缩窄性心包炎",
+      "standard_western_name": "缩窄性心包炎",
       "aliases": [
+        "Constrictive Pericarditis",
         "心包缩窄 (Pericardial Constriction)"
       ],
       "department_or_category": "",
@@ -7174,9 +7369,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "缺血性视神经病变 (Ischemic Optic Neuropathy)",
-      "standard_western_name": "缺血性视神经病变 (Ischemic Optic Neuropathy)",
-      "aliases": [],
+      "raw_text": "缺血性视神经病变",
+      "standard_western_name": "缺血性视神经病变",
+      "aliases": [
+        "Ischemic Optic Neuropathy"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">50岁",
@@ -7186,9 +7383,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "缺铁性贫血 (Iron Deficiency Anemia)",
-      "standard_western_name": "缺铁性贫血 (Iron Deficiency Anemia)",
+      "raw_text": "缺铁性贫血",
+      "standard_western_name": "缺铁性贫血",
       "aliases": [
+        "Iron Deficiency Anemia",
         "IDA"
       ],
       "department_or_category": "血液系统疾病",
@@ -7228,9 +7426,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "翼状胬肉 (Pterygium)",
-      "standard_western_name": "翼状胬肉 (Pterygium)",
-      "aliases": [],
+      "raw_text": "翼状胬肉",
+      "standard_western_name": "翼状胬肉",
+      "aliases": [
+        "Pterygium"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">30岁",
@@ -7240,9 +7440,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "老年性皮肤瘙痒症 (Senile Pruritus)",
-      "standard_western_name": "老年性皮肤瘙痒症 (Senile Pruritus)",
+      "raw_text": "老年性皮肤瘙痒症",
+      "standard_western_name": "老年性皮肤瘙痒症",
       "aliases": [
+        "Senile Pruritus",
         "老年瘙痒症"
       ],
       "department_or_category": "",
@@ -7254,9 +7455,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "老年性耳聋 (Presbycusis)",
-      "standard_western_name": "老年性耳聋 (Presbycusis)",
+      "raw_text": "老年性耳聋",
+      "standard_western_name": "老年性耳聋",
       "aliases": [
+        "Presbycusis",
         "老年性听力下降"
       ],
       "department_or_category": "",
@@ -7313,9 +7515,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "老视 (Presbyopia)",
-      "standard_western_name": "老视 (Presbyopia)",
+      "raw_text": "老视",
+      "standard_western_name": "老视",
       "aliases": [
+        "Presbyopia",
         "老花眼"
       ],
       "department_or_category": "",
@@ -7539,9 +7742,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肝囊肿 (Liver Cyst)",
-      "standard_western_name": "肝囊肿 (Liver Cyst)",
-      "aliases": [],
+      "raw_text": "肝囊肿",
+      "standard_western_name": "肝囊肿",
+      "aliases": [
+        "Liver Cyst"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">40岁",
@@ -7551,9 +7756,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肝性脑病 (Hepatic Encephalopathy)",
-      "standard_western_name": "肝性脑病 (Hepatic Encephalopathy)",
+      "raw_text": "肝性脑病",
+      "standard_western_name": "肝性脑病",
       "aliases": [
+        "Hepatic Encephalopathy",
         "HE",
         "肝性昏迷"
       ],
@@ -7566,9 +7772,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肝硬化 (Liver Cirrhosis)",
-      "standard_western_name": "肝硬化 (Liver Cirrhosis)",
-      "aliases": [],
+      "raw_text": "肝硬化",
+      "standard_western_name": "肝硬化",
+      "aliases": [
+        "Liver Cirrhosis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "31-60岁（高发年龄段，约占77.6%）",
@@ -7578,9 +7786,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肠易激综合征 (Irritable Bowel Syndrome)",
-      "standard_western_name": "肠易激综合征 (Irritable Bowel Syndrome)",
+      "raw_text": "肠易激综合征",
+      "standard_western_name": "肠易激综合征",
       "aliases": [
+        "Irritable Bowel Syndrome",
         "IBS"
       ],
       "department_or_category": "",
@@ -7613,9 +7822,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "股骨头坏死 (Osteonecrosis of the Femoral Head)",
-      "standard_western_name": "股骨头坏死 (Osteonecrosis of the Femoral Head)",
+      "raw_text": "股骨头坏死",
+      "standard_western_name": "股骨头坏死",
       "aliases": [
+        "Osteonecrosis of the Femoral Head",
         "ONFH",
         "股骨头无菌性坏死"
       ],
@@ -7628,9 +7838,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肥胖症 (Obesity)",
-      "standard_western_name": "肥胖症 (Obesity)",
+      "raw_text": "肥胖症",
+      "standard_western_name": "肥胖症",
       "aliases": [
+        "Obesity",
         "原发性肥胖"
       ],
       "department_or_category": "",
@@ -7654,9 +7865,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肱骨外上髁炎 (Lateral Epicondylitis)",
-      "standard_western_name": "肱骨外上髁炎 (Lateral Epicondylitis)",
-      "aliases": [],
+      "raw_text": "肱骨外上髁炎",
+      "standard_western_name": "肱骨外上髁炎",
+      "aliases": [
+        "Lateral Epicondylitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "30~60岁",
@@ -7666,9 +7879,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肺炎 (Pneumonia)",
-      "standard_western_name": "肺炎 (Pneumonia)",
+      "raw_text": "肺炎",
+      "standard_western_name": "肺炎",
       "aliases": [
+        "Pneumonia",
         "细菌性肺炎",
         "病毒性肺炎",
         "大叶性肺炎",
@@ -7683,9 +7897,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肺癌 (Lung Cancer)",
-      "standard_western_name": "肺癌 (Lung Cancer)",
+      "raw_text": "肺癌",
+      "standard_western_name": "肺癌",
       "aliases": [
+        "Lung Cancer",
         "原发性支气管肺癌"
       ],
       "department_or_category": "",
@@ -7697,9 +7912,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肺结核 (Pulmonary Tuberculosis)",
-      "standard_western_name": "肺结核 (Pulmonary Tuberculosis)",
+      "raw_text": "肺结核",
+      "standard_western_name": "肺结核",
       "aliases": [
+        "Pulmonary Tuberculosis",
         "TB",
         "肺痨",
         "侵润性肺结核"
@@ -7713,9 +7929,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肺结节 (Pulmonary Nodule)",
-      "standard_western_name": "肺结节 (Pulmonary Nodule)",
+      "raw_text": "肺结节",
+      "standard_western_name": "肺结节",
       "aliases": [
+        "Pulmonary Nodule",
         "肺小结节",
         "肺结节病"
       ],
@@ -7728,9 +7945,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肺脓肿 (Lung Abscess)",
-      "standard_western_name": "肺脓肿 (Lung Abscess)",
+      "raw_text": "肺脓肿",
+      "standard_western_name": "肺脓肿",
       "aliases": [
+        "Lung Abscess",
         "肺痈"
       ],
       "department_or_category": "",
@@ -7742,9 +7960,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肾囊肿 (Renal Cyst)",
-      "standard_western_name": "肾囊肿 (Renal Cyst)",
-      "aliases": [],
+      "raw_text": "肾囊肿",
+      "standard_western_name": "肾囊肿",
+      "aliases": [
+        "Renal Cyst"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">40岁",
@@ -7754,9 +7974,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "肾病综合征 (Nephrotic Syndrome)",
-      "standard_western_name": "肾病综合征 (Nephrotic Syndrome)",
+      "raw_text": "肾病综合征",
+      "standard_western_name": "肾病综合征",
       "aliases": [
+        "Nephrotic Syndrome",
         "NS"
       ],
       "department_or_category": "",
@@ -7780,9 +8001,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "胁痛 (Hypochondriac Pain)",
-      "standard_western_name": "胁痛 (Hypochondriac Pain)",
+      "raw_text": "胁痛",
+      "standard_western_name": "胁痛",
       "aliases": [
+        "Hypochondriac Pain",
         "肋间神经痛"
       ],
       "department_or_category": "中医内科学-肝胆系疾病",
@@ -7794,9 +8016,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "胃痛 (Gastric Pain)",
-      "standard_western_name": "胃痛 (Gastric Pain)",
+      "raw_text": "胃痛",
+      "standard_western_name": "胃痛",
       "aliases": [
+        "Gastric Pain",
         "胃脘痛"
       ],
       "department_or_category": "中医内科学-脾胃系疾病",
@@ -7808,9 +8031,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "胃癌 (Gastric Cancer)",
-      "standard_western_name": "胃癌 (Gastric Cancer)",
-      "aliases": [],
+      "raw_text": "胃癌",
+      "standard_western_name": "胃癌",
+      "aliases": [
+        "Gastric Cancer"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "40-80岁",
@@ -7820,9 +8045,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "胆石症 (Cholelithiasis)",
-      "standard_western_name": "胆石症 (Cholelithiasis)",
-      "aliases": [],
+      "raw_text": "胆石症",
+      "standard_western_name": "胆石症",
+      "aliases": [
+        "Cholelithiasis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "30~70岁",
@@ -7859,9 +8086,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "胸腔积液 (Pleural Effusion)",
-      "standard_western_name": "胸腔积液 (Pleural Effusion)",
-      "aliases": [],
+      "raw_text": "胸腔积液",
+      "standard_western_name": "胸腔积液",
+      "aliases": [
+        "Pleural Effusion"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "18~79岁",
@@ -7926,9 +8155,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "脑出血 (Intracerebral Hemorrhage)",
-      "standard_western_name": "脑出血 (Intracerebral Hemorrhage)",
+      "raw_text": "脑出血",
+      "standard_western_name": "脑出血",
       "aliases": [
+        "Intracerebral Hemorrhage",
         "脑溢血",
         "出血性脑卒中",
         "高血压性脑出血"
@@ -7958,9 +8188,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "脑梗死 (Cerebral Infarction)",
-      "standard_western_name": "脑梗死 (Cerebral Infarction)",
+      "raw_text": "脑梗死",
+      "standard_western_name": "脑梗死",
       "aliases": [
+        "Cerebral Infarction",
         "CI",
         "缺血性脑卒中",
         "CIS",
@@ -8040,7 +8271,9 @@
     {
       "raw_text": "腕管综合征（Carpal Tunnel Syndrome",
       "standard_western_name": "腕管综合征（Carpal Tunnel Syndrome",
-      "aliases": [],
+      "aliases": [
+        "CTS"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "好发 40–60 岁女性",
@@ -8064,9 +8297,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "腰椎管狭窄症 (Lumbar Spinal Stenosis)",
-      "standard_western_name": "腰椎管狭窄症 (Lumbar Spinal Stenosis)",
-      "aliases": [],
+      "raw_text": "腰椎管狭窄症",
+      "standard_western_name": "腰椎管狭窄症",
+      "aliases": [
+        "Lumbar Spinal Stenosis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "50~80岁",
@@ -8076,9 +8311,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "腰椎间盘突出症 (Lumbar Disc Herniation)",
-      "standard_western_name": "腰椎间盘突出症 (Lumbar Disc Herniation)",
-      "aliases": [],
+      "raw_text": "腰椎间盘突出症",
+      "standard_western_name": "腰椎间盘突出症",
+      "aliases": [
+        "Lumbar Disc Herniation"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "25~60岁",
@@ -8088,9 +8325,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "腰痛 (Low Back Pain)",
-      "standard_western_name": "腰痛 (Low Back Pain)",
-      "aliases": [],
+      "raw_text": "腰痛",
+      "standard_western_name": "腰痛",
+      "aliases": [
+        "Low Back Pain"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~55岁",
@@ -8100,9 +8339,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "腰肌劳损 (Lumbar Muscle Strain)",
-      "standard_western_name": "腰肌劳损 (Lumbar Muscle Strain)",
-      "aliases": [],
+      "raw_text": "腰肌劳损",
+      "standard_western_name": "腰肌劳损",
+      "aliases": [
+        "Lumbar Muscle Strain"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~60岁",
@@ -8112,9 +8353,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "腹水 (Ascites)",
-      "standard_western_name": "腹水 (Ascites)",
+      "raw_text": "腹水",
+      "standard_western_name": "腹水",
       "aliases": [
+        "Ascites",
         "肝硬化腹水"
       ],
       "department_or_category": "",
@@ -8130,25 +8372,13 @@
       "standard_western_name": "腹泻",
       "aliases": [
         "幼儿腹泻",
-        "婴儿肠炎"
+        "婴儿肠炎",
+        "Diarrhea",
+        "泄泻"
       ],
       "department_or_category": "",
       "sex": "性别：男女均可",
       "typical_age": "0-5岁（高发年龄为6个月-2岁，全年龄段均可发病）",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "腹泻 (Diarrhea)",
-      "standard_western_name": "腹泻 (Diarrhea)",
-      "aliases": [
-        "泄泻"
-      ],
-      "department_or_category": "",
-      "sex": "男女均可",
-      "typical_age": "0~79岁",
       "entry_type": "standard_western_disease",
       "m1_diagnosis_entry_allowed": true,
       "needs_external_enrichment": true,
@@ -8191,9 +8421,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "膜性肾病 (Membranous Nephropathy)",
-      "standard_western_name": "膜性肾病 (Membranous Nephropathy)",
+      "raw_text": "膜性肾病",
+      "standard_western_name": "膜性肾病",
       "aliases": [
+        "Membranous Nephropathy",
         "MN"
       ],
       "department_or_category": "",
@@ -8306,9 +8537,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "药物性肾损伤 (Drug-Induced Kidney Injury)",
-      "standard_western_name": "药物性肾损伤 (Drug-Induced Kidney Injury)",
+      "raw_text": "药物性肾损伤",
+      "standard_western_name": "药物性肾损伤",
       "aliases": [
+        "Drug-Induced Kidney Injury",
         "药物相关性肾损害"
       ],
       "department_or_category": "",
@@ -8371,9 +8603,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "虚损 (Debility)",
-      "standard_western_name": "虚损 (Debility)",
+      "raw_text": "虚损",
+      "standard_western_name": "虚损",
       "aliases": [
+        "Debility",
         "虚劳"
       ],
       "department_or_category": "",
@@ -8407,9 +8640,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "蚕食性角膜溃疡 (Mooren's Ulcer)",
-      "standard_western_name": "蚕食性角膜溃疡 (Mooren's Ulcer)",
-      "aliases": [],
+      "raw_text": "蚕食性角膜溃疡",
+      "standard_western_name": "蚕食性角膜溃疡",
+      "aliases": [
+        "Mooren's Ulcer"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~60岁",
@@ -8449,9 +8684,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "蛛网膜下腔出血 (Subarachnoid Hemorrhage)",
-      "standard_western_name": "蛛网膜下腔出血 (Subarachnoid Hemorrhage)",
+      "raw_text": "蛛网膜下腔出血",
+      "standard_western_name": "蛛网膜下腔出血",
       "aliases": [
+        "Subarachnoid Hemorrhage",
         "原发性蛛网膜下腔出血"
       ],
       "department_or_category": "",
@@ -8477,9 +8713,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "血尿 (Hematuria)",
-      "standard_western_name": "血尿 (Hematuria)",
+      "raw_text": "血尿",
+      "standard_western_name": "血尿",
       "aliases": [
+        "Hematuria",
         "尿血"
       ],
       "department_or_category": "",
@@ -8521,9 +8758,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "血管性痴呆 (Vascular Dementia)",
-      "standard_western_name": "血管性痴呆 (Vascular Dementia)",
+      "raw_text": "血管性痴呆",
+      "standard_western_name": "血管性痴呆",
       "aliases": [
+        "Vascular Dementia",
         "VaD",
         "多发性梗死性痴呆",
         "特殊部位单发性梗死性痴呆",
@@ -8551,9 +8789,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "视盘水肿 (Papilledema)",
-      "standard_western_name": "视盘水肿 (Papilledema)",
+      "raw_text": "视盘水肿",
+      "standard_western_name": "视盘水肿",
       "aliases": [
+        "Papilledema",
         "视乳头水肿"
       ],
       "department_or_category": "",
@@ -8565,9 +8804,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "视神经乳头炎 (Optic Papillitis)",
-      "standard_western_name": "视神经乳头炎 (Optic Papillitis)",
-      "aliases": [],
+      "raw_text": "视神经乳头炎",
+      "standard_western_name": "视神经乳头炎",
+      "aliases": [
+        "Optic Papillitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "15~45 岁",
@@ -8577,9 +8818,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "视神经萎缩 (Optic Atrophy)",
-      "standard_western_name": "视神经萎缩 (Optic Atrophy)",
-      "aliases": [],
+      "raw_text": "视神经萎缩",
+      "standard_western_name": "视神经萎缩",
+      "aliases": [
+        "Optic Atrophy"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -8589,9 +8832,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "视网膜动脉阻塞 (Retinal Artery Occlusion)",
-      "standard_western_name": "视网膜动脉阻塞 (Retinal Artery Occlusion)",
-      "aliases": [],
+      "raw_text": "视网膜动脉阻塞",
+      "standard_western_name": "视网膜动脉阻塞",
+      "aliases": [
+        "Retinal Artery Occlusion"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -8601,9 +8846,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "视网膜静脉周围炎 (Retinal Periphlebitis)",
-      "standard_western_name": "视网膜静脉周围炎 (Retinal Periphlebitis)",
-      "aliases": [],
+      "raw_text": "视网膜静脉周围炎",
+      "standard_western_name": "视网膜静脉周围炎",
+      "aliases": [
+        "Retinal Periphlebitis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "15~40岁",
@@ -8613,9 +8860,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "视网膜静脉阻塞 (Retinal Vein Occlusion)",
-      "standard_western_name": "视网膜静脉阻塞 (Retinal Vein Occlusion)",
-      "aliases": [],
+      "raw_text": "视网膜静脉阻塞",
+      "standard_western_name": "视网膜静脉阻塞",
+      "aliases": [
+        "Retinal Vein Occlusion"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">50岁",
@@ -8625,9 +8874,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "角膜基质炎 (Interstitial Keratitis)",
-      "standard_western_name": "角膜基质炎 (Interstitial Keratitis)",
-      "aliases": [],
+      "raw_text": "角膜基质炎",
+      "standard_western_name": "角膜基质炎",
+      "aliases": [
+        "Interstitial Keratitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -8637,9 +8888,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "角膜瘢痕 (Corneal Scar)",
-      "standard_western_name": "角膜瘢痕 (Corneal Scar)",
-      "aliases": [],
+      "raw_text": "角膜瘢痕",
+      "standard_western_name": "角膜瘢痕",
+      "aliases": [
+        "Corneal Scar"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -8683,9 +8936,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "超急性细菌性结膜炎 (Hyperacute Bacterial Conjunctivitis)",
-      "standard_western_name": "超急性细菌性结膜炎 (Hyperacute Bacterial Conjunctivitis)",
-      "aliases": [],
+      "raw_text": "超急性细菌性结膜炎",
+      "standard_western_name": "超急性细菌性结膜炎",
+      "aliases": [
+        "Hyperacute Bacterial Conjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0-1岁, 18-40岁",
@@ -8737,9 +8992,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "足背蜂窝组织炎或脓肿 (Cellulitis or Abscess of the Dorsum of the Foot)",
-      "standard_western_name": "足背蜂窝组织炎或脓肿 (Cellulitis or Abscess of the Dorsum of the Foot)",
+      "raw_text": "足背蜂窝组织炎或脓肿",
+      "standard_western_name": "足背蜂窝组织炎或脓肿",
       "aliases": [
+        "Cellulitis or Abscess of the Dorsum of the Foot",
         "足发背"
       ],
       "department_or_category": "",
@@ -8751,9 +9007,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "软下疳 (Chancroid)",
-      "standard_western_name": "软下疳 (Chancroid)",
+      "raw_text": "软下疳",
+      "standard_western_name": "软下疳",
       "aliases": [
+        "Chancroid",
         "杜克雷嗜血杆菌感染"
       ],
       "department_or_category": "",
@@ -8765,9 +9022,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "过敏性结膜炎 (Allergic Conjunctivitis)",
-      "standard_western_name": "过敏性结膜炎 (Allergic Conjunctivitis)",
-      "aliases": [],
+      "raw_text": "过敏性结膜炎",
+      "standard_western_name": "过敏性结膜炎",
+      "aliases": [
+        "Allergic Conjunctivitis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -8789,9 +9048,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "运动神经元病 (Motor Neuron Disease)",
-      "standard_western_name": "运动神经元病 (Motor Neuron Disease)",
-      "aliases": [],
+      "raw_text": "运动神经元病",
+      "standard_western_name": "运动神经元病",
+      "aliases": [
+        "Motor Neuron Disease"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "40~70岁",
@@ -8801,9 +9062,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "近视 (Myopia)",
-      "standard_western_name": "近视 (Myopia)",
-      "aliases": [],
+      "raw_text": "近视",
+      "standard_western_name": "近视",
+      "aliases": [
+        "Myopia"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "6~18岁",
@@ -8830,9 +9093,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "远视 (Hyperopia)",
-      "standard_western_name": "远视 (Hyperopia)",
-      "aliases": [],
+      "raw_text": "远视",
+      "standard_western_name": "远视",
+      "aliases": [
+        "Hyperopia"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -8842,9 +9107,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "逆行射精 (Retrograde Ejaculation)",
-      "standard_western_name": "逆行射精 (Retrograde Ejaculation)",
-      "aliases": [],
+      "raw_text": "逆行射精",
+      "standard_western_name": "逆行射精",
+      "aliases": [
+        "Retrograde Ejaculation"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": ">18岁",
@@ -8869,9 +9136,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "遗精 (Nocturnal Emission)",
-      "standard_western_name": "遗精 (Nocturnal Emission)",
-      "aliases": [],
+      "raw_text": "遗精",
+      "standard_western_name": "遗精",
+      "aliases": [
+        "Nocturnal Emission"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "13~40岁",
@@ -8899,9 +9168,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "重症肌无力 (Myasthenia Gravis)",
-      "standard_western_name": "重症肌无力 (Myasthenia Gravis)",
+      "raw_text": "重症肌无力",
+      "standard_western_name": "重症肌无力",
       "aliases": [
+        "Myasthenia Gravis",
         "MG"
       ],
       "department_or_category": "",
@@ -8959,9 +9229,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "间质性肺疾病 (Interstitial Lung Disease)",
-      "standard_western_name": "间质性肺疾病 (Interstitial Lung Disease)",
+      "raw_text": "间质性肺疾病",
+      "standard_western_name": "间质性肺疾病",
       "aliases": [
+        "Interstitial Lung Disease",
         "ILD",
         "间质性肺炎",
         "肺间质纤维化",
@@ -8978,9 +9249,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "阑尾炎 (Appendicitis)",
-      "standard_western_name": "阑尾炎 (Appendicitis)",
+      "raw_text": "阑尾炎",
+      "standard_western_name": "阑尾炎",
       "aliases": [
+        "Appendicitis",
         "急性阑尾炎",
         "慢性阑尾炎"
       ],
@@ -8993,9 +9265,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "阴囊湿疹 (Scrotal Eczema)",
-      "standard_western_name": "阴囊湿疹 (Scrotal Eczema)",
-      "aliases": [],
+      "raw_text": "阴囊湿疹",
+      "standard_western_name": "阴囊湿疹",
+      "aliases": [
+        "Scrotal Eczema"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "全年龄段",
@@ -9005,9 +9279,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "阴囊蜂窝织炎 (Scrotal Cellulitis)",
-      "standard_western_name": "阴囊蜂窝织炎 (Scrotal Cellulitis)",
-      "aliases": [],
+      "raw_text": "阴囊蜂窝织炎",
+      "standard_western_name": "阴囊蜂窝织炎",
+      "aliases": [
+        "Scrotal Cellulitis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "全年龄段",
@@ -9020,7 +9296,8 @@
       "raw_text": "阴茎癌",
       "standard_western_name": "阴茎癌",
       "aliases": [
-        "肾岩"
+        "肾岩",
+        "Penile Cancer"
       ],
       "department_or_category": "",
       "sex": "男女均可",
@@ -9031,21 +9308,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "阴茎癌 (Penile Cancer)",
-      "standard_western_name": "阴茎癌 (Penile Cancer)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "50~70岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "阴茎硬化性淋巴管炎 (Sclerosing Lymphangitis of Penis)",
-      "standard_western_name": "阴茎硬化性淋巴管炎 (Sclerosing Lymphangitis of Penis)",
-      "aliases": [],
+      "raw_text": "阴茎硬化性淋巴管炎",
+      "standard_western_name": "阴茎硬化性淋巴管炎",
+      "aliases": [
+        "Sclerosing Lymphangitis of Penis"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20~40岁",
@@ -9055,9 +9322,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "阴茎硬结症 (Peyronie's Disease)",
-      "standard_western_name": "阴茎硬结症 (Peyronie's Disease)",
-      "aliases": [],
+      "raw_text": "阴茎硬结症",
+      "standard_western_name": "阴茎硬结症",
+      "aliases": [
+        "Peyronie's Disease"
+      ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "50~70岁",
@@ -9115,9 +9384,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "阿尔茨海默病 (Alzheimer's Disease)",
-      "standard_western_name": "阿尔茨海默病 (Alzheimer's Disease)",
+      "raw_text": "阿尔茨海默病",
+      "standard_western_name": "阿尔茨海默病",
       "aliases": [
+        "Alzheimer's Disease",
         "AD",
         "阿尔兹海默症"
       ],
@@ -9136,7 +9406,8 @@
         "子痈",
         "急性附睾炎",
         "慢性附睾炎",
-        "睾丸炎"
+        "睾丸炎",
+        "Epididymitis"
       ],
       "department_or_category": "",
       "sex": "男",
@@ -9149,39 +9420,16 @@
       ]
     },
     {
-      "raw_text": "附睾炎 (Epididymitis)",
-      "standard_western_name": "附睾炎 (Epididymitis)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "20~40岁，>50岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
       "raw_text": "附睾结核",
       "standard_western_name": "附睾结核",
       "aliases": [
         "子痰",
-        "穿囊漏"
+        "穿囊漏",
+        "Tuberculosis of Epididymis"
       ],
       "department_or_category": "",
       "sex": "男",
       "typical_age": "20-50岁",
-      "entry_type": "standard_western_disease",
-      "m1_diagnosis_entry_allowed": true,
-      "needs_external_enrichment": true,
-      "cleaning_warnings": []
-    },
-    {
-      "raw_text": "附睾结核 (Tuberculosis of Epididymis)",
-      "standard_western_name": "附睾结核 (Tuberculosis of Epididymis)",
-      "aliases": [],
-      "department_or_category": "",
-      "sex": "男",
-      "typical_age": "20~40岁",
       "entry_type": "standard_western_disease",
       "m1_diagnosis_entry_allowed": true,
       "needs_external_enrichment": true,
@@ -9239,9 +9487,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "青光眼睫状体炎综合征 (Glaucomatocyclitic Crisis)",
-      "standard_western_name": "青光眼睫状体炎综合征 (Glaucomatocyclitic Crisis)",
-      "aliases": [],
+      "raw_text": "青光眼睫状体炎综合征",
+      "standard_western_name": "青光眼睫状体炎综合征",
+      "aliases": [
+        "Glaucomatocyclitic Crisis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "20~50岁",
@@ -9324,9 +9574,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "颈动脉斑块 (Carotid Plaque)",
-      "standard_western_name": "颈动脉斑块 (Carotid Plaque)",
+      "raw_text": "颈动脉斑块",
+      "standard_western_name": "颈动脉斑块",
       "aliases": [
+        "Carotid Plaque",
         "颈动脉粥样硬化斑块",
         "颈动脉狭窄斑块"
       ],
@@ -9339,9 +9590,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "颈椎病 (Cervical Spondylosis)",
-      "standard_western_name": "颈椎病 (Cervical Spondylosis)",
-      "aliases": [],
+      "raw_text": "颈椎病",
+      "standard_western_name": "颈椎病",
+      "aliases": [
+        "Cervical Spondylosis"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "40~80岁",
@@ -9418,9 +9671,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "食管-贲门失弛缓症 (Esophageal Achalasia)",
-      "standard_western_name": "食管-贲门失弛缓症 (Esophageal Achalasia)",
+      "raw_text": "食管-贲门失弛缓症",
+      "standard_western_name": "食管-贲门失弛缓症",
       "aliases": [
+        "Esophageal Achalasia",
         "贲门痉挛"
       ],
       "department_or_category": "",
@@ -9432,9 +9686,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "食管癌 (Esophageal Cancer)",
-      "standard_western_name": "食管癌 (Esophageal Cancer)",
+      "raw_text": "食管癌",
+      "standard_western_name": "食管癌",
       "aliases": [
+        "Esophageal Cancer",
         "食道癌"
       ],
       "department_or_category": "",
@@ -9462,9 +9717,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "骨关节炎 (Osteoarthritis)",
-      "standard_western_name": "骨关节炎 (Osteoarthritis)",
+      "raw_text": "骨关节炎",
+      "standard_western_name": "骨关节炎",
       "aliases": [
+        "Osteoarthritis",
         "OA",
         "退行性关节炎"
       ],
@@ -9477,9 +9733,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "骨质疏松症 (Osteoporosis)",
-      "standard_western_name": "骨质疏松症 (Osteoporosis)",
+      "raw_text": "骨质疏松症",
+      "standard_western_name": "骨质疏松症",
       "aliases": [
+        "Osteoporosis",
         "OP",
         "骨质疏松",
         "绝经后骨质疏松"
@@ -9493,9 +9750,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "高脂血症 (Hyperlipidemia)",
-      "standard_western_name": "高脂血症 (Hyperlipidemia)",
+      "raw_text": "高脂血症",
+      "standard_western_name": "高脂血症",
       "aliases": [
+        "Hyperlipidemia",
         "高脂蛋白血症",
         "高血脂",
         "血脂异常",
@@ -9510,9 +9768,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "高血压 (Hypertension)",
-      "standard_western_name": "高血压 (Hypertension)",
+      "raw_text": "高血压",
+      "standard_western_name": "高血压",
       "aliases": [
+        "Hypertension",
         "原发性高血压",
         "继发性高血压",
         "essential hypertension",
@@ -9528,9 +9787,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "高血压性视网膜病变 (Hypertensive Retinopathy)",
-      "standard_western_name": "高血压性视网膜病变 (Hypertensive Retinopathy)",
-      "aliases": [],
+      "raw_text": "高血压性视网膜病变",
+      "standard_western_name": "高血压性视网膜病变",
+      "aliases": [
+        "Hypertensive Retinopathy"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": ">40岁",
@@ -9584,9 +9845,11 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "黄疸(Jaundice)",
-      "standard_western_name": "黄疸(Jaundice)",
-      "aliases": [],
+      "raw_text": "黄疸",
+      "standard_western_name": "黄疸",
+      "aliases": [
+        "Jaundice"
+      ],
       "department_or_category": "",
       "sex": "男女均可",
       "typical_age": "0~99岁",
@@ -9758,9 +10021,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "齿龈出血 (Gingival Bleeding)",
-      "standard_western_name": "齿龈出血 (Gingival Bleeding)",
+      "raw_text": "齿龈出血",
+      "standard_western_name": "齿龈出血",
       "aliases": [
+        "Gingival Bleeding",
         "齿衄"
       ],
       "department_or_category": "",
@@ -9772,9 +10036,10 @@
       "cleaning_warnings": []
     },
     {
-      "raw_text": "龟头炎和包皮炎 (Balanoposthitis)",
-      "standard_western_name": "龟头炎和包皮炎 (Balanoposthitis)",
+      "raw_text": "龟头炎和包皮炎",
+      "standard_western_name": "龟头炎和包皮炎",
       "aliases": [
+        "Balanoposthitis",
         "龟头包皮炎"
       ],
       "department_or_category": "",
