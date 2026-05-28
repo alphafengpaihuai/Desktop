@@ -1,0 +1,209 @@
+{
+  "房颤": {
+    "canonical_disease_name": "Atrial Fibrillation",
+    "aliases": ["心房颤动", "atrial fibrillation", "AF", "Afib"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于疾病名归一，不直接提高诊断置信度。"
+  },
+  "急性冠脉综合征": {
+    "canonical_disease_name": "Acute Coronary Syndrome",
+    "aliases": ["ACS", "急性冠脉综合征", "急性冠状动脉综合征", "不稳定心绞痛", "心梗", "心肌梗死"],
+    "language": ["zh", "en"],
+    "match_priority": 0.98,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于召回急性胸痛相关候选，不直接确诊。"
+  },
+  "心肌梗死": {
+    "canonical_disease_name": "Acute Myocardial Infarction",
+    "aliases": ["AMI", "急性心肌梗死", "心梗", "myocardial infarction", "heart attack"],
+    "language": ["zh", "en"],
+    "match_priority": 0.98,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "需结合症状、心电图和肌钙蛋白动态变化。"
+  },
+  "COPD": {
+    "canonical_disease_name": "Chronic Obstructive Pulmonary Disease",
+    "aliases": ["慢阻肺", "慢性阻塞性肺疾病", "chronic obstructive pulmonary disease"],
+    "language": ["zh", "en"],
+    "match_priority": 0.93,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "当前标准病名未在 M1 库中精确命中，只能作为候选提示。"
+  },
+  "GERD": {
+    "canonical_disease_name": "Gastroesophageal Reflux Disease",
+    "aliases": ["胃食管反流", "反流性食管炎", "gastroesophageal reflux disease"],
+    "language": ["zh", "en"],
+    "match_priority": 0.94,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于反酸、烧心、慢性咳嗽等入口召回。"
+  },
+  "DVT": {
+    "canonical_disease_name": "Deep Vein Thrombosis",
+    "aliases": ["深静脉血栓", "下肢深静脉血栓", "deep venous thrombosis"],
+    "language": ["zh", "en"],
+    "match_priority": 0.96,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "当前 M1 库未精确命中，需保留为高风险候选方向。"
+  },
+  "PE": {
+    "canonical_disease_name": "Pulmonary Embolism",
+    "aliases": ["肺栓塞", "pulmonary embolism", "肺动脉栓塞"],
+    "language": ["zh", "en"],
+    "match_priority": 0.97,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于胸痛、呼吸困难、咯血、低氧等入口召回。"
+  },
+  "TIA": {
+    "canonical_disease_name": "Transient Ischemic Attack",
+    "aliases": ["短暂性脑缺血发作", "小中风", "transient ischemic attack"],
+    "language": ["zh", "en"],
+    "match_priority": 0.96,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "当前 M1 库未精确命中，不能强行写入疾病库。"
+  },
+  "CKD": {
+    "canonical_disease_name": "Chronic Kidney Disease",
+    "aliases": ["慢性肾脏病", "慢性肾病", "chronic kidney disease"],
+    "language": ["zh", "en"],
+    "match_priority": 0.94,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于肌酐升高、eGFR下降、蛋白尿等入口召回。"
+  },
+  "AKI": {
+    "canonical_disease_name": "Acute Kidney Injury",
+    "aliases": ["急性肾损伤", "急性肾衰", "acute kidney injury"],
+    "language": ["zh", "en"],
+    "match_priority": 0.96,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于少尿、无尿、肌酐快速升高等入口召回。"
+  },
+  "IBD": {
+    "canonical_disease_name": "Inflammatory Bowel Disease",
+    "aliases": ["炎症性肠病", "inflammatory bowel disease"],
+    "language": ["zh", "en"],
+    "match_priority": 0.92,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "IBD 是伞状入口，应进一步区分 UC 与 CD。"
+  },
+  "UC": {
+    "canonical_disease_name": "Ulcerative Colitis",
+    "aliases": ["溃疡性结肠炎", "ulcerative colitis"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于血便、腹泻、里急后重等入口召回。"
+  },
+  "CD": {
+    "canonical_disease_name": "Crohn Disease",
+    "aliases": ["克罗恩病", "Crohn's disease", "Crohn disease"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于慢性腹痛、腹泻、体重下降等入口召回。"
+  },
+  "SLE": {
+    "canonical_disease_name": "Systemic Lupus Erythematosus",
+    "aliases": ["系统性红斑狼疮", "狼疮", "systemic lupus erythematosus"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于多系统受累、皮疹、关节痛、肾损害等入口召回。"
+  },
+  "RA": {
+    "canonical_disease_name": "Rheumatoid Arthritis",
+    "aliases": ["类风湿关节炎", "rheumatoid arthritis"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "in_m1",
+    "notes": "用于对称小关节肿痛、晨僵等入口召回。"
+  },
+  "DKA": {
+    "canonical_disease_name": "Diabetic Ketoacidosis",
+    "aliases": ["糖尿病酮症酸中毒", "diabetic ketoacidosis"],
+    "language": ["zh", "en"],
+    "match_priority": 0.97,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "当前 M1 库未精确命中，作为急症风险候选。"
+  },
+  "HHS": {
+    "canonical_disease_name": "Hyperosmolar Hyperglycemic State",
+    "aliases": ["高渗高血糖状态", "高渗性高血糖状态"],
+    "language": ["zh", "en"],
+    "match_priority": 0.96,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "当前 M1 库未精确命中，作为急症风险候选。"
+  },
+  "GBS": {
+    "canonical_disease_name": "Guillain-Barre Syndrome",
+    "aliases": ["吉兰-巴雷综合征", "格林巴利综合征", "Guillain-Barré syndrome"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "用于进行性肢体无力、腱反射减弱等入口召回。"
+  },
+  "SAH": {
+    "canonical_disease_name": "Subarachnoid Hemorrhage",
+    "aliases": ["蛛网膜下腔出血", "subarachnoid hemorrhage"],
+    "language": ["zh", "en"],
+    "match_priority": 0.97,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "用于雷击样头痛、脑膜刺激征等入口召回。"
+  },
+  "SJS/TEN": {
+    "canonical_disease_name": "Stevens-Johnson Syndrome / Toxic Epidermal Necrolysis",
+    "aliases": ["Stevens-Johnson syndrome", "中毒性表皮坏死松解症", "TEN"],
+    "language": ["zh", "en"],
+    "match_priority": 0.96,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "用于药疹、黏膜损害、皮肤剥脱等高风险入口召回。"
+  },
+  "DIC": {
+    "canonical_disease_name": "Disseminated Intravascular Coagulation",
+    "aliases": ["弥散性血管内凝血", "disseminated intravascular coagulation"],
+    "language": ["zh", "en"],
+    "match_priority": 0.96,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "用于凝血异常、出血与血栓并存等入口召回。"
+  },
+  "TTP": {
+    "canonical_disease_name": "Thrombotic Thrombocytopenic Purpura",
+    "aliases": ["血栓性血小板减少性紫癜", "thrombotic thrombocytopenic purpura"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "用于血小板减少、溶血、神经症状等入口召回。"
+  },
+  "HUS": {
+    "canonical_disease_name": "Hemolytic Uremic Syndrome",
+    "aliases": ["溶血尿毒综合征", "hemolytic uremic syndrome"],
+    "language": ["zh", "en"],
+    "match_priority": 0.95,
+    "source_quality": "A",
+    "mapping_status": "not_in_m1",
+    "notes": "用于腹泻后肾损伤、贫血、血小板减少等入口召回。"
+  }
+}

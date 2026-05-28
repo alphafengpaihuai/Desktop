@@ -1,0 +1,58 @@
+{
+  "rules_count": 21,
+  "covered_axes_count": 21,
+  "uncovered_axes": [],
+  "tests_count": 6,
+  "tests_passed": 5,
+  "manual_review_cases": 3,
+  "forbidden_direct_disease_to_syndrome_jump_detected": false,
+  "m1_modified": false,
+  "m3_modified": false,
+  "m2_bridge_installed": true,
+  "tests_detail": [
+    {
+      "test": "雄激素性脱发（头油+苔腻）",
+      "allowed_main": [
+        "湿热上蒸",
+        "气血不足",
+        "血热风燥"
+      ],
+      "needs_manual_review": true
+    },
+    {
+      "test": "脱发+怕冷+乏力+甲减",
+      "allowed_main": [
+        "气血两虚",
+        "气血不足",
+        "脾胃虚寒"
+      ],
+      "needs_manual_review": true
+    },
+    {
+      "test": "紫癜+感冒后",
+      "allowed_main": [
+        "肝胆湿热",
+        "热入血分",
+        "痰热壅肺"
+      ],
+      "needs_manual_review": false
+    },
+    {
+      "test": "胸痛运动后加重（红旗）",
+      "allowed_main": [
+        "肝胆湿热",
+        "痰热壅肺"
+      ],
+      "needs_manual_review": true
+    },
+    {
+      "test": "兼证加味约束（失眠+便秘）",
+      "allowed_main": [
+        "肝胆湿热",
+        "湿热下注",
+        "血热风燥"
+      ],
+      "needs_manual_review": false
+    }
+  ]
+}

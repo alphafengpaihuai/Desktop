@@ -1,0 +1,313 @@
+{
+  "胸痛": {
+    "normalized_complaint": "胸痛",
+    "must_consider": [
+      {"disease_name": "Acute Coronary Syndrome", "reason": "压榨性胸痛、大汗、放射痛、肌钙蛋白或心电图异常时必须优先排除。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Aortic Dissection", "reason": "突发撕裂样胸背痛、双上肢血压差、神经症状或休克时必须排除。", "priority": 0.95, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Pulmonary Embolism", "reason": "胸痛伴呼吸困难、咯血、低氧、下肢肿痛或高凝风险时必须排除。", "priority": 0.94, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Gastroesophageal Reflux Disease", "mapping_status": "in_m1"}, {"disease_name": "Pneumothorax", "mapping_status": "in_m1"}, {"disease_name": "Pneumonia", "mapping_status": "in_m1"}],
+    "red_flags": ["大汗", "低血压", "放射痛", "撕裂样疼痛", "呼吸困难", "晕厥"],
+    "first_checks": ["心电图", "肌钙蛋白", "双上肢血压", "胸部影像或CTA按风险"],
+    "must_not_miss": ["Acute Coronary Syndrome", "Aortic Dissection", "Pulmonary Embolism", "Pneumothorax"],
+    "source_quality": "A"
+  },
+  "呼吸困难": {
+    "normalized_complaint": "呼吸困难",
+    "must_consider": [
+      {"disease_name": "Pulmonary Embolism", "reason": "突发呼吸困难、胸痛、低氧或血栓风险时必须排除。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Heart Failure", "reason": "端坐呼吸、湿啰音、BNP升高或水肿时需考虑。", "priority": 0.92, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Bronchial Asthma", "reason": "喘息、哮鸣音、诱因暴露或反复发作时需考虑。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Community-Acquired Pneumonia", "mapping_status": "in_m1"}, {"disease_name": "Pneumothorax", "mapping_status": "in_m1"}, {"disease_name": "Anemia", "mapping_status": "not_in_m1"}],
+    "red_flags": ["低氧", "发绀", "不能平卧", "意识改变", "呼吸急促"],
+    "first_checks": ["血氧饱和度", "胸部影像", "心电图", "血气分析", "BNP或NT-proBNP按风险"],
+    "must_not_miss": ["Pulmonary Embolism", "Pneumothorax", "Heart Failure", "Sepsis"],
+    "source_quality": "A"
+  },
+  "咳嗽": {
+    "normalized_complaint": "咳嗽",
+    "must_consider": [
+      {"disease_name": "Community-Acquired Pneumonia", "reason": "咳嗽伴发热、气促、肺部实变影或低氧时必须排除。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Bronchial Asthma", "reason": "夜间咳嗽、喘息、诱因触发或反复发作时需考虑。", "priority": 0.86, "red_flag_relevant": false, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Acute Bronchitis", "mapping_status": "in_m1"}, {"disease_name": "Gastroesophageal Reflux Disease", "mapping_status": "in_m1"}, {"disease_name": "Upper Airway Cough Syndrome", "mapping_status": "not_in_m1"}],
+    "red_flags": ["咯血", "低氧", "持续高热", "胸痛", "体重下降"],
+    "first_checks": ["体温", "血氧饱和度", "肺部听诊", "胸部影像按风险"],
+    "must_not_miss": ["Community-Acquired Pneumonia", "Pulmonary Embolism", "Lung Cancer"],
+    "source_quality": "A"
+  },
+  "咯血": {
+    "normalized_complaint": "咯血",
+    "must_consider": [
+      {"disease_name": "Pulmonary Embolism", "reason": "咯血伴胸痛、呼吸困难、低氧或下肢肿痛时必须排除。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Tuberculosis", "reason": "慢性咳嗽、盗汗、消瘦或接触史时需考虑。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Bronchiectasis", "mapping_status": "in_m1"}, {"disease_name": "Pneumonia", "mapping_status": "in_m1"}, {"disease_name": "Lung Cancer", "mapping_status": "not_in_m1"}],
+    "red_flags": ["大量咯血", "低氧", "休克", "抗凝用药", "胸痛"],
+    "first_checks": ["血氧饱和度", "血常规", "凝血功能", "胸部影像"],
+    "must_not_miss": ["Pulmonary Embolism", "Tuberculosis", "Lung Cancer"],
+    "source_quality": "A"
+  },
+  "发热": {
+    "normalized_complaint": "发热",
+    "must_consider": [
+      {"disease_name": "Sepsis", "reason": "发热伴低血压、意识改变、呼吸急促、乳酸升高或少尿时必须排除。", "priority": 0.97, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Community-Acquired Pneumonia", "reason": "发热伴咳嗽、气促、肺部体征或影像异常时需考虑。", "priority": 0.88, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Influenza", "mapping_status": "not_in_m1"}, {"disease_name": "Urinary Tract Infection", "mapping_status": "in_m1"}, {"disease_name": "Meningitis", "mapping_status": "not_in_m1"}],
+    "red_flags": ["高热不退", "低血压", "意识障碍", "皮肤花斑", "颈强直"],
+    "first_checks": ["体温", "血常规", "CRP或PCT", "血培养按风险", "感染灶评估"],
+    "must_not_miss": ["Sepsis", "Meningitis", "Pneumonia"],
+    "source_quality": "A"
+  },
+  "头痛": {
+    "normalized_complaint": "头痛",
+    "must_consider": [
+      {"disease_name": "Subarachnoid Hemorrhage", "reason": "雷击样突发剧烈头痛、颈强直、呕吐或意识改变时必须排除。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Meningitis", "reason": "头痛伴发热、颈强直、意识改变或皮疹时需排除。", "priority": 0.95, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Migraine", "mapping_status": "in_m1"}, {"disease_name": "Tension-Type Headache", "mapping_status": "in_m1"}, {"disease_name": "Sinusitis", "mapping_status": "not_in_m1"}],
+    "red_flags": ["雷击样头痛", "神经功能缺损", "颈强直", "发热", "意识改变"],
+    "first_checks": ["神经系统查体", "血压", "头颅CT按风险", "脑脊液检查按风险"],
+    "must_not_miss": ["Subarachnoid Hemorrhage", "Meningitis", "Stroke"],
+    "source_quality": "A"
+  },
+  "眩晕/头晕": {
+    "normalized_complaint": "眩晕/头晕",
+    "must_consider": [
+      {"disease_name": "Stroke", "reason": "眩晕伴复视、构音障碍、共济失调、肢体无力时必须排除后循环卒中。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Benign Paroxysmal Positional Vertigo", "mapping_status": "not_in_m1"}, {"disease_name": "Vestibular Neuritis", "mapping_status": "not_in_m1"}, {"disease_name": "Anemia", "mapping_status": "not_in_m1"}],
+    "red_flags": ["肢体无力", "言语不清", "复视", "共济失调", "新发严重头痛"],
+    "first_checks": ["神经系统查体", "眼震检查", "血压", "血糖", "头颅影像按风险"],
+    "must_not_miss": ["Stroke"],
+    "source_quality": "A"
+  },
+  "晕厥": {
+    "normalized_complaint": "晕厥",
+    "must_consider": [
+      {"disease_name": "Atrial Fibrillation", "reason": "心悸、心电异常或血流动力学不稳时需考虑心律失常相关晕厥。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Pulmonary Embolism", "reason": "晕厥伴胸痛、呼吸困难、低氧或下肢血栓风险时必须排除。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Seizure", "mapping_status": "not_in_m1"}, {"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}, {"disease_name": "Orthostatic Hypotension", "mapping_status": "not_in_m1"}],
+    "red_flags": ["运动中晕厥", "胸痛", "心悸", "家族猝死史", "低血压"],
+    "first_checks": ["心电图", "血压卧立位", "血糖", "血氧饱和度"],
+    "must_not_miss": ["Arrhythmia", "Pulmonary Embolism", "Acute Coronary Syndrome"],
+    "source_quality": "A"
+  },
+  "腹痛": {
+    "normalized_complaint": "腹痛",
+    "must_consider": [
+      {"disease_name": "Acute Pancreatitis", "reason": "上腹痛向背部放射、呕吐、淀粉酶或脂肪酶升高时需考虑。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Appendicitis", "reason": "转移性右下腹痛、发热、压痛或反跳痛时必须排除。", "priority": 0.88, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Cholecystitis", "mapping_status": "in_m1"}, {"disease_name": "Bowel Obstruction", "mapping_status": "not_in_m1"}, {"disease_name": "Ectopic Pregnancy", "mapping_status": "not_in_m1"}],
+    "red_flags": ["腹膜刺激征", "休克", "持续呕吐", "黑便", "妊娠可能"],
+    "first_checks": ["生命体征", "腹部查体", "血常规", "肝胆胰酶", "尿妊娠按人群", "腹部影像按风险"],
+    "must_not_miss": ["Appendicitis", "Bowel Obstruction", "Acute Pancreatitis", "Ectopic Pregnancy"],
+    "source_quality": "A"
+  },
+  "腹泻": {
+    "normalized_complaint": "腹泻",
+    "must_consider": [
+      {"disease_name": "Inflammatory Bowel Disease", "reason": "慢性腹泻、血便、体重下降或炎症指标升高时需考虑。", "priority": 0.82, "red_flag_relevant": false, "mapping_status": "in_m1"},
+      {"disease_name": "Sepsis", "reason": "腹泻伴低血压、意识改变、少尿或乳酸升高时必须排除重症感染。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Gastroenteritis", "mapping_status": "not_in_m1"}, {"disease_name": "Ulcerative Colitis", "mapping_status": "in_m1"}, {"disease_name": "Crohn Disease", "mapping_status": "in_m1"}],
+    "red_flags": ["脱水", "血便", "高热", "低血压", "儿童精神差"],
+    "first_checks": ["脱水评估", "电解质", "血常规", "粪便检查按风险"],
+    "must_not_miss": ["Sepsis", "Inflammatory Bowel Disease", "Hemolytic Uremic Syndrome"],
+    "source_quality": "A"
+  },
+  "呕吐": {
+    "normalized_complaint": "呕吐",
+    "must_consider": [
+      {"disease_name": "Intracranial Hypertension", "reason": "喷射性呕吐伴头痛、视乳头水肿或意识改变时必须排除颅内压升高。", "priority": 0.92, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Diabetic Ketoacidosis", "reason": "呕吐伴高血糖、酮体阳性、酸中毒或脱水时必须排除。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Gastroenteritis", "mapping_status": "not_in_m1"}, {"disease_name": "Bowel Obstruction", "mapping_status": "not_in_m1"}, {"disease_name": "Acute Pancreatitis", "mapping_status": "in_m1"}],
+    "red_flags": ["喷射性呕吐", "意识改变", "脱水", "呕血", "严重腹痛"],
+    "first_checks": ["血糖", "电解质", "脱水评估", "腹部查体", "头颅影像按风险"],
+    "must_not_miss": ["Diabetic Ketoacidosis", "Bowel Obstruction", "Intracranial Hypertension"],
+    "source_quality": "A"
+  },
+  "黄疸": {
+    "normalized_complaint": "黄疸",
+    "must_consider": [
+      {"disease_name": "Cholangitis", "reason": "黄疸伴发热、右上腹痛或低血压时必须排除胆道感染。", "priority": 0.94, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Hepatitis", "reason": "乏力、转氨酶显著升高或暴露史时需考虑肝细胞损伤。", "priority": 0.86, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Cholecystitis", "mapping_status": "in_m1"}, {"disease_name": "Gallstone Disease", "mapping_status": "not_in_m1"}, {"disease_name": "Hemolytic Anemia", "mapping_status": "not_in_m1"}],
+    "red_flags": ["发热", "意识改变", "低血压", "凝血异常", "胆管扩张"],
+    "first_checks": ["总胆红素及分型", "ALT/AST", "ALP/GGT", "凝血功能", "腹部超声"],
+    "must_not_miss": ["Cholangitis", "Acute Liver Failure"],
+    "source_quality": "A"
+  },
+  "黑便/呕血": {
+    "normalized_complaint": "黑便/呕血",
+    "must_consider": [
+      {"disease_name": "Upper Gastrointestinal Bleeding", "reason": "呕血、黑便、头晕、低血压或贫血时必须排除活动性消化道出血。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Peptic Ulcer Disease", "mapping_status": "in_m1"}, {"disease_name": "Liver Cirrhosis", "mapping_status": "in_m1"}, {"disease_name": "Gastric Cancer", "mapping_status": "not_in_m1"}],
+    "red_flags": ["低血压", "心动过速", "贫血", "晕厥", "抗凝用药"],
+    "first_checks": ["生命体征", "血红蛋白", "凝血功能", "交叉配血按风险", "内镜评估"],
+    "must_not_miss": ["Upper Gastrointestinal Bleeding", "Variceal Bleeding"],
+    "source_quality": "A"
+  },
+  "血尿": {
+    "normalized_complaint": "血尿",
+    "must_consider": [
+      {"disease_name": "Glomerulonephritis", "reason": "血尿伴蛋白尿、水肿、高血压或肾功能异常时需考虑肾小球疾病。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Urinary Tract Infection", "mapping_status": "in_m1"}, {"disease_name": "Kidney Stone", "mapping_status": "not_in_m1"}, {"disease_name": "Bladder Cancer", "mapping_status": "not_in_m1"}],
+    "red_flags": ["肉眼血尿", "血块", "少尿", "水肿", "肾功能异常"],
+    "first_checks": ["尿常规", "尿蛋白", "肾功能", "泌尿系影像按风险"],
+    "must_not_miss": ["Glomerulonephritis", "Urinary Tract Malignancy"],
+    "source_quality": "A"
+  },
+  "水肿": {
+    "normalized_complaint": "水肿",
+    "must_consider": [
+      {"disease_name": "Heart Failure", "reason": "水肿伴气促、端坐呼吸、BNP升高或肺部湿啰音时需考虑。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Chronic Kidney Disease", "reason": "水肿伴蛋白尿、肌酐升高或eGFR下降时需考虑肾脏疾病。", "priority": 0.86, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Liver Cirrhosis", "mapping_status": "in_m1"}, {"disease_name": "Hypothyroidism", "mapping_status": "in_m1"}, {"disease_name": "Deep Vein Thrombosis", "mapping_status": "not_in_m1"}],
+    "red_flags": ["呼吸困难", "少尿", "单侧下肢肿痛", "胸痛", "低氧"],
+    "first_checks": ["尿常规", "肾功能", "白蛋白", "BNP或NT-proBNP按风险", "下肢血管超声按风险"],
+    "must_not_miss": ["Heart Failure", "Acute Kidney Injury", "Deep Vein Thrombosis"],
+    "source_quality": "A"
+  },
+  "少尿/无尿": {
+    "normalized_complaint": "少尿/无尿",
+    "must_consider": [
+      {"disease_name": "Acute Kidney Injury", "reason": "尿量明显减少、肌酐上升、电解质异常或容量问题时必须评估。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Urinary Retention", "reason": "膀胱膨隆、排尿困难或下腹胀痛时需考虑梗阻。", "priority": 0.86, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Sepsis", "mapping_status": "in_m1"}, {"disease_name": "Chronic Kidney Disease", "mapping_status": "in_m1"}, {"disease_name": "Hydronephrosis", "mapping_status": "not_in_m1"}],
+    "red_flags": ["无尿", "高钾", "肺水肿", "意识改变", "休克"],
+    "first_checks": ["尿量记录", "肌酐", "电解质", "尿常规", "泌尿系超声"],
+    "must_not_miss": ["Acute Kidney Injury", "Urinary Obstruction"],
+    "source_quality": "A"
+  },
+  "皮疹": {
+    "normalized_complaint": "皮疹",
+    "must_consider": [
+      {"disease_name": "Stevens-Johnson Syndrome / Toxic Epidermal Necrolysis", "reason": "皮疹伴黏膜损害、皮肤疼痛、发热或药物暴露时必须排除严重药疹。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Anaphylaxis", "reason": "皮疹伴喉紧、喘憋、低血压或胃肠症状时必须排除严重过敏反应。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Urticaria", "mapping_status": "in_m1"}, {"disease_name": "Systemic Lupus Erythematosus", "mapping_status": "in_m1"}, {"disease_name": "Viral Exanthem", "mapping_status": "not_in_m1"}],
+    "red_flags": ["黏膜损害", "皮肤剥脱", "喉头水肿", "低血压", "紫癜"],
+    "first_checks": ["生命体征", "皮肤黏膜查体", "过敏暴露史", "血常规按风险"],
+    "must_not_miss": ["Stevens-Johnson Syndrome / Toxic Epidermal Necrolysis", "Anaphylaxis", "Sepsis"],
+    "source_quality": "A"
+  },
+  "关节痛": {
+    "normalized_complaint": "关节痛",
+    "must_consider": [
+      {"disease_name": "Septic Arthritis", "reason": "单关节红肿热痛、发热或免疫低下时必须排除感染性关节炎。", "priority": 0.94, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Rheumatoid Arthritis", "reason": "对称小关节肿痛、晨僵、慢性病程时需考虑。", "priority": 0.86, "red_flag_relevant": false, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Systemic Lupus Erythematosus", "mapping_status": "in_m1"}, {"disease_name": "Gout", "mapping_status": "in_m1"}, {"disease_name": "Osteoarthritis", "mapping_status": "in_m1"}],
+    "red_flags": ["发热", "单关节剧痛", "不能负重", "免疫低下", "近期手术"],
+    "first_checks": ["关节查体", "血常规", "CRP或ESR", "关节液检查按风险"],
+    "must_not_miss": ["Septic Arthritis"],
+    "source_quality": "A"
+  },
+  "下肢肿痛": {
+    "normalized_complaint": "下肢肿痛",
+    "must_consider": [
+      {"disease_name": "Deep Vein Thrombosis", "reason": "单侧下肢肿痛、近期制动、肿瘤、妊娠或既往血栓史时必须考虑。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Cellulitis", "reason": "局部红热痛、发热或皮肤破口时需考虑软组织感染。", "priority": 0.82, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Heart Failure", "mapping_status": "in_m1"}, {"disease_name": "Venous Insufficiency", "mapping_status": "not_in_m1"}, {"disease_name": "Baker Cyst", "mapping_status": "not_in_m1"}],
+    "red_flags": ["单侧肿胀", "胸痛", "呼吸困难", "低氧", "发热"],
+    "first_checks": ["下肢围度", "D-二聚体按风险", "下肢静脉超声", "血氧饱和度"],
+    "must_not_miss": ["Deep Vein Thrombosis", "Pulmonary Embolism"],
+    "source_quality": "A"
+  },
+  "意识障碍": {
+    "normalized_complaint": "意识障碍",
+    "must_consider": [
+      {"disease_name": "Stroke", "reason": "突发意识障碍伴局灶神经体征时必须排除卒中。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Sepsis", "reason": "意识障碍伴发热、低血压、呼吸急促或乳酸升高时必须排除。", "priority": 0.95, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}, {"disease_name": "Electrolyte Disorder", "mapping_status": "not_in_m1"}, {"disease_name": "Intoxication", "mapping_status": "not_in_m1"}],
+    "red_flags": ["低血糖", "低氧", "抽搐", "头部外伤", "颈强直"],
+    "first_checks": ["血糖", "血氧饱和度", "血压", "神经系统查体", "头颅影像按风险"],
+    "must_not_miss": ["Stroke", "Sepsis", "Hypoglycemia", "Intracranial Hemorrhage"],
+    "source_quality": "A"
+  },
+  "抽搐": {
+    "normalized_complaint": "抽搐",
+    "must_consider": [
+      {"disease_name": "Seizure", "reason": "发作性抽搐、意识丧失、舌咬伤或发作后嗜睡时需考虑。", "priority": 0.94, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Meningitis", "reason": "抽搐伴发热、颈强直或意识障碍时必须排除中枢感染。", "priority": 0.93, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}, {"disease_name": "Electrolyte Disorder", "mapping_status": "not_in_m1"}, {"disease_name": "Stroke", "mapping_status": "not_in_m1"}],
+    "red_flags": ["持续抽搐", "发热", "低血糖", "头部外伤", "妊娠"],
+    "first_checks": ["血糖", "电解质", "体温", "神经系统查体", "头颅影像按风险"],
+    "must_not_miss": ["Status Epilepticus", "Meningitis", "Hypoglycemia"],
+    "source_quality": "A"
+  },
+  "突发肢体无力/言语不清": {
+    "normalized_complaint": "突发肢体无力/言语不清",
+    "must_consider": [
+      {"disease_name": "Stroke", "reason": "突发偏瘫、言语不清、口角歪斜或视野缺损时必须按卒中通道评估。", "priority": 0.99, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Transient Ischemic Attack", "reason": "短暂神经功能缺损即使缓解也需评估短期卒中风险。", "priority": 0.96, "red_flag_relevant": true, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}, {"disease_name": "Migraine", "mapping_status": "in_m1"}, {"disease_name": "Seizure", "mapping_status": "not_in_m1"}],
+    "red_flags": ["发病时间明确", "偏瘫", "失语", "吞咽困难", "意识改变"],
+    "first_checks": ["血糖", "神经功能评分", "头颅CT或MRI", "心电图"],
+    "must_not_miss": ["Stroke", "Transient Ischemic Attack", "Intracranial Hemorrhage"],
+    "source_quality": "A"
+  },
+  "异常阴道出血": {
+    "normalized_complaint": "异常阴道出血",
+    "must_consider": [
+      {"disease_name": "Ectopic Pregnancy", "reason": "育龄期阴道出血伴腹痛、晕厥或妊娠可能时必须排除异位妊娠。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Abnormal Uterine Bleeding", "reason": "非妊娠相关出血需按年龄和出血量评估结构性与非结构性原因。", "priority": 0.86, "red_flag_relevant": false, "mapping_status": "in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Miscarriage", "mapping_status": "not_in_m1"}, {"disease_name": "Endometrial Cancer", "mapping_status": "not_in_m1"}, {"disease_name": "Coagulopathy", "mapping_status": "not_in_m1"}],
+    "red_flags": ["妊娠可能", "腹痛", "晕厥", "大量出血", "低血压"],
+    "first_checks": ["尿或血妊娠试验", "血红蛋白", "生命体征", "盆腔超声按风险"],
+    "must_not_miss": ["Ectopic Pregnancy", "Severe Hemorrhage"],
+    "source_quality": "A"
+  },
+  "儿童发热": {
+    "normalized_complaint": "儿童发热",
+    "must_consider": [
+      {"disease_name": "Sepsis", "reason": "儿童发热伴精神差、呼吸困难、皮肤花斑、低血压或少尿时必须排除。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "in_m1"},
+      {"disease_name": "Meningitis", "reason": "发热伴嗜睡、抽搐、颈强直或前囟异常时必须排除。", "priority": 0.95, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Pneumonia", "mapping_status": "in_m1"}, {"disease_name": "Urinary Tract Infection", "mapping_status": "in_m1"}, {"disease_name": "Influenza", "mapping_status": "not_in_m1"}],
+    "red_flags": ["嗜睡", "惊厥", "呼吸困难", "皮肤花斑", "拒食拒水"],
+    "first_checks": ["体温", "呼吸频率", "血氧饱和度", "补液状态", "感染灶评估"],
+    "must_not_miss": ["Sepsis", "Meningitis", "Pneumonia"],
+    "source_quality": "A"
+  },
+  "新生儿拒奶/反应差": {
+    "normalized_complaint": "新生儿拒奶/反应差",
+    "must_consider": [
+      {"disease_name": "Neonatal Sepsis", "reason": "新生儿拒奶、反应差、体温异常、呼吸异常或发绀时必须排除感染。", "priority": 0.99, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Hypoglycemia", "reason": "反应差、喂养困难、惊厥或低体温时需立即查血糖。", "priority": 0.95, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Neonatal Pneumonia", "mapping_status": "not_in_m1"}, {"disease_name": "Congenital Heart Disease", "mapping_status": "not_in_m1"}, {"disease_name": "Hyperbilirubinemia", "mapping_status": "not_in_m1"}],
+    "red_flags": ["发绀", "呼吸暂停", "低体温", "惊厥", "黄疸加重"],
+    "first_checks": ["体温", "血糖", "血氧饱和度", "呼吸评估", "感染指标按风险"],
+    "must_not_miss": ["Neonatal Sepsis", "Hypoglycemia", "Congenital Heart Disease"],
+    "source_quality": "A"
+  },
+  "妊娠期腹痛/阴道流血": {
+    "normalized_complaint": "妊娠期腹痛/阴道流血",
+    "must_consider": [
+      {"disease_name": "Ectopic Pregnancy", "reason": "早孕腹痛、阴道流血、晕厥或低血压时必须排除。", "priority": 0.99, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
+      {"disease_name": "Placental Abruption", "reason": "中晚孕腹痛、阴道流血、子宫压痛或胎动异常时必须排除。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+    ],
+    "common_differentials": [{"disease_name": "Miscarriage", "mapping_status": "not_in_m1"}, {"disease_name": "Preterm Labor", "mapping_status": "not_in_m1"}, {"disease_name": "Appendicitis", "mapping_status": "not_in_m1"}],
+    "red_flags": ["晕厥", "低血压", "大量出血", "胎动减少", "持续腹痛"],
+    "first_checks": ["生命体征", "妊娠周数", "血红蛋白", "盆腔或产科超声", "胎儿评估按孕周"],
+    "must_not_miss": ["Ectopic Pregnancy", "Placental Abruption", "Severe Hemorrhage"],
+    "source_quality": "A"
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "timestamp": "2026-05-28 11:26:13",
+  "disease": "雄激素性脱发",
+  "success": true,
+  "errors": [],
+  "boundary_checks": [
+    {
+      "rule": "M1_仅西医诊断",
+      "passed": true,
+      "description": "M1 不输出中医内容",
+      "status": "PASS"
+    },
+    {
+      "rule": "M1_用户输入仅作参考",
+      "passed": true,
+      "description": "user_input=脱发 matched=斑秃",
+      "status": "PASS"
+    },
+    {
+      "rule": "M2-0_不从disease跳syndrome",
+      "passed": true,
+      "description": "通过病理轴映射，非直接跳转",
+      "status": "PASS"
+    },
+    {
+      "rule": "M2-1_仅本地RAG",
+      "passed": true,
+      "description": "仅口服方剂知识库+案例库",
+      "status": "PASS"
+    },
+    {
+      "rule": "M2-0_禁用LLM自由发挥病机",
+      "passed": true,
+      "description": "所有病机映射来自本地规则库",
+      "status": "PASS"
+    },
+    {
+      "rule": "M2-2_不影响证型判断",
+      "passed": true,
+      "description": "仅加减层，不影响证型",
+      "status": "PASS"
+    },
+    {
+      "rule": "M2-2_禁止自动加药",
+      "passed": true,
+      "description": "全部0药 allow_auto_add=False",
+      "status": "PASS"
+    },
+    {
+      "rule": "M3_基础方完整保留",
+      "passed": true,
+      "description": "基础方10味 保留15味",
+      "status": "PASS"
+    },
+    {
+      "rule": "M3_不擅自替换主方",
+      "passed": true,
+      "description": "主方匹配=True",
+      "status": "PASS"
+    }
+  ],
+  "pipeline_trace": {
+    "m1": {
+      "query": "脱发",
+      "matched": "斑秃",
+      "score": 0.4,
+      "covered": [
+        "structural_abnormality",
+        "stress_related"
+      ],
+      "uncovered": [
+        "immune_abnormality",
+        "genetic_predisposition"
+      ]
+    },
+    "m2_0": {
+      "primary_disease": "斑秃",
+      "primary_axes": [
+        "structural_abnormality"
+      ],
+      "covered_count": 2,
+      "uncovered": [
+        "immune_abnormality",
+        "genetic_predisposition",
+        "structural_abnormality"
+      ],
+      "tcm_candidates_count": 37,
+      "primary_candidates": [
+        "血热风燥",
+        "湿热上蒸",
+        "肝胃不和",
+        "气血不足",
+        "肝火上炎",
+        "肝胆湿热",
+        "脾虚湿困",
+        "风痰上扰",
+        "痰热壅肺",
+        "湿热蕴结"
+      ],
+      "allowed_main": [
+        "血热风燥",
+        "湿热上蒸",
+        "肝胃不和"
+      ],
+      "needs_review": true,
+      "can_enter_m2": true,
+      "hidden_qs": [
+        "有无外伤史",
+        "疼痛性质/位置",
+        "影像学检查是否异常",
+        "功能受限情况",
+        "有无明显压力/焦虑/抑郁",
+        "睡眠质量",
+        "有无重大生活事件",
+        "有无头痛/胃肠不适等躯体化症状",
+        "有无反复感染",
+        "有无自身免疫病史",
+        "免疫球蛋白/淋巴细胞亚群是否异常",
+        "疫苗接种史"
+      ],
+      "rules_matched": 25,
+      "warnings": [
+        "桥接层成功约束: 脱发 → ['血热风燥', '湿热上蒸', '肝胃不和']"
+      ]
+    },
+    "m2_1": {
+      "main_formula": "凉血消风散",
+      "main_syndrome": "血热风燥",
+      "main_herbs_count": 10,
+      "main_herbs": [
+        "生地黄",
+        "当归",
+        "荆芥",
+        "蝉蜕",
+        "苦参",
+        "白蒺藜",
+        "生石膏",
+        "生甘草",
+        "防风",
+        "胡麻仁"
+      ],
+      "rag_herbs": [
+        "丹参",
+        "墨旱莲",
+        "木瓜",
+        "赤芍",
+        "淫羊藿",
+        "牡丹皮",
+        "女贞子",
+        "鬼箭羽",
+        "菟丝子",
+        "茯苓"
+      ],
+      "rag_count": 12,
+      "reference_cases": [
+        {
+          "disease": "便秘",
+          "syndrome": "湿热",
+          "formula": "nan",
+          "score": 10.0
+        },
+        {
+          "disease": "失眠",
+          "syndrome": "nan",
+          "formula": "nan",
+          "score": 10.0
+        },
+        {
+          "disease": "肝炎",
+          "syndrome": "血虚风燥",
+          "formula": "nan",
+          "score": 9.0
+        }
+      ]
+    },
+    "m2_2": {
+      "matched": true,
+      "grade": "C",
+      "addon_count": 0,
+      "hint_count": 1,
+      "rejected_count": 0,
+      "addons": [],
+      "rejected": []
+    },
+    "m3": {
+      "status": "OK",
+      "error": null,
+      "herbs": 15,
+      "removed": 0,
+      "reselection": false
+    }
+  }
+}

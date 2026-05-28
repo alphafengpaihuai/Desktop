@@ -212,7 +212,7 @@ def _empty_detail_entry(standard: str, raw_name: str, row, header: dict[str, int
         "pathology_axes": [],
         "raw_western_detail_excerpt": [],
         "source_row_numbers": [row_number],
-        "source_file": str(DEFAULT_EXCEL),
+        "source_file": str(manifest_builder.resolve_excel_path(DEFAULT_EXCEL)),
         "status": "pending_review",
         "confidence": "low",
     }
@@ -226,7 +226,7 @@ def _merge_list(entry: dict[str, Any], field: str, values: list[Any]) -> None:
 
 
 def build_excel_diagnostic_details(excel_path: str | Path = DEFAULT_EXCEL) -> dict[str, Any]:
-    path = Path(excel_path)
+    path = manifest_builder.resolve_excel_path(excel_path)
     manifest = manifest_builder.build_disease_manifest(path)
     wb = load_workbook(path, read_only=True, data_only=True)
     details_by_name: dict[str, dict[str, Any]] = {}
@@ -425,10 +425,18 @@ def _ensure_pending_schema(card: dict[str, Any]) -> dict[str, Any]:
 
 
 def _merge_details_into_pending_cards(details: list[dict[str, Any]]) -> None:
+    valid_detail_names = {detail["standard_western_name"] for detail in details}
     cards = [
         _ensure_pending_schema(card)
         for card in (_sanitize_pending_value(card) for card in _load_pending())
-        if isinstance(card, dict) and card.get("disease_name")
+        if (
+            isinstance(card, dict)
+            and card.get("disease_name")
+            and (
+                not card.get("excel_diagnostic_detail_source")
+                or card.get("disease_name") in valid_detail_names
+            )
+        )
     ]
     by_name = {card.get("disease_name"): card for card in cards if card.get("disease_name")}
     for detail in details:

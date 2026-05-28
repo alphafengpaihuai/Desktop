@@ -51,6 +51,17 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def resolve_excel_path(excel_path: str | Path = DEFAULT_EXCEL) -> Path:
+    path = Path(excel_path)
+    if path.exists():
+        return path
+    desktop = Path("/Users/fangxuan/Desktop")
+    for candidate in desktop.glob("**/5月5日 知识库 病名lsx.xlsx"):
+        if candidate.exists():
+            return candidate
+    raise FileNotFoundError(f"Excel knowledge base not found: {path}")
+
+
 def _clean(text: Any) -> str:
     if text is None:
         return ""
@@ -151,7 +162,7 @@ def _headers(row) -> dict[str, int]:
 
 
 def build_disease_manifest(excel_path: str | Path = DEFAULT_EXCEL) -> dict:
-    path = Path(excel_path)
+    path = resolve_excel_path(excel_path)
     wb = load_workbook(path, read_only=True, data_only=True)
     diseases_by_name: dict[str, dict] = {}
     disease_occurrence_count: dict[str, int] = {}

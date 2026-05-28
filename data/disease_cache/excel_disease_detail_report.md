@@ -1,7 +1,7 @@
 # Excel Disease Diagnostic Detail Report
 
-- generated_at: 2026-05-26T15:57:02.920254+00:00
-- source_file: /Users/fangxuan/Desktop/5月5日 知识库 病名lsx.xlsx
+- generated_at: 2026-05-27T10:38:09.136408+00:00
+- source_file: /Users/fangxuan/Desktop/~/5月5日 知识库 病名lsx.xlsx
 - raw_disease_cell_count: 643
 - cleaned_disease_count: 663
 - raw_detail_cell_count: 633

@@ -1,0 +1,526 @@
+{
+  "ok": true,
+  "errors": [],
+  "duplicate_aliases": {
+    "异常子宫出血": [
+      "Abnormal Uterine Bleeding",
+      "异常子宫出血"
+    ],
+    "急性支气管炎": [
+      "Acute Bronchitis",
+      "急性支气管炎"
+    ],
+    "急性冠脉综合征": [
+      "Acute Coronary Syndrome",
+      "急性冠脉综合征"
+    ],
+    "急性肾损伤": [
+      "Acute Kidney Injury",
+      "急性肾损伤"
+    ],
+    "急性心肌梗死": [
+      "Acute Myocardial Infarction",
+      "急性心肌梗死"
+    ],
+    "急性胰腺炎": [
+      "Acute Pancreatitis",
+      "急性胰腺炎"
+    ],
+    "急性呼吸窘迫综合征": [
+      "Acute Respiratory Distress Syndrome",
+      "急性呼吸窘迫综合征"
+    ],
+    "急性鼻窦炎": [
+      "Acute Sinusitis",
+      "急性鼻窦炎"
+    ],
+    "急性扁桃体炎": [
+      "Acute Tonsillitis",
+      "急性扁桃体炎"
+    ],
+    "子宫腺肌症": [
+      "Adenomyosis",
+      "子宫腺肌症"
+    ],
+    "成人斯蒂尔病": [
+      "Adult-Onset Still Disease",
+      "成人斯蒂尔病"
+    ],
+    "变应性鼻炎": [
+      "Allergic Rhinitis",
+      "变应性鼻炎"
+    ],
+    "闭经": [
+      "Amenorrhea",
+      "闭经"
+    ],
+    "强直性脊柱炎": [
+      "Ankylosing Spondylitis",
+      "强直性脊柱炎"
+    ],
+    "再生障碍性贫血": [
+      "Aplastic Anemia",
+      "再生障碍性贫血"
+    ],
+    "动脉粥样硬化": [
+      "Atherosclerosis",
+      "动脉粥样硬化"
+    ],
+    "特应性皮炎": [
+      "Atopic Dermatitis",
+      "特应性皮炎"
+    ],
+    "心房颤动": [
+      "Atrial Fibrillation",
+      "心房颤动"
+    ],
+    "细菌性阴道病": [
+      "Bacterial Vaginosis",
+      "细菌性阴道病"
+    ],
+    "双相障碍": [
+      "Bipolar Disorder",
+      "双相障碍"
+    ],
+    "支气管哮喘": [
+      "Bronchial Asthma",
+      "支气管哮喘"
+    ],
+    "支气管扩张": [
+      "Bronchiectasis",
+      "支气管扩张"
+    ],
+    "脑出血": [
+      "Cerebral Hemorrhage",
+      "脑出血"
+    ],
+    "脑梗死": [
+      "Cerebral Infarction",
+      "脑梗死"
+    ],
+    "颈椎病": [
+      "Cervical Spondylosis",
+      "颈椎病"
+    ],
+    "宫颈炎": [
+      "Cervicitis",
+      "宫颈炎"
+    ],
+    "胆囊炎": [
+      "Cholecystitis",
+      "胆囊炎"
+    ],
+    "胆石症": [
+      "Cholelithiasis",
+      "胆石症"
+    ],
+    "慢性支气管炎": [
+      "Chronic Bronchitis",
+      "慢性支气管炎"
+    ],
+    "慢性腹泻": [
+      "Chronic Diarrhea",
+      "慢性腹泻"
+    ],
+    "慢性胃炎": [
+      "Chronic Gastritis",
+      "慢性胃炎"
+    ],
+    "慢性乙型肝炎": [
+      "Chronic Hepatitis B",
+      "慢性乙型肝炎"
+    ],
+    "慢性丙型肝炎": [
+      "Chronic Hepatitis C",
+      "慢性丙型肝炎"
+    ],
+    "慢性肾脏病": [
+      "Chronic Kidney Disease",
+      "慢性肾脏病"
+    ],
+    "慢性阻塞性肺疾病": [
+      "Chronic Obstructive Pulmonary Disease",
+      "慢性阻塞性肺疾病"
+    ],
+    "慢性胰腺炎": [
+      "Chronic Pancreatitis",
+      "慢性胰腺炎"
+    ],
+    "慢性鼻炎": [
+      "Chronic Rhinitis",
+      "慢性鼻炎"
+    ],
+    "慢性鼻窦炎": [
+      "Chronic Sinusitis",
+      "慢性鼻窦炎"
+    ],
+    "社区获得性肺炎": [
+      "Community-Acquired Pneumonia",
+      "社区获得性肺炎"
+    ],
+    "接触性皮炎": [
+      "Contact Dermatitis",
+      "接触性皮炎"
+    ],
+    "冠心病": [
+      "Coronary Artery Disease",
+      "冠心病"
+    ],
+    "克罗恩病": [
+      "Crohn Disease",
+      "克罗恩病"
+    ],
+    "溺水": [
+      "Drowning",
+      "溺水"
+    ],
+    "痛经": [
+      "Dysmenorrhea",
+      "痛经"
+    ],
+    "子宫内膜异位症": [
+      "Endometriosis",
+      "子宫内膜异位症"
+    ],
+    "癫痫": [
+      "Epilepsy",
+      "癫痫"
+    ],
+    "原发性高血压": [
+      "Essential Hypertension",
+      "原发性高血压"
+    ],
+    "骨折": [
+      "Fracture",
+      "骨折"
+    ],
+    "功能性便秘": [
+      "Functional Constipation",
+      "功能性便秘"
+    ],
+    "功能性消化不良": [
+      "Functional Dyspepsia",
+      "功能性消化不良"
+    ],
+    "胃食管反流病": [
+      "Gastroesophageal Reflux Disease",
+      "胃食管反流病"
+    ],
+    "广泛性焦虑障碍": [
+      "Generalized Anxiety Disorder",
+      "广泛性焦虑障碍"
+    ],
+    "痛风": [
+      "Gout",
+      "痛风"
+    ],
+    "手足口病": [
+      "Hand, Foot, and Mouth Disease",
+      "手足口病"
+    ],
+    "桥本甲状腺炎": [
+      "Hashimoto Thyroiditis",
+      "桥本甲状腺炎"
+    ],
+    "心力衰竭": [
+      "Heart Failure",
+      "心力衰竭"
+    ],
+    "单纯疱疹": [
+      "Herpes Simplex",
+      "单纯疱疹"
+    ],
+    "带状疱疹": [
+      "Herpes Zoster",
+      "带状疱疹"
+    ],
+    "高脂血症": [
+      "Hyperlipidemia",
+      "高脂血症"
+    ],
+    "甲状腺功能亢进症": [
+      "Hyperthyroidism",
+      "甲状腺功能亢进症"
+    ],
+    "甲状腺功能减退症": [
+      "Hypothyroidism",
+      "甲状腺功能减退症"
+    ],
+    "炎症性肠病": [
+      "Inflammatory Bowel Disease",
+      "炎症性肠病"
+    ],
+    "失眠障碍": [
+      "Insomnia Disorder",
+      "失眠障碍"
+    ],
+    "缺铁性贫血": [
+      "Iron Deficiency Anemia",
+      "缺铁性贫血"
+    ],
+    "肠易激综合征": [
+      "Irritable Bowel Syndrome",
+      "肠易激综合征"
+    ],
+    "川崎病": [
+      "Kawasaki Disease",
+      "川崎病"
+    ],
+    "钩端螺旋体病": [
+      "Leptospirosis",
+      "钩端螺旋体病"
+    ],
+    "肝硬化": [
+      "Liver Cirrhosis",
+      "肝硬化"
+    ],
+    "下肢静脉曲张": [
+      "Lower Extremity Varicose Veins",
+      "下肢静脉曲张"
+    ],
+    "腰椎间盘突出症": [
+      "Lumbar Disc Herniation",
+      "腰椎间盘突出症"
+    ],
+    "抑郁障碍": [
+      "Major Depressive Disorder",
+      "抑郁障碍"
+    ],
+    "疟疾": [
+      "Malaria",
+      "疟疾"
+    ],
+    "更年期综合征": [
+      "Menopausal Syndrome",
+      "更年期综合征"
+    ],
+    "偏头痛": [
+      "Migraine",
+      "偏头痛"
+    ],
+    "心肌炎": [
+      "Myocarditis",
+      "心肌炎"
+    ],
+    "肾病综合征": [
+      "Nephrotic Syndrome",
+      "肾病综合征"
+    ],
+    "强迫障碍": [
+      "Obsessive-Compulsive Disorder",
+      "强迫障碍"
+    ],
+    "甲癣": [
+      "Onychomycosis",
+      "甲癣"
+    ],
+    "骨关节炎": [
+      "Osteoarthritis",
+      "骨关节炎"
+    ],
+    "骨质疏松症": [
+      "Osteoporosis",
+      "骨质疏松症"
+    ],
+    "卵巢囊肿": [
+      "Ovarian Cyst",
+      "卵巢囊肿"
+    ],
+    "帕金森病": [
+      "Parkinson Disease",
+      "帕金森病"
+    ],
+    "儿童支气管肺炎": [
+      "Pediatric Bronchopneumonia",
+      "儿童支气管肺炎"
+    ],
+    "盆腔炎性疾病": [
+      "Pelvic Inflammatory Disease",
+      "盆腔炎性疾病"
+    ],
+    "消化性溃疡": [
+      "Peptic Ulcer Disease",
+      "消化性溃疡"
+    ],
+    "多囊卵巢综合征": [
+      "Polycystic Ovary Syndrome",
+      "多囊卵巢综合征"
+    ],
+    "创伤后应激障碍": [
+      "Post-Traumatic Stress Disorder",
+      "创伤后应激障碍"
+    ],
+    "银屑病": [
+      "Psoriasis",
+      "银屑病"
+    ],
+    "翼状胬肉": [
+      "Pterygium",
+      "翼状胬肉"
+    ],
+    "肺栓塞": [
+      "Pulmonary Embolism",
+      "肺栓塞"
+    ],
+    "肺纤维化": [
+      "Pulmonary Fibrosis",
+      "肺纤维化"
+    ],
+    "肾盂肾炎": [
+      "Pyelonephritis",
+      "肾盂肾炎"
+    ],
+    "类风湿关节炎": [
+      "Rheumatoid Arthritis",
+      "类风湿关节炎"
+    ],
+    "精神分裂症": [
+      "Schizophrenia",
+      "精神分裂症"
+    ],
+    "脂溢性皮炎": [
+      "Seborrheic Dermatitis",
+      "脂溢性皮炎"
+    ],
+    "脓毒症": [
+      "Sepsis",
+      "脓毒症"
+    ],
+    "休克": [
+      "Shock",
+      "休克"
+    ],
+    "干燥综合征": [
+      "Sjögren Syndrome",
+      "干燥综合征"
+    ],
+    "躯体症状障碍": [
+      "Somatic Symptom Disorder",
+      "躯体症状障碍"
+    ],
+    "稳定型心绞痛": [
+      "Stable Angina Pectoris",
+      "稳定型心绞痛"
+    ],
+    "亚急性甲状腺炎": [
+      "Subacute Thyroiditis",
+      "亚急性甲状腺炎"
+    ],
+    "系统性红斑狼疮": [
+      "Systemic Lupus Erythematosus",
+      "系统性红斑狼疮"
+    ],
+    "系统性硬化症": [
+      "Systemic Sclerosis",
+      "系统性硬化症"
+    ],
+    "肌腱炎": [
+      "Tendinitis",
+      "肌腱炎"
+    ],
+    "腱鞘炎": [
+      "Tenosynovitis",
+      "腱鞘炎"
+    ],
+    "紧张型头痛": [
+      "Tension-Type Headache",
+      "紧张型头痛"
+    ],
+    "甲状腺结节": [
+      "Thyroid Nodule",
+      "甲状腺结节"
+    ],
+    "足癣": [
+      "Tinea Pedis",
+      "足癣"
+    ],
+    "短暂性脑缺血发作": [
+      "Transient Ischemic Attack",
+      "短暂性脑缺血发作"
+    ],
+    "2型糖尿病": [
+      "2型糖尿病",
+      "Type 2 Diabetes Mellitus"
+    ],
+    "溃疡性结肠炎": [
+      "Ulcerative Colitis",
+      "溃疡性结肠炎"
+    ],
+    "尿路感染": [
+      "Urinary Tract Infection",
+      "尿路感染"
+    ],
+    "荨麻疹": [
+      "Urticaria",
+      "荨麻疹"
+    ],
+    "子宫肌瘤": [
+      "Uterine Leiomyoma",
+      "子宫肌瘤"
+    ],
+    "阴道炎": [
+      "Vaginitis",
+      "阴道炎"
+    ],
+    "水痘": [
+      "Varicella",
+      "水痘"
+    ],
+    "外阴阴道假丝酵母菌病": [
+      "Vulvovaginal Candidiasis",
+      "外阴阴道假丝酵母菌病"
+    ],
+    "梅毒": [
+      "Syphilis",
+      "梅毒"
+    ],
+    "淋病": [
+      "Gonorrhea",
+      "淋病"
+    ],
+    "肺结核": [
+      "Pulmonary Tuberculosis",
+      "肺结核"
+    ],
+    "人类免疫缺陷病毒感染": [
+      "HIV Infection",
+      "人类免疫缺陷病毒感染"
+    ],
+    "血友病": [
+      "Hemophilia",
+      "血友病"
+    ],
+    "心包炎": [
+      "Pericarditis",
+      "心包炎"
+    ],
+    "胸腔积液": [
+      "Pleural Effusion",
+      "胸腔积液"
+    ],
+    "气胸": [
+      "Pneumothorax",
+      "气胸"
+    ],
+    "风湿性多肌痛": [
+      "Polymyalgia Rheumatica",
+      "风湿性多肌痛"
+    ],
+    "神经性厌食症": [
+      "Anorexia Nervosa",
+      "神经性厌食症"
+    ],
+    "肝细胞癌": [
+      "Hepatocellular Carcinoma",
+      "肝细胞癌"
+    ],
+    "慢性咽炎": [
+      "Chronic Pharyngitis",
+      "慢性咽炎"
+    ]
+  },
+  "ambiguous_alias_count": 7,
+  "not_in_m1_count": 6,
+  "alias_entry_count": 801,
+  "forbidden_terms_found": []
+}

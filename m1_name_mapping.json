@@ -186,7 +186,7 @@
   "Idiopathic pulmonary fibrosis": "肺纤维化",
   "肺纤维化": "Idiopathic pulmonary fibrosis",
   "Chronic pharyngitis": "慢性咽炎",
-  "慢性咽炎": "Chronic pharyngitis",
+  "慢性咽炎": "Chronic Pharyngitis",
   "Acute laryngitis": "急性喉炎",
   "急性喉炎": "Acute laryngitis",
   "Chronic laryngitis": "慢性喉炎",
@@ -1111,5 +1111,6 @@
   "Steatorrhea": "脂肪泻",
   "脂肪泻": "Steatorrhea",
   "Drug-induced kidney injury": "药物性肾损伤",
-  "药物性肾损伤": "Drug-induced kidney injury"
+  "药物性肾损伤": "Drug-induced kidney injury",
+  "咽喉炎": "Chronic Pharyngitis"
 }

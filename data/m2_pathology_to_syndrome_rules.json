@@ -1,0 +1,1102 @@
+{
+  "_version": "1.0",
+  "_description": "守一 CDSS M2-0 病理锚点桥接层 — 西医病理轴→中医病机映射规则库",
+  "_updated": "2025-07",
+  "infection_or_inflammation": {
+    "display_name": "感染/炎症",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "热毒内蕴",
+        "allowed_when": [
+          "发热",
+          "红肿热痛",
+          "分泌物脓性",
+          "CRP升高",
+          "PCT升高",
+          "WBC升高"
+        ],
+        "not_allowed_when": [
+          "无炎症证据",
+          "虚寒证明显",
+          "舌淡苔白滑且畏寒"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "湿热蕴结",
+        "allowed_when": [
+          "苔黄腻",
+          "口苦",
+          "分泌物黏稠",
+          "小便黄",
+          "皮脂旺盛",
+          "头面油多"
+        ],
+        "not_allowed_when": [
+          "舌淡苔白滑且畏寒明显",
+          "口干不欲饮"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "风热犯表",
+        "allowed_when": [
+          "急性起病",
+          "咽痛",
+          "发热恶寒",
+          "脉浮数",
+          "咳嗽"
+        ],
+        "not_allowed_when": [
+          "病程超过2周无表证",
+          "里寒证明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "风寒束表",
+        "allowed_when": [
+          "恶寒重发热轻",
+          "无汗",
+          "头痛身痛",
+          "流清涕",
+          "苔薄白"
+        ],
+        "not_allowed_when": [
+          "发热明显",
+          "咽红肿痛",
+          "苔黄"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "是否发热",
+      "体温多少",
+      "有无红肿热痛",
+      "分泌物颜色/性状",
+      "是否查过血常规/CRP/PCT"
+    ]
+  },
+  "allergic_th2_inflammation": {
+    "display_name": "过敏/Th2型炎症",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "风邪袭表",
+        "allowed_when": [
+          "瘙痒阵发",
+          "起病急骤",
+          "遇风加重",
+          "皮肤划痕征",
+          "鼻痒喷嚏"
+        ],
+        "not_allowed_when": [
+          "固定皮损无变化",
+          "无过敏诱因"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "血虚生风",
+        "allowed_when": [
+          "慢性反复",
+          "皮肤干燥",
+          "入夜痒甚",
+          "面色萎黄",
+          "指甲脆薄",
+          "毛发枯槁"
+        ],
+        "not_allowed_when": [
+          "急性发作",
+          "皮疹红肿渗出"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无过敏史",
+      "发作是否与季节/食物/药物相关",
+      "有无湿疹/鼻炎/哮喘",
+      "IgE是否升高"
+    ]
+  },
+  "autoimmune_or_immune_complex": {
+    "display_name": "自身免疫/免疫复合物",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "热入血分",
+        "allowed_when": [
+          "紫癜",
+          "发热",
+          "关节痛",
+          "皮疹色红",
+          "舌绛红",
+          "斑疹隐隐"
+        ],
+        "not_allowed_when": [
+          "无出血性皮疹",
+          "慢性无急性发作"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "阴虚内热",
+        "allowed_when": [
+          "慢性反复发作",
+          "低热",
+          "盗汗",
+          "口干",
+          "舌红少苔",
+          "手足心热"
+        ],
+        "not_allowed_when": [
+          "急性感染期",
+          "湿热明显"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "湿热下注",
+        "allowed_when": [
+          "关节红肿",
+          "下肢明显",
+          "小便黄赤",
+          "苔黄腻",
+          "口苦"
+        ],
+        "not_allowed_when": [
+          "关节无红肿",
+          "虚寒证明显"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无关节痛/肿",
+      "有无口腔溃疡",
+      "有无光敏/皮疹",
+      "有无蛋白尿/血尿",
+      "ANA/dsDNA等自身抗体是否异常"
+    ]
+  },
+  "mucosal_barrier_dysfunction": {
+    "display_name": "黏膜屏障功能障碍",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "脾虚湿困",
+        "allowed_when": [
+          "纳差",
+          "腹胀",
+          "大便溏",
+          "面色萎黄",
+          "舌淡胖边齿痕",
+          "苔白腻"
+        ],
+        "not_allowed_when": [
+          "急性起病实热证",
+          "大便干硬"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无腹胀/腹痛",
+      "大便性状/频率",
+      "有无黏液/脓血",
+      "有无食物过敏/不耐受"
+    ]
+  },
+  "lower_airway_involvement": {
+    "display_name": "下气道受累",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "痰热壅肺",
+        "allowed_when": [
+          "咳黄痰",
+          "气喘",
+          "发热",
+          "胸闷",
+          "苔黄腻",
+          "脉滑数"
+        ],
+        "not_allowed_when": [
+          "咳白稀痰",
+          "畏寒肢冷",
+          "无热象"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "寒饮伏肺",
+        "allowed_when": [
+          "咳白稀痰",
+          "遇寒则发",
+          "背寒",
+          "苔白滑",
+          "脉弦紧"
+        ],
+        "not_allowed_when": [
+          "痰黄稠",
+          "发热明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无气促/喘息",
+      "咳痰颜色/量",
+      "活动后是否加重",
+      "有无低氧",
+      "有无胸痛"
+    ]
+  },
+  "airway_hyperreactivity": {
+    "display_name": "气道高反应性",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "风痰阻肺",
+        "allowed_when": [
+          "阵发性咳喘",
+          "遇冷/异味诱发",
+          "喉中哮鸣",
+          "发无定时"
+        ],
+        "not_allowed_when": [
+          "持续呼吸困难",
+          "无过敏诱因"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无哮喘/过敏史",
+      "发作诱因",
+      "夜间是否加重",
+      "肺功能/激发试验是否异常"
+    ]
+  },
+  "secretion_or_retention": {
+    "display_name": "分泌/潴留异常",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "痰湿内蕴",
+        "allowed_when": [
+          "痰多易出",
+          "身体困重",
+          "大便黏腻",
+          "苔白厚腻",
+          "头重如裹"
+        ],
+        "not_allowed_when": [
+          "痰少难咯",
+          "阴虚明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "痰量/颜色/黏稠度",
+      "有无胸闷/呼吸困难",
+      "有无反流/误吸风险"
+    ]
+  },
+  "cardiovascular_or_circulatory_risk": {
+    "display_name": "心血管/循环风险",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "心血瘀阻",
+        "allowed_when": [
+          "胸痛固定不移",
+          "刺痛",
+          "唇舌紫暗",
+          "舌有瘀斑",
+          "脉涩"
+        ],
+        "not_allowed_when": [
+          "胸痛漂移无定处",
+          "无血瘀见症"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "痰浊痹阻",
+        "allowed_when": [
+          "胸闷如窒",
+          "形体肥胖",
+          "苔白厚腻",
+          "脉滑",
+          "运动后胸闷加重"
+        ],
+        "not_allowed_when": [
+          "胸痛剧烈持续不缓解",
+          "大汗肢厥"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "气阴两虚",
+        "allowed_when": [
+          "心悸气短",
+          "活动后加重",
+          "自汗盗汗",
+          "口干",
+          "舌红少苔"
+        ],
+        "not_allowed_when": [
+          "急性胸痛发作期",
+          "痰湿明显"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "胸痛性质/部位/放射痛",
+      "有无大汗/晕厥",
+      "有无心悸",
+      "血压/心电图/肌钙蛋白是否异常",
+      "有无高血压/冠心病史"
+    ]
+  },
+  "vascular_or_microcirculatory": {
+    "display_name": "血管/微循环",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "瘀血阻络",
+        "allowed_when": [
+          "刺痛固定",
+          "肢体麻木",
+          "舌紫暗",
+          "脉涩",
+          "皮肤瘀斑"
+        ],
+        "not_allowed_when": [
+          "出血倾向明显",
+          "凝血功能障碍"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "寒凝血脉",
+        "allowed_when": [
+          "肢冷",
+          "遇寒加重",
+          "得温则减",
+          "脉沉迟",
+          "面色白"
+        ],
+        "not_allowed_when": [
+          "热象明显",
+          "红肿热痛"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无肢体发凉/麻木",
+      "肤色/皮温变化",
+      "有无静脉曲张",
+      "ABI/D-二聚体是否异常"
+    ]
+  },
+  "coagulation_or_bleeding_disorder": {
+    "display_name": "凝血/出血障碍",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "血热妄行",
+        "allowed_when": [
+          "出血色鲜红",
+          "紫癜色红",
+          "发热",
+          "心烦",
+          "舌红绛",
+          "脉数"
+        ],
+        "not_allowed_when": [
+          "出血色暗淡",
+          "虚寒证明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "脾不统血",
+        "allowed_when": [
+          "出血色淡",
+          "紫癜反复",
+          "面色萎黄",
+          "乏力",
+          "纳差",
+          "舌淡"
+        ],
+        "not_allowed_when": [
+          "急性大量出血",
+          "实热证明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "出血部位/颜色/量",
+      "有无皮肤瘀斑",
+      "有无牙龈/鼻出血",
+      "血常规/凝血功能是否异常"
+    ]
+  },
+  "hematopoietic_or_marrow_dysfunction": {
+    "display_name": "造血/骨髓功能障碍",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "气血两虚",
+        "allowed_when": [
+          "乏力",
+          "面色苍白",
+          "头晕",
+          "心悸",
+          "唇甲色淡",
+          "舌淡",
+          "脉细弱"
+        ],
+        "not_allowed_when": [
+          "湿热明显",
+          "瘀血重症"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "肾精不足",
+        "allowed_when": [
+          "发育迟缓",
+          "早衰",
+          "脱发",
+          "腰膝酸软",
+          "耳鸣",
+          "健忘"
+        ],
+        "not_allowed_when": [
+          "急性失血期",
+          "实热证"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无乏力/头晕/面色苍白",
+      "有无反复感染",
+      "有无出血倾向",
+      "血常规/铁蛋白/B12/叶酸是否异常"
+    ]
+  },
+  "endocrine_or_hormonal_dysregulation": {
+    "display_name": "内分泌/激素失调",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "肝肾不足",
+        "allowed_when": [
+          "病程日久",
+          "腰膝酸软",
+          "脱发",
+          "性发育异常",
+          "生殖/毛发相关"
+        ],
+        "not_allowed_when": [
+          "湿热证据强且急性活动",
+          "急性实热"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "肝郁气滞",
+        "allowed_when": [
+          "情绪波动",
+          "胸胁胀满",
+          "月经不调",
+          "叹息",
+          "脉弦"
+        ],
+        "not_allowed_when": [
+          "器质性病变为主",
+          "无情绪诱因"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "阴虚火旺",
+        "allowed_when": [
+          "怕热",
+          "盗汗",
+          "五心烦热",
+          "口干咽燥",
+          "舌红少津",
+          "脉细数"
+        ],
+        "not_allowed_when": [
+          "畏寒肢冷明显",
+          "苔白滑"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "怕冷还是怕热",
+      "体重有无明显变化",
+      "月经是否规律",
+      "有无心悸/乏力/手抖",
+      "甲状腺功能/性激素是否异常"
+    ]
+  },
+  "metabolic_or_insulin_resistance": {
+    "display_name": "代谢/胰岛素抵抗",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "痰湿内盛",
+        "allowed_when": [
+          "肥胖",
+          "腹大",
+          "身体困重",
+          "苔白厚腻",
+          "大便黏",
+          "头面油"
+        ],
+        "not_allowed_when": [
+          "消瘦明显",
+          "舌红少苔"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "脾虚湿盛",
+        "allowed_when": [
+          "纳差腹胀",
+          "大便溏",
+          "面色萎黄",
+          "乏力",
+          "舌淡胖"
+        ],
+        "not_allowed_when": [
+          "消谷善饥",
+          "实热证"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "湿热上蒸",
+        "allowed_when": [
+          "头发油",
+          "头皮屑多",
+          "苔白腻",
+          "苔黄腻",
+          "头面油多",
+          "皮脂旺盛"
+        ],
+        "not_allowed_when": [
+          "舌淡胖苔白滑",
+          "畏寒肢冷"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "身高体重/BMI",
+      "有无多饮多食多尿",
+      "血糖/血脂/尿酸是否异常",
+      "有无脂肪肝",
+      "家族代谢病史"
+    ]
+  },
+  "digestive_reflux_or_dysfunction": {
+    "display_name": "消化/反流功能障碍",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "肝胃不和",
+        "allowed_when": [
+          "反酸",
+          "烧心",
+          "胸胁胀满",
+          "嗳气",
+          "口苦",
+          "情绪诱发",
+          "脉弦"
+        ],
+        "not_allowed_when": [
+          "虚寒腹泻为主",
+          "无热象"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "脾胃虚寒",
+        "allowed_when": [
+          "胃脘隐痛喜按",
+          "得温则减",
+          "纳差",
+          "大便溏",
+          "舌淡苔白",
+          "脉沉迟"
+        ],
+        "not_allowed_when": [
+          "反酸烧心明显",
+          "苔黄"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无反酸/烧心/嗳气",
+      "吞咽有无困难",
+      "腹痛性质/位置",
+      "有无黑便/便血",
+      "体重有无下降",
+      "胃镜是否异常"
+    ]
+  },
+  "hepatic_or_biliary_dysfunction": {
+    "display_name": "肝/胆功能障碍",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "肝胆湿热",
+        "allowed_when": [
+          "口苦",
+          "胁痛",
+          "身目发黄",
+          "小便黄",
+          "恶心",
+          "苔黄腻"
+        ],
+        "not_allowed_when": [
+          "无黄染",
+          "虚寒明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "肝郁气滞",
+        "allowed_when": [
+          "胁肋胀痛",
+          "情志抑郁",
+          "嗳气叹息",
+          "脉弦"
+        ],
+        "not_allowed_when": [
+          "黄疸明显",
+          "急性感染"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无黄疸",
+      "有无肝病史",
+      "饮酒史",
+      "肝功能/胆红素/转氨酶是否异常",
+      "腹部B超是否异常"
+    ]
+  },
+  "urinary_renal_risk": {
+    "display_name": "泌尿/肾风险",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "湿热下注",
+        "allowed_when": [
+          "尿频急痛",
+          "小便黄赤",
+          "尿道灼热",
+          "苔黄腻",
+          "腰酸"
+        ],
+        "not_allowed_when": [
+          "尿清长",
+          "虚寒明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无尿频/尿急/尿痛",
+      "尿液颜色/泡沫",
+      "有无水肿",
+      "肾功能/尿常规是否异常"
+    ]
+  },
+  "structural_abnormality": {
+    "display_name": "结构异常",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "痰瘀阻络",
+        "allowed_when": [
+          "局部肿块",
+          "疼痛固定",
+          "病程日久",
+          "舌紫暗",
+          "脉涩"
+        ],
+        "not_allowed_when": [
+          "急性感染高热",
+          "明显虚寒表现"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "气滞血瘀",
+        "allowed_when": [
+          "疼痛胀痛交替",
+          "与情绪相关",
+          "病程反复",
+          "面色晦暗"
+        ],
+        "not_allowed_when": [
+          "新发急性损伤",
+          "明显炎症表现"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "肝肾亏虚",
+        "allowed_when": [
+          "退行性病变",
+          "腰膝酸软",
+          "病程日久",
+          "筋骨痿软"
+        ],
+        "not_allowed_when": [
+          "急性外伤期",
+          "实邪壅盛"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "血热风燥",
+        "allowed_when": [
+          "脱发",
+          "头皮屑多",
+          "瘙痒",
+          "头皮潮红",
+          "头发油"
+        ],
+        "not_allowed_when": [
+          "怕冷明显",
+          "甲减"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "气血不足",
+        "allowed_when": [
+          "乏力",
+          "面色萎黄",
+          "头晕",
+          "脱发",
+          "唇甲色淡"
+        ],
+        "not_allowed_when": [
+          "湿热明显",
+          "血热明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "肝火上炎",
+        "allowed_when": [
+          "目赤",
+          "结膜充血",
+          "头痛",
+          "烦躁易怒",
+          "口苦"
+        ],
+        "not_allowed_when": [
+          "无热象",
+          "虚寒明显"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无外伤史",
+      "疼痛性质/位置",
+      "影像学检查是否异常",
+      "功能受限情况"
+    ]
+  },
+  "neoplastic_or_proliferative": {
+    "display_name": "肿瘤/增殖性病变",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "瘀毒互结",
+        "allowed_when": [
+          "肿块",
+          "消瘦",
+          "疼痛",
+          "病程进展快",
+          "舌紫暗有瘀斑"
+        ],
+        "not_allowed_when": [
+          "无确切占位证据"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "正气亏虚",
+        "allowed_when": [
+          "慢性消耗",
+          "乏力",
+          "消瘦",
+          "面色无华",
+          "食少纳差"
+        ],
+        "not_allowed_when": [
+          "急性感染期",
+          "实证明显"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无体重下降",
+      "有无不明原因发热",
+      "病理活检是否异常",
+      "肿瘤标志物是否升高",
+      "家族肿瘤史"
+    ]
+  },
+  "fibrosis_or_tissue_remodeling": {
+    "display_name": "纤维化/组织重塑",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "痰瘀互结",
+        "allowed_when": [
+          "组织硬化",
+          "活动受限",
+          "病程慢性",
+          "舌紫暗"
+        ],
+        "not_allowed_when": [
+          "急性炎症期"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无组织硬化/挛缩",
+      "病程多久",
+      "功能受限程度",
+      "影像学/病理是否提示纤维化"
+    ]
+  },
+  "immune_abnormality": {
+    "display_name": "免疫异常",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "卫气不固",
+        "allowed_when": [
+          "反复感冒",
+          "自汗",
+          "怕风",
+          "易过敏",
+          "气短乏力"
+        ],
+        "not_allowed_when": [
+          "急性感染期",
+          "实热证"
+        ],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "气阴两虚",
+        "allowed_when": [
+          "反复感染",
+          "乏力",
+          "口干",
+          "盗汗",
+          "舌红少苔"
+        ],
+        "not_allowed_when": [
+          "湿热急性活动"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无反复感染",
+      "有无自身免疫病史",
+      "免疫球蛋白/淋巴细胞亚群是否异常",
+      "疫苗接种史"
+    ]
+  },
+  "stress_related": {
+    "display_name": "应激相关",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "肝郁化火",
+        "allowed_when": [
+          "情绪波动",
+          "易怒",
+          "口干口苦",
+          "失眠多梦",
+          "头痛",
+          "脉弦数"
+        ],
+        "not_allowed_when": [
+          "无情绪诱因",
+          "虚寒证明显"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "心脾两虚",
+        "allowed_when": [
+          "思虑过度",
+          "失眠多梦",
+          "心悸",
+          "纳差",
+          "乏力",
+          "舌淡"
+        ],
+        "not_allowed_when": [
+          "实火明显",
+          "舌红苔黄"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "心神不宁",
+        "allowed_when": [
+          "易惊",
+          "噩梦",
+          "心悸",
+          "胆怯",
+          "多虑"
+        ],
+        "not_allowed_when": [
+          "器质性心脏病明确为主"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "肝气郁结",
+        "allowed_when": [
+          "情绪波动",
+          "紧张加重",
+          "抽动",
+          "叹气",
+          "脉弦"
+        ],
+        "not_allowed_when": [
+          "虚寒明显",
+          "无情绪诱因"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "有无明显压力/焦虑/抑郁",
+      "睡眠质量",
+      "有无重大生活事件",
+      "有无头痛/胃肠不适等躯体化症状"
+    ]
+  },
+  "neurotransmitter_or_synaptic_dysfunction": {
+    "display_name": "神经递质/突触功能障碍",
+    "possible_tcm_pathogenesis": [
+      {
+        "pathogenesis": "肝风内动",
+        "allowed_when": [
+          "眨眼",
+          "努嘴",
+          "抽动",
+          "挤眼睛",
+          "面部肌肉抽动",
+          "不自主运动"
+        ],
+        "not_allowed_when": [],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "风痰上扰",
+        "allowed_when": [
+          "苔白腻",
+          "眨眼",
+          "抽动",
+          "注意力不集中",
+          "喉中痰鸣"
+        ],
+        "not_allowed_when": [],
+        "default_role": "primary_candidate",
+        "rules_matched": []
+      },
+      {
+        "pathogenesis": "心脾两虚",
+        "allowed_when": [
+          "注意力不集中",
+          "面色萎黄",
+          "纳差",
+          "眼袋大",
+          "疲劳"
+        ],
+        "not_allowed_when": [
+          "急性抽动发作",
+          "肝火亢盛明显"
+        ],
+        "default_role": "secondary_candidate",
+        "rules_matched": []
+      }
+    ],
+    "hidden_symptom_questions": [
+      "抽动从什么时候开始",
+      "有无加重/缓解因素",
+      "有无喉中发声/清嗓子",
+      "有无记忆力下降",
+      "有无多动/冲动行为",
+      "家族中（父母/兄弟姐妹）有无类似情况",
+      "有无做过脑电图",
+      "有无药物过敏史"
+    ]
+  }
+}

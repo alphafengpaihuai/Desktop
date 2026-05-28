@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "files": {
+    "alias_map": {
+      "exists": true,
+      "json_valid": true
+    },
+    "complaint_map": {
+      "exists": true,
+      "json_valid": true
+    },
+    "red_flag_rules": {
+      "exists": true,
+      "json_valid": true
+    },
+    "feature_interpreter": {
+      "exists": true,
+      "json_valid": true
+    }
+  },
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "alias_map": 23,
+    "complaint_map": 26,
+    "red_flag_rules": 18,
+    "feature_interpreter": 54
+  }
+}

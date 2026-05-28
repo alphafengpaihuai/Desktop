@@ -1,0 +1,283 @@
+[
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMDE file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Disease_id",
+      "Disease_Name",
+      "Disease_definition",
+      "UMLS_id",
+      "MeSH_id",
+      "OMIM_id",
+      "Orphanet_id",
+      "ICD10CM_id",
+      "MedDRA_id",
+      "Version",
+      "Link_disease_id",
+      "Suppress"
+    ],
+    "row_count": 14434,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Disease entity table; no target/gene, herb, ingredient, or symptom relationship columns."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMDE key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Disease_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 28497,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMHB file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Herb_id",
+      "Chinese_name",
+      "Pinyin_name",
+      "Latin_name",
+      "English_name",
+      "Properties_Chinese",
+      "Properties_English",
+      "Meridians_Chinese",
+      "Meridians_English",
+      "Class_Chinese",
+      "Class_English",
+      "UsePart",
+      "TCMID_id",
+      "TCM-ID_id",
+      "TCMSP_id",
+      "Link_herb_id",
+      "Alias",
+      "HERBDB_ID",
+      "Suppress"
+    ],
+    "row_count": 703,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Herb entity table; no ingredient, target/gene, disease, or symptom relationship columns."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMHB key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Herb_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 2556,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMIT file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Mol_id",
+      "Molecule_name",
+      "PubChem_CID",
+      "Molecule_structure",
+      "Molecule_formula",
+      "Molecule_weight",
+      "OB_score",
+      "CAS_id",
+      "TCMID_id",
+      "TCM-ID_id",
+      "TCMSP_id",
+      "Version",
+      "Type",
+      "Link_ingredient_id",
+      "Suppress"
+    ],
+    "row_count": 27690,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Ingredient entity table. It has Mol_id and ingredient attributes, but no Herb_id, Gene_id/Target_id, Disease_id, or symptom ID edge columns."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMIT key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Mol_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 148636,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMMS file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "MM_symptom_id",
+      "MM_symptom_name",
+      "MM_symptom_definition",
+      "UMLS_id",
+      "MeSH_tree_numbers",
+      "OMIM_id",
+      "ICD10CM_id",
+      "HPO_id",
+      "MeSH_id",
+      "Version",
+      "Suppress"
+    ],
+    "row_count": 1148,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Modern medicine symptom entity table; no disease or herb relationship columns."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMMS key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "MM_symptom_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 15142,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMSY file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Syndrome_id",
+      "Syndrome_name",
+      "Syndrome_English",
+      "Syndrome_PinYin",
+      "Syndrome_definition",
+      "Version",
+      "Type",
+      "Suppress"
+    ],
+    "row_count": 233,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "TCM symptom/syndrome entity table; not a symptom-disease or symptom-herb edge table."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMSY key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Syndrome_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 697,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMTS file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "TCM_symptom_id",
+      "TCM_symptom_name",
+      "Symptom_pinYin",
+      "Symptom_definition",
+      "Symptom_locus",
+      "Symptom_property",
+      "Type",
+      "Version",
+      "Suppress"
+    ],
+    "row_count": 2364,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "TCM symptom/syndrome entity table; not a symptom-disease or symptom-herb edge table."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMTS key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "TCM_symptom_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 4728,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMTT file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Gene_id",
+      "Gene_symbol",
+      "Chromosome",
+      "Gene_name",
+      "Protein_name",
+      "HIT_id",
+      "TCMSP_id",
+      "Ensembl_id",
+      "NCBI_id",
+      "HGNC_id",
+      "Vega_id",
+      "GenBank_Gene_id",
+      "GenBank_Protein_id",
+      "UniProt_id",
+      "PDB_id",
+      "MIM_id",
+      "miRBase_id",
+      "IMGT/GENE-DB_id",
+      "Version",
+      "Suppress"
+    ],
+    "row_count": 20965,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Target/gene entity table; no disease, ingredient, herb, or symptom relationship columns."
+  },
+  {
+    "file_path": "data/symmap_v2_download/SymMap v2.0, SMTT key file.xlsx",
+    "file_type": "xlsx",
+    "columns": [
+      "Gene_id",
+      "Field_name",
+      "Field_context"
+    ],
+    "row_count": 59343,
+    "relationship_inferred": [],
+    "usable_for_disease_target_herb_mapping": false,
+    "reason": "Search-key/alias table only; maps entity IDs to search terms, not biomedical relationships."
+  },
+  {
+    "file_path": "data/disease_cache/symmap_online_mapping.json",
+    "file_type": "json_api_cache",
+    "columns": [
+      "attempted_search_keys",
+      "effective_herbs",
+      "evidence_source",
+      "fetched_at",
+      "herb_count",
+      "herb_rows",
+      "molecular_targets",
+      "search_key",
+      "symmap_disease_id",
+      "symmap_matched_name",
+      "target_count",
+      "target_rows",
+      "western_disease"
+    ],
+    "row_count": 124,
+    "relationship_inferred": [
+      "disease-target/gene",
+      "disease-herb"
+    ],
+    "usable_for_disease_target_herb_mapping": true,
+    "reason": "SymMap related_components API cache contains disease-keyed molecular_targets and/or effective_herbs. This is usable only as direct disease→target/gene and disease→herb evidence; it cannot infer herb→ingredient→target chains."
+  }
+]

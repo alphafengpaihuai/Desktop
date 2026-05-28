@@ -1,0 +1,362 @@
+{
+  "entries": [
+    {
+      "timestamp": "2026-05-27 22:46",
+      "axes": [
+        "endocrine_or_hormonal_dysregulation",
+        "coagulation_or_bleeding_disorder",
+        "stress_related",
+        "mucosal_barrier_dysfunction",
+        "hepatic_or_biliary_dysfunction",
+        "metabolic_or_insulin_resistance",
+        "neurotransmitter_or_synaptic_dysfunction",
+        "neurovascular_or_cortical_spreading",
+        "hematopoietic_or_marrow_dysfunction",
+        "digestive_reflux_or_dysfunction"
+      ],
+      "patient_text_preview": "眩晕发作 耳鸣 听力下降 恶心 舌淡苔白腻 脉弦滑",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肝阳化风",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 眩晕、耳鸣、脉弦，提示肝阳上亢化风，但舌淡苔白腻非典型肝阳化风舌象，故为次证。",
+          "related_axes": [
+            "neurovascular_or_cortical_spreading",
+            "stress_related"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-27 22:56",
+      "axes": [
+        "endocrine_or_hormonal_dysregulation",
+        "digestive_reflux_or_dysfunction",
+        "coagulation_or_bleeding_disorder",
+        "hematopoietic_or_marrow_dysfunction",
+        "neurovascular_or_cortical_spreading",
+        "stress_related",
+        "metabolic_or_insulin_resistance",
+        "neurotransmitter_or_synaptic_dysfunction",
+        "hepatic_or_biliary_dysfunction",
+        "mucosal_barrier_dysfunction"
+      ],
+      "patient_text_preview": "眩晕发作 耳鸣 听力下降 恶心 舌淡苔白腻 脉弦滑",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肝肾阴虚",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 耳鸣、听力下降，眩晕，可因肝肾阴虚，髓海不足，虚风内动；与内分泌失调、神经递质功能障碍相关。",
+          "related_axes": [
+            "endocrine_or_hormonal_dysregulation",
+            "neurotransmitter_or_synaptic_dysfunction"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-27 23:00",
+      "axes": [
+        "stress_related",
+        "mucosal_barrier_dysfunction",
+        "metabolic_or_insulin_resistance",
+        "coagulation_or_bleeding_disorder",
+        "digestive_reflux_or_dysfunction",
+        "endocrine_or_hormonal_dysregulation",
+        "neurovascular_or_cortical_spreading",
+        "neurotransmitter_or_synaptic_dysfunction",
+        "hematopoietic_or_marrow_dysfunction",
+        "hepatic_or_biliary_dysfunction"
+      ],
+      "patient_text_preview": "眩晕发作 耳鸣 听力下降 恶心 舌淡苔白腻 脉弦滑",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "风痰上扰",
+          "role": "primary_candidate",
+          "confidence": 0.85,
+          "reason": "LLM: 眩晕、耳鸣、听力下降、恶心，舌淡苔白腻，脉弦滑，符合风痰上扰清窍之证；与神经血管性（neurovascular）及神经递质（neurotransmitter）轴相关",
+          "related_axes": [
+            "neurovascular_or_cortical_spreading",
+            "neurotransmitter_or_synaptic_dysfunction"
+          ]
+        },
+        {
+          "pathogenesis": "肝阳化风",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 眩晕、耳鸣、脉弦，提示肝阳上亢，化风上扰；与应激（stress）及神经血管（neurovascular）轴相关",
+          "related_axes": [
+            "stress_related",
+            "neurovascular_or_cortical_spreading"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 11:38",
+      "axes": [
+        "upper_airway_involvement",
+        "cardiovascular_or_circulatory_risk",
+        "autoimmune_or_immune_complex",
+        "immune_abnormality"
+      ],
+      "patient_text_preview": "眼睑红肿 眼睑痒痛 眼睑灼热刺痛 睾丸红痒 口干 大便不成型 体温37.2  ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "湿热蕴结",
+          "role": "primary_candidate",
+          "confidence": 0.7,
+          "reason": "LLM: 眼睑红肿痒痛、睾丸红痒、体温37.2℃、大便不成型，结合免疫异常和自身免疫病理轴，符合湿热下注、上攻之象。",
+          "related_axes": [
+            "immune_abnormality",
+            "autoimmune_or_immune_complex"
+          ]
+        },
+        {
+          "pathogenesis": "风热上扰",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 眼睑红肿痒痛、灼热刺痛，符合风热之邪上扰头目，但无恶寒等表证，故为次证。",
+          "related_axes": [
+            "upper_airway_involvement"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 11:41",
+      "axes": [
+        "autoimmune_or_immune_complex",
+        "upper_airway_involvement",
+        "immune_abnormality",
+        "cardiovascular_or_circulatory_risk"
+      ],
+      "patient_text_preview": "眼睑红肿 眼睑痒痛 眼睑灼热刺痛 睾丸红痒 口干 大便不成型 体温37.2  ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "湿热蕴结",
+          "role": "primary_candidate",
+          "confidence": 0.7,
+          "reason": "LLM: 眼睑红肿痒痛、睾丸红痒、体温37.2提示湿热之邪蕴结于上（眼）及下（睾丸），与自身免疫/免疫复合物沉积及免疫异常相关。",
+          "related_axes": [
+            "autoimmune_or_immune_complex",
+            "immune_abnormality"
+          ]
+        },
+        {
+          "pathogenesis": "风热上扰",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 眼睑痒痛、灼热刺痛符合风热上扰头目，与上呼吸道受累及免疫异常有关。",
+          "related_axes": [
+            "upper_airway_involvement",
+            "immune_abnormality"
+          ]
+        },
+        {
+          "pathogenesis": "阴虚湿热",
+          "role": "secondary_candidate",
+          "confidence": 0.5,
+          "reason": "LLM: 口干提示阴液不足，眼睑红肿、睾丸红痒为湿热表现，大便不成型为脾虚湿盛，与免疫异常及循环风险相关。",
+          "related_axes": [
+            "immune_abnormality",
+            "cardiovascular_or_circulatory_risk"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 17:35",
+      "axes": [
+        "lower_airway_involvement",
+        "upper_airway_involvement",
+        "autoimmune_or_immune_complex",
+        "coagulation_or_bleeding_disorder",
+        "mucosal_barrier_dysfunction",
+        "infection_or_inflammation"
+      ],
+      "patient_text_preview": "咽痛2天 发热1天最高39℃ 鼻涕多 鼻塞 经常鼻血 咽喉充血 扁桃体少量脓点 大便2-3日一行  ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肺热炽盛",
+          "role": "primary_candidate",
+          "confidence": 0.75,
+          "reason": "LLM: 高热、咽痛、鼻塞、鼻涕多，肺开窍于鼻，肺热上攻咽喉，与感染/炎症及上气道受累相关。",
+          "related_axes": [
+            "infection_or_inflammation",
+            "upper_airway_involvement"
+          ]
+        },
+        {
+          "pathogenesis": "阳明腑实",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 大便2-3日一行，热盛伤津，腑气不通，与感染/炎症及黏膜屏障功能障碍相关。",
+          "related_axes": [
+            "infection_or_inflammation",
+            "mucosal_barrier_dysfunction"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 17:40",
+      "axes": [
+        "coagulation_or_bleeding_disorder",
+        "mucosal_barrier_dysfunction",
+        "upper_airway_involvement",
+        "autoimmune_or_immune_complex",
+        "infection_or_inflammation",
+        "lower_airway_involvement"
+      ],
+      "patient_text_preview": "咽痛两天 发热一天最高39 鼻涕多 鼻塞 经常鼻血 咽喉充血 扁桃体可见少量脓点样 大便2-3日一行 舌点刺苔薄黄 ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肺胃热盛",
+          "role": "primary_candidate",
+          "confidence": 0.75,
+          "reason": "LLM: 咽痛、扁桃体脓点、大便2-3日一行、舌点刺苔黄，肺胃热毒循经上攻咽喉，兼阳明腑气不通，与黏膜屏障功能障碍及感染相关。",
+          "related_axes": [
+            "mucosal_barrier_dysfunction",
+            "infection_or_inflammation"
+          ]
+        },
+        {
+          "pathogenesis": "热伤血络",
+          "role": "secondary_candidate",
+          "confidence": 0.7,
+          "reason": "LLM: 经常鼻血，热毒炽盛迫血妄行，与凝血/出血功能障碍相关。",
+          "related_axes": [
+            "coagulation_or_bleeding_disorder"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 17:42",
+      "axes": [
+        "mucosal_barrier_dysfunction",
+        "coagulation_or_bleeding_disorder",
+        "upper_airway_involvement",
+        "infection_or_inflammation",
+        "lower_airway_involvement",
+        "autoimmune_or_immune_complex"
+      ],
+      "patient_text_preview": "咽痛两天 发热一天最高39 鼻涕多 鼻塞 经常鼻血 咽喉充血 扁桃体可见少量脓点样 大便2-3日一行 舌点刺苔薄黄 ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肺胃热盛",
+          "role": "primary_candidate",
+          "confidence": 0.8,
+          "reason": "LLM: 咽痛、扁桃体脓点、大便2-3日一行、舌点刺苔薄黄，提示肺胃热盛，上攻咽喉，下结肠道。",
+          "related_axes": [
+            "infection_or_inflammation",
+            "mucosal_barrier_dysfunction"
+          ]
+        },
+        {
+          "pathogenesis": "热伤血络",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 经常鼻血，结合热象，提示热邪迫血妄行，但非主要矛盾。",
+          "related_axes": [
+            "coagulation_or_bleeding_disorder"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 17:45",
+      "axes": [
+        "mucosal_barrier_dysfunction",
+        "lower_airway_involvement",
+        "upper_airway_involvement",
+        "coagulation_or_bleeding_disorder",
+        "autoimmune_or_immune_complex",
+        "infection_or_inflammation"
+      ],
+      "patient_text_preview": "咽痛两天 发热一天最高39 鼻涕多 鼻塞 经常鼻血 咽喉充血 扁桃体可见少量脓点样 大便2-3日一行 舌点刺苔薄黄 ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肺热炽盛",
+          "role": "primary_candidate",
+          "confidence": 0.85,
+          "reason": "LLM: 高热、咽痛、鼻衄、大便干结，肺热上攻咽喉，热伤血络，且已有候选未包含此病机，更贴合。",
+          "related_axes": [
+            "upper_airway_involvement",
+            "coagulation_or_bleeding_disorder",
+            "infection_or_inflammation"
+          ]
+        },
+        {
+          "pathogenesis": "热伤血络",
+          "role": "secondary_candidate",
+          "confidence": 0.6,
+          "reason": "LLM: 经常鼻血，结合热象，为热迫血妄行，但非主要矛盾。",
+          "related_axes": [
+            "coagulation_or_bleeding_disorder"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    },
+    {
+      "timestamp": "2026-05-28 18:08",
+      "axes": [
+        "lower_airway_involvement",
+        "upper_airway_involvement",
+        "autoimmune_or_immune_complex",
+        "mucosal_barrier_dysfunction",
+        "infection_or_inflammation",
+        "coagulation_or_bleeding_disorder"
+      ],
+      "patient_text_preview": "咽痛两天 发热一天最高39 鼻涕多 鼻塞 经常鼻血 咽喉充血 扁桃体可见少量脓点样 大便2-3日一行 舌点刺苔薄黄 ",
+      "llm_inferred_candidates": [
+        {
+          "pathogenesis": "肺热炽盛",
+          "role": "primary_candidate",
+          "confidence": 0.65,
+          "reason": "LLM: 发热、咽痛、鼻塞、鼻涕、大便2-3日一行，肺热移于大肠，腑气不通，对应感染/炎症反应和上气道受累。",
+          "related_axes": [
+            "infection_or_inflammation",
+            "upper_airway_involvement"
+          ]
+        },
+        {
+          "pathogenesis": "风热夹湿",
+          "role": "secondary_candidate",
+          "confidence": 0.5,
+          "reason": "LLM: 鼻涕多、苔薄黄，风热夹湿上扰，但无典型湿阻中焦表现，故为次证。",
+          "related_axes": [
+            "upper_airway_involvement",
+            "infection_or_inflammation"
+          ]
+        }
+      ],
+      "verified": false,
+      "notes": ""
+    }
+  ],
+  "_meta": {
+    "total": 10
+  }
+}

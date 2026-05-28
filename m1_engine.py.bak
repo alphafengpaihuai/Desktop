@@ -1,0 +1,710 @@
+"""
+M1 诊断推理引擎 — 中医辅助诊疗系统「守一」
+============================================
+功能：病理轴匹配、Primary Formula Entry Disease 选择、Uncovered Targets 识别
+严格限制：仅输出西医诊断内容，禁止任何中医输出
+"""
+
+import json
+import os
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass, field, asdict
+
+# ── 数据类 ──────────────────────────────────────────────
+
+@dataclass
+class AxeMatch:
+    """单个病理轴匹配结果"""
+    axis: str
+    db_weight: float
+    db_role: str
+    db_confidence: str
+    findings: List[str] = field(default_factory=list)
+    covered: bool = False
+    match_score: float = 0.0
+
+@dataclass
+class CandidateDiagnosis:
+    """候选诊断"""
+    disease_name: str
+    entry_type: str
+    overall_score: float
+    primary_axes_covered: float
+    total_primary_axes: int
+    uncovered_primary_axes: List[str]
+    uncovered_axes: List[AxeMatch]
+    covered_axes: List[AxeMatch]
+    primary_findings: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
+    needs_external_check: List[str] = field(default_factory=list)
+
+@dataclass
+class DiagnosisResult:
+    """完整诊断结果"""
+    query_disease: str
+    query_symptoms: List[str]
+    matched_disease: Optional[CandidateDiagnosis] = None
+    differential_list: List[CandidateDiagnosis] = field(default_factory=list)
+    no_match: bool = False
+    not_allowed: bool = False
+    error: Optional[str] = None
+
+
+# ── 引擎核心 ──────────────────────────────────────────────
+
+class M1DiagnosisEngine:
+    """M1 西医诊断推理引擎"""
+
+    # 病理轴角色权重系数（用于评分）
+    ROLE_WEIGHT_MULTIPLIER = {
+        "primary": 1.0,
+        "location": 0.85,
+        "secondary": 0.7,
+        "pathogenesis": 0.65,
+        "trigger": 0.55,
+        "risk": 0.4,
+        "stage_related": 0.3,
+    }
+
+    # 置信度权重系数
+    CONFIDENCE_MULTIPLIER = {
+        "high": 1.0,
+        "medium": 0.7,
+        "low": 0.4,
+    }
+
+    def __init__(self, db_path: Optional[str] = None):
+        """初始化引擎，加载数据库"""
+        if db_path is None:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(script_dir, "diseases_core.json")
+
+        with open(db_path, "r", encoding="utf-8") as f:
+            self.db: List[dict] = json.load(f)
+
+        # 加载中英文名称映射
+        self.cn_to_en: Dict[str, str] = {}
+        mapping_path = os.path.join(os.path.dirname(db_path), "m1_name_mapping.json")
+        if os.path.exists(mapping_path):
+            with open(mapping_path, "r", encoding="utf-8") as f:
+                self.cn_to_en = json.load(f)
+
+        # 建立索引：疾病名 → 条目
+        self.name_index: Dict[str, dict] = {}
+        self.keyword_index: Dict[str, List[dict]] = {}
+
+        for entry in self.db:
+            name = entry["disease_name"].lower()
+            self.name_index[name] = entry
+            for word in name.replace("(", " ").replace(")", " ").replace("/", " ").split():
+                if len(word) > 2:
+                    if word not in self.keyword_index:
+                        self.keyword_index[word] = []
+                    self.keyword_index[word].append(entry)
+
+        # 可用病理轴列表
+        self.available_axes: set = set()
+        for entry in self.db:
+            for axe in entry.get("axes", []):
+                if axe.get("axis"):
+                    self.available_axes.add(axe["axis"])
+
+    # ── 查找部分 ───────────────────────────────────────
+
+    def find_disease(self, disease_name: str) -> Optional[dict]:
+        """精确查找疾病（支持中英文）"""
+        key = disease_name.strip().lower()
+        # 直接匹配英文名
+        if key in self.name_index:
+            return self.name_index[key]
+        # 中文名映射
+        if key in self.cn_to_en:
+            en_key = self.cn_to_en[key].lower()
+            if en_key in self.name_index:
+                return self.name_index[en_key]
+        return None
+
+    def search_diseases(self, query: str) -> List[dict]:
+        """模糊搜索疾病（支持中英文）"""
+        query = query.strip().lower()
+        if not query:
+            return []
+        
+        # 快速过滤：纯数字、太短、无意义字符组合 ≠ 疾病名
+        if len(query) < 3:
+            return []
+        alpha_chars = [c for c in query if c.isalpha()]
+        if not alpha_chars:
+            return []
+
+        if query in self.name_index:
+            return [self.name_index[query]]
+
+        results: List[dict] = []
+        seen = set()
+
+        # 部分匹配（中英文都适用）—— 要求实质性名称重叠
+        query_words = set(q for q in query.replace("(", " ").replace(")", " ").replace("/", " ").split() if len(q) >= 3)
+        for name, entry in self.name_index.items():
+            if query in name or name in query:
+                # 对于长名称（>10字符），检查重叠是否足够有意义
+                if len(query) >= 10 and len(name) >= 10:
+                    overlap = set(query) & set(name)
+                    # 至少 50% 的字符重叠
+                    if len(overlap) >= min(len(set(query)), len(set(name))) * 0.5 or query[:6] in name or name[:6] in query:
+                        if id(entry) not in seen:
+                            results.append(entry)
+                            seen.add(id(entry))
+                else:
+                    if id(entry) not in seen:
+                        results.append(entry)
+                        seen.add(id(entry))
+
+        # 英文关键词匹配
+        query_words = query.replace("(", " ").replace(")", " ").replace("/", " ").split()
+        # 额外拆分：将连在一起的字母数字拆开（如"disease12345"→"disease","12345"）
+        refined_words = []
+        for w in query_words:
+            parts = []
+            current = ""
+            for c in w:
+                if c.isalpha() and (not current or current[-1].isalpha()):
+                    current += c
+                elif c.isdigit() and (not current or current[-1].isdigit()):
+                    current += c
+                else:
+                    if current: parts.append(current)
+                    current = c
+            if current: parts.append(current)
+            refined_words.extend(parts)
+        query_words = refined_words
+        
+        # 疾病名中常见"泛称后缀" — 如果查询词几乎等价于这些泛称则跳过
+        GENERIC_NAME_TOKENS = {'disease', 'syndrome', 'disorder', 'infection', 'condition', 'failure'}
+        for word in query_words:
+            if len(word) <= 2:
+                continue
+            # 跳过纯数字/标点关键词
+            if all(c.isdigit() or not c.isalnum() for c in word):
+                continue
+            # 跳过本身是泛称词的查询（如仅输入"disease"）
+            if word in GENERIC_NAME_TOKENS:
+                continue
+            for keyword, entries in self.keyword_index.items():
+                if len(keyword) < 3:
+                    continue
+                # 双向包含匹配，但限制长度比例（防止"nonexistentdisease"因含"disease"而误匹配）
+                if word in keyword:
+                    # 查询词 ≤ 关键词（如"stroke" in "Stroke Rehabilitation"）
+                    if len(keyword) >= len(word) * 0.8:
+                        for entry in entries:
+                            if id(entry) not in seen:
+                                results.append(entry)
+                                seen.add(id(entry))
+                elif keyword in word:
+                    # 关键词在查询词中 — 关键词必须占查询词的大部分
+                    overlap_ratio = len(keyword) / len(word)
+                    if overlap_ratio >= 0.6:  # 查询词大部分由该关键词组成
+                        for entry in entries:
+                            if id(entry) not in seen:
+                                results.append(entry)
+                                seen.add(id(entry))
+
+        # 中文搜索增强：通过映射反向查找 + 字符模糊匹配
+        if any('\u4e00' <= c <= '\u9fff' for c in query):
+            # 1. 通过中文映射反向查找
+            for cn_name, en_name in self.cn_to_en.items():
+                if id(self.name_index.get(en_name.lower())) in seen:
+                    continue
+                if query in cn_name or cn_name in query:
+                    entry = self.name_index.get(en_name.lower())
+                    if entry and id(entry) not in seen:
+                        results.append(entry)
+                        seen.add(id(entry))
+
+            # 2. 字符模糊匹配（处理中文分词特性）
+            query_chars = set(c for c in query if '\u4e00' <= c <= '\u9fff')
+            if query_chars:
+                for name, entry in self.name_index.items():
+                    if id(entry) in seen:
+                        continue
+                    name_chars = set(c for c in name if '\u4e00' <= c <= '\u9fff')
+                    if query_chars & name_chars and len(query_chars & name_chars) >= max(2, len(query_chars) // 2):
+                        results.append(entry)
+                        seen.add(id(entry))
+
+        return results
+
+    # ── 核心诊断逻辑 ──────────────────────────────────
+
+    def diagnose(
+        self,
+        disease_name: str,
+        symptoms: List[str],
+        max_differentials: int = 5,
+        match_threshold: float = 0.15,
+    ) -> DiagnosisResult:
+        """主诊断入口"""
+        result = DiagnosisResult(
+            query_disease=disease_name,
+            query_symptoms=symptoms,
+        )
+
+        disease_entry = self.find_disease(disease_name)
+
+        if disease_entry is None:
+            suggestions = self.search_diseases(disease_name)
+            if suggestions:
+                candidates = []
+                for d in suggestions[:max_differentials]:
+                    candidate = self._evaluate_candidate(d, symptoms)
+                    if candidate.overall_score > 0:  # 只保留有正匹配的
+                        candidates.append(candidate)
+                candidates.sort(key=lambda c: c.overall_score, reverse=True)
+                if candidates and candidates[0].overall_score >= match_threshold:
+                    result.matched_disease = candidates[0]
+                    result.query_disease = result.matched_disease.disease_name
+                    result.differential_list = candidates
+                else:
+                    result.no_match = True
+                    if candidates:
+                        result.differential_list = candidates
+                    else:
+                        result.error = f"未找到疾病「{disease_name}」"
+            else:
+                result.no_match = True
+                result.error = f"未找到疾病「{disease_name}」"
+            return result
+
+        if not disease_entry.get("m1_diagnosis_entry_allowed", True):
+            result.not_allowed = True
+            result.error = (
+                f"「{disease_entry['disease_name']}」是{self._entry_type_cn(disease_entry['entry_type'])}，"
+                f"不允许作为 M1 诊断入口。请查找其背后的根本病因。"
+            )
+            return result
+
+        candidate = self._evaluate_candidate(disease_entry, symptoms)
+        result.matched_disease = candidate
+
+        differentials = self._generate_differentials(disease_entry, symptoms)
+        result.differential_list = differentials[:max_differentials]
+
+        return result
+
+    def _evaluate_candidate(self, entry: dict, symptoms: List[str]) -> CandidateDiagnosis:
+        """评估一个候选诊断条目"""
+        disease_name = entry["disease_name"]
+        axes = entry.get("axes", [])
+        entry_type = entry.get("entry_type", "")
+        symptoms_lower = [s.strip().lower() for s in symptoms]
+
+        total_weight = 0.0
+        weighted_match = 0.0
+        primary_axes = 0
+        primary_covered = 0
+        uncovered_primary = []
+        covered_list: List[AxeMatch] = []
+        uncovered_list: List[AxeMatch] = []
+        all_findings: List[str] = []
+
+        for axe_data in axes:
+            axis_name = axe_data.get("axis", "")
+            role = axe_data.get("role", "secondary")
+            weight = axe_data.get("weight", 0.5)
+            if weight is None:
+                weight = 0.5
+            confidence = axe_data.get("confidence", "medium")
+            typical_findings = axe_data.get("typical_findings", [])
+
+            match_score, matched_findings = self._match_axis(
+                axis_name, typical_findings, symptoms_lower
+            )
+
+            role_mult = self.ROLE_WEIGHT_MULTIPLIER.get(role, 0.5)
+            effective_weight = weight * role_mult
+
+            total_weight += effective_weight
+            weighted_match += effective_weight * match_score
+
+            axe_match = AxeMatch(
+                axis=axis_name,
+                db_weight=weight,
+                db_role=role,
+                db_confidence=confidence,
+                findings=matched_findings,
+                covered=match_score > 0.3,
+                match_score=match_score,
+            )
+
+            if match_score > 0.3:
+                covered_list.append(axe_match)
+                all_findings.extend(matched_findings)
+            else:
+                uncovered_list.append(axe_match)
+
+            if role == "primary":
+                primary_axes += 1
+                if match_score > 0.3:
+                    primary_covered += 1
+                else:
+                    uncovered_primary.append(axis_name)
+
+        overall_score = weighted_match / total_weight if total_weight > 0 else 0.0
+        primary_ratio = primary_covered / primary_axes if primary_axes > 0 else 0.0
+
+        warnings = self._generate_warnings(
+            entry, overall_score, primary_ratio, uncovered_primary, entry_type
+        )
+
+        candidate = CandidateDiagnosis(
+            disease_name=disease_name,
+            entry_type=entry_type,
+            overall_score=overall_score,
+            primary_axes_covered=primary_ratio,
+            total_primary_axes=primary_axes,
+            uncovered_primary_axes=uncovered_primary,
+            uncovered_axes=uncovered_list,
+            covered_axes=covered_list,
+            primary_findings=list(set(all_findings)),
+            warnings=warnings,
+            needs_external_check=entry.get("need_external_check_if", []),
+        )
+
+        return candidate
+
+    def _match_axis(
+        self, axis_name: str, typical_findings: List[str], symptoms: List[str]
+    ) -> Tuple[float, List[str]]:
+        """匹配单个病理轴，返回 (分数, 匹配到的表现)
+        支持中英文交叉匹配，使用同义词和语义相似度"""
+        if not typical_findings or not symptoms:
+            return 0.0, []
+
+        # 内置中英文医学同义词映射
+        SYNONYM_MAP = {
+            "cough": ["cough", "咳嗽", "咳", "coughing"],
+            "fever": ["fever", "发热", "发烧", "pyrexia", "高温", "elevated temperature"],
+            "low-grade fever": ["low-grade fever", "低热", "低烧", "subfebrile"],
+            "sputum": ["sputum", "痰", "phlegm", "咳痰", "mucus"],
+            "productive cough": ["productive cough", "咳痰", "湿咳", "cough with sputum"],
+            "sore throat": ["sore throat", "咽痛", "喉咙痛", "pharyngalgia", "pharyngeal pain"],
+            "chest pain": ["chest pain", "胸痛", "chest tightness", "胸闷", "胸骨后疼痛"],
+            "dyspnea": ["dyspnea", "呼吸困难", "气短", "shortness of breath", "喘", "呼吸急促"],
+            "wheezing": ["wheezing", "喘息", "哮鸣", "wheeze"],
+            "headache": ["headache", "头痛", "cephalalgia"],
+            "dizziness": ["dizziness", "头晕", "眩晕", "vertigo", "dizzy"],
+            "nausea": ["nausea", "恶心", "nauseous"],
+            "vomiting": ["vomiting", "呕吐", "vomit", "emesis"],
+            "fatigue": ["fatigue", "乏力", "疲劳", "疲倦", "tiredness", "weakness", "无力"],
+            "edema": ["edema", "水肿", "浮肿", "肿胀", "swelling"],
+            "pain": ["pain", "疼痛", "痛", "ache"],
+            "palpitations": ["palpitations", "心悸", "心慌", "heart racing"],
+            "anemia": ["anemia", "贫血"],
+            "bleeding": ["bleeding", "出血", "hemorrhage", "hemorrhagic"],
+            "hypertension": ["hypertension", "高血压", "high blood pressure", "elevated BP"],
+            "hypotension": ["hypotension", "低血压", "low blood pressure"],
+            "tachycardia": ["tachycardia", "心动过速", "heart racing", "fast heart rate"],
+            "bradycardia": ["bradycardia", "心动过缓", "slow heart rate"],
+            "jaundice": ["jaundice", "黄疸", "icterus"],
+            "diarrhea": ["diarrhea", "腹泻", "拉肚子", "loose stools"],
+            "constipation": ["constipation", "便秘", "constipated"],
+            "dysuria": ["dysuria", "尿痛", "排尿困难", "painful urination"],
+            "urinary frequency": ["urinary frequency", "尿频", "frequent urination"],
+            "hematuria": ["hematuria", "血尿", "blood in urine"],
+            "proteinuria": ["proteinuria", "蛋白尿", "protein in urine"],
+            "rash": ["rash", "皮疹", "红斑", "eruption", "皮肤疹"],
+            "pruritus": ["pruritus", "瘙痒", "itch", "itching"],
+            "insomnia": ["insomnia", "失眠", "入睡困难", "sleep disorder"],
+            "weight loss": ["weight loss", "体重下降", "消瘦", "减肥"],
+            "weight gain": ["weight gain", "体重增加", "肥胖"],
+            "fever >38.5": ["fever >38.5", "高热", "高烧", "high fever", "体温>38.5"],
+            "dysphagia": ["dysphagia", "吞咽困难", "difficulty swallowing"],
+            "syncope": ["syncope", "晕厥", "昏倒", "fainting", "loss of consciousness"],
+            "hypoxia": ["hypoxia", "缺氧", "低氧", "low oxygen"],
+            "cyanosis": ["cyanosis", "发绀", "紫绀"],
+            "tremor": ["tremor", "震颤", "抖动", "shaking"],
+            "seizure": ["seizure", "癫痫发作", "抽搐", "convulsion", "惊厥"],
+            "paralysis": ["paralysis", "瘫痪", "麻痹", "无力"],
+            "numbness": ["numbness", "麻木", "感觉减退"],
+            "blurred vision": ["blurred vision", "视力模糊", "视物模糊", "vision blurred"],
+            "tinnitus": ["tinnitus", "耳鸣"],
+            "hearing loss": ["hearing loss", "听力下降", "听力丧失", "耳聋"],
+            "nasal congestion": ["nasal congestion", "鼻塞", "congestion"],
+            "rhinorrhea": ["rhinorrhea", "流涕", "流鼻涕", "runny nose", "鼻漏"],
+            "sneezing": ["sneezing", "打喷嚏", "喷嚏", "sneeze"],
+        }
+
+        # 病史/病程类上下文映射（处理"肝硬化15年"→"肝硬化"这类匹配）
+        HISTORY_CONTEXT_MAP = {
+            "肝硬化": ["肝硬化", "liver cirrhosis", "hepatic cirrhosis", "cirrhosis"],
+            "乙肝": ["乙肝", "HBV", "hepatitis B", "HBsAg", "乙型肝炎"],
+            "高血压": ["高血压", "hypertension", "high blood pressure", "BP高"],
+            "糖尿病": ["糖尿病", "diabetes", "DM", "高血糖"],
+            "冠心病": ["冠心病", "冠心病史", "CAD", "coronary artery disease"],
+            "多年": ["多年", "慢性", "数十年", "长期", "久病", "病史", "史", "年", "year"],
+            "吸烟": ["吸烟", "smoking", "烟", "smoker", "tobacco"],
+            "饮酒": ["饮酒", "drinking", "酒精", "alcohol", "酗酒"],
+        }
+
+        # 对每个 symptom 扩展同义词集
+        def expand_synonyms(text: str) -> set:
+            """扩展一个词的所有同义词"""
+            results = {text.lower()}
+            text_lower = text.lower()
+            for key, synonyms in SYNONYM_MAP.items():
+                if text_lower in synonyms or any(s in text_lower or text_lower in s for s in synonyms):
+                    results.update(synonyms)
+            return results
+
+        # 提取病史上下文（如"肝硬化15年"→"肝硬化"）
+        def extract_context(symptom: str) -> set:
+            """从病史描述中提取主题词"""
+            results = set()
+            text_lower = symptom.lower()
+            for key, synonyms in HISTORY_CONTEXT_MAP.items():
+                if key in text_lower:
+                    results.update(synonyms)
+            return results
+
+        matched = []
+        findings_lower = [f.lower() for f in typical_findings]
+
+        for symptom in symptoms:
+            symptom_synonyms = expand_synonyms(symptom)
+            symptom_context = extract_context(symptom)
+            all_expanded = symptom_synonyms | symptom_context
+
+            for i, finding in enumerate(findings_lower):
+                # 直接包含匹配（含同义词展开 + 病史上下文）
+                if any(s in finding or finding in s for s in all_expanded):
+                    if typical_findings[i] not in matched:
+                        matched.append(typical_findings[i])
+                    break
+                # 词级别匹配（含上下文词）
+                all_words = set()
+                for w in all_expanded:
+                    all_words.update(w.split())
+                symptom_words = set(symptom.lower().split())
+                finding_words = set(finding.split())
+                combined = symptom_words | all_words
+                common = combined & finding_words
+                if len(common) >= max(1, min(len(combined), len(finding_words)) * 0.25):
+                    if typical_findings[i] not in matched:
+                        matched.append(typical_findings[i])
+                    break
+
+        if not matched:
+            return 0.0, []
+
+        ratio = len(matched) / len(typical_findings)
+        score = min(1.0, ratio * 1.5)
+        return score, list(set(matched))
+
+    def _generate_differentials(
+        self, primary_entry: dict, symptoms: List[str]
+    ) -> List[CandidateDiagnosis]:
+        """生成鉴别诊断列表"""
+        primary_name = primary_entry["disease_name"].lower()
+
+        candidates: List[CandidateDiagnosis] = []
+        seen_names = {primary_name}
+
+        primary_axes_names = {a["axis"] for a in primary_entry.get("axes", []) if a.get("axis")}
+
+        for entry in self.db:
+            name = entry["disease_name"].lower()
+            if name in seen_names:
+                continue
+            if not entry.get("m1_diagnosis_entry_allowed", True):
+                continue
+
+            entry_axes_names = {a["axis"] for a in entry.get("axes", []) if a.get("axis")}
+
+            if primary_axes_names & entry_axes_names:
+                candidate = self._evaluate_candidate(entry, symptoms)
+                if candidate.overall_score > 0.1:
+                    candidates.append(candidate)
+                    seen_names.add(name)
+
+        candidates.sort(key=lambda c: c.overall_score, reverse=True)
+        return candidates
+
+    def _generate_warnings(
+        self,
+        entry: dict,
+        overall_score: float,
+        primary_ratio: float,
+        uncovered_primary: List[str],
+        entry_type: str,
+    ) -> List[str]:
+        """生成警告信息"""
+        warnings = []
+
+        if overall_score < 0.3:
+            warnings.append(f"总体病理轴匹配度偏低（{overall_score:.2f}），请谨慎考虑此诊断")
+        elif overall_score < 0.5:
+            warnings.append(f"病理轴匹配度一般（{overall_score:.2f}），需要更多证据支持")
+
+        if uncovered_primary:
+            axes_str = "、".join(uncovered_primary)
+            warnings.append(f"以下主要病理轴未被患者症状覆盖: {axes_str}")
+
+        if entry_type in ("symptom_or_sign",):
+            warnings.append(
+                f"「{entry['disease_name']}」是一个{self._entry_type_cn(entry_type)}，"
+                f"需要进一步查找根本病因"
+            )
+
+        must_not = entry.get("must_not_be_primary_when", [])
+        for condition in must_not:
+            warnings.append(f"需排除: {condition}")
+
+        return warnings
+
+    def _entry_type_cn(self, entry_type: str) -> str:
+        mapping = {
+            "standard_western_disease": "标准西医疾病",
+            "western_syndrome": "西医综合征",
+            "symptom_or_sign": "症状/体征",
+            "risk_condition": "风险状态",
+            "lab_or_imaging_finding": "实验室/影像学发现",
+        }
+        return mapping.get(entry_type, entry_type)
+
+    # ── 辅助方法 ──────────────────────────────────────
+
+    def get_available_diseases(self) -> List[str]:
+        return [
+            entry["disease_name"]
+            for entry in self.db
+            if entry.get("m1_diagnosis_entry_allowed", True)
+        ]
+
+    def get_disease_detail(self, disease_name: str) -> Optional[dict]:
+        return self.find_disease(disease_name)
+
+    def format_diagnosis_result(self, result: DiagnosisResult) -> str:
+        """格式化诊断结果为树状决策路径格式"""
+        lines = []
+        lines.append("=" * 60)
+        lines.append(f"  【守一·M1 西医诊断评估】")
+        lines.append(f"  查询疾病: {result.query_disease}")
+        lines.append(f"  患者表现: {', '.join(result.query_symptoms)}")
+        lines.append("=" * 60)
+
+        if result.error:
+            lines.append(f"\n❌ {result.error}")
+            return "\n".join(lines)
+
+        if result.not_allowed:
+            lines.append(f"\n🚫 不允许作为 M1 诊断入口")
+            lines.append(f"   原因: {result.error}")
+            lines.append(f"\n   提示: 请查找背后的根本病因")
+            return "\n".join(lines)
+
+        if result.no_match:
+            lines.append(f"\n❌ 未找到匹配疾病")
+            if result.differential_list:
+                lines.append(f"\n   您是否在找以下疾病？")
+                for i, diff in enumerate(result.differential_list[:5], 1):
+                    lines.append(f"     {i}. {diff.disease_name} (匹配度: {diff.overall_score:.2f})")
+            return "\n".join(lines)
+
+        cd = result.matched_disease
+        if cd is None:
+            lines.append("\n❌ 未能生成诊断评估")
+            return "\n".join(lines)
+
+        # ── 决策树核心输出 ──
+        score_icon = "✅" if cd.overall_score >= 0.5 else ("⚠" if cd.overall_score >= 0.3 else "❌")
+        
+        lines.append(f"\n  ① {result.query_disease}")
+        lines.append(f"     ├─ 匹配度: {cd.overall_score:.2f} {score_icon}")
+        lines.append(f"     ├─ 类型: {self._entry_type_cn(cd.entry_type)}")
+        lines.append(f"     └─ 主要轴覆盖: {cd.primary_axes_covered:.0%} ({cd.total_primary_axes - len(cd.uncovered_primary_axes)}/{cd.total_primary_axes})")
+
+        # 已覆盖的病理轴
+        if cd.covered_axes:
+            lines.append(f"     ├─ 已覆盖的病理轴:")
+            for i, ax in enumerate(cd.covered_axes):
+                is_last_ax = (i == len(cd.covered_axes) - 1)
+                ax_prefix = "└" if is_last_ax else "├"
+                lines.append(f"     │   {ax_prefix}─ {ax.axis} (role: {ax.db_role}, w={ax.db_weight:.2f})")
+                if ax.findings:
+                    findings_str = ", ".join(ax.findings[:3])
+                    lines.append(f"     │   │   └─ 匹配: {findings_str}")
+
+        # 未覆盖的病理轴
+        if cd.uncovered_axes:
+            has_content_after = bool(cd.warnings or cd.needs_external_check or result.differential_list)
+            lines.append(f"     ├─ 未覆盖的病理轴:")
+            for i, ax in enumerate(cd.uncovered_axes):
+                is_last_ua = (i == len(cd.uncovered_axes) - 1)
+                ua_prefix = "├" if (not is_last_ua or has_content_after) else "└"
+                lines.append(f"     │   {ua_prefix}─ {ax.axis} ({ax.db_role}, w={ax.db_weight:.2f})")
+
+        # 注意事项
+        if cd.warnings:
+            lines.append(f"     ├─ 注意事项:")
+            for i, w in enumerate(cd.warnings):
+                has_content_after = bool(cd.needs_external_check or result.differential_list)
+                is_last_w = (i == len(cd.warnings) - 1)
+                w_prefix = "├" if (not is_last_w or has_content_after) else "└"
+                lines.append(f"     │   {w_prefix}─ {w}")
+
+        # 建议检查
+        if cd.needs_external_check:
+            has_diff = bool(result.differential_list)
+            lines.append(f"     ├─ 建议检查:")
+            for i, check in enumerate(cd.needs_external_check):
+                is_last_c = (i == len(cd.needs_external_check) - 1)
+                c_prefix = "├" if (not is_last_c or has_diff) else "└"
+                lines.append(f"     │   {c_prefix}─ {check}")
+
+        # 鉴别诊断
+        if result.differential_list:
+            lines.append(f"     └─ 鉴别诊断:")
+            count = 0
+            for diff in result.differential_list:
+                if diff.disease_name == cd.disease_name:
+                    continue
+                count += 1
+                if count > 5:
+                    break
+                diff_icon = "✅" if diff.overall_score >= 0.5 else ("⚠" if diff.overall_score >= 0.3 else "❌")
+                diff_items = [d for d in result.differential_list if d.disease_name != cd.disease_name]
+                is_last_diff = (count == min(5, len(diff_items)))
+                diff_prefix = "└" if is_last_diff else "├"
+                lines.append(f"         {diff_prefix}─ {diff.disease_name} → {diff.overall_score:.2f} {diff_icon}")
+                if diff.uncovered_primary_axes:
+                    lines.append(f"             └─ 缺主要轴: {', '.join(diff.uncovered_primary_axes)}")
+                elif diff.warnings:
+                    lines.append(f"             └─ {diff.warnings[0]}")
+
+        lines.append(f"\n{'─' * 60}")
+        if cd.overall_score >= 0.6 and cd.primary_axes_covered >= 0.6:
+            lines.append("结论: ✅ 该诊断有较强的病理轴支持")
+        elif cd.overall_score >= 0.4:
+            lines.append("结论: ⚠ 该诊断有一定参考价值，建议结合临床进一步验证")
+        else:
+            lines.append("结论: ❌ 病理轴匹配不足，请考虑其他诊断方向")
+
+        lines.append(f"{'=' * 60}")
+        lines.append("⚠ M1 阶段: 仅限西医诊断与鉴别诊断，禁止输出任何中医内容")
+
+        return "\n".join(lines)
+
+
+# ── 独立使用 ──────────────────────────────────────────
+
+if __name__ == "__main__":
+    engine = M1DiagnosisEngine()
+    print(f"已加载 {len(engine.db)} 条疾病数据")
+    print(f"可用病理轴: {len(engine.available_axes)} 个")
+
+    result = engine.diagnose(
+        "Acute Bronchitis",
+        ["acute cough", "low-grade fever", "cough with sputum", "sore throat"]
+    )
+    print(engine.format_diagnosis_result(result))

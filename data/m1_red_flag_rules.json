@@ -1,0 +1,164 @@
+{
+  "acute_chest_pain_red_flag": {
+    "trigger_terms": ["胸痛", "胸闷", "大汗", "濒死感", "放射至左肩", "放射至下颌", "低血压"],
+    "risk_direction": [{"disease_name": "Acute Coronary Syndrome", "mapping_status": "in_m1"}, {"disease_name": "Aortic Dissection", "mapping_status": "not_in_m1"}, {"disease_name": "Pulmonary Embolism", "mapping_status": "in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "急性胸痛伴休克、大汗、放射痛或心电/肌钙蛋白异常时，必须优先排除心血管急症。",
+    "source_quality": "A"
+  },
+  "dyspnea_hypoxia_red_flag": {
+    "trigger_terms": ["呼吸困难", "低氧", "发绀", "血氧下降", "不能平卧", "呼吸急促"],
+    "risk_direction": [{"disease_name": "Pulmonary Embolism", "mapping_status": "in_m1"}, {"disease_name": "Pneumothorax", "mapping_status": "in_m1"}, {"disease_name": "Heart Failure", "mapping_status": "in_m1"}],
+    "severity": "emergency",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "呼吸困难伴低氧、发绀或意识改变提示呼吸循环不稳定，需要急诊评估。",
+    "source_quality": "A"
+  },
+  "hemoptysis_red_flag": {
+    "trigger_terms": ["咯血", "大量咯血", "低氧", "胸痛", "抗凝"],
+    "risk_direction": [{"disease_name": "Pulmonary Embolism", "mapping_status": "in_m1"}, {"disease_name": "Tuberculosis", "mapping_status": "not_in_m1"}],
+    "severity": "urgent",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "咯血伴低氧、胸痛或出血量大时，需要排除肺栓塞、严重感染或气道出血风险。",
+    "source_quality": "A"
+  },
+  "altered_mental_status_red_flag": {
+    "trigger_terms": ["意识障碍", "嗜睡", "昏迷", "谵妄", "反应差"],
+    "risk_direction": [{"disease_name": "Stroke", "mapping_status": "not_in_m1"}, {"disease_name": "Sepsis", "mapping_status": "in_m1"}, {"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "意识改变可能来自卒中、低血糖、低氧、感染或中毒，不能进入自动建议流程。",
+    "source_quality": "A"
+  },
+  "seizure_red_flag": {
+    "trigger_terms": ["抽搐", "惊厥", "持续发作", "发作后嗜睡", "舌咬伤"],
+    "risk_direction": [{"disease_name": "Seizure", "mapping_status": "not_in_m1"}, {"disease_name": "Meningitis", "mapping_status": "not_in_m1"}, {"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "抽搐或惊厥需先评估血糖、电解质、中枢感染和颅内病变。",
+    "source_quality": "A"
+  },
+  "acute_neurologic_deficit_red_flag": {
+    "trigger_terms": ["突发肢体无力", "言语不清", "口角歪斜", "偏瘫", "复视", "吞咽困难"],
+    "risk_direction": [{"disease_name": "Stroke", "mapping_status": "not_in_m1"}, {"disease_name": "Transient Ischemic Attack", "mapping_status": "in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "突发局灶神经功能缺损需按卒中或短暂性脑缺血发作通道评估。",
+    "source_quality": "A"
+  },
+  "thunderclap_headache_red_flag": {
+    "trigger_terms": ["雷击样头痛", "突发剧烈头痛", "一生最严重头痛", "颈强直", "呕吐"],
+    "risk_direction": [{"disease_name": "Subarachnoid Hemorrhage", "mapping_status": "not_in_m1"}, {"disease_name": "Meningitis", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "雷击样头痛或伴颈强直、意识改变时必须排除蛛网膜下腔出血或中枢感染。",
+    "source_quality": "A"
+  },
+  "persistent_high_fever_sepsis_red_flag": {
+    "trigger_terms": ["高热不退", "寒战", "低血压", "皮肤花斑", "乳酸升高", "少尿"],
+    "risk_direction": [{"disease_name": "Sepsis", "mapping_status": "in_m1"}],
+    "severity": "emergency",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "高热伴循环不稳、少尿或乳酸升高提示脓毒症风险，需要外部检查。",
+    "source_quality": "A"
+  },
+  "acute_abdomen_red_flag": {
+    "trigger_terms": ["腹膜刺激征", "板状腹", "反跳痛", "持续剧烈腹痛", "休克"],
+    "risk_direction": [{"disease_name": "Appendicitis", "mapping_status": "not_in_m1"}, {"disease_name": "Bowel Obstruction", "mapping_status": "not_in_m1"}, {"disease_name": "Acute Pancreatitis", "mapping_status": "in_m1"}],
+    "severity": "urgent",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "腹膜刺激征或休克提示急腹症，需要影像和外科/急诊评估。",
+    "source_quality": "A"
+  },
+  "active_gi_bleeding_red_flag": {
+    "trigger_terms": ["呕血", "黑便", "便血", "低血压", "心动过速", "晕厥"],
+    "risk_direction": [{"disease_name": "Upper Gastrointestinal Bleeding", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "呕血或黑便伴循环不稳提示活动性出血，需要急诊评估。",
+    "source_quality": "A"
+  },
+  "severe_dehydration_red_flag": {
+    "trigger_terms": ["严重脱水", "口唇干", "尿少", "眼窝凹陷", "低血压", "精神差"],
+    "risk_direction": [{"disease_name": "Acute Kidney Injury", "mapping_status": "in_m1"}, {"disease_name": "Electrolyte Disorder", "mapping_status": "not_in_m1"}],
+    "severity": "urgent",
+    "action": "need_external_check",
+    "block_m2_auto_flow": true,
+    "explanation": "严重脱水可能导致肾损伤、电解质紊乱和休克，需要补液状态与化验评估。",
+    "source_quality": "A"
+  },
+  "oliguria_anuria_aki_red_flag": {
+    "trigger_terms": ["少尿", "无尿", "肌酐升高", "高钾", "肺水肿"],
+    "risk_direction": [{"disease_name": "Acute Kidney Injury", "mapping_status": "in_m1"}],
+    "severity": "urgent",
+    "action": "need_external_check",
+    "block_m2_auto_flow": true,
+    "explanation": "少尿或无尿伴肌酐升高、电解质异常或肺水肿提示急性肾损伤风险。",
+    "source_quality": "A"
+  },
+  "pregnancy_bleeding_pain_red_flag": {
+    "trigger_terms": ["妊娠", "怀孕", "阴道流血", "腹痛", "晕厥", "胎动减少"],
+    "risk_direction": [{"disease_name": "Ectopic Pregnancy", "mapping_status": "not_in_m1"}, {"disease_name": "Placental Abruption", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "妊娠期阴道流血或腹痛需优先排除异位妊娠、胎盘早剥或严重出血。",
+    "source_quality": "A"
+  },
+  "pediatric_lethargy_convulsion_dyspnea_red_flag": {
+    "trigger_terms": ["儿童", "嗜睡", "惊厥", "呼吸困难", "皮肤花斑", "拒食"],
+    "risk_direction": [{"disease_name": "Sepsis", "mapping_status": "in_m1"}, {"disease_name": "Meningitis", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "urgent_review",
+    "block_m2_auto_flow": true,
+    "explanation": "儿童发热或不适伴嗜睡、惊厥、呼吸困难或皮肤花斑时需要急诊评估。",
+    "source_quality": "A"
+  },
+  "neonatal_poor_feeding_cyanosis_red_flag": {
+    "trigger_terms": ["新生儿", "拒奶", "反应差", "发绀", "呼吸暂停", "低体温"],
+    "risk_direction": [{"disease_name": "Neonatal Sepsis", "mapping_status": "not_in_m1"}, {"disease_name": "Hypoglycemia", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "新生儿拒奶、反应差、发绀或呼吸异常属于高风险表现，需急诊/新生儿专科评估。",
+    "source_quality": "A"
+  },
+  "anaphylaxis_red_flag": {
+    "trigger_terms": ["严重过敏", "喉头水肿", "喘憋", "低血压", "全身风团"],
+    "risk_direction": [{"disease_name": "Anaphylaxis", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "过敏反应伴呼吸道症状或低血压提示严重过敏反应，需要急救评估。",
+    "source_quality": "A"
+  },
+  "self_harm_violence_red_flag": {
+    "trigger_terms": ["自杀", "自伤", "伤人", "跳楼", "服毒", "幻听命令"],
+    "risk_direction": [{"disease_name": "Suicide Risk", "mapping_status": "not_in_m1"}, {"disease_name": "Psychosis", "mapping_status": "not_in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "自杀、自伤或伤人风险需要立即人工复核和安全处置，不能进入自动建议流程。",
+    "source_quality": "A"
+  },
+  "major_trauma_poisoning_red_flag": {
+    "trigger_terms": ["严重外伤", "骨折", "电击", "溺水", "中毒", "一氧化碳"],
+    "risk_direction": [{"disease_name": "Major Trauma", "mapping_status": "not_in_m1"}, {"disease_name": "Poisoning", "mapping_status": "in_m1"}],
+    "severity": "emergency",
+    "action": "block_auto_m2",
+    "block_m2_auto_flow": true,
+    "explanation": "严重外伤、电击、溺水或中毒必须进入急诊评估，不应自动继续。",
+    "source_quality": "A"
+  }
+}

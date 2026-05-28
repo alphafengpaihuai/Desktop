@@ -1,0 +1,726 @@
+{
+  "Allergic Contact Dermatitis||装修工作": {
+    "disease_name": "Allergic Contact Dermatitis",
+    "colloquial_symptom": "装修工作",
+    "count": 3,
+    "source": "cleaned"
+  },
+  "Allergic Contact Dermatitis||双外眼睑红肿痒痛": {
+    "disease_name": "Allergic Contact Dermatitis",
+    "colloquial_symptom": "双外眼睑红肿痒痛",
+    "standard_term": "瘙痒",
+    "count": 3,
+    "source": "api_enhance"
+  },
+  "Allergic Contact Dermatitis||睾丸红痒痛": {
+    "disease_name": "Allergic Contact Dermatitis",
+    "colloquial_symptom": "睾丸红痒痛",
+    "standard_term": "瘙痒",
+    "count": 3,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||反复咳嗽一周余": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "反复咳嗽一周余",
+    "standard_term": "咳嗽",
+    "count": 2,
+    "timestamp": 1779876150.851465,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||右肺支气管肺炎": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "右肺支气管肺炎",
+    "standard_term": "咳嗽",
+    "count": 3,
+    "timestamp": 1779876150.851491,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||乳酸脱氢酶274": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "乳酸脱氢酶274",
+    "standard_term": "炎症指标升高",
+    "count": 2,
+    "timestamp": 1779876150.851514,
+    "source": "api_enhance"
+  },
+  "Bronchial Asthma||反复咳嗽一周余": {
+    "disease_name": "Bronchial Asthma",
+    "colloquial_symptom": "反复咳嗽一周余",
+    "standard_term": "喘息",
+    "count": 1,
+    "timestamp": 1779876159.894785,
+    "source": "api_enhance"
+  },
+  "Bronchial Asthma||轻度吸气性三凹征": {
+    "disease_name": "Bronchial Asthma",
+    "colloquial_symptom": "轻度吸气性三凹征",
+    "standard_term": "喘息",
+    "count": 2,
+    "timestamp": 1779876159.894811,
+    "source": "api_enhance"
+  },
+  "Bronchial Asthma||双肺呼吸音粗": {
+    "disease_name": "Bronchial Asthma",
+    "colloquial_symptom": "双肺呼吸音粗",
+    "standard_term": "喘息",
+    "count": 1,
+    "timestamp": 1779876159.8948338,
+    "source": "api_enhance"
+  },
+  "Bronchial Asthma||双肺散在干啰音": {
+    "disease_name": "Bronchial Asthma",
+    "colloquial_symptom": "双肺散在干啰音",
+    "standard_term": "喘息",
+    "count": 1,
+    "timestamp": 1779876159.894856,
+    "source": "api_enhance"
+  },
+  "Bronchial Asthma||右肺支气管肺炎": {
+    "disease_name": "Bronchial Asthma",
+    "colloquial_symptom": "右肺支气管肺炎",
+    "standard_term": "喘息",
+    "count": 1,
+    "timestamp": 1779876159.894878,
+    "source": "api_enhance"
+  },
+  "Bronchial Asthma||人鼻病毒阳性": {
+    "disease_name": "Bronchial Asthma",
+    "colloquial_symptom": "人鼻病毒阳性",
+    "standard_term": "诱因触发",
+    "count": 1,
+    "timestamp": 1779876159.894901,
+    "source": "api_enhance"
+  },
+  "Acute Bronchitis||反复咳嗽一周余": {
+    "disease_name": "Acute Bronchitis",
+    "colloquial_symptom": "反复咳嗽一周余",
+    "standard_term": "急性咳嗽",
+    "count": 1,
+    "timestamp": 1779876172.423027,
+    "source": "api_enhance"
+  },
+  "Acute Bronchitis||喘息": {
+    "disease_name": "Acute Bronchitis",
+    "colloquial_symptom": "喘息",
+    "standard_term": "急性咳嗽",
+    "count": 1,
+    "timestamp": 1779876172.4230552,
+    "source": "api_enhance"
+  },
+  "Acute Bronchitis||双肺散在干啰音": {
+    "disease_name": "Acute Bronchitis",
+    "colloquial_symptom": "双肺散在干啰音",
+    "standard_term": "急性咳嗽",
+    "count": 1,
+    "timestamp": 1779876172.423079,
+    "source": "api_enhance"
+  },
+  "Acute Bronchitis||人鼻病毒阳性": {
+    "disease_name": "Acute Bronchitis",
+    "colloquial_symptom": "人鼻病毒阳性",
+    "standard_term": "上呼吸道感染后",
+    "count": 1,
+    "timestamp": 1779876172.4231071,
+    "source": "api_enhance"
+  },
+  "Acute Bronchitis||双肺呼吸音粗": {
+    "disease_name": "Acute Bronchitis",
+    "colloquial_symptom": "双肺呼吸音粗",
+    "standard_term": "上呼吸道感染后",
+    "count": 1,
+    "timestamp": 1779876172.423131,
+    "source": "api_enhance"
+  },
+  "Acute Bronchitis||右肺支气管肺炎": {
+    "disease_name": "Acute Bronchitis",
+    "colloquial_symptom": "右肺支气管肺炎",
+    "standard_term": "上呼吸道感染后",
+    "count": 1,
+    "timestamp": 1779876172.4231548,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||喘息": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "喘息",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876225.170897,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||轻度吸气性三凹征": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "轻度吸气性三凹征",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876225.1709208,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||双肺呼吸音粗": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "双肺呼吸音粗",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876225.170943,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||双肺散在干啰音": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "双肺散在干啰音",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876225.170966,
+    "source": "api_enhance"
+  },
+  "Community-Acquired Pneumonia||人鼻病毒阳性": {
+    "disease_name": "Community-Acquired Pneumonia",
+    "colloquial_symptom": "人鼻病毒阳性",
+    "standard_term": "感染证据（病毒阳性）",
+    "count": 1,
+    "timestamp": 1779876225.171011,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||人鼻病毒阳性": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "人鼻病毒阳性",
+    "standard_term": "病毒阳性",
+    "count": 1,
+    "timestamp": 1779876234.41209,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||乳酸脱氢酶274": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "乳酸脱氢酶274",
+    "standard_term": "病毒阳性",
+    "count": 1,
+    "timestamp": 1779876234.412113,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||反复咳嗽一周余": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "反复咳嗽一周余",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876234.4121358,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||喘息": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "喘息",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876234.412158,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||轻度吸气性三凹征": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "轻度吸气性三凹征",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876234.41219,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||双肺呼吸音粗": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "双肺呼吸音粗",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876234.412212,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||双肺散在干啰音": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "双肺散在干啰音",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876234.412234,
+    "source": "api_enhance"
+  },
+  "Pediatric Bronchopneumonia||右肺支气管肺炎": {
+    "disease_name": "Pediatric Bronchopneumonia",
+    "colloquial_symptom": "右肺支气管肺炎",
+    "standard_term": "咳嗽",
+    "count": 1,
+    "timestamp": 1779876234.4122581,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||人鼻病毒阳性": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "人鼻病毒阳性",
+    "standard_term": "人鼻病毒阳性",
+    "count": 2,
+    "timestamp": 1779876981.123281,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||反复咳嗽一周余": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "反复咳嗽一周余",
+    "standard_term": "cough",
+    "count": 1,
+    "timestamp": 1779876981.123313,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||喘息": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "喘息",
+    "standard_term": "cough",
+    "count": 3,
+    "timestamp": 1779876981.123341,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||轻度吸气性三凹征": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "轻度吸气性三凹征",
+    "standard_term": "cough",
+    "count": 2,
+    "timestamp": 1779876981.123368,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||双肺呼吸音粗": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "双肺呼吸音粗",
+    "standard_term": "cough",
+    "count": 3,
+    "timestamp": 1779876981.123394,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||双肺散在干啰音": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "双肺散在干啰音",
+    "standard_term": "cough",
+    "count": 4,
+    "timestamp": 1779876981.12342,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||右肺支气管肺炎": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "右肺支气管肺炎",
+    "standard_term": "cough",
+    "count": 2,
+    "timestamp": 1779876981.123446,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||白细胞计数8.1-10.5": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "白细胞计数8.1-10.5",
+    "standard_term": "viral infection",
+    "count": 1,
+    "timestamp": 1779877411.423139,
+    "source": "api_enhance"
+  },
+  "毛细支气管炎||反复咳嗽": {
+    "disease_name": "毛细支气管炎",
+    "colloquial_symptom": "反复咳嗽",
+    "standard_term": "cough",
+    "count": 1,
+    "timestamp": 1779877411.42319,
+    "source": "api_enhance"
+  },
+  "Seborrheic Dermatitis||头皮屑多": {
+    "disease_name": "Seborrheic Dermatitis",
+    "colloquial_symptom": "头皮屑多",
+    "standard_term": "increased discharge",
+    "count": 4,
+    "timestamp": 1779877649.978945,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||脱发3年": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "hormonal imbalance",
+    "count": 2,
+    "timestamp": 1779877676.1962838,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||睡眠噩梦多": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "睡眠噩梦多",
+    "standard_term": "hormonal imbalance",
+    "count": 1,
+    "timestamp": 1779877676.196317,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||头皮屑多": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "头皮屑多",
+    "standard_term": "metabolic abnormality",
+    "count": 2,
+    "timestamp": 1779877676.196349,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||大便稍干": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "大便稍干",
+    "standard_term": "metabolic abnormality",
+    "count": 2,
+    "timestamp": 1779877676.19638,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||晨起口干口苦": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "晨起口干口苦",
+    "standard_term": "metabolic abnormality",
+    "count": 1,
+    "timestamp": 1779877676.1964102,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||苔白腻": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "苔白腻",
+    "standard_term": "metabolic abnormality",
+    "count": 1,
+    "timestamp": 1779877676.19644,
+    "source": "api_enhance"
+  },
+  "Hypothyroidism||胸闷胸痛运动后加重": {
+    "disease_name": "Hypothyroidism",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "ischemic symptoms",
+    "count": 2,
+    "timestamp": 1779877676.196471,
+    "source": "api_enhance"
+  },
+  "Iron Deficiency Anemia||胸闷胸痛运动后加重": {
+    "disease_name": "Iron Deficiency Anemia",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "anemia",
+    "count": 2,
+    "timestamp": 1779877680.595917,
+    "source": "api_enhance"
+  },
+  "Gastroesophageal Reflux Disease||胸闷胸痛运动后加重": {
+    "disease_name": "Gastroesophageal Reflux Disease",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "chest pain (non-cardiac)",
+    "count": 1,
+    "timestamp": 1779877701.872654,
+    "source": "api_enhance"
+  },
+  "Gastroesophageal Reflux Disease||大便稍干": {
+    "disease_name": "Gastroesophageal Reflux Disease",
+    "colloquial_symptom": "大便稍干",
+    "standard_term": "chest pain (non-cardiac)",
+    "count": 2,
+    "timestamp": 1779877701.872685,
+    "source": "api_enhance"
+  },
+  "Gastroesophageal Reflux Disease||晨起口干口苦": {
+    "disease_name": "Gastroesophageal Reflux Disease",
+    "colloquial_symptom": "晨起口干口苦",
+    "standard_term": "chest pain (non-cardiac)",
+    "count": 2,
+    "timestamp": 1779877701.872715,
+    "source": "api_enhance"
+  },
+  "Androgenetic Alopecia||脱发3年": {
+    "disease_name": "Androgenetic Alopecia",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "毛囊微小化",
+    "count": 4,
+    "timestamp": 1779877951.3480551,
+    "source": "api_enhance"
+  },
+  "Telogen Effluvium||脱发3年": {
+    "disease_name": "Telogen Effluvium",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "毛囊周期异常，大量生长期毛囊提前转为休止期",
+    "count": 1,
+    "timestamp": 1779877973.500264,
+    "source": "api_enhance"
+  },
+  "Telogen Effluvium||陆兵每天训练多": {
+    "disease_name": "Telogen Effluvium",
+    "colloquial_symptom": "陆兵每天训练多",
+    "standard_term": "与产后、严重疾病、手术、精神压力等应激相关",
+    "count": 1,
+    "timestamp": 1779877973.500289,
+    "source": "api_enhance"
+  },
+  "Tinea Capitis||脱发3年": {
+    "disease_name": "Tinea Capitis",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "真菌菌丝和孢子侵犯毛干和角质层",
+    "count": 2,
+    "timestamp": 1779877984.830749,
+    "source": "api_enhance"
+  },
+  "Tinea Capitis||头皮屑多": {
+    "disease_name": "Tinea Capitis",
+    "colloquial_symptom": "头皮屑多",
+    "standard_term": "真菌菌丝和孢子侵犯毛干和角质层",
+    "count": 2,
+    "timestamp": 1779877984.830797,
+    "source": "api_enhance"
+  },
+  "Scalp Psoriasis||头皮屑多": {
+    "disease_name": "Scalp Psoriasis",
+    "colloquial_symptom": "头皮屑多",
+    "standard_term": "Th1和Th17细胞介导的炎症",
+    "count": 2,
+    "timestamp": 1779878003.757938,
+    "source": "api_enhance"
+  },
+  "Iron Deficiency Anemia||脱发3年": {
+    "disease_name": "Iron Deficiency Anemia",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "anemia",
+    "count": 1,
+    "timestamp": 1779878031.274092,
+    "source": "api_enhance"
+  },
+  "Iron Deficiency Anemia||晨起口干口苦": {
+    "disease_name": "Iron Deficiency Anemia",
+    "colloquial_symptom": "晨起口干口苦",
+    "standard_term": "anemia",
+    "count": 1,
+    "timestamp": 1779878031.274165,
+    "source": "api_enhance"
+  },
+  "Seborrheic Dermatitis||脱发3年": {
+    "disease_name": "Seborrheic Dermatitis",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "increased discharge",
+    "count": 2,
+    "timestamp": 1779878177.0913322,
+    "source": "api_enhance"
+  },
+  "Insomnia Disorder||睡眠噩梦多": {
+    "disease_name": "Insomnia Disorder",
+    "colloquial_symptom": "睡眠噩梦多",
+    "standard_term": "sleep disturbance",
+    "count": 2,
+    "timestamp": 1779878187.803618,
+    "source": "api_enhance"
+  },
+  "Coronary Heart Disease||胸闷胸痛运动后加重": {
+    "disease_name": "Coronary Heart Disease",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "心绞痛或心肌梗死表现",
+    "count": 1,
+    "timestamp": 1779878440.2875478,
+    "source": "api_enhance"
+  },
+  "Hypertension||胸闷胸痛运动后加重": {
+    "disease_name": "Hypertension",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "左心室肥厚",
+    "count": 2,
+    "timestamp": 1779878512.568906,
+    "source": "api_enhance"
+  },
+  "斑秃||脱发3年": {
+    "disease_name": "斑秃",
+    "colloquial_symptom": "脱发3年",
+    "standard_term": "脱发",
+    "count": 2,
+    "timestamp": 1779879947.1380968,
+    "source": "api_enhance"
+  },
+  "斑秃||睡眠噩梦多": {
+    "disease_name": "斑秃",
+    "colloquial_symptom": "睡眠噩梦多",
+    "standard_term": "精神压力",
+    "count": 1,
+    "timestamp": 1779879947.138129,
+    "source": "api_enhance"
+  },
+  "斑秃||陆兵每天训练多": {
+    "disease_name": "斑秃",
+    "colloquial_symptom": "陆兵每天训练多",
+    "standard_term": "精神压力",
+    "count": 1,
+    "timestamp": 1779879947.138158,
+    "source": "api_enhance"
+  },
+  "冠心病||胸闷胸痛运动后加重": {
+    "disease_name": "冠心病",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "chest pain",
+    "count": 2,
+    "timestamp": 1779879952.760756,
+    "source": "api_enhance"
+  },
+  "Anxiety Disorder||睡眠噩梦多": {
+    "disease_name": "Anxiety Disorder",
+    "colloquial_symptom": "睡眠噩梦多",
+    "standard_term": "5-羟色胺（5-HT）功能异常",
+    "count": 1,
+    "timestamp": 1779880037.593673,
+    "source": "api_enhance"
+  },
+  "Anxiety Disorder||胸闷胸痛运动后加重": {
+    "disease_name": "Anxiety Disorder",
+    "colloquial_symptom": "胸闷胸痛运动后加重",
+    "standard_term": "呼吸急促或过度换气",
+    "count": 1,
+    "timestamp": 1779880037.5937018,
+    "source": "api_enhance"
+  },
+  "Anxiety Disorder||大便稍干": {
+    "disease_name": "Anxiety Disorder",
+    "colloquial_symptom": "大便稍干",
+    "standard_term": "呼吸急促或过度换气",
+    "count": 1,
+    "timestamp": 1779880037.593729,
+    "source": "api_enhance"
+  },
+  "斑秃||脱发2年": {
+    "disease_name": "斑秃",
+    "colloquial_symptom": "脱发2年",
+    "standard_term": "脱发",
+    "count": 1,
+    "timestamp": 1779888081.7474308,
+    "source": "api_enhance"
+  },
+  "斑秃||脱发弥漫性": {
+    "disease_name": "斑秃",
+    "colloquial_symptom": "脱发弥漫性",
+    "standard_term": "脱发",
+    "count": 1,
+    "timestamp": 1779888081.747458,
+    "source": "api_enhance"
+  },
+  "梅尼埃病||步态不稳": {
+    "disease_name": "梅尼埃病",
+    "colloquial_symptom": "步态不稳",
+    "standard_term": "movement disorder",
+    "count": 1,
+    "timestamp": 1779890157.107897,
+    "source": "api_enhance"
+  },
+  "Chest Pain||胸痛": {
+    "disease_name": "Chest Pain",
+    "colloquial_symptom": "胸痛",
+    "standard_term": "心绞痛或心肌梗死引起压榨性胸痛",
+    "count": 1,
+    "timestamp": 1779896534.1746728,
+    "source": "api_enhance"
+  },
+  "Chest Pain||大汗": {
+    "disease_name": "Chest Pain",
+    "colloquial_symptom": "大汗",
+    "standard_term": "心绞痛或心肌梗死引起压榨性胸痛",
+    "count": 1,
+    "timestamp": 1779896534.174707,
+    "source": "api_enhance"
+  },
+  "Chest Pain||ST段抬高": {
+    "disease_name": "Chest Pain",
+    "colloquial_symptom": "ST段抬高",
+    "standard_term": "心绞痛或心肌梗死引起压榨性胸痛",
+    "count": 1,
+    "timestamp": 1779896534.174734,
+    "source": "api_enhance"
+  },
+  "Chest Pain||放射至左肩": {
+    "disease_name": "Chest Pain",
+    "colloquial_symptom": "放射至左肩",
+    "standard_term": "心绞痛或心肌梗死引起压榨性胸痛",
+    "count": 1,
+    "timestamp": 1779896534.174758,
+    "source": "api_enhance"
+  },
+  "产褥感染||发热1天最高39℃": {
+    "disease_name": "产褥感染",
+    "colloquial_symptom": "发热1天最高39℃",
+    "standard_term": "产后发热",
+    "count": 1,
+    "timestamp": 1779955618.2379122,
+    "source": "api_enhance"
+  },
+  "产褥感染||咽喉充血": {
+    "disease_name": "产褥感染",
+    "colloquial_symptom": "咽喉充血",
+    "standard_term": "产后发热",
+    "count": 1,
+    "timestamp": 1779955618.2379751,
+    "source": "api_enhance"
+  },
+  "产褥感染||扁桃体少量脓点": {
+    "disease_name": "产褥感染",
+    "colloquial_symptom": "扁桃体少量脓点",
+    "standard_term": "产后发热",
+    "count": 1,
+    "timestamp": 1779955618.2380319,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||咽痛": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "咽痛",
+    "standard_term": "sore throat",
+    "count": 1,
+    "timestamp": 1779960271.6562161,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||鼻涕多": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "鼻涕多",
+    "standard_term": "sore throat",
+    "count": 4,
+    "timestamp": 1779960271.656373,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||鼻塞": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "鼻塞",
+    "standard_term": "sore throat",
+    "count": 2,
+    "timestamp": 1779960271.6564312,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||经常鼻血": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "经常鼻血",
+    "standard_term": "bleeding",
+    "count": 2,
+    "timestamp": 1779960271.656558,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||咽喉充血": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "咽喉充血",
+    "standard_term": "bleeding",
+    "count": 3,
+    "timestamp": 1779960271.656636,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||扁桃体少量脓点": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "扁桃体少量脓点",
+    "standard_term": "bleeding",
+    "count": 1,
+    "timestamp": 1779960271.656693,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||咽痛两天": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "咽痛两天",
+    "standard_term": "sore throat",
+    "count": 1,
+    "timestamp": 1779961231.609473,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||发热一天最高39": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "发热一天最高39",
+    "standard_term": "sore throat",
+    "count": 1,
+    "timestamp": 1779961231.609515,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||扁桃体可见少量脓点样": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "扁桃体可见少量脓点样",
+    "standard_term": "sore throat",
+    "count": 2,
+    "timestamp": 1779961231.609673,
+    "source": "api_enhance"
+  },
+  "感音神经性听力损失||大便2-3日一行": {
+    "disease_name": "感音神经性听力损失",
+    "colloquial_symptom": "大便2-3日一行",
+    "standard_term": "increased secretion",
+    "count": 1,
+    "timestamp": 1779961231.6099288,
+    "source": "api_enhance"
+  }
+}

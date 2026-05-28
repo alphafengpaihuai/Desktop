@@ -1,0 +1,1294 @@
+"""
+M1 诊断推理引擎 v2 — 中医辅助诊疗系统「守一」
+===============================================
+功能：诊断标准比对型引擎
+
+v2 重构要点：
+- 从「病理轴匹配型」重构为「诊断标准比对型」
+- 使用 required_criteria / supportive_criteria / exclusion_criteria
+- 当数据库缺 criteria 时输出 schema_missing warning
+- 禁止 axes 参与诊断评分
+- LLM 仅用于症状标准化，不参与诊断决策
+"""
+
+import json
+import os
+import hashlib
+import time
+import re
+from typing import Dict, List, Optional, Tuple, Set
+from dataclasses import dataclass, field
+
+
+# ── 数据类 ──────────────────────────────────────────────
+
+@dataclass
+class CriterionMatch:
+    """单条诊断标准匹配结果"""
+    criterion: str
+    criterion_type: str  # "required" | "supportive" | "exclusion"
+    matched: bool
+    matched_terms: List[str] = field(default_factory=list)
+    evidence_type: str = ""  # "symptom" | "sign" | "lab" | "imaging" | "history" | "negative"
+    source: str = ""
+    detail: str = ""
+
+
+@dataclass
+class CandidateDiagnosis:
+    """候选诊断（v2 标准比对型）"""
+    disease_name: str
+    entry_type: str
+    diagnostic_score: float = 0.0
+    confidence: str = "low"  # "high" | "medium" | "low" | "none"
+    required_matches: List[CriterionMatch] = field(default_factory=list)
+    missing_required: List[CriterionMatch] = field(default_factory=list)
+    supportive_matches: List[CriterionMatch] = field(default_factory=list)
+    exclusion_matches: List[CriterionMatch] = field(default_factory=list)
+    objective_support_count: int = 0
+    symptom_support_count: int = 0
+    confidence_reasoning: str = ""
+    warnings: List[str] = field(default_factory=list)
+    final_rank_score: float = 0.0
+    reason: str = ""
+
+
+@dataclass
+class PatientFeatures:
+    """标准化患者特征"""
+    patient_mentioned_disease: str = ""
+    chief_complaint: str = ""
+    symptoms: List[str] = field(default_factory=list)
+    signs: List[str] = field(default_factory=list)  # 查体发现
+    vitals: List[str] = field(default_factory=list)  # 生命体征
+    labs: List[str] = field(default_factory=list)     # 实验室检查
+    imaging: List[str] = field(default_factory=list)  # 影像学
+    history: List[str] = field(default_factory=list)  # 病史
+    negative_findings: List[str] = field(default_factory=list)
+    tcm_features_for_m2: List[str] = field(default_factory=list)  # 舌苔脉象→M2
+
+
+@dataclass
+class DiagnosisResult:
+    """完整诊断结果"""
+    query_disease: str
+    query_symptoms: List[str]
+    matched_disease: Optional[CandidateDiagnosis] = None
+    differential_list: List[CandidateDiagnosis] = field(default_factory=list)
+    no_match: bool = False
+    not_allowed: bool = False
+    error: Optional[str] = None
+    schema_missing: bool = False
+    schema_missing_diseases: List[str] = field(default_factory=list)
+
+
+# ── 引擎核心 ──────────────────────────────────────────────
+
+class M1DiagnosisEngine:
+    """M1 西医诊断推理引擎 v2 — 诊断标准比对型"""
+
+    def __init__(self, db_path: Optional[str] = None):
+        """初始化引擎，加载数据库"""
+        if db_path is None:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(script_dir, "diseases_core.json")
+
+        with open(db_path, "r", encoding="utf-8") as f:
+            self.db: List[dict] = json.load(f)
+        self.db_path_origin = db_path
+
+        # 加载中英文名称映射
+        self.cn_to_en: Dict[str, str] = {}
+        mapping_path = os.path.join(os.path.dirname(db_path), "m1_name_mapping.json")
+        if os.path.exists(mapping_path):
+            with open(mapping_path, "r", encoding="utf-8") as f:
+                self.cn_to_en = json.load(f)
+
+        # 建立索引：疾病名 → 条目
+        self.name_index: Dict[str, dict] = {}
+        self.keyword_index: Dict[str, List[dict]] = {}
+
+        for entry in self.db:
+            name = entry["disease_name"].lower()
+            self.name_index[name] = entry
+            for word in name.replace("(", " ").replace(")", " ").replace("/", " ").split():
+                if len(word) > 2:
+                    if word not in self.keyword_index:
+                        self.keyword_index[word] = []
+                    self.keyword_index[word].append(entry)
+
+        # ── 语义缓存（API 增强结果缓存）──
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.semantic_cache_path = os.path.join(script_dir, "m1_semantic_cache.json")
+        self.semantic_cache: Dict[str, dict] = {}
+        if os.path.exists(self.semantic_cache_path):
+            try:
+                with open(self.semantic_cache_path, "r", encoding="utf-8") as f:
+                    cached = json.load(f)
+                # 只加载有 content 的缓存条目
+                for k, v in cached.items():
+                    if isinstance(v, dict) and v.get("result"):
+                        self.semantic_cache[k] = v
+            except:
+                self.semantic_cache = {}
+        self.api_enabled = True
+
+        # ── 疾病别名映射表（临床俗称 → 标准名）──
+        self.alias_map_path = os.path.join(script_dir, "m1_alias_map.json")
+        self.alias_map: Dict[str, str] = {}
+        if os.path.exists(self.alias_map_path):
+            try:
+                with open(self.alias_map_path, "r", encoding="utf-8") as f:
+                    self.alias_map = json.load(f)
+            except:
+                self.alias_map = {}
+
+        # ── 口语化映射库（口语→标准术语映射）──
+        self.colloquial_map_path = os.path.join(script_dir, "m1_colloquial_mapping.json")
+        self.colloquial_map: Dict[str, dict] = {}
+        if os.path.exists(self.colloquial_map_path):
+            try:
+                with open(self.colloquial_map_path, "r", encoding="utf-8") as f:
+                    self.colloquial_map = json.load(f)
+            except:
+                self.colloquial_map = {}
+
+        # API 配置
+        self.deepseek_api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+        self.deepseek_model = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+        self.deepseek_api_base = os.environ.get("DEEPSEEK_API_BASE", "https://api.deepseek.com")
+        self.gemini_api_key = os.environ.get("GEMINI_API_KEY", "")
+        self.gemini_model = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        self.llm_provider = os.environ.get("LLM_PROVIDER", "deepseek")
+        if self.gemini_api_key and not os.environ.get("LLM_PROVIDER") and not self.deepseek_api_key:
+            self.llm_provider = "gemini"
+
+        self.knowledge_base_url = os.environ.get("KNOWLEDGE_BASE_URL", "")
+        self.knowledge_base_token = os.environ.get("KNOWLEDGE_BASE_TOKEN", "")
+
+        # 内置医学同义词映射（仅用于症状标准化匹配）
+        self._init_synonym_map()
+
+    def _init_synonym_map(self):
+        """初始化同义词映射表（仅用于症状标准化，不用于诊断评分）"""
+        self.SYNONYM_MAP: Dict[str, List[str]] = {
+            "cough": ["cough", "coughing", "咳嗽"],
+            "fever": ["fever", "pyrexia", "发热", "发烧"],
+            "low-grade fever": ["low-grade fever", "低热", "低烧", "subfebrile"],
+            "sputum": ["sputum", "phlegm", "痰", "咳痰", "mucus"],
+            "productive cough": ["productive cough", "cough with sputum", "咳痰", "湿咳"],
+            "sore throat": ["sore throat", "pharyngalgia", "pharyngeal pain", "咽痛", "喉咙痛"],
+            "chest pain": ["chest pain", "胸痛", "chest tightness", "胸闷"],
+            "dyspnea": ["dyspnea", "shortness of breath", "呼吸困难", "气短", "呼吸急促"],
+            "wheezing": ["wheezing", "wheeze", "喘息", "哮鸣"],
+            "headache": ["headache", "cephalalgia", "头痛"],
+            "dizziness": ["dizziness", "vertigo", "dizzy", "头晕", "眩晕"],
+            "nausea": ["nausea", "nauseous", "恶心"],
+            "vomiting": ["vomiting", "vomit", "emesis", "呕吐"],
+            "fatigue": ["fatigue", "tiredness", "weakness", "乏力", "疲劳", "疲倦", "无力"],
+            "edema": ["edema", "swelling", "水肿", "浮肿", "肿胀"],
+            "pain": ["pain", "ache", "疼痛", "痛"],
+            "palpitations": ["palpitations", "heart racing", "心悸", "心慌"],
+            "anemia": ["anemia", "贫血"],
+            "bleeding": ["bleeding", "hemorrhage", "hemorrhagic", "出血"],
+            "hypertension": ["hypertension", "high blood pressure", "elevated BP", "高血压"],
+            "hypotension": ["hypotension", "low blood pressure", "低血压"],
+            "tachycardia": ["tachycardia", "fast heart rate", "心动过速"],
+            "bradycardia": ["bradycardia", "slow heart rate", "心动过缓"],
+            "jaundice": ["jaundice", "icterus", "黄疸"],
+            "diarrhea": ["diarrhea", "loose stools", "腹泻", "拉肚子"],
+            "constipation": ["constipation", "constipated", "便秘"],
+            "dysuria": ["dysuria", "painful urination", "尿痛", "排尿困难"],
+            "urinary frequency": ["urinary frequency", "frequent urination", "尿频"],
+            "hematuria": ["hematuria", "blood in urine", "血尿"],
+            "proteinuria": ["proteinuria", "protein in urine", "蛋白尿"],
+            "rash": ["rash", "eruption", "皮疹", "红斑", "皮肤疹"],
+            "pruritus": ["pruritus", "itch", "itching", "瘙痒"],
+            "insomnia": ["insomnia", "sleep disorder", "失眠", "入睡困难"],
+            "weight loss": ["weight loss", "消瘦", "体重下降"],
+            "weight gain": ["weight gain", "体重增加", "肥胖"],
+            "high fever": ["high fever", "fever >38.5", "高热", "高烧", "体温>38.5"],
+            "dysphagia": ["dysphagia", "difficulty swallowing", "吞咽困难"],
+            "syncope": ["syncope", "fainting", "loss of consciousness", "晕厥", "昏倒"],
+            "hypoxia": ["hypoxia", "low oxygen", "缺氧", "低氧"],
+            "cyanosis": ["cyanosis", "发绀", "紫绀"],
+            "tremor": ["tremor", "shaking", "震颤", "抖动"],
+            "seizure": ["seizure", "convulsion", "抽搐", "癫痫发作", "惊厥"],
+            "paralysis": ["paralysis", "瘫痪", "麻痹"],
+            "numbness": ["numbness", "麻木", "感觉减退"],
+            "blurred vision": ["blurred vision", "vision blurred", "视物模糊", "视力模糊"],
+            "tinnitus": ["tinnitus", "耳鸣"],
+            "hearing loss": ["hearing loss", "听力下降", "听力丧失", "耳聋"],
+            "nasal congestion": ["nasal congestion", "congestion", "鼻塞"],
+            "rhinorrhea": ["rhinorrhea", "runny nose", "流涕", "流鼻涕", "鼻漏"],
+            "sneezing": ["sneezing", "sneeze", "打喷嚏", "喷嚏"],
+        }
+    # ── 患者输入标准化 ──────────────────────────────
+
+    def _normalize_patient_input(
+        self,
+        disease_name: str,
+        symptoms: List[str],
+        patient_features: Optional[Dict[str, List[str]]] = None,
+    ) -> PatientFeatures:
+        """将患者输入统一为结构化 PatientFeatures
+
+        Args:
+            disease_name: 患者提到的病名（可为空）
+            symptoms: 患者症状列表（原始输入）
+            patient_features: 可选的结构化特征字典，可含：
+                - signs: 查体发现
+                - vitals: 生命体征
+                - labs: 实验室检查
+                - imaging: 影像学
+                - history: 病史
+                - negative_findings: 阴性发现
+
+        Returns:
+            标准化的 PatientFeatures 对象
+        """
+        pf = PatientFeatures(
+            patient_mentioned_disease=disease_name,
+            chief_complaint=symptoms[0] if symptoms else "",
+        )
+
+        if patient_features is None:
+            patient_features = {}
+
+        # 对 symptoms 进行分类：区分西医症状、体征与中医描述
+        tcm_keywords = {'舌', '苔', '脉', '弦', '滑', '涩', '数', '迟', '细',
+                        '浮', '沉', '弱', '濡', '缓', '促', '结', '代',
+                        '紧', '洪', '大', '小', '长', '短',
+                        '阴', '阳', '虚', '实', '寒', '热', '温', '凉',
+                        '气滞', '血瘀', '痰湿', '湿热', '寒湿', '气虚', '血虚',
+                        '阴虚', '阳虚', '精亏', '津亏', '肺', '脾', '肾',
+                        '肝', '心', '胃', '胆', '膀胱', '大肠', '小肠',
+                        '三焦', '六经', '卫气营血', '经络'}
+        
+        for s in symptoms:
+            s_lower = s.lower().strip()
+            # 检测中医特征
+            is_tcm = False
+            for keyword in tcm_keywords:
+                if keyword in s:
+                    is_tcm = True
+                    break
+            # 舌苔脉象相关描述
+            if any(c in s for c in ['舌', '苔', '脉']):
+                is_tcm = True
+            
+            if is_tcm:
+                pf.tcm_features_for_m2.append(s)
+            else:
+                pf.symptoms.append(s)
+
+        # 分类 features
+        for key, values in patient_features.items():
+            if key == "signs":
+                pf.signs = values
+            elif key == "vitals":
+                pf.vitals = values
+            elif key == "labs":
+                pf.labs = values
+            elif key == "imaging":
+                pf.imaging = values
+            elif key == "history":
+                pf.history = values
+            elif key == "negative_findings":
+                pf.negative_findings = values
+
+        # 从原始症状中识别病史类信息（如"乙肝病史15年"→history）
+        for s in symptoms:
+            s_lower = s.lower()
+            history_markers = ['病史', '史', '年', '既往', '曾', '手术', '外伤',
+                               '诊断', '患病', '慢性', '长期']
+            if any(m in s_lower for m in history_markers) and len(s) >= 4:
+                pf.history.append(s)
+
+        return pf
+
+    # ── 查找部分 ───────────────────────────────────────
+
+    def find_disease(self, disease_name: str, allow_msd_fallback: bool = True) -> Optional[dict]:
+        """精确查找疾病（支持中英文 + 别名映射）"""
+        key = disease_name.strip().lower()
+        # 1. 直接匹配英文名
+        if key in self.name_index:
+            return self.name_index[key]
+        # 2. 中文名映射
+        if key in self.cn_to_en:
+            en_key = self.cn_to_en[key].lower()
+            if en_key in self.name_index:
+                return self.name_index[en_key]
+        # 3. 别名映射（临床俗称 → 标准名）
+        if self.alias_map:
+            mapped = self.alias_map.get(key)
+            if mapped:
+                mk = mapped.lower()
+                if mk in self.name_index:
+                    return self.name_index[mk]
+                if mk in self.cn_to_en:
+                    en_key = self.cn_to_en[mk].lower()
+                    if en_key in self.name_index:
+                        return self.name_index[en_key]
+                for entry in self.db:
+                    cn = entry.get('diseaseName_cn', '').lower()
+                    if cn == mk:
+                        return entry
+        return None
+
+    def search_diseases(self, query: str) -> List[dict]:
+        """模糊搜索疾病（支持中英文）"""
+        query = query.strip().lower()
+        if not query:
+            return []
+        # 中文最短2字符，英文最短3字符
+        has_cjk = any('\u4e00' <= c <= '\u9fff' for c in query)
+        if has_cjk:
+            if len(query) < 2:
+                return []
+        elif len(query) < 3:
+            return []
+
+        if query in self.name_index:
+            return [self.name_index[query]]
+
+        results: List[dict] = []
+        seen = set()
+
+        # 部分匹配
+        for name, entry in self.name_index.items():
+            if query in name or name in query:
+                if id(entry) not in seen:
+                    results.append(entry)
+                    seen.add(id(entry))
+
+        # ── 中文搜索（优先） ──
+        if has_cjk:
+            for cn_name, en_name in self.cn_to_en.items():
+                entry = self.name_index.get(en_name.lower())
+                if entry and id(entry) not in seen:
+                    if query in cn_name or cn_name in query:
+                        results.append(entry)
+                        seen.add(id(entry))
+            # 字符级模糊匹配
+            query_chars = set(c for c in query if '\u4e00' <= c <= '\u9fff')
+            if query_chars:
+                for name, entry in self.name_index.items():
+                    if id(entry) in seen:
+                        continue
+                    name_chars = set(c for c in name if '\u4e00' <= c <= '\u9fff')
+                    if query_chars & name_chars and len(query_chars & name_chars) >= max(1, len(query_chars) // 2):
+                        results.append(entry)
+                        seen.add(id(entry))
+                # 任意中文字符在 key 中出现
+                for name, entry in self.name_index.items():
+                    if id(entry) in seen:
+                        continue
+                    if any(c in name for c in query_chars):
+                        results.append(entry)
+                        seen.add(id(entry))
+            return results
+
+        # ── 英文关键词匹配 ──
+        query_words = query.replace("(", " ").replace(")", " ").replace("/", " ").split()
+        refined_words = []
+        for w in query_words:
+            parts = []
+            current = ""
+            for c in w:
+                if c.isalpha() and (not current or current[-1].isalpha()):
+                    current += c
+                elif c.isdigit() and (not current or current[-1].isdigit()):
+                    current += c
+                else:
+                    if current: parts.append(current)
+                    current = c
+            if current: parts.append(current)
+            refined_words.extend(parts)
+        query_words = refined_words
+
+        for word in query_words:
+            if len(word) <= 2:
+                continue
+            if all(c.isdigit() or not c.isalnum() for c in word):
+                continue
+            for keyword, entries in self.keyword_index.items():
+                if len(keyword) < 3:
+                    continue
+                if word in keyword:
+                    if len(keyword) >= len(word) * 0.8:
+                        for entry in entries:
+                            if id(entry) not in seen:
+                                results.append(entry)
+                                seen.add(id(entry))
+                elif keyword in word:
+                    overlap_ratio = len(keyword) / len(word)
+                    if overlap_ratio >= 0.6:
+                        for entry in entries:
+                            if id(entry) not in seen:
+                                results.append(entry)
+                                seen.add(id(entry))
+
+        return results
+
+    # ── 核心诊断逻辑 ──────────────────────────────────
+
+    def diagnose(
+        self,
+        disease_name: str,
+        symptoms: List[str],
+        max_differentials: int = 5,
+        **kwargs,
+    ) -> DiagnosisResult:
+        """主诊断入口（v2 标准比对型）
+
+        Args:
+            disease_name: 患者提到的疾病名
+            symptoms: 患者症状列表
+            max_differentials: 最大鉴别诊断数
+            **kwargs: 可选参数
+                patient_features: Dict[str, List[str]] 结构化特征
+                match_threshold: float 匹配阈值（默认0.1）
+
+        Returns:
+            DiagnosisResult
+        """
+        patient_features = kwargs.get("patient_features")
+        match_threshold = kwargs.get("match_threshold", 0.1)
+
+        result = DiagnosisResult(
+            query_disease=disease_name,
+            query_symptoms=symptoms,
+        )
+
+        # 1. 标准化患者输入
+        patient = self._normalize_patient_input(disease_name, symptoms, patient_features)
+
+        # 2. 查找疾病
+        disease_entry = self.find_disease(disease_name)
+
+        if disease_entry is None:
+            # 尝试搜索
+            suggestions = self.search_diseases(disease_name)
+            if suggestions:
+                candidates = []
+                for d in suggestions[:max_differentials]:
+                    candidate = self._evaluate_disease_by_criteria(d, patient)
+                    if candidate.diagnostic_score > 0:
+                        candidates.append(candidate)
+                candidates.sort(key=lambda c: c.diagnostic_score, reverse=True)
+                if candidates and candidates[0].diagnostic_score >= match_threshold:
+                    result.matched_disease = candidates[0]
+                    result.query_disease = result.matched_disease.disease_name
+                    result.differential_list = candidates
+                else:
+                    result.no_match = True
+                    if candidates:
+                        result.differential_list = candidates
+                    else:
+                        result.error = f"未找到疾病「{disease_name}」"
+            else:
+                result.no_match = True
+                result.error = f"未找到疾病「{disease_name}」"
+            
+            return result
+
+        # 3. 检查是否允许作为入口
+        if not disease_entry.get("m1_diagnosis_entry_allowed", True):
+            result.not_allowed = True
+            result.error = (
+                f"「{disease_entry['disease_name']}」是{self._entry_type_cn(disease_entry['entry_type'])}，"
+                f"不允许作为 M1 诊断入口。请查找其背后的根本病因。"
+            )
+            return result
+
+        # 4. 按诊断标准进行比对评估
+        candidate = self._evaluate_disease_by_criteria(disease_entry, patient)
+        result.matched_disease = candidate
+
+        # 5. 生成鉴别诊断
+        differentials = self._generate_differentials_by_criteria(disease_entry, patient)
+        result.differential_list = differentials[:max_differentials]
+
+        # 6. 标记 schema_missing
+        if candidate.confidence in ("none",) and "缺少标准诊断结构" in (candidate.confidence_reasoning or ""):
+            result.schema_missing = True
+            if disease_entry["disease_name"] not in result.schema_missing_diseases:
+                result.schema_missing_diseases.append(disease_entry["disease_name"])
+
+        return result
+
+    def _retrieve_candidates_by_patient_features(self, patient: PatientFeatures) -> List[dict]:
+        """根据患者特征召回候选疾病
+
+        使用以下字段进行召回（不使用 axes）：
+        - patient_mentioned_disease
+        - symptoms 与 typical_symptoms 的匹配
+        - history 与 risk_factors 的匹配
+        - labs/imaging 的匹配
+        """
+        candidates = []
+        seen_names = set()
+
+        # 1. 如果患者提到了疾病名，优先召回
+        if patient.patient_mentioned_disease:
+            entry = self.find_disease(patient.patient_mentioned_disease)
+            if entry:
+                candidates.append(entry)
+                seen_names.add(entry["disease_name"].lower())
+
+        # 2. 基于 symptom 匹配
+        symptom_set = set(s.lower().strip() for s in patient.symptoms)
+        if symptom_set:
+            scored = []
+            for entry in self.db:
+                if not entry.get("m1_diagnosis_entry_allowed", True):
+                    continue
+                name_lower = entry["disease_name"].lower()
+                if name_lower in seen_names:
+                    continue
+                typical_symptoms = [s.lower() for s in entry.get("typical_symptoms", [])]
+                match_count = 0
+                for ps in symptom_set:
+                    ps_clean = ps.strip()
+                    for ts in typical_symptoms:
+                        ts_clean = ts.strip()
+                        if ps_clean == ts_clean:
+                            match_count += 2
+                        elif len(ps_clean) >= 3 and len(ts_clean) >= 3 and (ps_clean in ts_clean or ts_clean in ps_clean):
+                            match_count += 1
+                        # 同义词匹配
+                        elif self._is_synonym_match(ps_clean, ts_clean):
+                            match_count += 1
+                if match_count > 0:
+                    scored.append((match_count, entry))
+            scored.sort(key=lambda x: -x[0])
+            for _, entry in scored[:15]:
+                name_lower = entry["disease_name"].lower()
+                if name_lower not in seen_names:
+                    candidates.append(entry)
+                    seen_names.add(name_lower)
+
+        # 3. 基于 history 匹配 risk_factors
+        if patient.history:
+            history_text = " ".join(h.lower() for h in patient.history)
+            for entry in self.db:
+                name_lower = entry["disease_name"].lower()
+                if name_lower in seen_names:
+                    continue
+                risk_factors = " ".join(rf.lower() for rf in entry.get("risk_factors", []))
+                if risk_factors:
+                    for rf_word in risk_factors.split():
+                        if len(rf_word) >= 2 and rf_word in history_text:
+                            if name_lower not in seen_names:
+                                candidates.append(entry)
+                                seen_names.add(name_lower)
+                            break
+
+        return candidates[:30]  # 最多 30 个候选
+
+    def _is_synonym_match(self, word_a: str, word_b: str) -> bool:
+        """检查两个词是否同义"""
+        if word_a == word_b:
+            return True
+        # 查同义词映射
+        for canonical, terms in self.SYNONYM_MAP.items():
+            terms_lower = [t.lower() for t in terms]
+            if word_a in terms_lower and word_b in terms_lower:
+                return True
+            # 有一个在映射中且另一个是它的同义扩展
+            a_syns = set()
+            b_syns = set()
+            if word_a in terms_lower:
+                a_syns = set(terms_lower)
+            if word_b in terms_lower:
+                b_syns = set(terms_lower)
+            if a_syns and b_syns and a_syns & b_syns:
+                return True
+        return False
+
+    def _evaluate_disease_by_criteria(
+        self, entry: dict, patient: PatientFeatures
+    ) -> CandidateDiagnosis:
+        """对单个疾病按诊断标准逐条匹配
+
+        匹配流程：
+        1. 检查 entry 是否有 required_criteria / supportive_criteria / exclusion_criteria
+        2. 如果没有 → schema_missing，confidence = "none"
+        3. 如果有 → 逐条匹配，计算得分
+        """
+        disease_name = entry["disease_name"]
+        entry_type = entry.get("entry_type", "")
+
+        candidate = CandidateDiagnosis(
+            disease_name=disease_name,
+            entry_type=entry_type,
+        )
+
+        # 提取诊断标准
+        diagnostic_criteria = entry.get("diagnostic_criteria", [])
+        required_criteria = entry.get("required_criteria", [])
+        supportive_criteria = entry.get("supportive_criteria", [])
+        exclusion_criteria = entry.get("exclusion_criteria", [])
+
+        # schema_missing 检测
+        has_required = bool(required_criteria) or bool(diagnostic_criteria)
+        has_supportive = bool(supportive_criteria)
+        has_exclusion = bool(exclusion_criteria)
+
+        if not has_required and not has_supportive:
+            # 完全缺少标准诊断结构
+            candidate.confidence = "none"
+            candidate.confidence_reasoning = f"「{disease_name}」缺少标准诊断结构（required_criteria/supportive_criteria），无法进行标准比对"
+            candidate.warnings = [candidate.confidence_reasoning]
+            candidate.diagnostic_score = 0.0
+
+            # 仍然尝试用 typical_symptoms 做简单的特征匹配
+            if patient.symptoms or patient.signs:
+                fallback_score = self._fallback_symptom_match(entry, patient)
+                candidate.diagnostic_score = fallback_score * 0.3
+                if fallback_score > 0.2:
+                    candidate.confidence = "low"
+                    candidate.confidence_reasoning = f"基于症状模糊匹配（fallback），因缺少标准诊断结构"
+                    candidate.warnings.append(
+                        f"⚠ 需要补充 {disease_name} 的 required_criteria 结构以提升诊断精度"
+                    )
+            return candidate
+
+        # ── 匹配 required_criteria ──
+        all_required = list(required_criteria)
+        if diagnostic_criteria and not required_criteria:
+            # 使用 diagnostic_criteria 作为 reference 标准的降级
+            all_required = []
+            for dc in diagnostic_criteria:
+                if isinstance(dc, str):
+                    all_required.append(dc)
+            candidate.warnings.append(
+                f"「{disease_name}」缺少 required_criteria 结构，已降级使用 diagnostic_criteria"
+            )
+
+        for criterion in all_required:
+            cm = self._match_criterion(criterion, patient)
+            if cm.matched:
+                candidate.required_matches.append(cm)
+            else:
+                candidate.missing_required.append(cm)
+
+        # ── 匹配 supportive_criteria ──
+        for criterion in supportive_criteria:
+            cm = self._match_criterion(criterion, patient)
+            if cm.matched:
+                candidate.supportive_matches.append(cm)
+
+        # ── 匹配 exclusion_criteria ──
+        for criterion in exclusion_criteria:
+            cm = self._match_criterion(criterion, patient)
+            if cm.matched:
+                candidate.exclusion_matches.append(cm)
+
+        # ── 计算 objective_support_count ──
+        # 客观证据：lab、imaging、vitals、signs 中匹配的
+        for cm in candidate.required_matches:
+            if cm.evidence_type in ("lab", "imaging", "sign", "vital"):
+                candidate.objective_support_count += 1
+        for cm in candidate.supportive_matches:
+            if cm.evidence_type in ("lab", "imaging", "sign", "vital"):
+                candidate.objective_support_count += 1
+
+        # 症状匹配计数
+        candidate.symptom_support_count = len([
+            cm for cm in candidate.required_matches if cm.evidence_type == "symptom"
+        ]) + len([
+            cm for cm in candidate.supportive_matches if cm.evidence_type == "symptom"
+        ])
+
+        # ── 计算 diagnostic_score ──
+        self._compute_diagnostic_score(candidate, entry, patient)
+
+        # ── 分配 confidence ──
+        self._assign_confidence(candidate, entry, patient)
+
+        return candidate
+
+    def _fallback_symptom_match(self, entry: dict, patient: PatientFeatures) -> float:
+        """当没有 criteria 结构时，用 symptoms 做简单的回退匹配"""
+        typical_symptoms = [s.lower() for s in entry.get("typical_symptoms", [])]
+        if not typical_symptoms or (not patient.symptoms and not patient.signs):
+            return 0.0
+
+        all_patient_text = set()
+        for s in patient.symptoms:
+            all_patient_text.add(s.lower().strip())
+        for s in patient.signs:
+            all_patient_text.add(s.lower().strip())
+        for s in patient.vitals:
+            all_patient_text.add(s.lower().strip())
+
+        matches = 0
+        for ts in typical_symptoms:
+            ts_lower = ts.lower().strip()
+            for ps in all_patient_text:
+                if ps == ts_lower:
+                    matches += 1
+                    break
+                elif len(ps) >= 3 and len(ts_lower) >= 3 and (ps in ts_lower or ts_lower in ps):
+                    matches += 0.5
+                    break
+                elif self._is_synonym_match(ps, ts_lower):
+                    matches += 0.5
+                    break
+
+        ratio = matches / len(typical_symptoms) if typical_symptoms else 0
+        return min(1.0, ratio * 1.2)
+
+    def _compute_diagnostic_score(self, candidate: CandidateDiagnosis, entry: dict, patient: PatientFeatures):
+        """计算诊断得分（不使用 axes）
+
+        评分公式：
+        - required_match_ratio: 必要条件匹配比例（权重 0.5）
+        - supportive_match_ratio: 支持条件匹配比例（权重 0.3）
+        - exclusion_penalty: 排除项惩罚（每个排除匹配 -0.2）
+        - objective_bonus: 客观证据加分（每个客观证据 +0.05，上限 0.15）
+        """
+        total_required = len(candidate.required_matches) + len(candidate.missing_required)
+        matched_required = len(candidate.required_matches)
+
+        total_supportive = len(candidate.supportive_matches)
+        # 由于 supportive 通常是可选的，count 可能为 0
+        # 我们基于 entry 的 supportive_criteria 总数计算
+        expected_supportive = len(entry.get("supportive_criteria", []))
+        total_supportive_expected = max(expected_supportive, total_supportive)
+
+        required_ratio = matched_required / total_required if total_required > 0 else 0
+        supportive_ratio = total_supportive / total_supportive_expected if total_supportive_expected > 0 else 0
+
+        score = required_ratio * 0.5 + supportive_ratio * 0.3
+
+        # exclusion_penalty
+        exclusion_count = len(candidate.exclusion_matches)
+        score -= exclusion_count * 0.2
+
+        # objective_bonus
+        objective_bonus = min(0.15, candidate.objective_support_count * 0.05)
+        score += objective_bonus
+
+        # symptom_support 也加分
+        symptom_bonus = min(0.1, candidate.symptom_support_count * 0.02)
+        score += symptom_bonus
+
+        candidate.diagnostic_score = max(0.0, min(1.0, score))
+
+    def _assign_confidence(self, candidate: CandidateDiagnosis, entry: dict, patient: PatientFeatures):
+        """使用 qualitative confidence matrix 分配置信度
+
+        high:   必要条件完整 + 至少2条客观证据 + 无排除项
+        medium: 核心必要条件匹配但关键检查缺失，或客观证据不足
+        low:    必要条件不完整、仅非特异症状、命中排除项
+        none:   疾病不在本地库或强制信源覆盖，或患者数据与诊断标准根本冲突
+        """
+        score = candidate.diagnostic_score
+        required_matched = len(candidate.required_matches)
+        required_total = required_matched + len(candidate.missing_required)
+        has_exclusion = len(candidate.exclusion_matches) > 0
+        has_objective = candidate.objective_support_count >= 2
+
+        reasoning_parts = []
+
+        if required_total == 0:
+            candidate.confidence = "none"
+            candidate.confidence_reasoning = "无必要条件定义，无法评估"
+            return
+
+        # high
+        if (required_matched == required_total
+            and has_objective
+            and not has_exclusion
+            and score >= 0.5):
+            candidate.confidence = "high"
+            reasoning_parts.append(f"必要条件全部匹配({required_matched}/{required_total})")
+            reasoning_parts.append(f"客观证据≥2项({candidate.objective_support_count})")
+            reasoning_parts.append("无排除项匹配")
+            candidate.confidence_reasoning = "；".join(reasoning_parts)
+            return
+
+        # medium
+        if (required_matched >= max(1, required_total // 2)
+            and not has_exclusion
+            and score >= 0.3):
+            candidate.confidence = "medium"
+            reasoning_parts.append(f"核心必要条件匹配({required_matched}/{required_total})")
+            if not has_objective:
+                reasoning_parts.append("客观证据不足")
+            if candidate.missing_required:
+                reasoning_parts.append(f"缺失{len(candidate.missing_required)}项必要条件")
+            candidate.confidence_reasoning = "；".join(reasoning_parts)
+            return
+
+        # low
+        if required_matched >= 1 and score >= 0.1:
+            candidate.confidence = "low"
+            reasoning_parts.append(f"部分必要条件匹配({required_matched}/{required_total})")
+            if required_matched < required_total:
+                reasoning_parts.append(f"必要条件不完整")
+            if not patient.symptoms and not patient.signs:
+                reasoning_parts.append("仅有非特异信息")
+            if has_exclusion:
+                reasoning_parts.append(f"命中{len(candidate.exclusion_matches)}条排除项")
+            candidate.confidence_reasoning = "；".join(reasoning_parts)
+            return
+
+        # none
+        candidate.confidence = "none"
+        if required_matched == 0:
+            reasoning_parts.append("必要条件均未匹配")
+        else:
+            reasoning_parts.append(f"诊断得分过低({score:.2f})")
+        if has_exclusion:
+            reasoning_parts.append("命中排除项")
+        candidate.confidence_reasoning = "；".join(reasoning_parts)
+
+    def _match_criterion(self, criterion: str, patient: PatientFeatures) -> CriterionMatch:
+        """匹配单条诊断标准与患者信息
+
+        使用文本匹配 + 同义词映射，不调用 LLM。
+        """
+        if not criterion or not isinstance(criterion, str):
+            return CriterionMatch(
+                criterion=str(criterion),
+                criterion_type="unknown",
+                matched=False,
+                evidence_type="unknown",
+            )
+
+        criterion_lower = criterion.lower().strip()
+        matched_terms = []
+        evidence_type = "symptom"
+
+        # 判断 criterion 的类型
+        ctype = self._classify_criterion(criterion_lower)
+        
+        # 判断 evidence_type
+        evidence_type = self._classify_evidence_type(criterion_lower)
+
+        # 收集所有患者文本
+        all_texts = []
+        text_sources = {
+            "symptom": patient.symptoms,
+            "sign": patient.signs,
+            "vital": patient.vitals,
+            "lab": patient.labs,
+            "imaging": patient.imaging,
+            "history": patient.history,
+            "negative": patient.negative_findings,
+        }
+
+        for etype, texts in text_sources.items():
+            for t in texts:
+                all_texts.append((t.lower().strip(), etype))
+
+        # 匹配逻辑
+        for text, src_type in all_texts:
+            # 精确匹配
+            if text == criterion_lower:
+                matched_terms.append(text)
+                if evidence_type == "symptom":
+                    evidence_type = src_type
+                continue
+
+            # 包含匹配（要求长度≥3）
+            if len(criterion_lower) >= 3 and len(text) >= 3:
+                if criterion_lower in text or text in criterion_lower:
+                    matched_terms.append(text)
+                    if evidence_type == "symptom":
+                        evidence_type = src_type
+                    continue
+
+            # 同义词匹配
+            if self._is_synonym_match(criterion_lower, text):
+                matched_terms.append(text)
+                if evidence_type == "symptom":
+                    evidence_type = src_type
+                continue
+
+        is_matched = len(matched_terms) > 0
+
+        # 对于 exclusion criterion，逻辑是反向的：匹配到意味着不排除
+        # 但我们的 exclusion_matches 记录的是"命中了排除条件"
+        # 所以 exclusion criterion 匹配到患者信息意味着「有证据表明应该排除」
+        if ctype == "exclusion":
+            is_matched = len(matched_terms) > 0
+
+        return CriterionMatch(
+            criterion=criterion,
+            criterion_type=ctype,
+            matched=is_matched,
+            matched_terms=list(set(matched_terms)),
+            evidence_type=evidence_type,
+        )
+
+    def _classify_criterion(self, criterion: str) -> str:
+        """分类诊断标准的类型：required / supportive / exclusion"""
+        exclusion_markers = ['排除', '除外', '鉴别', '无', '没有', '未', '不伴',
+                             'absence of', 'without', 'no evidence of',
+                             'rule out', 'exclude', 'negative']
+        for marker in exclusion_markers:
+            if marker in criterion:
+                return "exclusion"
+        return "required"  # 默认视为 required
+
+    def _classify_evidence_type(self, criterion: str) -> str:
+        """判断诊断标准的证据类型"""
+        if any(k in criterion for k in ['实验室', '血常规', '生化', '病原', '培养',
+                                          'lab', 'blood', 'serum', 'culture',
+                                          'crp', 'esr', 'procalcitonin', 'pct',
+                                          'wbc', 'neutrophil', 'lymphocyte']):
+            return "lab"
+        if any(k in criterion for k in ['影像', '胸片', 'ct', 'mri', 'x-ray', '超声',
+                                          'imaging', 'xray', 'radiograph', '超声',
+                                          '心电图', 'ekg', 'ecg']):
+            return "imaging"
+        if any(k in criterion for k in ['查体', '体征', '听诊', '叩诊', '触诊',
+                                          '啰音', '喘鸣', '皮疹', '红斑',
+                                          'physical', 'exam', 'auscultation',
+                                          'rales', 'wheez', 'rash', 'murmur']):
+            return "sign"
+        if any(k in criterion for k in ['血压', '体温', '心率', '呼吸', '氧饱和度',
+                                          'bp', 'heart rate', 'temp', 'respiratory',
+                                          'spo2', 'vital']):
+            return "vital"
+        if any(k in criterion for k in ['病史', '既往', '史', 'history of',
+                                          '既往史', '个人史', '家族史']):
+            return "history"
+        if any(k in criterion for k in ['无', '阴性', 'negative', 'absence']):
+            return "negative"
+        return "symptom"
+
+    def _generate_differentials_by_criteria(
+        self, primary_entry: dict, patient: PatientFeatures
+    ) -> List[CandidateDiagnosis]:
+        """基于诊断标准生成鉴别诊断
+
+        不使用 axes 交集，改用：
+        - 疾病的标准 differential_diagnosis 列表
+        - 用 search_diseases 支持中英文鉴别项查找
+        """
+        differentials = []
+
+        # 获取 primary 的鉴别诊断列表
+        diff_names = primary_entry.get("differential_diagnosis", [])
+
+        if not diff_names:
+            return differentials
+
+        # 召回鉴别诊断条目
+        for diff_name in diff_names:
+            # 先尝试精确查找
+            entry = self.find_disease(diff_name)
+            # 再尝试模糊搜索
+            if entry is None:
+                candidates = self.search_diseases(diff_name)
+                if candidates:
+                    entry = candidates[0]
+            if entry and entry.get("m1_diagnosis_entry_allowed", True):
+                candidate = self._evaluate_disease_by_criteria(entry, patient)
+                if candidate.diagnostic_score > 0:
+                    differentials.append(candidate)
+
+        # 按得分排序
+        differentials.sort(key=lambda c: c.diagnostic_score, reverse=True)
+        return differentials
+
+    # ── 口语化检测 ──────────────────────────────────
+
+    def _detect_colloquial_symptoms(self, symptoms: List[str]) -> List[str]:
+        """检测并标准化口语化症状"""
+        standardized = []
+        if not self.colloquial_map:
+            return symptoms
+        for symptom in symptoms:
+            s_lower = symptom.strip().lower()
+            found = False
+            for key, mapping in self.colloquial_map.items():
+                if key == s_lower:
+                    std = mapping.get("standard", mapping.get("english", ""))
+                    if std:
+                        standardized.append(std)
+                        found = True
+                        break
+            if not found:
+                standardized.append(symptom)
+        return standardized
+
+    # ── 格式输出 ────────────────────────────────────
+
+    def format_diagnosis_result(self, result: DiagnosisResult) -> str:
+        """格式化诊断结果为可读文本（v2 标准比对型）"""
+        lines = []
+        lines.append("=" * 60)
+        lines.append("  【守一·M1 西医诊断评估 v2】")
+        lines.append(f"  查询疾病: {result.query_disease}")
+        lines.append(f"  患者表现: {', '.join(result.query_symptoms)}")
+        lines.append("=" * 60)
+        lines.append("")
+
+        # Schema missing 警告
+        if result.schema_missing:
+            lines.append("  ⚠ 诊断标准结构缺失 ⚠")
+            lines.append(f"  以下疾病缺少 required_criteria / supportive_criteria 结构：")
+            for d in result.schema_missing_diseases:
+                lines.append(f"  • {d}")
+            lines.append(f"  → 置信度设为 none，需要补充标准诊断结构")
+            lines.append("")
+
+        # 错误
+        if result.error:
+            lines.append(f"  ❌ 错误: {result.error}")
+            lines.append("")
+
+        # 不允许作为入口
+        if result.not_allowed:
+            lines.append("  ⛔ 该疾病不允许作为 M1 诊断入口")
+            lines.append("")
+
+        # 未找到
+        if result.no_match:
+            lines.append("  ❌ 未找到匹配疾病")
+            lines.append("")
+
+        # 主候选
+        if result.matched_disease:
+            mc = result.matched_disease
+            confidence_icon = {
+                "high": "✅",
+                "medium": "⚠️",
+                "low": "❌",
+                "none": "⛔",
+            }.get(mc.confidence, "❓")
+
+            lines.append(f"  ① {mc.disease_name}")
+            lines.append(f"     ├─ 诊断评分: {mc.diagnostic_score:.2f} {confidence_icon}")
+            lines.append(f"     ├─ 置信度: {mc.confidence}")
+            lines.append(f"     ├─ 类型: {self._entry_type_cn(mc.entry_type)}")
+            
+            if mc.confidence_reasoning:
+                lines.append(f"     ├─ 置信度依据: {mc.confidence_reasoning}")
+
+            lines.append("")
+
+            # Required matches
+            if mc.required_matches:
+                lines.append(f"     ├─ ✅ 已匹配的必要条件 ({len(mc.required_matches)}):")
+                for cm in mc.required_matches:
+                    terms = f" [{', '.join(cm.matched_terms)}]" if cm.matched_terms else ""
+                    lines.append(f"     │   • {cm.criterion}{terms}")
+
+            if mc.missing_required:
+                lines.append(f"     ├─ ❌ 未满足的必要条件 ({len(mc.missing_required)}):")
+                for cm in mc.missing_required:
+                    lines.append(f"     │   • {cm.criterion}")
+
+            # Supportive matches
+            if mc.supportive_matches:
+                lines.append(f"     ├─ ✅ 匹配的支持条件 ({len(mc.supportive_matches)}):")
+                for cm in mc.supportive_matches:
+                    lines.append(f"     │   • {cm.criterion}")
+
+            # Exclusion matches
+            if mc.exclusion_matches:
+                lines.append(f"     ├─ ⚠ 命中排除项 ({len(mc.exclusion_matches)}):")
+                for cm in mc.exclusion_matches:
+                    lines.append(f"     │   • {cm.criterion}")
+
+            # 客观证据
+            if mc.objective_support_count > 0:
+                lines.append(f"     ├─ 📊 客观证据支持: {mc.objective_support_count} 项")
+
+            # 缺失检查
+            if mc.missing_checks:
+                lines.append(f"     ├─ 🔍 待完成检查:")
+                for check in mc.missing_checks:
+                    lines.append(f"     │   • {check}")
+
+            # 警告
+            if mc.warnings:
+                lines.append(f"     ├─ ⚠ 注意事项:")
+                for w in mc.warnings[:3]:
+                    lines.append(f"     │   • {w}")
+
+            lines.append("")
+
+        # 鉴别诊断
+        if result.differential_list:
+            lines.append(f"     └─ 🔄 鉴别诊断 ({len(result.differential_list)}):")
+            for i, diff in enumerate(result.differential_list, 1):
+                if result.matched_disease and diff.disease_name == result.matched_disease.disease_name:
+                    continue
+                confidence_icon = {
+                    "high": "✅",
+                    "medium": "⚠️",
+                    "low": "❌",
+                    "none": "⛔",
+                }.get(diff.confidence, "❓")
+                lines.append(f"         {i}. {diff.disease_name} → {diff.diagnostic_score:.2f} {confidence_icon}")
+                lines.append(f"            置信度: {diff.confidence}")
+                if diff.missing_required:
+                    lines.append(f"            ❌ 缺失必要条件: {len(diff.missing_required)} 项")
+                if diff.supportive_matches:
+                    lines.append(f"            ✅ 支持条件: {len(diff.supportive_matches)} 项")
+            lines.append("")
+
+        lines.append("─" * 60)
+        lines.append("⚠ M1 阶段: 仅限西医诊断与鉴别诊断，禁止输出任何中医内容")
+        lines.append("=" * 60)
+        return "\n".join(lines)
+
+    @staticmethod
+    def _entry_type_cn(entry_type: str) -> str:
+        """将 entry_type 转为中文描述"""
+        mapping = {
+            "standard_western_disease": "标准西医疾病",
+            "syndrome": "综合征",
+            "symptom_complex": "症状群/症候群",
+            "injury_or_poisoning": "损伤或中毒",
+            "special_clinical_situation": "特殊临床情境",
+            "non_disease_diagnostic_label": "非疾病诊断性标签",
+            "tcm_pattern": "中医证型（不应出现在M1）",
+        }
+        return mapping.get(entry_type, entry_type or "未知")
+
+    # ── 工具方法 ────────────────────────────────────
+
+    def normalize_symptoms(self, symptoms: List[str]) -> List[str]:
+        """标准化症状（使用别名映射 + 口语化检测，可配置 LLM 增强）
+
+        LLM 仅用于症状标准化，不参与诊断决策。
+        """
+        standardized = []
+        for s in symptoms:
+            s_lower = s.strip().lower()
+            # 1. 别名映射
+            mapped = False
+            if hasattr(self, "alias_map") and self.alias_map:
+                if s_lower in self.alias_map:
+                    standardized.append(self.alias_map[s_lower])
+                    mapped = True
+            # 2. 口语化检测
+            if not mapped and hasattr(self, "colloquial_map") and self.colloquial_map:
+                if s_lower in self.colloquial_map:
+                    std = self.colloquial_map[s_lower].get("standard", s)
+                    standardized.append(std)
+                    mapped = True
+            # 3. 保留原词
+            if not mapped:
+                standardized.append(s)
+        return standardized
+
+    def _call_llm_api(self, prompt: str, system: str = "") -> Optional[str]:
+        """调用 LLM API 进行症状标准化（仅用于标准化，不参与诊断）
+
+        支持的 provider: deepseek, gemini
+        """
+        # 缓存检查
+        cache_key = hashlib.md5((system + prompt).encode()).hexdigest()
+        if cache_key in self.semantic_cache:
+            cached = self.semantic_cache[cache_key]
+            if isinstance(cached, dict) and cached.get("result"):
+                return cached["result"]
+
+        if not self.api_enabled:
+            return None
+
+        result = None
+
+        if self.llm_provider == "deepseek" and self.deepseek_api_key:
+            result = self._call_deepseek_api(prompt, system)
+        elif self.llm_provider == "gemini" and self.gemini_api_key:
+            result = self._call_gemini_api(prompt, system)
+
+        # 缓存结果
+        if result:
+            self.semantic_cache[cache_key] = {
+                "result": result,
+                "timestamp": time.time(),
+            }
+            self._save_semantic_cache()
+
+        return result
+
+    def _call_deepseek_api(self, prompt: str, system: str = "") -> Optional[str]:
+        """调用 DeepSeek API"""
+        try:
+            import requests
+            headers = {
+                "Authorization": f"Bearer {self.deepseek_api_key}",
+                "Content-Type": "application/json",
+            }
+            messages = []
+            if system:
+                messages.append({"role": "system", "content": system})
+            messages.append({"role": "user", "content": prompt})
+            payload = {
+                "model": self.deepseek_model,
+                "messages": messages,
+                "temperature": 0.1,
+                "max_tokens": 500,
+            }
+            url = f"{self.deepseek_api_base}/v1/chat/completions"
+            resp = requests.post(url, headers=headers, json=payload, timeout=30)
+            if resp.status_code == 200:
+                data = resp.json()
+                return data["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            return None
+        return None
+
+    def _call_gemini_api(self, prompt: str, system: str = "") -> Optional[str]:
+        """调用 Gemini API"""
+        try:
+            import requests
+            url = (
+                f"https://generativelanguage.googleapis.com/v1beta/models/"
+                f"{self.gemini_model}:generateContent?key={self.gemini_api_key}"
+            )
+            contents = []
+            if system:
+                contents.append({
+                    "role": "user",
+                    "parts": [{"text": f"[System Instruction]\n{system}\n\n[User Message]\n{prompt}"}],
+                })
+                contents.append({
+                    "role": "model",
+                    "parts": [{"text": "I understand the system instruction. I will format my response as requested."}],
+                })
+            else:
+                contents.append({
+                    "role": "user",
+                    "parts": [{"text": prompt}],
+                })
+            payload = {
+                "contents": contents,
+                "generationConfig": {
+                    "temperature": 0.1,
+                    "maxOutputTokens": 500,
+                },
+            }
+            resp = requests.post(url, json=payload, timeout=30)
+            if resp.status_code == 200:
+                data = resp.json()
+                candidates = data.get("candidates", [])
+                if candidates:
+                    parts = candidates[0].get("content", {}).get("parts", [])
+                    if parts:
+                        return parts[0].get("text", "").strip()
+        except Exception as e:
+            return None
+        return None
+
+    def _save_semantic_cache(self):
+        """保存语义缓存到磁盘"""
+        try:
+            with open(self.semantic_cache_path, "w", encoding="utf-8") as f:
+                json.dump(self.semantic_cache, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
