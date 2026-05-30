@@ -108,6 +108,23 @@ class M1DiagnosisEngine:
         with open(db_path, "r", encoding="utf-8") as f:
             self.db: List[dict] = json.load(f)
 
+        # ── 诊断卡片库（已合并入 db，保留独立索引供精确查询） ──
+        self.diagnostic_cards: Dict[str, dict] = {}
+        cards_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "m1_diagnostic_cards.json")
+        if os.path.exists(cards_path):
+            try:
+                with open(cards_path, "r", encoding="utf-8") as f:
+                    raw = json.load(f)
+                for card in raw.get("diagnostic_cards", []):
+                    cn = card.get("diseaseName_cn", "").strip()
+                    name = card.get("disease_name", "").strip()
+                    if cn:
+                        self.diagnostic_cards[cn] = card
+                    if cn and name:
+                        self.diagnostic_cards[f"{cn} ({name})"] = card
+            except Exception:
+                pass
+
         # ── 索引 ──
         self.name_index: Dict[str, dict] = {}       # 英文名(小写) → 条目
         self.cn_name_index: Dict[str, dict] = {}     # 中文名 → 条目
@@ -118,6 +135,29 @@ class M1DiagnosisEngine:
 
         # ── 系统索引（疾病→系统）──
         self.system_index: Dict[str, str] = {}
+
+        # ── 诊断标准补齐配置 ──
+        # 当 LLM 诊断到某疾病但该疾病缺少 diagnostic_criteria 时，
+        # 自动让 LLM 查询循证医学网站并缓存结果
+        self.criteria_fill_enabled = True
+        self.criteria_fill_cache_path = os.path.join(script_dir, "data", "disease_cache", "runtime_cache.json")
+        self.criteria_fill_cache: Dict[str, dict] = {}
+        if os.path.exists(self.criteria_fill_cache_path):
+            try:
+                with open(self.criteria_fill_cache_path, "r", encoding="utf-8") as f:
+                    self.criteria_fill_cache = json.load(f)
+            except Exception:
+                self.criteria_fill_cache = {}
+        # 已补齐过的疾病集合（避免重复查询）
+        self.criteria_filled_set: set = set()
+        # 加载已补齐记录
+        self.criteria_filled_log_path = os.path.join(script_dir, "data", "disease_cache", "criteria_filled_log.json")
+        if os.path.exists(self.criteria_filled_log_path):
+            try:
+                with open(self.criteria_filled_log_path, "r", encoding="utf-8") as f:
+                    self.criteria_filled_set = set(json.load(f))
+            except Exception:
+                self.criteria_filled_set = set()
 
         for entry in self.db:
             name = entry["disease_name"].lower()
@@ -204,527 +244,218 @@ class M1DiagnosisEngine:
 
     # ══════════════════════════════════════════════════════
     #  症状轨：代码检索
-    # ══════════════════════════════════════════════════════
 
-    def _retrieve_by_symptom_track(self, ni: NormalizedInput, top_k: int = 20) -> List[dict]:
-        """症状轨：多路召回 + 关键特征重排
+    def _fill_missing_criteria(self, disease_cn_name: str, disease_en_name: str = "") -> bool:
+        """即时补齐单个疾病的诊断标准
 
-        多路召回：
-        1. 病名/中文名精确/模糊匹配
-        2. 主诉匹配
-        3. 症状/体征/检查匹配（key_symptom_pattern / key_exam_findings / local_retrieval_keywords）
-        4. 语义匹配（diagnostic_criteria / typical_symptoms 中包含多个患者症状）
+        当 M1 诊断出某疾病后，发现该疾病在 diseases_core.json 中缺少
+        diagnostic_criteria / typical_symptoms / differential_diagnosis 时，
+        调用 LLM 查询默沙东/MSD Manual 等循证医学网站并缓存回数据库。
 
-        重排（得分叠加）：
-        - key_symptom_pattern / key_exam_findings 命中 → 高权重
-        - chief_complaint 命中典型症状 → 中权重
-        - 多症状同时命中 → 加分
-        - 仅命中泛化词 → 降权×0.1
-        - 仅命中"发热、乏力、疼痛"等单一泛化症状 → 降权
-        - 与主诉器官系统无关 → 降权（但不硬过滤）
-
-        返回 top_k 候选给 LLM 裁判。
+        规则：
+        - 只查未补齐过的疾病
+        - LLM 只能搜索网上循证医学来源（默沙东、pubmed）
+        - 结果写回 diseases_core.json 和 runtime_cache.json
+        - 记录到 criteria_filled_log.json 避免重复查询
         """
-        if self.llm_api_available():
-            return self._retrieve_by_symptom_track_v2(ni, top_k)
-        else:
-            return self._retrieve_by_symptom_track_fallback(ni, top_k)
+        cache_key = disease_cn_name or disease_en_name
+        if not cache_key or cache_key in self.criteria_filled_set:
+            return False
 
-    def _retrieve_by_symptom_track_v2(self, ni: NormalizedInput, top_k: int = 20) -> List[dict]:
-        """多路召回 v2（LLM 可用时的智能版本）"""
-        patient_texts = set()
-        for key in ["symptoms", "signs", "labs", "imaging"]:
-            for t in getattr(ni, key, []):
-                patient_texts.add(t.lower().strip())
-        patient_texts.discard("")
-        if not patient_texts:
-            return []
+        if cache_key in self.criteria_fill_cache:
+            cached = self.criteria_fill_cache[cache_key]
+            if cached.get("diagnostic_criteria") or cached.get("diagnostic_key_points"):
+                self.criteria_filled_set.add(cache_key)
+                self._save_criteria_filled_log()
+                return True
 
-        patient_disease = ni.patient_mentioned_disease.lower().strip()
-        chief = ni.chief_complaint.lower().strip()
-
-        # ── 系统粗过滤：从症状/主诉推断最可能的 1-3 个系统 ──
-        patient_systems = self._infer_systems(ni, patient_texts, chief)
-        for s in patient_systems:
-            pass  # 用于调试
-
-        # ── 每条路召回的候选集合 ──
-        candidates = {}  # disease_name_lower → {entry, score, reasons}
-
-        # 路1：病名/中文名精确/模糊匹配（最高权重）
-        if patient_disease:
-            for entry in self.db:
-                # 系统粗过滤：只检索相关系统的疾病
-                en = entry["disease_name"].lower()
-                if patient_systems and self.system_index.get(en, "综合") not in patient_systems:
-                    continue
-                dn = en
-                cn = entry.get("diseaseName_cn", "").lower()
-                if not cn:
-                    continue
-                # 精确匹配
-                if patient_disease == dn or patient_disease == cn:
-                    candidates.setdefault(dn, {"entry": entry, "score": 0, "reasons": []})
-                    candidates[dn]["score"] += 10
-                    candidates[dn]["reasons"].append("病名精确匹配")
-                # 包含匹配
-                elif (len(patient_disease) >= 2 and
-                      (patient_disease in dn or patient_disease in cn or dn in patient_disease or cn in patient_disease)):
-                    candidates.setdefault(dn, {"entry": entry, "score": 0, "reasons": []})
-                    candidates[dn]["score"] += 6
-                    candidates[dn]["reasons"].append("病名模糊匹配")
-
-        # 路2：主诉匹配 key_symptom_pattern（中权重）
-        if chief:
-            for entry in self.db:
-                # 系统粗过滤
-                if patient_systems and self.system_index.get(entry["disease_name"].lower(), "综合") not in patient_systems:
-                    continue
-                ksp = entry.get("source_verified_medical_summary", {}).get("key_symptom_pattern", "")
-                ts_list = entry.get("typical_symptoms", [])
-                dc_list = entry.get("diagnostic_criteria", [])
-                dn = entry["disease_name"].lower()
-
-                all_text = (ksp + " " + " ".join(ts_list) + " " + " ".join(dc_list)).lower()
-                if chief in all_text or any(s in all_text for s in re.split(r"[，；、,;]", chief) if len(s) >= 2):
-                    candidates.setdefault(dn, {"entry": entry, "score": 0, "reasons": []})
-                    candidates[dn]["score"] += 5
-                    candidates[dn]["reasons"].append("主诉命中典型症状")
-
-        # 路3：症状/体征/检查匹配 key_exam_findings / local_retrieval_keywords（高权重）
-        for pt in patient_texts:
-            for entry in self.db:
-                # 系统粗过滤
-                if patient_systems and self.system_index.get(entry["disease_name"].lower(), "综合") not in patient_systems:
-                    continue
-                sm = entry.get("source_verified_medical_summary", {})
-                ksp = sm.get("key_symptom_pattern", "").lower()
-                kef = sm.get("key_exam_findings", "").lower()
-                keywords = [k.lower() for k in sm.get("local_retrieval_keywords", [])]
-                ts_list = [t.lower() for t in entry.get("typical_symptoms", [])]
-                dn = entry["disease_name"].lower()
-
-                # 检查命中
-                hit_weight = 0
-                reason = ""
-                if pt in ksp or pt in kef:
-                    hit_weight = 7
-                    reason = f"关键特征命中: {pt}"
-                elif any(pt in kw or kw in pt for kw in keywords):
-                    hit_weight = 6
-                    reason = f"局部检索词命中: {pt}"
-                elif any(pt == ts or pt in ts or ts in pt for ts in ts_list):
-                    # 检查是否泛化词
-                    if pt in HIGH_FREQ_GENERIC_TERMS:
-                        hit_weight = 1
-                        reason = f"泛化词命中: {pt}"
-                    else:
-                        hit_weight = 4
-                        reason = f"典型症状命中: {pt}"
-
-                if hit_weight > 0:
-                    candidates.setdefault(dn, {"entry": entry, "score": 0, "reasons": []})
-                    candidates[dn]["score"] += hit_weight
-                    candidates[dn]["reasons"].append(reason)
-
-        # 路4：diagnostic_criteria 语义召回（低权重，仅当多个患者症状同时命中）
+        target_entry = None
         for entry in self.db:
-            # 系统粗过滤
-            if patient_systems and self.system_index.get(entry["disease_name"].lower(), "综合") not in patient_systems:
-                continue
-            dc_list = [d.lower() for d in entry.get("diagnostic_criteria", [])]
-            dn = entry["disease_name"].lower()
-            dc_text = " ".join(dc_list)
-            pts_hit = sum(1 for pt in patient_texts if len(pt) >= 2 and (pt in dc_text))
-            if pts_hit >= 2:
-                candidates.setdefault(dn, {"entry": entry, "score": 0, "reasons": []})
-                candidates[dn]["score"] += pts_hit * 2  # 每命中一个症状 +2
-                candidates[dn]["reasons"].append(f"诊断标准多症状命中({pts_hit}个)")
+            cn = entry.get("diseaseName_cn", "").strip()
+            en = entry.get("disease_name", "").strip()
+            if (disease_cn_name and cn == disease_cn_name) or                (disease_en_name and en.lower() == disease_en_name.lower()) or                (disease_cn_name and disease_cn_name in cn):
+                target_entry = entry
+                break
 
-        # ── 重排 ──
-        # 先确定主诉的器官系统方向（用于跨系统降权）
-        chief_systems = self._infer_systems_from_text(chief + " " + " ".join(patient_texts))
+        if target_entry is None:
+            return False
 
-        scored = []
-        for dn, data in candidates.items():
-            entry = data["entry"]
-            raw_score = data["score"]
-            reasons = list(set(data["reasons"]))
-            final_score = float(raw_score)
+        if target_entry.get("diagnostic_criteria") or target_entry.get("typical_symptoms"):
+            return False
 
-            # 1. key_findings 命中 → 加分（已在上面加过了）
+        disease_name_display = target_entry.get("diseaseName_cn", target_entry.get("disease_name", ""))
+        prompt_text = """你是一个医学疾病知识查询助手。你的任务是查找疾病 "%s" 的西医诊断标准。
 
-            # 2. 多症状同时命中 → 额外加分
-            hit_symptoms = set()
-            for r in reasons:
-                if "命中" in r:
-                    for pt in patient_texts:
-                        if pt in r:
-                            hit_symptoms.add(pt)
-            if len(hit_symptoms) >= 3:
-                final_score += 5
-            elif len(hit_symptoms) >= 2:
-                final_score += 2
+## 规则（严格遵循）
+1. 你只能基于默沙东诊疗手册（MSD Manuals, https://www.msdmanuals.com/）、PubMed、CDC、WHO、NICE、UpToDate 等循证医学来源中的信息进行回答。
+2. 严禁使用中医来源（如"中医世家"、"方剂学"、"针灸"等）。
+3. 严禁编造诊断标准。如果找不到可靠信息，请如实说明。
+4. 只能查该疾病的【西医诊断标准】，不涉及中医辨证。
+5. 输出必须是严格的 JSON 格式，不得输出 Markdown。
 
-            # 3. 仅命中泛化词且没有关键特征命中 → 降权
-            generic_only = all("泛化词命中" in r or "诊断标准多症状命中" in r for r in reasons)
-            if generic_only and not any("关键特征命中" in r or "局部检索词命中" in r or "病名" in r or "主诉命中" in r for r in reasons):
-                final_score *= 0.2
+## 输出格式
+{
+  "diagnostic_criteria": ["诊断标准1（简明扼要）", "诊断标准2"],
+  "typical_symptoms": ["典型症状1", "典型症状2"],
+  "differential_diagnosis": ["鉴别诊断病名1", "鉴别诊断病名2"],
+  "source_urls": ["来源1的URL", "来源2的URL"]
+}
 
-            # 4. 与主诉器官系统无关 → 降权
-            dn_text = (entry["disease_name"] + " " + entry.get("diseaseName_cn", "")).lower()
-            sm_text = entry.get("source_verified_medical_summary", {}).get("key_symptom_pattern", "").lower()
-            disease_all_text = dn_text + " " + sm_text
-            system_overlap = 0
-            for sys, kws in SYSTEM_KEYWORDS.items():
-                if sys in chief_systems:
-                    if any(kw in disease_all_text for kw in kws):
-                        system_overlap += 1
-            if system_overlap == 0:
-                final_score *= 0.5  # 完全无关降权50%
-                reasons.append("系统无关降权")
+如果确实找不到可靠信息，输出：{"diagnostic_criteria": [], "typical_symptoms": [], "differential_diagnosis": [], "source_urls": []}"""
+        prompt = prompt_text % disease_name_display
 
-            # 5. 只有2个或以下泛化词命中 → 大幅度降权
-            if len(reasons) <= 2 and all("泛化词" in r or "诊断标准多症状命中" in r or "系统无关" in r for r in reasons):
-                final_score *= 0.3
+        raw = self._call_llm(prompt, temperature=0.1, max_tokens=800)
+        if not raw:
+            return False
 
-            scored.append((final_score, entry, reasons))
-
-        # 排序输出
-        scored.sort(key=lambda x: -x[0])
-        return [entry for _, entry, _ in scored[:top_k]]
-
-    def _retrieve_by_symptom_track_fallback(self, ni: NormalizedInput, top_k: int = 20) -> List[dict]:
-        """无 LLM 时的兜底版本（简化版多路召回，不用LLM也能运行）"""
-        patient_texts = set()
-        for key in ["symptoms", "signs", "labs", "imaging"]:
-            for t in getattr(ni, key, []):
-                patient_texts.add(t.lower().strip())
-        patient_texts.discard("")
-        if not patient_texts:
-            return []
-
-        patient_disease = ni.patient_mentioned_disease.lower().strip()
-        chief = ni.chief_complaint.lower().strip()
-
-        # 系统粗过滤
-        patient_systems = self._infer_systems(ni, patient_texts, chief)
-
-        scored = []
-        for entry in self.db:
-            if patient_systems and self.system_index.get(entry["disease_name"].lower(), "综合") not in patient_systems:
-                continue
-            dn = entry["disease_name"].lower()
-            cn = entry.get("diseaseName_cn", "").lower()
-            sm = entry.get("source_verified_medical_summary", {})
-            ksp = sm.get("key_symptom_pattern", "").lower()
-            kef = sm.get("key_exam_findings", "").lower()
-            keywords = [k.lower() for k in sm.get("local_retrieval_keywords", [])]
-            ts_list = [t.lower() for t in entry.get("typical_symptoms", [])]
-            dc_list = [d.lower() for d in entry.get("diagnostic_criteria", [])]
-            all_text = (ksp + " " + kef + " " + " ".join(keywords) + " " +
-                        " ".join(ts_list) + " " + " ".join(dc_list))
-
-            score = 0
-
-            # 病名匹配
-            if patient_disease and cn:
-                if patient_disease == dn or patient_disease == cn:
-                    score += 12
-                elif len(patient_disease) >= 2 and (patient_disease in dn or dn in patient_disease):
-                    score += 8
-
-            # 主诉匹配
-            if chief and (chief in ksp or any(chief in ts for ts in ts_list)):
-                score += 5
-
-            # 关键特征匹配
-            for pt in patient_texts:
-                if pt in ksp or pt in kef:
-                    score += 6
-                elif any(pt in kw or kw in pt for kw in keywords):
-                    score += 5
-                elif any(pt == ts or (len(pt) >= 2 and pt in ts) for ts in ts_list):
-                    if pt not in HIGH_FREQ_GENERIC_TERMS:
-                        score += 3
-                    else:
-                        score += 0.5
-
-            if score > 0:
-                scored.append((score, entry))
-
-        scored.sort(key=lambda x: -x[0])
-        return [entry for _, entry in scored[:top_k]]
-
-    def _infer_systems_from_text(self, text: str) -> set:
-        """从文本推断涉及的器官系统"""
-        systems = set()
-        text_lower = text.lower()
-        for sys_name, kws in SYSTEM_KEYWORDS.items():
-            if any(kw in text_lower for kw in kws):
-                systems.add(sys_name)
-        return systems or {"全身"}
-
-    def _infer_systems(self, ni, patient_texts: set, chief: str) -> set:
-        """极简系统推断：从症状/主诉/病名推断最可能的 1-3 个系统"""
-        # 从患者所有文本中提取关键词
-        all_text = (chief + " " + " ".join(patient_texts) + " " +
-                    ni.patient_mentioned_disease).lower()
-
-        # 症状→系统信号
-        sys_signals = {}
-        for sys_name, kws in SYSTEM_KEYWORDS.items():
-            hits = sum(1 for kw in kws if kw in all_text)
-            if hits > 0:
-                sys_signals[sys_name] = hits
-
-        if not sys_signals:
-            # 完全没信号时从症状推断
-            system_from_text = self._infer_systems_from_text(all_text)
-            if system_from_text != {"全身"}:
-                return system_from_text
-            # 还是没信号→所有系统（不过滤）
-            return set(self.system_index.values())
-
-        # 取命中次数最多的 1-3 个系统
-        ranked = sorted(sys_signals.items(), key=lambda x: -x[1])
-        top_systems = {s for s, _ in ranked[:3]}
-
-        # 如果"全身"/"综合"有命中，仅在患者没有明确系统归属时才加入
-        whole_body = {"全身", "综合"}
-        if len(top_systems) == 0 or (len(top_systems) == 1 and "全身" in top_systems):
-            for wb in whole_body:
-                if wb.lower() in all_text or any(wb in s for s in ranked[:5]):
-                    top_systems.add(wb)
-
-        # 如果系统分数差异很大 + 第一名明显 > 第三名，只保留前1-2个
-        if len(ranked) >= 3:
-            ratio = ranked[0][1] / max(ranked[2][1], 1)
-            if ratio > 5 and ranked[0][1] >= 3:
-                top_systems = {s for s, _ in ranked[:2]}
-
-        return top_systems
-
-
-
-    # ══════════════════════════════════════════════════════
-    #  病名轨：LLM 猜 3-5 个病名
-    # ══════════════════════════════════════════════════════
-
-    def _get_disease_names_text(self) -> str:
-        """获取疾病名称列表文本（供 LLM 选择）"""
-        if self._disease_names_txt is None:
-            path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "m1_disease_names.txt")
-            if os.path.exists(path):
-                with open(path, "r", encoding="utf-8") as f:
-                    self._disease_names_txt = f.read()
+        import re
+        try:
+            m = re.search(r'\{.*\}', raw, re.DOTALL)
+            if m:
+                result = json.loads(m.group())
             else:
-                self._disease_names_txt = "\n".join(self.disease_names_list)
-        return self._disease_names_txt
+                return False
+        except (json.JSONDecodeError, AttributeError):
+            return False
 
-    def _retrieve_by_disease_name_track(self, ni: NormalizedInput) -> List[dict]:
-        """病名轨：LLM 根据患者资料猜 3-5 个病名
+        has_criteria = result.get("diagnostic_criteria") and len(result["diagnostic_criteria"]) > 0
+        has_symptoms = result.get("typical_symptoms") and len(result["typical_symptoms"]) > 0
+        has_diff = result.get("differential_diagnosis") and len(result["differential_diagnosis"]) > 0
 
-        第一步：让 LLM 从主诉推断涉及的系统（如呼吸系统、消化系统），缩小范围
-        第二步：在缩小后的列表中选 3-5 个病名
-        """
-        if not self.llm_api_available():
-            return []
+        if not (has_criteria or has_symptoms):
+            return False
 
-        # 第一步：让 LLM 先缩小系统范围
-        system_prompt = f"""根据患者主诉和症状，判断最可能涉及的 1-2 个器官系统。
+        if has_criteria:
+            target_entry["diagnostic_criteria"] = result["diagnostic_criteria"]
+        if has_symptoms:
+            target_entry["typical_symptoms"] = result["typical_symptoms"]
+        if has_diff:
+            target_entry["differential_diagnosis"] = result["differential_diagnosis"]
 
-主诉：{ni.chief_complaint}
-症状：{'；'.join(ni.symptoms + ni.signs + ni.labs)}
+        try:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            db_path = os.path.join(script_dir, "diseases_core.json")
+            with open(db_path, 'w', encoding='utf-8') as f:
+                json.dump(self.db, f, ensure_ascii=False, indent=4)
+        except Exception:
+            self.criteria_filled_set.add(cache_key)
+            return False
 
-请从以下列表中选择最相关的 1-2 个系统（只输出系统名，每行一个）：
-呼吸系统、循环系统、消化系统、神经系统、泌尿系统、内分泌系统、血液系统、
-骨骼肌肉系统、皮肤系统、免疫系统、生殖系统、精神心理、全身性/感染性"""
-
-        system_result = self._call_llm(system_prompt, temperature=0.1, max_tokens=50)
-
-        # 用系统名或症状关键词过滤疾病列表
-        system_kw_map = {
-            "呼吸": ["呼吸", "肺", "支气管", "肺炎", "哮喘", "咳嗽", "respiratory", "pulmonary", "lung"],
-            "循环": ["心", "血管", "冠脉", "心律", "cardiac", "heart", "vascular"],
-            "消化": ["胃", "肠", "肝", "胰", "胆", "食管", "gastr", "hepat", "enter", "pancrea"],
-            "神经": ["神经", "脑", "卒中", "癫痫", "偏头痛", "neuro", "cerebr", "stroke"],
-            "泌尿": ["肾", "尿", "膀胱", "renal", "nephr", "urinar"],
-            "内分泌": ["甲状腺", "糖尿", "肾上腺", "激素", "thyroid", "diabet", "adrenal"],
-            "血液": ["贫血", "血液", "白血", "淋巴", "凝血", "anemia", "hemato"],
-            "皮肤": ["皮肤", "皮疹", "湿疹", "银屑", "dermat", "skin", "rash"],
-            "全身": ["感染", "发热", "败血", "病毒", "细菌", "fever", "infect", "sepsis"],
+        import time
+        self.criteria_fill_cache[cache_key] = {
+            "disease_name": disease_name_display,
+            "diagnostic_criteria": result.get("diagnostic_criteria", []),
+            "typical_symptoms": result.get("typical_symptoms", []),
+            "differential_diagnosis": result.get("differential_diagnosis", []),
+            "source_urls": result.get("source_urls", []),
+            "status": "llm_filled_on_demand",
+            "filled_at": time.strftime('%Y-%m-%d %H:%M:%S'),
         }
+        with open(self.criteria_fill_cache_path, 'w', encoding='utf-8') as f:
+            json.dump(self.criteria_fill_cache, f, ensure_ascii=False, indent=2)
 
-        narrowed_keywords = []
-        if system_result:
-            for line in system_result.strip().split("\n"):
-                for sys_name, kws in system_kw_map.items():
-                    if sys_name in line:
-                        narrowed_keywords.extend(kws)
+        self.criteria_filled_set.add(cache_key)
+        self._save_criteria_filled_log()
+        print(f"[M1] 诊断标准补齐: {disease_name_display} ({len(result.get('diagnostic_criteria', []))}条标准)")
+        return True
 
-        # 如果 LLM 缩小范围失败，用症状关键词
-        if not narrowed_keywords:
-            narrowed_keywords = [s.lower() for s in ni.symptoms + [ni.chief_complaint] if s]
+    def _save_criteria_filled_log(self):
+        """保存补齐日志"""
+        try:
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            log_path = os.path.join(script_dir, "data", "disease_cache", "criteria_filled_log.json")
+            with open(log_path, 'w', encoding='utf-8') as f:
+                json.dump(sorted(list(self.criteria_filled_set)), f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
 
-        # 用关键词过滤疾病列表
-        filtered_names = []
-        for display in self.disease_names_list:
-            display_lower = display.lower()
-            if any(kw in display_lower for kw in narrowed_keywords):
-                filtered_names.append(display)
-
-        if not filtered_names or len(filtered_names) > 200:
-            filtered_names = self.disease_names_list[:100]
-
-        disease_list = "\n".join(filtered_names)
-
-        prompt = f"""你是一个疾病名称猜测助手。从下面的疾病列表中，选出最可能符合患者病情的 3-5 个疾病名称。
-
-## 患者资料
-- 主诉：{ni.chief_complaint}
-- 症状：{'；'.join(ni.symptoms)}
-- 体征：{'；'.join(ni.signs)}
-- 实验室：{'；'.join(ni.labs)}
-- 影像学：{'；'.join(ni.imaging)}
-- 患者提到的病名：{ni.patient_mentioned_disease}
-- 病程：{ni.duration}
-
-## 疾病列表
-{disease_list}
-
-## 要求
-1. 只输出疾病全称（中文名 (英文名)），每行一个
-2. 严格从列表中选，不要创造列表中不存在的病名
-3. 患者提到的病名在列表中则优先选
-4. 按可能性从高到低排列
-5. 信息不足无法判断时输出"无匹配"
-6. 不要输出任何其他文字"""
-
-        result = self._call_llm(prompt, temperature=0.2)
-        if not result:
-            return []
-
-        # 解析 LLM 返回的病名
-        candidates = []
-        seen = set()
-        for line in result.strip().split("\n"):
-            line = line.strip().strip('"').strip("'").strip("-").strip()
-            if not line or line == "无匹配":
-                continue
-
-            match = re.match(r'(.+?)\s*[（(](.+?)[）)]', line)
-            if match:
-                cn = match.group(1).strip()
-                en = match.group(2).strip().lower()
-                if en in self.name_index and en not in seen:
-                    candidates.append(self.name_index[en])
-                    seen.add(en)
-                elif cn.lower() in self.cn_name_index:
-                    entry = self.cn_name_index[cn.lower()]
-                    if entry["disease_name"].lower() not in seen:
-                        candidates.append(entry)
-                        seen.add(entry["disease_name"].lower())
-            else:
-                line_lower = line.lower()
-                if line_lower in self.name_index and line_lower not in seen:
-                    candidates.append(self.name_index[line_lower])
-                    seen.add(line_lower)
-                elif line_lower in self.cn_name_index:
-                    entry = self.cn_name_index[line_lower]
-                    if entry["disease_name"].lower() not in seen:
-                        candidates.append(entry)
-                        seen.add(entry["disease_name"].lower())
-
-        return candidates
-
-    # ══════════════════════════════════════════════════════
-    #  LLM 逻辑裁判：选 Top 1-3        return candidates
-
-    # ══════════════════════════════════════════════════════
-    #  LLM 逻辑裁判：选 Top 1-3
-    # ══════════════════════════════════════════════════════
-
-    def _llm_select_top_diagnoses(self, ni: NormalizedInput, candidates: List[dict]) -> List[str]:
-        """LLM 作为逻辑裁判，选出 Top 1-3 疾病名称"""
-        if not candidates:
-            return []
-
-        # 构建候选疾病信息
-        candidate_sections = []
-        for i, entry in enumerate(candidates[:12]):  # 最多给 LLM 12 个候选
-            cn = entry.get("diseaseName_cn", "")
-            display_name = f'{cn} ({entry["disease_name"]})' if cn else entry["disease_name"]
-            criteria = entry.get("diagnostic_criteria", [])
-            typical = entry.get("typical_symptoms", [])
-            diff_dx = entry.get("differential_diagnosis", [])
-
-            section = f"""### 候选 {i+1}：{display_name}
-- 诊断标准：{'；'.join(criteria[:8])}
-- 典型症状：{'；'.join(typical[:6])}
-- 鉴别诊断：{'；'.join(diff_dx[:5])}"""
-            candidate_sections.append(section)
-
-        prompt = f"""你是一名诊断专家。请根据患者资料和候选疾病的诊断标准，选出最符合患者病情的 Top 1-3 个疾病。
-
-## 患者资料
-- 主诉：{ni.chief_complaint}
-- 症状：{', '.join(ni.symptoms)}
-- 体征：{', '.join(ni.signs)}
-- 实验室检查：{', '.join(ni.labs)}
-- 影像学：{', '.join(ni.imaging)}
-- 患者提到的病名：{ni.patient_mentioned_disease}
-- 病程：{ni.duration}
-- 起病方式：{ni.onset}
-
-## 候选疾病及其诊断标准
-{chr(10).join(candidate_sections)}
-
-## 你的任务
-1. 逐一对比患者资料与每个候选病的诊断标准
-2. 按匹配程度从高到低排序
-3. 选出最符合的 Top 1-3 个疾病名称
-4. 如果最高匹配与其他候选差距显著，可只输出 1 个
-5. 如果所有候选都不匹配，输出"无匹配"
-
-## 输出要求
-- 只输出疾病名称（中文名 (英文名) 格式），每行一个
-- 按匹配度从高到低排列
-- 不要输出任何其他文字、解释或推理过程
-- 不要输出列表中不存在的病名"""
-
-        result = self._call_llm(prompt, temperature=0.1)
-        if not result:
-            return []
-
-        # 解析结果
-        diagnoses = []
-        for line in result.strip().split("\n"):
-            line = line.strip().strip('"').strip("'").strip("-").strip()
-            if not line or line == "无匹配":
-                continue
-
-            # 尝试解析
-            parsed_name = self._parse_disease_name(line)
-            if parsed_name and parsed_name not in diagnoses:
-                diagnoses.append(parsed_name)
-
-        return diagnoses[:3]
+    def _keyword_fallback(self, mentioned: str, symptoms: List[str]) -> List[str]:
+        """代码兜底：当 LLM 不可用时，用关键词+别名映射模糊搜索匹配疾病
+        
+        策略：
+        1. 口语化病名→标准名映射表（如"外眼睑炎"→"睑缘炎"）
+        2. 关键词模糊匹配（支持子串匹配）
+        3. 症状关键词辅助评分
+        """
+        # 口语化病名→标准名映射（覆盖常见不匹配场景）
+        slang_map = {
+            "外眼睑炎": "睑缘炎",
+            "眼睛发炎": "结膜炎",
+            "角膜炎": "角膜炎",
+            "麦粒肿": "睑腺炎",
+            "针眼": "睑腺炎",
+            "白内障": "白内障",
+            "青光眼": "青光眼",
+            "老花眼": "老花眼",
+            "糖尿病": "糖尿病",
+            "高血压": "高血压",
+            "感冒": "上呼吸道感染",
+            "拉肚子": "腹泻",
+            "发烧": "发热",
+        }
+        
+        # 构建搜索关键词
+        keywords = set()
+        search_text = (mentioned or "") + " " + " ".join(symptoms or [])
+        search_lower = search_text.lower()
+        
+        # 添加映射后的标准名
+        for slang, standard in slang_map.items():
+            if slang in search_lower:
+                keywords.add(standard.lower())
+        
+        # 添加原词中的有意义的词（≥2个字）
+        for w in re.split(r'[\s()（）,，、.:：]+', search_lower):
+            if len(w) >= 2:
+                keywords.add(w)
+        
+        scored = []
+        for entry in self.db:
+            name = entry["disease_name"].lower()
+            cn = entry.get("diseaseName_cn", entry["disease_name"]).lower()
+            cn_part = cn.split(" (")[0].split("（")[0]  # 只取中文部分
+            
+            score = 0
+            for kw in keywords:
+                # 中文部分子串匹配（最高权重）
+                if len(kw) >= 2 and kw in cn_part:
+                    score += 3
+                # 英文部分子串匹配
+                if len(kw) >= 3 and kw in name:
+                    score += 2
+                # 完整中文名匹配
+                if cn_part == kw:
+                    score += 5
+                # 症状关键词（较短的词）匹配
+                if 2 <= len(kw) <= 3 and kw in cn_part:
+                    score += 2
+            
+            if score > 0:
+                display = entry.get("diseaseName_cn", entry["disease_name"])
+                scored.append((score, display))
+        
+        scored.sort(key=lambda x: (-x[0], x[1]))
+        return [s[1] for s in scored[:3]]
 
     def _parse_disease_name(self, line: str) -> Optional[str]:
         """解析疾病名称行，返回标准英文名"""
+        line = line.replace("（", "(").replace("）", ")")
         # 格式1：中文名 (英文名)
         match = re.match(r'(.+?)\s*[（(](.+?)[）)]', line)
         if match:
-            en = match.group(2).strip()
-            if en.lower() in self.name_index:
+            en = match.group(2).strip().lower()
+            if en in self.name_index:
                 return en
             cn = match.group(1).strip().lower()
             if cn in self.cn_name_index:
                 return self.cn_name_index[cn]["disease_name"]
+            # 中文名 + 英文名一起查（如 "睑缘炎 (blepharitis)"）
+            combined = f"{cn} ({en})"
+            if combined in self.name_index:
+                return en
 
-        # 格式2：直接是英文名
         line_lower = line.strip().lower()
+        # 格式2：直接是英文名
         if line_lower in self.name_index:
             return self.name_index[line_lower]["disease_name"]
 
@@ -741,106 +472,6 @@ class M1DiagnosisEngine:
 
     # ══════════════════════════════════════════════════════
     #  代码兜底排序（当 LLM 不可用时使用）
-    # ══════════════════════════════════════════════════════
-
-    def _score_by_code(self, ni: NormalizedInput, candidates: List[dict]) -> List[str]:
-        """代码兜底排序：基于文本匹配度排序输出 Top 1-3"""
-        if not candidates:
-            return []
-
-        patient_texts = set()
-        for key in ["symptoms", "signs", "labs", "imaging"]:
-            for t in getattr(ni, key, []):
-                patient_texts.add(t.lower().strip())
-        patient_texts.discard("")
-
-        if not patient_texts:
-            # 只有一个候选时直接返回
-            return [candidates[0]["disease_name"]]
-
-        scored = []
-        for entry in candidates:
-            entry_texts = []
-            for field in ["diagnostic_criteria", "typical_symptoms"]:
-                for item in entry.get(field, []):
-                    if isinstance(item, str):
-                        entry_texts.append(item.lower().strip())
-
-            score = 0
-            necessary_matches = 0
-            for pt in patient_texts:
-                for et in entry_texts:
-                    if not et:
-                        continue
-                    if pt == et:
-                        score += 3
-                        necessary_matches += 1
-                    elif len(pt) >= 2 and len(et) >= 2 and (pt in et or et in pt):
-                        score += 2
-                        necessary_matches += 1
-                    elif is_synonym_match(pt, et):
-                        score += 2
-                        necessary_matches += 1
-
-            scored.append((score, necessary_matches, entry["disease_name"]))
-
-        scored.sort(key=lambda x: (-x[0], -x[1]))
-        return [name for _, _, name in scored[:3]]
-
-    # ══════════════════════════════════════════════════════
-    #  兜底：查默沙东
-    # ══════════════════════════════════════════════════════
-
-    def _search_merck_manual(self, ni: NormalizedInput) -> Optional[str]:
-        """查默沙东手册获取最适配病名"""
-        # 构造缓存键
-        cache_key = hashlib.md5(
-            (ni.chief_complaint + "|" + "|".join(ni.symptoms)).encode()
-        ).hexdigest()
-
-        if cache_key in self.merck_cache:
-            cached = self.merck_cache[cache_key]
-            if isinstance(cached, dict) and cached.get("result"):
-                return cached["result"]
-
-        prompt = f"""根据患者资料，在默沙东诊疗手册专业版中检索最适配的疾病名称。
-
-## 患者资料
-- 主诉：{ni.chief_complaint}
-- 症状：{', '.join(ni.symptoms)}
-- 体征：{', '.join(ni.signs)}
-- 实验室：{', '.join(ni.labs)}
-- 影像学：{', '.join(ni.imaging)}
-
-## 要求
-1. 给出最可能的 1-3 个疾病名称（中文名 (英文名) 格式）
-2. 每行一个，按可能性从高到低排列
-3. 如果无法判断，输出"未找到匹配"
-
-## 输出格式
-疾病中文名 (Disease English Name)"""
-
-        result = self._call_llm(prompt, temperature=0.15)
-        if result:
-            self.merck_cache[cache_key] = {
-                "result": result,
-                "timestamp": time.time(),
-            }
-            self._save_merck_cache()
-
-        return result
-
-    def _save_merck_cache(self):
-        """保存默沙东缓存"""
-        try:
-            with open(self.merck_cache_path, "w", encoding="utf-8") as f:
-                json.dump(self.merck_cache, f, ensure_ascii=False, indent=2)
-        except Exception:
-            pass
-
-    # ══════════════════════════════════════════════════════
-    #  LLM 调用
-    # ══════════════════════════════════════════════════════
 
     def llm_api_available(self) -> bool:
         """检查 LLM API 是否可用"""
@@ -915,145 +546,132 @@ class M1DiagnosisEngine:
 
         流程：
         1. 标准化输入
-        2. 双轨召回（症状轨 + 病名轨）
-        3. LLM 逻辑裁判选 Top 1-3
-        4. 若无法匹配 → 查默沙东
-        5. 输出结果
+        2. LLM 从疾病列表中直接选出 Top 1-3（始终有 LLM 深度参与）
 
         Returns:
             JSON 格式的诊断结果
         """
-        # 1. 标准化
         ni = self.normalize_input(raw_input)
 
-        # 2. 双轨召回
-        symptom_candidates = self._retrieve_by_symptom_track(ni)
-        name_candidates = self._retrieve_by_disease_name_track(ni)
-
-        # 合并去重（优先保留有具体标准的版本）
-        # 同一疾病可能有英文版（具体标准）和中文版（泛化标准），
-        # 用中文名做去重 key，优先保留有具体诊断标准的条目
-        def _has_specific_criteria(entry) -> bool:
-            """检查疾病条目是否有非泛化的具体诊断标准"""
-            generic_templates = {
-                "症状和病程符合该病核心临床模式",
-                "查体、实验室或影像证据支持",
-                "排除同系统常见相似疾病",
-                "出现危急值或红旗表现时必须触发外部临床评估",
+        if not self.llm_api_available():
+            # LLM 不可用 → 走代码兜底关键词匹配
+            fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
+            return {
+                "diagnosis_calibration": {
+                    "original_input": raw_input.get("patient_mentioned_disease", ""),
+                    "calibrated_diagnosis": fallback[:3] if fallback else [],
+                },
+                "source": "code_fallback",
+                "cache_hit": False,
             }
-            dc = entry.get("diagnostic_criteria", [])
-            for criterion in dc:
-                if criterion not in generic_templates:
-                    return True
-            return False
 
-        seen = {}
-        all_candidates = []
-        for entry in symptom_candidates + name_candidates:
-            # 用中文名作去重 key
-            cn = entry.get("diseaseName_cn", "").strip()
-            if not cn:
-                cn = entry["disease_name"].replace("_", " ").strip()
-            dedup_key = cn.lower()
+        disease_list = "\n".join([
+            f'{e.get("diseaseName_cn", e["disease_name"])} ({e["disease_name"]})'
+            for e in self.db if e.get("diseaseName_cn")
+        ])
 
-            if dedup_key in seen:
-                existing_entry = seen[dedup_key]
-                # 如果新来的有具体标准而现有的没有，替换
-                if _has_specific_criteria(entry) and not _has_specific_criteria(existing_entry):
-                    all_candidates.remove(existing_entry)
-                    all_candidates.append(entry)
-                    seen[dedup_key] = entry
-            else:
-                all_candidates.append(entry)
-                seen[dedup_key] = entry
+        prompt = f"""你是一个疾病诊断助手。根据患者的完整资料，从以下疾病列表中选出最符合的 1-3 个疾病名称。
 
-        # 3. 合并后重排序：具体标准 > 泛化标准，且按关键特征匹配数排序
-        def _has_specific_criteria(entry) -> bool:
-            generic_templates = {
-                "症状和病程符合该病核心临床模式",
-                "查体、实验室或影像证据支持",
-                "排除同系统常见相似疾病",
-                "出现危急值或红旗表现时必须触发外部临床评估",
-            }
-            dc = entry.get("diagnostic_criteria", [])
-            for criterion in dc:
-                if criterion not in generic_templates:
-                    return True
-            return False
+## 患者资料
+- 主诉：{ni.chief_complaint}
+- 症状：{'；'.join(ni.symptoms)}
+- 体征：{'；'.join(ni.signs)}
+- 实验室：{'；'.join(ni.labs)}
+- 影像学：{'；'.join(ni.imaging)}
+- 患者提到的病名：{ni.patient_mentioned_disease}
+- 病程：{ni.duration}
+- 起病方式：{ni.onset}
 
-        def _count_key_matches(entry, ni) -> int:
-            """统计患者的症状/体征在疾病关键特征中的命中数"""
-            patient_texts = set()
-            for key in ["symptoms", "signs", "labs", "imaging"]:
-                for t in getattr(ni, key, []):
-                    patient_texts.add(t.lower().strip())
-            patient_texts.discard("")
-            sm = entry.get("source_verified_medical_summary", {})
-            ksp = sm.get("key_symptom_pattern", "").lower()
-            kef = sm.get("key_exam_findings", "").lower()
-            keywords = [k.lower() for k in sm.get("local_retrieval_keywords", [])]
-            hits = 0
-            for pt in patient_texts:
-                if pt in ksp or pt in kef:
-                    hits += 1
-                elif any(pt in kw or kw in pt for kw in keywords):
-                    hits += 0.5
-            return hits
+## 疾病列表（共 {len(self.db)} 种）
+{disease_list}
 
-        # 先按关键特征匹配数降序，同分时有具体标准的优先
-        all_candidates.sort(key=lambda e: (
-            _count_key_matches(e, ni) + (1 if _has_specific_criteria(e) else 0),
-            -bool(_has_specific_criteria(e)),
-        ), reverse=True)
+## 要求
+1. 逐一分析患者资料，选出最符合的 Top 1-3 个疾病
+2. 患者提到的病名仅作参考，不作为诊断依据
+3. 输出格式：中文病名（英文病名），每行一个，按匹配度从高到低排列
+4. 只输出疾病全称，不输出解释、不输出置信度、不输出推理过程
+5. 信息不足时输出"无匹配" """
 
-        # 4. LLM 逻辑裁判
+        result_text = self._call_llm(prompt, temperature=0.1, max_tokens=300)
+
         diagnoses = []
-        source = "local_cache"
-        cache_hit = True
+        if result_text:
+            for line in result_text.strip().split("\n"):
+                line = line.strip().strip('\'"').strip("-").strip()
+                if not line or line == "无匹配":
+                    continue
+                parsed = self._parse_disease_name(line)
+                if parsed and parsed not in diagnoses:
+                    diagnoses.append(parsed)
 
-        if all_candidates:
-            diagnoses = self._llm_select_top_diagnoses(ni, all_candidates)
-
-        # 4. 如果 LLM 无法匹配 → 查默沙东
-        if not diagnoses:
-            merck_result = self._search_merck_manual(ni)
-            if merck_result:
-                for line in merck_result.strip().split("\n"):
-                    parsed = self._parse_disease_name(line.strip())
-                    if parsed and parsed not in diagnoses:
-                        diagnoses.append(parsed)
-                source = "merck_manual"
-                cache_hit = False
+        # 输出转中文（取纯中文名）
+        def _to_cn_name(d: str) -> str:
+            dl = d.lower()
+            # 直接匹配英文名
+            if dl in self.name_index:
+                cn = self.name_index[dl].get("diseaseName_cn", "")
+            # 直接匹配中文名
+            elif dl in self.cn_name_index:
+                cn = self.cn_name_index[dl].get("diseaseName_cn", "")
             else:
-                # 真·无匹配
-                pass
+                # 部分匹配：搜 name_index 中是否包含
+                for name, entry in self.name_index.items():
+                    if dl in name or name in dl:
+                        cn = entry.get("diseaseName_cn", "")
+                        break
+                else:
+                    cn = d
+            # 从 "睑缘炎 (Blepharitis)" 中提取纯中文名
+            cn = cn.split(" (")[0].split("（")[0] if cn else d
+            return cn.strip()
 
-        # 3b. 如果 LLM 不可用或返回空，用代码兜底排序
-        if not diagnoses and all_candidates:
-            diagnoses = self._score_by_code(ni, all_candidates)
+        cn_diagnoses = [_to_cn_name(d) for d in diagnoses[:3]]
+        # M1→M2 接口：如知识库以 "中文名 (英文名)" 为键，保留完整格式
+        cn_diagnoses_full = []
+        for d in diagnoses[:3]:
+            dl = d.lower()
+            full_name = None
+            if dl in self.name_index:
+                full_name = self.name_index[dl].get("diseaseName_cn", "")
+            else:
+                for name, entry in self.name_index.items():
+                    if dl in name or name in dl:
+                        full_name = entry.get("diseaseName_cn", "")
+                        break
+            cn_diagnoses_full.append(full_name if full_name else d)
+        # 兼容：既输出纯中文名（m2 旧版），也提供完整名
+        # 将完整名写回 calibrated_diagnosis
+        # 因为知识库 key 是完整格式如 "睑缘炎 (Blepharitis)"
+        if all(cn_diagnoses_full):
+            cn_diagnoses = cn_diagnoses_full
 
-        # 4. 如果仍然无法匹配 → 查默沙东
-        if not diagnoses:
-            merck_result = self._search_merck_manual(ni)
-            if merck_result:
-                for line in merck_result.strip().split("\n"):
-                    parsed = self._parse_disease_name(line.strip())
-                    if parsed and parsed not in diagnoses:
-                        diagnoses.append(parsed)
-                source = "merck_manual"
-                cache_hit = False
+        # ── LLM 兜底：如果 LLM 未返回有效结果，用代码做模糊搜索 ──
+        if not cn_diagnoses:
+            fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
+            if fallback:
+                cn_diagnoses = fallback[:3]
+                cn_diagnoses_full = cn_diagnoses
+                source = "code_fallback"
+            else:
+                source = "llm_empty"
+        else:
+            source = "llm"
 
-        # 5. 构建输出
-        result = {
+        # ── 诊断标准自动补齐 ──
+        # 如果诊断出疾病且该疾病缺少 diagnostic_criteria，触发 LLM 查询补齐
+        if self.criteria_fill_enabled and cn_diagnoses and source == "llm":
+            for diag in cn_diagnoses:
+                diag_clean = diag.split(" (")[0].split("（")[0].strip()
+                self._fill_missing_criteria(diag_clean)
+
+        return {
             "diagnosis_calibration": {
                 "original_input": raw_input.get("patient_mentioned_disease", ""),
-                "calibrated_diagnosis": diagnoses[:3],
+                "calibrated_diagnosis": cn_diagnoses,
             },
             "source": source,
-            "cache_hit": cache_hit,
+            "cache_hit": False,
         }
-
-        return result
 
     def diagnose_json(self, raw_input: Dict) -> str:
         """诊断并返回 JSON 字符串"""
@@ -1063,39 +681,7 @@ class M1DiagnosisEngine:
 
 # ── 系统关键词映射 ──────────────────────────────────
 
-SYSTEM_KEYWORDS = {
-    "呼吸": ["咳嗽", "咳痰", "咽痛", "咽喉", "扁桃体", "鼻塞", "流涕", "鼻出血",
-             "呼吸困难", "肺", "支气管", "气管", "肺炎", "感冒", "流感",
-             "发热", "咳痰或气促", "运动耐量下降",
-             "pulmon", "respir", "bronch", "pneumon", "tonsil"],
-    "耳鼻喉": ["耳", "鼻", "咽", "喉", "扁桃体", "中耳", "鼻窦",
-               "tonsil", "pharyn", "laryn", "nasal", "sinus", "otitis"],
-    "循环": ["心", "胸痛", "胸闷", "心悸", "气短", "冠脉", "血管", "cardio", "vascular",
-             "下肢水肿", "水肿或晕厥", "活动后", "心绞痛", "心肌", "心律不齐"],
-    "消化": ["腹痛", "胃", "肠", "肝", "胆", "胰", "食管", "阑尾", "腹泻", "恶心", "呕吐",
-             "gastr", "enter", "hepat", "pancrea", "chol", "append"],
-    "神经": ["头痛", "头晕", "眩晕", "脑", "神经", "脊髓", "癫痫", "偏头痛",
-             "cerebr", "neuro", "seizure"],
-    "泌尿": ["血尿", "肾", "尿", "膀胱", "renal", "nephr", "urinar"],
-    "皮肤": ["皮疹", "皮肤", "红斑", "dermat", "rash"],
-    "全身": ["乏力", "全身", "感染", "fatigue"],
-}
-
 # ── 泛化词降权列表（这些词太泛化，命中时降权）───────────
-
-HIGH_FREQ_GENERIC_TERMS: set = {
-    "主要系统症状", "病程变化", "疼痛或不适", "功能受限",
-    "全身症状", "复发或进展", "红旗表现",
-    "症状和病程符合该病核心临床模式", "查体、实验室或影像证据支持",
-    "排除同系统常见相似疾病", "出现危急值或红旗表现时必须触发外部临床评估",
-    "存在危急值或红旗表现时必须触发外部临床评估",
-    "典型症状和体征", "实验室或影像证据支持",
-    "根据严重程度和红旗信号决定是否急诊/专科评估",
-    "生命体征不稳", "呼吸窘迫", "灌注不良", "意识状态下降",
-    "皮肤湿冷/花斑", "原发病灶查体",
-    "生命体征", "受累系统查体", "严重程度评估", "并发症体征", "红旗体征筛查",
-    "主要系统症状", "病程变化", "疼痛或不适", "功能受限", "全身症状", "复发或进展",
-}
 
 # ── 同义词匹配工具函数 ──────────────────────────────────
 
