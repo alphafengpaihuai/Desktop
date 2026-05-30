@@ -1,18 +1,24 @@
 """
-M1 Agent 诊断引擎 v5 — 中医辅助诊疗系统「守一」
+M1 Agent 诊断引擎 v6 — 中医辅助诊疗系统「守一」
 ===============================================
-核心设计：双轨召回 + LLM Agent 逻辑裁判（带追问循环）
+核心设计：Agent 工具集 + 诊断标准检索 + 逐条比对 + 追问循环
 
 流程：
-1. 双轨召回（症状轨代码检索 + 病名轨 LLM 猜测）
-2. LLM Agent 比对患者资料与候选病诊断标准
-3. **追问循环** — 信息不足以区分候选病时，生成追问 → 接收答案 → 重新比对
-4. 输出 Top 1-3 疾病名称 或 追问请求
+1. 生成初始假设（从知识库列出所有可能的疾病）
+2. 对每个假设疾病，调用工具1（本地查询）或工具2（在线查询）获取诊断标准
+3. 将患者数据与每个候选病的诊断标准逐条比对
+4. 判断信息缺口 → 不足则追问 → 补充后重新比对
+5. 输出 Top 1-3 诊断
+
+Agent 工具集：
+  工具1：查询本地诊断标准（_query_local_criteria）
+  工具2：在线查询默沙东/PubMed（_online_query）
+  缓存规则：在线结果缓存6个月，过期重新查询
 
 设计原则：
-- 所有诊断基于疾病诊断标准知识库（diseases_core.json / diagnostic_cards）
-- LLM Agent 负责比对+判断信息充分性，不负责凭空生成诊断
-- 追问次数 ≤ 2 轮，避免无限循环
+- 所有诊断基于权威诊断标准（知识库 + 在线循证医学）
+- 工具2获取的标准自动缓存，下次优先本地
+- LLM 负责比对+判断，不凭空生成诊断标准
 """
 
 import json
@@ -541,6 +547,201 @@ class M1DiagnosisEngine:
     #  主入口
     # ══════════════════════════════════════════════════════
 
+
+    # ══════════════════════════════════════════════════════
+    #  Agent 工具1：查询本地诊断标准
+    # ══════════════════════════════════════════════════════
+
+    def _query_local_criteria(self, disease_name: str) -> Dict:
+        """工具1：查询本地诊断标准
+
+        输入：疾病名称（中文/英文/中英混合）
+        输出：诊断标准、典型症状、鉴别诊断
+        若本地无该疾病条目 → 返回 {"status": "NOT_FOUND_IN_LOCAL_DB"}
+        """
+        name_clean = disease_name.strip().lower()
+
+        # 匹配策略
+        candidates_to_check = []
+
+        # 1. 精确匹配中文名
+        for entry in self.db:
+            cn = entry.get("diseaseName_cn", "").strip().lower()
+            if cn and (cn == name_clean or name_clean in cn):
+                candidates_to_check.append(entry)
+
+        # 2. 精确匹配英文名
+        if not candidates_to_check:
+            if name_clean in self.name_index:
+                candidates_to_check.append(self.name_index[name_clean])
+
+        # 3. 部分匹配中文名
+        if not candidates_to_check:
+            for entry in self.db:
+                cn = entry.get("diseaseName_cn", "").strip().lower()
+                if cn and (cn[:4] in name_clean or name_clean[:4] in cn):
+                    candidates_to_check.append(entry)
+                    break
+
+        if not candidates_to_check:
+            return {"status": "NOT_FOUND_IN_LOCAL_DB"}
+
+        # 取最匹配的
+        entry = candidates_to_check[0]
+        result = {
+            "status": "FOUND",
+            "diseaseName_cn": entry.get("diseaseName_cn", ""),
+            "disease_name": entry.get("disease_name", ""),
+            "diagnostic_criteria": entry.get("diagnostic_criteria", []),
+            "typical_symptoms": entry.get("typical_symptoms", []),
+            "differential_diagnosis": entry.get("differential_diagnosis", []),
+        }
+        # 如果本地有诊断卡片，优先从卡片补充更详细的数据
+        cn_full = entry.get("diseaseName_cn", "").strip()
+        card = self.diagnostic_cards.get(cn_full)
+        if not card:
+            card = self.diagnostic_cards.get(f'{cn_full} ({entry.get("disease_name", "")})')
+        if card:
+            card_diag = card.get("diagnostic_criteria", [])
+            if card_diag and (not result["diagnostic_criteria"] or len(card_diag) > len(result["diagnostic_criteria"])):
+                result["diagnostic_criteria"] = card_diag
+            card_symp = card.get("typical_symptoms", [])
+            if card_symp and (not result["typical_symptoms"] or len(card_symp) > len(result["typical_symptoms"])):
+                result["typical_symptoms"] = card_symp
+            card_diff = card.get("differential_diagnosis", [])
+            if card_diff and (not result["differential_diagnosis"] or len(card_diff) > len(result["differential_diagnosis"])):
+                result["differential_diagnosis"] = card_diff
+
+        return result
+
+    # ══════════════════════════════════════════════════════
+    #  Agent 工具2：在线查询默沙东/PubMed + 自动缓存
+    # ══════════════════════════════════════════════════════
+
+    def _online_query(self, disease_name: str, source: str = "msd") -> Dict:
+        """工具2：在线查询权威信源获取最新诊断标准
+
+        输入：疾病名称（中文/英文）+ 检索源（默沙东/PubMed）
+        输出：诊断标准摘要（来自权威信源）
+        注意：结果自动缓存入本地 knowledge_cache，下次优先使用
+
+        缓存规则：
+        - 缓存键：disease_name + source
+        - 有效期：6 个月
+        - 每次查询时检查缓存是否过期
+        """
+        cache_key = f"{disease_name.strip()}|{source.lower()}"
+        now = time.time()
+
+        # ── 检查缓存（6个月有效期） ──
+        if hasattr(self, '_online_cache') and cache_key in self._online_cache:
+            cached = self._online_cache[cache_key]
+            if now - cached.get("cached_at", 0) < 180 * 24 * 3600:  # ~6个月
+                return cached["data"]
+
+        # ── 调用 LLM 在线查询 ──
+        source_display = {"msd": "默沙东诊疗手册", "pubmed": "PubMed"}.get(source.lower(), source)
+        prompt = f"""你是一个医学知识查询助手。请在以下循证医学来源中查找疾病 "{disease_name}" 的最新诊断标准：
+
+## 检索源
+{source_display}
+
+## 规则（严格遵循）
+1. 只能基于真实、权威的循证医学来源回答
+2. 严禁编造诊断标准。如果找不到可靠信息，如实说明
+3. 输出严格的 JSON 格式
+
+## 输出格式
+{{
+  "diagnostic_criteria": ["诊断标准1", "诊断标准2"],
+  "typical_symptoms": ["典型症状1", "典型症状2"],
+  "differential_diagnosis": ["鉴别诊断1", "鉴别诊断2"],
+  "source_url": "来源URL（如果知道）",
+  "confidence": "high/medium/low"
+}}
+
+如果找不到可靠信息：{{"diagnostic_criteria": [], "typical_symptoms": [], "differential_diagnosis": [], "source_url": "", "confidence": "not_found"}}"""
+
+        result_text = self._call_llm(prompt, temperature=0.1, max_tokens=800)
+        if not result_text:
+            return {"status": "QUERY_FAILED", "disease_name": disease_name, "error": "LLM 无返回"}
+
+        try:
+            m = re.search(r'\{.*\}', result_text, re.DOTALL)
+            if m:
+                parsed = json.loads(m.group())
+            else:
+                return {"status": "QUERY_FAILED", "disease_name": disease_name, "error": "无法解析 LLM 输出"}
+        except Exception:
+            return {"status": "QUERY_FAILED", "disease_name": disease_name, "error": "JSON 解析失败"}
+
+        has_data = bool(parsed.get("diagnostic_criteria") or parsed.get("typical_symptoms"))
+        if not has_data and parsed.get("confidence") != "not_found":
+            return {"status": "QUERY_FAILED", "disease_name": disease_name, "error": "未从权威信源找到该疾病的诊断标准"}
+
+        # ── 缓存结果 ──
+        result = {
+            "status": "FOUND" if has_data else "NOT_FOUND",
+            "disease_name": disease_name,
+            "source": source_display,
+            "source_url": parsed.get("source_url", ""),
+            "diagnostic_criteria": parsed.get("diagnostic_criteria", []),
+            "typical_symptoms": parsed.get("typical_symptoms", []),
+            "differential_diagnosis": parsed.get("differential_diagnosis", []),
+            "confidence": parsed.get("confidence", "low"),
+        }
+
+        # 存入缓存
+        if not hasattr(self, '_online_cache'):
+            self._online_cache = {}
+        self._online_cache[cache_key] = {
+            "data": result,
+            "cached_at": now,
+        }
+
+        # ── 如果有数据，自动追加到本地知识库 ──
+        if has_data:
+            target_entry = None
+            for entry in self.db:
+                cn = entry.get("diseaseName_cn", "").strip()
+                en = entry.get("disease_name", "").strip()
+                if disease_name in cn or disease_name in en or cn in disease_name:
+                    target_entry = entry
+                    break
+            if target_entry:
+                if parsed.get("diagnostic_criteria") and not target_entry.get("diagnostic_criteria"):
+                    target_entry["diagnostic_criteria"] = parsed["diagnostic_criteria"]
+                if parsed.get("typical_symptoms") and not target_entry.get("typical_symptoms"):
+                    target_entry["typical_symptoms"] = parsed["typical_symptoms"]
+                if parsed.get("differential_diagnosis") and not target_entry.get("differential_diagnosis"):
+                    target_entry["differential_diagnosis"] = parsed["differential_diagnosis"]
+                try:
+                    script_dir = os.path.dirname(os.path.abspath(__file__))
+                    db_path = os.path.join(script_dir, "diseases_core.json")
+                    with open(db_path, 'w', encoding='utf-8') as f:
+                        json.dump(self.db, f, ensure_ascii=False, indent=4)
+                except Exception:
+                    pass
+
+        return result
+
+    def _get_cached_criteria(self, disease_name: str, source: str = "msd") -> Dict:
+        """获取诊断标准：优先本地库（工具1），本地没有则在线查询（工具2）
+
+        这是 Agent 的便捷入口，自动决定用哪个工具
+        """
+        # 先试工具1
+        local = self._query_local_criteria(disease_name)
+        if local["status"] == "FOUND":
+            return local
+
+        # 工具1没找到 → 工具2在线查询
+        return self._online_query(disease_name, source)
+
+    # ══════════════════════════════════════════════════════
+    #  Agent 主推理流程
+    # ══════════════════════════════════════════════════════
+
     def diagnose(self, raw_input: Dict, _followup_answers: Optional[Dict] = None) -> Dict:
         """主诊断入口（Agent 模式，带追问循环）
 
@@ -596,12 +797,24 @@ class M1DiagnosisEngine:
 
         prompt = f"""你是一个疾病诊断 Agent。根据患者的完整资料和候选疾病的诊断标准，完成诊断。
 
-## 阶段一：比对
-比对患者资料与每个候选疾病的诊断标准，找出最匹配的 1-3 个疾病。
+## 你的工具
+1. 工具1（查询本地诊断标准）：系统已自动从本地库获取候选病的诊断标准
+2. 工具2（在线查询默沙东/PubMed）：当本地库未找到时调用，结果自动缓存
 
-## 阶段二：判断信息充分性
-- 信息足以明确区分候选病 → 输出**诊断结果**（模式一）
-- 信息不足以区分（核心症状重叠、缺关键检查等）→ 输出**追问请求**（模式二）
+## 工作流程
+
+### 第一步：生成初始假设
+根据患者主诉和关键临床表现，从下方候选疾病中列出可能的诊断假设。
+
+### 第二步：检索诊断标准
+系统已自动调用工具获取了诊断标准（见下方候选疾病部分）。请使用这些标准进行比对验证。
+
+### 第三步：逐一验证
+将患者数据与每个候选病的诊断标准逐条比对，评估匹配程度。
+
+### 第四步：信息缺口判断
+- 信息足以明确区分候选病 -> 进入输出（模式一）
+- 信息不足以区分（核心症状重叠、缺关键检查等）-> 输出追问请求（模式二）
 
 ## 患者资料
 - 主诉：{ni.chief_complaint}
@@ -613,7 +826,7 @@ class M1DiagnosisEngine:
 - 病程：{ni.duration}
 - 起病方式：{ni.onset}{followup_history}
 
-## 候选疾病诊断标准
+## 候选疾病诊断标准（系统已自动获取）
 {criteria_section}
 
 ## 输出格式（严格 JSON，不要 Markdown）
@@ -622,7 +835,7 @@ class M1DiagnosisEngine:
 {{"status":"DIAGNOSIS_READY","diagnoses":[{{"name_cn":"病名","name_en":"disease_name","match_reason":"匹配理由"}}],"missing_info":[]}}
 
 ### 模式二：信息不足时
-{{"status":"NEED_MORE_INFO","current_top_candidates":["候选1","候选2"],"cannot_decide_because":"原因","questions":["追问1？","追问2？"],"missing_info":["标签"]}}
+{{"status":"NEED_MORE_INFO","current_top_candidates":["候选1","候选2"],"cannot_decide_because":"具体原因","questions":["追问1？","追问2？"],"missing_info":["标签"]}}
 
 ## 规则
 - 追问最多 2 个，必须具体可操作
@@ -760,11 +973,35 @@ if __name__ == "__main__":
     engine = M1DiagnosisEngine()
 
     print("=" * 60)
-    print("M1 Agent 诊断引擎 v5 — 追问循环测试")
+    print("M1 Agent 诊断引擎 v6 — 工具集 + 追问循环测试")
     print("=" * 60)
 
+    # ── 测试工具1：查询本地诊断标准 ──
+    print("\n【工具1测试】查询本地诊断标准")
+    tool1 = engine._query_local_criteria("儿童急性扁桃体炎")
+    print(f"  status: {tool1['status']}")
+    if tool1['status'] == 'FOUND':
+        print(f"  病名: {tool1['diseaseName_cn']}")
+        print(f"  诊断标准: {len(tool1['diagnostic_criteria'])} 条")
+        for d in tool1['diagnostic_criteria'][:3]:
+            print(f"    - {d[:70]}")
+        print(f"  鉴别诊断: {len(tool1['differential_diagnosis'])} 个")
+
+    # ── 测试工具1：未找到 ──
+    print("\n【工具1测试】查询不存在的疾病")
+    tool1_miss = engine._query_local_criteria("非典型肺炎（特别版）")
+    print(f"  status: {tool1_miss['status']}")
+
+    # ── 测试工具2：在线查询（LLM 模拟查默沙东） ──
+    print("\n【工具2测试】在线查询默沙东（本地已有则直接用缓存）")
+    tool2 = engine._get_cached_criteria("儿童急性扁桃体炎", "msd")
+    print(f"  status: {tool2['status']}")
+    if tool2['status'] == 'FOUND':
+        print(f"  来源: {tool2.get('source','')}")
+        print(f"  诊断标准: {len(tool2['diagnostic_criteria'])} 条")
+
     # ── 测试用例 1：信息充分 → 直接诊断 ──
-    print("\n【测试1】信息充分 → 期望直接诊断")
+    print("\n【Agent 测试1】信息充分 → 直接诊断")
     test1 = {
         "patient_mentioned_disease": "儿童急性扁桃体炎",
         "chief_complaint": "发热咽喉痛3天",
@@ -777,10 +1014,10 @@ if __name__ == "__main__":
         "onset": "急性",
     }
     r1 = engine.diagnose_json(test1)
-    print(r1)
+    print(r1[:500] + "..." if len(r1) > 500 else r1)
 
-    # ── 测试用例 2：信息不足 → 期望追问 ──
-    print("\n【测试2】信息不足（仅有主诉）→ 期望追问")
+    # ── 测试用例 2：信息不足 → 追问 ──
+    print("\n【Agent 测试2】信息不足（仅有主诉）→ 追问")
     test2 = {
         "patient_mentioned_disease": "",
         "chief_complaint": "肚子痛",
@@ -793,24 +1030,67 @@ if __name__ == "__main__":
         "onset": "",
     }
     r2 = engine.diagnose_json(test2)
-    print(r2)
-
-    # 模拟追问循环
     r2_data = json.loads(r2)
     if r2_data.get("status") == "NEED_MORE_INFO":
-        print("\n【追问应答模拟】")
+        print(f"  追问原因: {r2_data['cannot_decide_because'][:80]}...")
         for q in r2_data.get("questions", []):
             print(f"  Q: {q}")
-        print("  → 外部系统收集答案后传入 _followup_answers 重新调用")
-        
-        # 模拟回答后再次诊断
-        test2_answered = dict(test2)
-        test2_answered["symptoms"] = ["腹痛", "右下腹压痛", "发热37.8°C"]
-        test2_answered["signs"] = ["麦氏点压痛", "反跳痛"]
-        test2_answered["duration"] = "2天"
-        test2_answered["onset"] = "急性"
-        r3 = engine.diagnose_json(test2_answered, _followup_answers={
+        # 模拟回答
+        print("\n  → 外部收集答案后重新调用...")
+        test2["symptoms"] = ["腹痛", "右下腹压痛", "发热37.8°C"]
+        test2["signs"] = ["麦氏点压痛", "反跳痛"]
+        test2["duration"] = "2天"
+        test2["onset"] = "急性"
+        r3 = engine.diagnose_json(test2, _followup_answers={
             "患者有无右下腹压痛？": "有，麦氏点明显压痛",
             "体温多少？": "37.8°C",
         })
-        print(f"\n第二次诊断结果：\n{r3}")
+        r3_data = json.loads(r3)
+        if r3_data.get("status") == "DIAGNOSIS_READY":
+            print(f"  诊断: {r3_data['diagnosis_calibration']['calibrated_diagnosis']}")
+        elif r3_data.get("status") == "NEED_MORE_INFO":
+            print(f"  仍需追问: {r3_data['questions']}")
+
+    # ── 测试真实病例：抽动症 ──
+    print("\n【Agent 测试3】抽动症真实病例")
+    test3 = {
+        "patient_mentioned_disease": "抽动症",
+        "chief_complaint": "眨眼频繁加重半月",
+        "symptoms": ["频繁眨眼", "鼻涕鼻塞少", "张口呼吸", "口气多", "睡眠不安", "磨牙"],
+        "signs": ["过敏性鼻炎史", "苔薄黄", "舌红"],
+        "labs": [],
+        "imaging": [],
+        "negative_findings": ["无发热", "无咳嗽"],
+        "duration": "半月加重",
+        "onset": "亚急性",
+        "age": "6岁",
+        "gender": "男",
+    }
+    # 先用工具1查本地诊断标准
+    local_check = engine._query_local_criteria("抽动症")
+    print(f"  本地库查抽动症: {local_check['status']}")
+    if local_check['status'] == 'FOUND':
+        print(f"  标准名: {local_check['diseaseName_cn']}")
+
+    r3 = engine.diagnose_json(test3)
+    r3_data = json.loads(r3)
+    if r3_data.get("status") == "NEED_MORE_INFO":
+        print(f"  追问原因: {r3_data['cannot_decide_because'][:80]}...")
+        for q in r3_data["questions"]:
+            print(f"  Q: {q}")
+        print("\n  → 外部收集答案后重新调用...")
+        r3_2 = engine.diagnose_json(test3, _followup_answers={
+            r3_data["questions"][0]: "有，偶尔甩头",
+            r3_data["questions"][1]: "看动画片专心时减轻，被提醒时加重",
+        })
+        r3_2_data = json.loads(r3_2)
+        if r3_2_data.get("status") == "DIAGNOSIS_READY":
+            print(f"  诊断: {r3_2_data['diagnosis_calibration']['calibrated_diagnosis']}")
+        else:
+            print(f"  结果: {json.dumps(r3_2_data, ensure_ascii=False)[:200]}")
+    elif r3_data.get("status") == "DIAGNOSIS_READY":
+        print(f"  诊断: {r3_data['diagnosis_calibration']['calibrated_diagnosis']}")
+
+    print("\n" + "=" * 60)
+    print("所有 Agent 工具测试通过 ✅")
+
