@@ -1,18 +1,18 @@
 """
-M1 诊断推理引擎 v4 — 中医辅助诊疗系统「守一」
+M1 Agent 诊断引擎 v5 — 中医辅助诊疗系统「守一」
 ===============================================
-核心设计：双轨召回 + LLM 逻辑裁判 + 默沙东回退
+核心设计：双轨召回 + LLM Agent 逻辑裁判（带追问循环）
 
 流程：
 1. 双轨召回（症状轨代码检索 + 病名轨 LLM 猜测）
-2. LLM 作为逻辑裁判，对比患者资料与候选病诊断标准
-3. 若 LLM 无法匹配 → 查默沙东 → 缓存
-4. 输出 Top 1-3 疾病名称（不输出置信度、推理过程）
+2. LLM Agent 比对患者资料与候选病诊断标准
+3. **追问循环** — 信息不足以区分候选病时，生成追问 → 接收答案 → 重新比对
+4. 输出 Top 1-3 疾病名称 或 追问请求
 
 设计原则：
-- 所有诊断基于疾病诊断标准知识库（diseases_core.json）
-- 模型仅负责对比打分，不负责生成诊断
-- 文本匹配用 LLM 更好，代码负责召回和兜底
+- 所有诊断基于疾病诊断标准知识库（diseases_core.json / diagnostic_cards）
+- LLM Agent 负责比对+判断信息充分性，不负责凭空生成诊断
+- 追问次数 ≤ 2 轮，避免无限循环
 """
 
 import json
@@ -541,20 +541,24 @@ class M1DiagnosisEngine:
     #  主入口
     # ══════════════════════════════════════════════════════
 
-    def diagnose(self, raw_input: Dict) -> Dict:
-        """主诊断入口
+    def diagnose(self, raw_input: Dict, _followup_answers: Optional[Dict] = None) -> Dict:
+        """主诊断入口（Agent 模式，带追问循环）
 
         流程：
         1. 标准化输入
-        2. LLM 从疾病列表中直接选出 Top 1-3（始终有 LLM 深度参与）
+        2. LLM_Agent 比对患者资料与候选病诊断标准
+        3. 判断信息是否足以明确诊断：
+           - 足够 → 输出 Top 1-3（模式一）
+           - 不足 → 生成追问问题（模式二）
+        4. _followup_answers 用于注入上一轮追问的答案（外部循环控制）
 
         Returns:
-            JSON 格式的诊断结果
+            模式一：{"diagnosis_calibration": {...}, "source": "llm"}
+            模式二：{"status": "NEED_MORE_INFO", ..., "questions": [...]}
         """
         ni = self.normalize_input(raw_input)
 
         if not self.llm_api_available():
-            # LLM 不可用 → 走代码兜底关键词匹配
             fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
             return {
                 "diagnosis_calibration": {
@@ -565,12 +569,39 @@ class M1DiagnosisEngine:
                 "cache_hit": False,
             }
 
-        disease_list = "\n".join([
-            f'{e.get("diseaseName_cn", e["disease_name"])} ({e["disease_name"]})'
-            for e in self.db if e.get("diseaseName_cn")
-        ])
+        # ── 召回候选疾病 + 构造诊断标准上下文 ──
+        candidates = self._recall_candidates(ni)
+        criteria_section = ""
+        for i, cand in enumerate(candidates[:6], 1):
+            cn_name = cand.get("diseaseName_cn", "").strip()
+            en_name = cand.get("disease_name", "").strip()
+            diag = cand.get("diagnostic_criteria", [])
+            typical = cand.get("typical_symptoms", [])
+            diff = cand.get("differential_diagnosis", [])
+            name_display = f"{cn_name} ({en_name})" if en_name else cn_name
+            criteria_section += "\n### 候选 " + str(i) + "：" + name_display
+            if diag:
+                criteria_section += "\n诊断标准：" + "；".join(diag[:5])
+            if typical:
+                criteria_section += "\n典型症状：" + "；".join(typical[:5])
+            if diff:
+                criteria_section += "\n需鉴别：" + "、".join(diff[:4])
 
-        prompt = f"""你是一个疾病诊断助手。根据患者的完整资料，从以下疾病列表中选出最符合的 1-3 个疾病名称。
+        # ── 历史追问上下文 ──
+        followup_history = ""
+        if _followup_answers:
+            followup_history = "\n## 上一轮追问的答案"
+            for q, a in _followup_answers.items():
+                followup_history += "\n追问：" + str(q) + "\n答案：" + str(a)
+
+        prompt = f"""你是一个疾病诊断 Agent。根据患者的完整资料和候选疾病的诊断标准，完成诊断。
+
+## 阶段一：比对
+比对患者资料与每个候选疾病的诊断标准，找出最匹配的 1-3 个疾病。
+
+## 阶段二：判断信息充分性
+- 信息足以明确区分候选病 → 输出**诊断结果**（模式一）
+- 信息不足以区分（核心症状重叠、缺关键检查等）→ 输出**追问请求**（模式二）
 
 ## 患者资料
 - 主诉：{ni.chief_complaint}
@@ -580,102 +611,124 @@ class M1DiagnosisEngine:
 - 影像学：{'；'.join(ni.imaging)}
 - 患者提到的病名：{ni.patient_mentioned_disease}
 - 病程：{ni.duration}
-- 起病方式：{ni.onset}
+- 起病方式：{ni.onset}{followup_history}
 
-## 疾病列表（共 {len(self.db)} 种）
-{disease_list}
+## 候选疾病诊断标准
+{criteria_section}
 
-## 要求
-1. 逐一分析患者资料，选出最符合的 Top 1-3 个疾病
-2. 患者提到的病名仅作参考，不作为诊断依据
-3. 输出格式：中文病名（英文病名），每行一个，按匹配度从高到低排列
-4. 只输出疾病全称，不输出解释、不输出置信度、不输出推理过程
-5. 信息不足时输出"无匹配" """
+## 输出格式（严格 JSON，不要 Markdown）
 
-        result_text = self._call_llm(prompt, temperature=0.1, max_tokens=300)
+### 模式一：信息足够时
+{{"status":"DIAGNOSIS_READY","diagnoses":[{{"name_cn":"病名","name_en":"disease_name","match_reason":"匹配理由"}}],"missing_info":[]}}
 
-        diagnoses = []
-        if result_text:
-            for line in result_text.strip().split("\n"):
-                line = line.strip().strip('\'"').strip("-").strip()
-                if not line or line == "无匹配":
-                    continue
-                parsed = self._parse_disease_name(line)
-                if parsed and parsed not in diagnoses:
-                    diagnoses.append(parsed)
+### 模式二：信息不足时
+{{"status":"NEED_MORE_INFO","current_top_candidates":["候选1","候选2"],"cannot_decide_because":"原因","questions":["追问1？","追问2？"],"missing_info":["标签"]}}
 
-        # 输出转中文（取纯中文名）
-        def _to_cn_name(d: str) -> str:
-            dl = d.lower()
-            # 直接匹配英文名
-            if dl in self.name_index:
-                cn = self.name_index[dl].get("diseaseName_cn", "")
-            # 直接匹配中文名
-            elif dl in self.cn_name_index:
-                cn = self.cn_name_index[dl].get("diseaseName_cn", "")
-            else:
-                # 部分匹配：搜 name_index 中是否包含
-                for name, entry in self.name_index.items():
-                    if dl in name or name in dl:
-                        cn = entry.get("diseaseName_cn", "")
+## 规则
+- 追问最多 2 个，必须具体可操作
+- 不能重复之前已问的问题
+- 只能基于候选病诊断标准中提到的信息点追问
+- 患者提到的病名仅作参考"""
+
+        result_text = self._call_llm(prompt, temperature=0.1, max_tokens=600)
+        if not result_text:
+            return {"status":"NEED_MORE_INFO","current_top_candidates":[],"cannot_decide_because":"LLM无返回","questions":[],"missing_info":[]}
+
+        import json as _json
+        try:
+            m = re.search(r'\{.*\}', result_text, re.DOTALL)
+            if not m:
+                raise ValueError("no JSON")
+            parsed = _json.loads(m.group())
+        except Exception:
+            return {"status":"NEED_MORE_INFO","current_top_candidates":[c.get("diseaseName_cn","") for c in candidates[:3]],"cannot_decide_because":"LLM输出解析失败","questions":["请补充更多症状及检查信息"],"missing_info":["症状细节"]}
+
+        if parsed.get("status") == "NEED_MORE_INFO":
+            return {"status":"NEED_MORE_INFO","current_top_candidates":parsed.get("current_top_candidates",[]),"cannot_decide_because":parsed.get("cannot_decide_because",""),"questions":parsed.get("questions",[]),"missing_info":parsed.get("missing_info",[])}
+
+        # ── 模式一：诊断输出 ──
+        diagnoses_raw = parsed.get("diagnoses",[])
+        cn_diagnoses = []
+        for d in diagnoses_raw:
+            cn = d.get("name_cn","").strip() if isinstance(d,dict) else str(d).strip()
+            if cn and cn not in cn_diagnoses:
+                # 查完整名
+                full = cn
+                for e in self.db:
+                    ecn = e.get("diseaseName_cn","").strip()
+                    if cn in ecn or ecn in cn or cn == e.get("disease_name",""):
+                        full = ecn
                         break
-                else:
-                    cn = d
-            # 从 "睑缘炎 (Blepharitis)" 中提取纯中文名
-            cn = cn.split(" (")[0].split("（")[0] if cn else d
-            return cn.strip()
+                cn_diagnoses.append(full if full else cn)
 
-        cn_diagnoses = [_to_cn_name(d) for d in diagnoses[:3]]
-        # M1→M2 接口：如知识库以 "中文名 (英文名)" 为键，保留完整格式
-        cn_diagnoses_full = []
-        for d in diagnoses[:3]:
-            dl = d.lower()
-            full_name = None
-            if dl in self.name_index:
-                full_name = self.name_index[dl].get("diseaseName_cn", "")
-            else:
-                for name, entry in self.name_index.items():
-                    if dl in name or name in dl:
-                        full_name = entry.get("diseaseName_cn", "")
-                        break
-            cn_diagnoses_full.append(full_name if full_name else d)
-        # 兼容：既输出纯中文名（m2 旧版），也提供完整名
-        # 将完整名写回 calibrated_diagnosis
-        # 因为知识库 key 是完整格式如 "睑缘炎 (Blepharitis)"
-        if all(cn_diagnoses_full):
-            cn_diagnoses = cn_diagnoses_full
-
-        # ── LLM 兜底：如果 LLM 未返回有效结果，用代码做模糊搜索 ──
         if not cn_diagnoses:
             fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
             if fallback:
                 cn_diagnoses = fallback[:3]
-                cn_diagnoses_full = cn_diagnoses
                 source = "code_fallback"
             else:
                 source = "llm_empty"
         else:
             source = "llm"
+            if self.criteria_fill_enabled:
+                for diag in cn_diagnoses:
+                    self._fill_missing_criteria(diag.split(" (")[0].split("（")[0].strip())
 
-        # ── 诊断标准自动补齐 ──
-        # 如果诊断出疾病且该疾病缺少 diagnostic_criteria，触发 LLM 查询补齐
-        if self.criteria_fill_enabled and cn_diagnoses and source == "llm":
-            for diag in cn_diagnoses:
-                diag_clean = diag.split(" (")[0].split("（")[0].strip()
-                self._fill_missing_criteria(diag_clean)
+        return {"diagnosis_calibration":{"original_input":raw_input.get("patient_mentioned_disease",""),"calibrated_diagnosis":cn_diagnoses[:3]},"source":source,"cache_hit":False}
 
-        return {
-            "diagnosis_calibration": {
-                "original_input": raw_input.get("patient_mentioned_disease", ""),
-                "calibrated_diagnosis": cn_diagnoses,
-            },
-            "source": source,
-            "cache_hit": False,
-        }
+    def _recall_candidates(self, ni) -> List[dict]:
+        """从患者资料召回候选疾病列表（供 Agent 比对）
 
-    def diagnose_json(self, raw_input: Dict) -> str:
-        """诊断并返回 JSON 字符串"""
-        result = self.diagnose(raw_input)
+        召回策略：
+        - 患者提到的病名精确匹配
+        - 症状关键词模糊匹配（从 keyword_index）
+        - 限制最多 20 个候选
+        """
+        candidates = []
+        seen = set()
+
+        mentioned = ni.patient_mentioned_disease.strip().lower()
+        if mentioned:
+            for entry in self.db:
+                cn = entry.get("diseaseName_cn","").strip().lower()
+                en = entry.get("disease_name","").lower()
+                if cn == mentioned or mentioned in cn or en == mentioned or mentioned in en:
+                    if entry["disease_name"] not in seen:
+                        candidates.append(entry)
+                        seen.add(entry["disease_name"])
+                        break
+
+        if not candidates:
+            all_text = [ni.chief_complaint.lower()] + [s.lower() for s in ni.symptoms]
+            for text in all_text:
+                if not text or len(text) < 2:
+                    continue
+                for word in re.split(r'[\s,，、.。:：]+', text):
+                    if len(word) < 2:
+                        continue
+                    for kw, entries in self.keyword_index.items():
+                        if word in kw or kw in word:
+                            for entry in entries:
+                                if entry["disease_name"] not in seen:
+                                    candidates.append(entry)
+                                    seen.add(entry["disease_name"])
+                                    if len(candidates) >= 20:
+                                        break
+                    if len(candidates) >= 20:
+                        break
+
+        return candidates[:20]
+
+
+    def diagnose_json(self, raw_input: Dict, _followup_answers: Optional[Dict] = None) -> str:
+        """诊断并返回 JSON 字符串（Agent 模式）
+        
+        外部调用方可检查返回结果中的 status 字段：
+        - 'DIAGNOSIS_READY' → diagnosis_calibration 包含诊断结果
+        - 'NEED_MORE_INFO' → questions 包含追问问题
+        - 外部拿到追问后，可以收集答案传入 _followup_answers 重新调用
+        """
+        result = self.diagnose(raw_input, _followup_answers=_followup_answers)
         return json.dumps(result, ensure_ascii=False, indent=2)
 
 
@@ -706,18 +759,58 @@ def is_synonym_match(a: str, b: str) -> bool:
 if __name__ == "__main__":
     engine = M1DiagnosisEngine()
 
-    # 测试用例
-    test_input = {
-        "patient_mentioned_disease": "咳嗽",
-        "chief_complaint": "咳嗽伴发热3天",
-        "symptoms": ["咳嗽", "咳痰", "发热", "咽喉痛"],
-        "signs": ["咽部充血"],
+    print("=" * 60)
+    print("M1 Agent 诊断引擎 v5 — 追问循环测试")
+    print("=" * 60)
+
+    # ── 测试用例 1：信息充分 → 直接诊断 ──
+    print("\n【测试1】信息充分 → 期望直接诊断")
+    test1 = {
+        "patient_mentioned_disease": "儿童急性扁桃体炎",
+        "chief_complaint": "发热咽喉痛3天",
+        "symptoms": ["发热", "咽喉痛", "吞咽痛"],
+        "signs": ["扁桃体充血肿大", "咽部充血"],
         "labs": ["血常规示白细胞升高"],
         "imaging": [],
         "negative_findings": [],
         "duration": "3天",
         "onset": "急性",
     }
+    r1 = engine.diagnose_json(test1)
+    print(r1)
 
-    result = engine.diagnose_json(test_input)
-    print(result)
+    # ── 测试用例 2：信息不足 → 期望追问 ──
+    print("\n【测试2】信息不足（仅有主诉）→ 期望追问")
+    test2 = {
+        "patient_mentioned_disease": "",
+        "chief_complaint": "肚子痛",
+        "symptoms": ["腹痛"],
+        "signs": [],
+        "labs": [],
+        "imaging": [],
+        "negative_findings": [],
+        "duration": "",
+        "onset": "",
+    }
+    r2 = engine.diagnose_json(test2)
+    print(r2)
+
+    # 模拟追问循环
+    r2_data = json.loads(r2)
+    if r2_data.get("status") == "NEED_MORE_INFO":
+        print("\n【追问应答模拟】")
+        for q in r2_data.get("questions", []):
+            print(f"  Q: {q}")
+        print("  → 外部系统收集答案后传入 _followup_answers 重新调用")
+        
+        # 模拟回答后再次诊断
+        test2_answered = dict(test2)
+        test2_answered["symptoms"] = ["腹痛", "右下腹压痛", "发热37.8°C"]
+        test2_answered["signs"] = ["麦氏点压痛", "反跳痛"]
+        test2_answered["duration"] = "2天"
+        test2_answered["onset"] = "急性"
+        r3 = engine.diagnose_json(test2_answered, _followup_answers={
+            "患者有无右下腹压痛？": "有，麦氏点明显压痛",
+            "体温多少？": "37.8°C",
+        })
+        print(f"\n第二次诊断结果：\n{r3}")
