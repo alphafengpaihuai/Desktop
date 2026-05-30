@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="page-chat"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Clinical Chat</title>
+
+  <script src="./Clinical Chat_files/saved_resource"></script>
+
+  <script src="./Clinical Chat_files/lucide@latest"></script>
+
+  <!-- Markdown 渲染库（带备用 CDN） -->
+  <script>
+    // 动态加载 marked.js，支持备用 CDN（国内优先 cdnjs，超时缩短避免卡顿）
+    (function() {
+      const cdnUrls = [
+        'https://cdnjs.cloudflare.com/ajax/libs/marked/11.1.1/marked.min.js',
+        'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
+        'https://unpkg.com/marked/marked.min.js'
+      ];
+
+      let currentIndex = 0;
+      const timeout = 5000; // 5秒超时，避免长时间等待
+
+      function loadScript(url, onSuccess, onError) {
+        const script = document.createElement('script');
+        script.src = url;
+        script.async = true;
+
+        const timer = setTimeout(() => {
+          script.onerror = null;
+          script.onload = null;
+          document.head.removeChild(script);
+          onError();
+        }, timeout);
+
+        script.onload = () => {
+          clearTimeout(timer);
+          onSuccess();
+        };
+
+        script.onerror = () => {
+          clearTimeout(timer);
+          document.head.removeChild(script);
+          onError();
+        };
+
+        document.head.appendChild(script);
+      }
+
+      function tryNextCDN() {
+        if (currentIndex >= cdnUrls.length) {
+          console.warn('[marked.js] 所有 CDN 加载失败，Markdown 渲染功能将受限');
+          // 创建一个空的 marked 对象，避免后续代码报错
+          window.marked = {
+            parse: function(text) { return text; },
+            setOptions: function() {}
+          };
+          return;
+        }
+
+        const url = cdnUrls[currentIndex++];
+        console.log(`[marked.js] 尝试加载: ${url}`);
+
+        loadScript(
+          url,
+          () => {
+            console.log(`[marked.js] 成功加载: ${url}`);
+          },
+          () => {
+            console.warn(`[marked.js] 加载失败: ${url}，尝试下一个 CDN...`);
+            tryNextCDN();
+          }
+        );
+      }
+
+      tryNextCDN();
+    })();
+  </script><script src="./Clinical Chat_files/marked.min.js" async=""></script>
+
+  <!-- 服务器配置（自动生成，请勿手动编辑） -->
+  <script src="./Clinical Chat_files/server_config.js"></script>
+
+  <style>
+    /* 医疗专业配色系统 - 参考MSD品牌设计 */
+    :root {
+      /* MSD Brand Colors (参考 chufangcankao.html) */
+      --msd-primary: #005F60;       /* MSD Deep Teal */
+      --msd-primary-dark: #004546;
+      --msd-accent: #00A699;        /* Cyan Accent */
+      --msd-bg-tint: #f2f8f8;       /* Very light teal tint */
+
+      /* 兼容保留原有变量名 */
+      --primary-green: #005F60;
+      --primary-green-dark: #004546;
+      --primary-green-darker: #003d3f;
+      --primary-green-light: #00A699;
+      --primary-green-lighter: #f2f8f8;
+      --primary-green-pale: #f7f9fa;
+
+      /* 文字和边框颜色 */
+      --text-main: #2b2b2b;
+      --text-sub: #5e6d75;
+      --border-light: #e6eaea;
+      --white: #ffffff;
+
+      /* 布局配置 */
+      --sidebar-width: 280px;
+      --timeline-width: 300px;
+      --header-height: 56px;
+      --patient-info-bar-height: 60px;
+      --followup-form-height: 140px;
+      --new-patient-form-min-height: 280px;
+      --input-section-min-height: 100px;
+
+      /* 设计令牌 */
+      --radius-md: 6px;
+      --shadow-card: 0 2px 8px rgba(0, 95, 96, 0.08);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", "微软雅黑", "PingFang SC", sans-serif;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--primary-green-pale);
+      font-size: 16px; /* [修改] 全局字号从15px提升到16px */
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      color: var(--text-main);
+      /* 防止页面跳动 */
+      overflow-x: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* 确保根容器稳定 */
+    html, body {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    /* 自定义滚动条 - 医疗专业主题 */
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--msd-accent) 0%, var(--msd-primary) 100%);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, var(--msd-primary) 0%, var(--msd-primary-dark) 100%);
+    }
+
+    /* 动画效果 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes typing {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.8); }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .animate-slide-in-right {
+      animation: slideInRight 0.4s ease-out;
+    }
+
+    .animate-slide-in-left {
+      animation: slideInLeft 0.4s ease-out;
+    }
+
+    .animate-pulse-slow {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-glow {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    /* 消息气泡动画 */
+    .message-bubble {
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    .message-user {
+      animation: slideInRight 0.4s ease-out;
+    }
+
+    .message-assistant {
+      animation: slideInLeft 0.4s ease-out;
+    }
+
+    /* 玻璃态效果 */
+    .glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* 按钮和交互元素 */
+    button {
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    button:hover {
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    }
+
+    button:active {
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    /* 输入框聚焦效果 - 医疗专业主题 */
+    input:focus, textarea:focus, select:focus {
+      box-shadow: 0 0 0 3px rgba(0, 95, 96, 0.15);
+      transition: all 0.3s ease;
+      border-color: var(--msd-primary);
+    }
+
+    /* 医疗专业字体大小系统 */
+    h1, .text-h1 { font-size: 24px; font-weight: 600; line-height: 1.4; }
+    h2, .text-h2 { font-size: 20px; font-weight: 600; line-height: 1.4; }
+    h3, .text-h3 { font-size: 18px; font-weight: 600; line-height: 1.4; }
+    .text-base { font-size: 16px; line-height: 1.6; } /* [修改] 从15px提升到16px */
+    .text-body { font-size: 15px; line-height: 1.6; } /* [修改] 从14px提升到15px */
+    .text-small { font-size: 14px; line-height: 1.5; } /* [修改] 从13px提升到14px */
+    .text-xs-custom { font-size: 12px; line-height: 1.5; }
+
+    /* 自定义医疗绿色工具类 */
+    .text-medical-green { color: var(--primary-green); }
+    .text-medical-green-dark { color: var(--primary-green-dark); }
+    .text-medical-green-light { color: var(--primary-green-light); }
+    .bg-medical-green { background-color: var(--primary-green); }
+    .bg-medical-green-dark { background-color: var(--primary-green-dark); }
+    .bg-medical-green-light { background-color: var(--primary-green-lighter); }
+    .bg-medical-green-pale { background-color: var(--primary-green-pale); }
+    .border-medical-green { border-color: var(--primary-green); }
+    .border-medical-green-light { border-color: var(--primary-green-light); }
+
+    .gradient-medical-btn {
+      background: var(--msd-primary);
+    }
+    .gradient-medical-btn:hover {
+      background: var(--msd-primary-dark);
+    }
+
+    .gradient-medical-bg {
+      background: linear-gradient(to right, var(--primary-green-pale), var(--primary-green-lighter));
+    }
+
+    /* 调理笺按钮禁用状态样式 */
+    .btn-prescription.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: auto; /* 允许点击以便显示提示 */
+    }
+
+    .btn-prescription.disabled:hover {
+      border-color: var(--border-light);
+      color: var(--text-sub);
+    }
+
+    /* 响应式布局优化 */
+    @media (max-width: 1536px) {
+      :root {
+        --sidebar-width: 260px;
+        --timeline-width: 280px;
+      }
+    }
+
+    @media (max-width: 1280px) {
+      :root {
+        --sidebar-width: 240px;
+        --timeline-width: 260px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      :root {
+        --sidebar-width: 220px;
+        --timeline-width: 240px;
+        --new-patient-form-min-height: 320px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --sidebar-width: 100%;
+        --timeline-width: 100%;
+        --patient-info-bar-height: 70px;
+        --followup-form-height: 160px;
+        --new-patient-form-min-height: 400px;
+        --input-section-min-height: 120px;
+      }
+
+      /* 小屏幕下优化患者信息栏 */
+      #patient-info-bar {
+        flex-wrap: wrap;
+        padding: 8px 12px !important;
+      }
+
+      #patient-info-bar .flex.items-center.gap-8 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px !important;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --header-height: 60px;
+        --patient-info-bar-height: 80px;
+        --input-section-min-height: 140px;
+      }
+    }
+
+    /* 防止布局跳动的关键样式 */
+    .layout-stable {
+      position: relative;
+      min-height: 0; /* 允许flex子元素收缩 */
+    }
+
+    /* 固定高度的容器 */
+    .fixed-height-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 可滚动内容区域 */
+    .scrollable-content {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      /* 确保滚动流畅 */
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    /* 固定的底部输入区域 */
+    .fixed-input-section {
+      flex: 0 0 auto;
+      min-height: var(--input-section-min-height);
+      max-height: none;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 平滑过渡动画 */
+    section[id*="section"],
+    section[id*="bar"],
+    #patient-info-bar,
+    #followup-symptom-section,
+    #clinic-form-section {
+      transition: height 0.2s ease-out, opacity 0.2s ease-out, transform 0.2s ease-out;
+    }
+
+    /* 确保固定高度的区域在显示/隐藏时不会导致布局跳动 */
+    /* Tailwind的hidden类已经使用display: none，不会影响布局 */
+    /* 但我们需要确保固定高度的section在显示时立即设置正确高度 */
+    #patient-info-bar:not(.hidden),
+    #followup-symptom-section:not(.hidden),
+    #clinic-form-section:not(.hidden) {
+      display: block !important;
+    }
+
+    /* 图标动画 */
+    .icon-bounce {
+      transition: transform 0.3s ease;
+    }
+
+    button:hover .icon-bounce {
+      transform: scale(1.04);
+    }
+
+    /* 连接状态指示器 */
+    .status-indicator {
+      position: relative;
+    }
+
+    .status-indicator::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    /* 加载动画 */
+    .typing-indicator {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    /* 渐变背景 - 医疗专业主题 */
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--primary-green-darker) 0%, var(--primary-green-dark) 100%);
+    }
+
+    .gradient-emerald {
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+    }
+
+    /* 右侧就诊时间线：纵向时间轴样式（参考 chufangcankao.html） */
+    .tl-node {
+      position: relative;
+      padding-left: 20px;
+      padding-bottom: 24px;
+      border-left: 2px solid #e2e8f0;
+    }
+    .tl-node:last-child {
+      border-left: transparent;
+    }
+    .tl-dot {
+      position: absolute;
+      left: -6px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--msd-primary);
+    }
+    .tl-date {
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .tl-content {
+      background: #f8fafc;
+      border: 1px solid #eef2f6;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .tl-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2px;
+    }
+    .tl-desc {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* 右侧边栏样式（参考 chufangcankao.html） */
+    .sidebar-right {
+      width: var(--timeline-width);
+      background: white;
+      border-left: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      min-width: 0;
+      height: 100vh; /* 确保侧边栏有固定高度 */
+      max-height: 100vh; /* 限制最大高度 */
+      overflow: hidden; /* 防止整体滚动 */
+      /* 响应式宽度调整 */
+    }
+
+    @media (max-width: 1280px) {
+      .sidebar-right {
+        width: 260px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar-right {
+        width: 240px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-right {
+        width: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 30;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      }
+    }
+    .tl-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--msd-primary);
+      text-transform: uppercase;
+    }
+    .tl-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 24px 20px;
+      min-height: 0; /* 确保flex子元素可以正确收缩 */
+    }
+
+    /* 确保就诊时间线部分有滚动条 */
+    #patient-timeline-sidebar-content {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      min-height: 0 !important;
+    }
+
+    /* Markdown 内容样式 */
+    .markdown-content {
+      line-height: 1.7;
+    }
+
+    .markdown-content h1 {
+      font-size: 1.5em;
+      font-weight: 600;
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+      color: #111827; /* [修改] 纯黑，强调重点 */
+      border-bottom: 2px solid var(--border-light);
+      padding-bottom: 0.3em;
+    }
+
+    .markdown-content h2 {
+      font-size: 18px !important; /* [修改] 小标题加大 */
+      font-weight: 600;
+      margin-top: 1.2em; /* [修改] 增加上边距 */
+      margin-bottom: 0.5em;
+      color: #111827; /* [修改] 纯黑，强调重点 */
+    }
+
+    .markdown-content h3 {
+      font-size: 1.1em;
+      font-weight: 600;
+      margin-top: 0.8em;
+      margin-bottom: 0.4em;
+      color: var(--text-main);
+    }
+
+    /* [关键修改] 正文阅读体验优化 */
+    .markdown-content p,
+    .markdown-content li {
+      font-size: 16px !important;  /* [修改] 提升字号 */
+      line-height: 1.75 !important; /* [修改] 增加行间距，让文字"透气" */
+      color: #1f2937; /* [修改] 加深颜色，确保对比度（深灰接近黑） */
+      margin-bottom: 1em; /* [修改] 段落间距拉大 */
+    }
+
+    .markdown-content strong {
+      color: #111827; /* [修改] 纯黑，强调重点 */
+    }
+
+    .markdown-content ul,
+    .markdown-content ol {
+      margin: 0.5em 0;
+      padding-left: 1.5em;
+    }
+
+    .markdown-content ol {
+      list-style-type: decimal;
+    }
+
+    .markdown-content ul {
+      list-style-type: disc;
+    }
+
+
+    .markdown-content em {
+      font-style: italic;
+    }
+
+    .markdown-content blockquote {
+      margin: 0.5em 0;
+      padding: 0.5em 1em;
+      border-left: 3px solid var(--msd-accent);
+      background: var(--msd-bg-tint);
+      color: var(--text-sub);
+      font-style: italic;
+    }
+
+    .markdown-content code {
+      background: var(--msd-bg-tint);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    .markdown-content pre {
+      background: var(--msd-bg-tint);
+      padding: 1em;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 0.5em 0;
+    }
+
+    .markdown-content pre code {
+      background: transparent;
+      padding: 0;
+    }
+
+    .markdown-content a {
+      color: var(--msd-primary);
+      text-decoration: underline;
+    }
+
+    .markdown-content a:hover {
+      color: var(--msd-primary-dark);
+    }
+
+    .markdown-content hr {
+      border: none;
+      border-top: 1px solid var(--border-light);
+      margin: 1em 0;
+    }
+
+    .markdown-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5em 0;
+    }
+
+    .markdown-content th,
+    .markdown-content td {
+      border: 1px solid var(--border-light);
+      padding: 0.5em;
+      text-align: left;
+    }
+
+    .markdown-content th {
+      background: var(--msd-bg-tint);
+      font-weight: 600;
+    }
+
+    /* 方剂内容表格特殊样式 - 每行4个药材，无边框，对齐整齐 */
+    .markdown-content table[style*="border: none"],
+    .markdown-content table.formula-table {
+      border: none !important;
+    }
+
+    .markdown-content table[style*="border: none"],
+    .markdown-content table.formula-table {
+      background-color: #fff !important; /* 方剂内容保持白底，不使用宣纸底纹 */
+    }
+
+    .markdown-content table[style*="border: none"] td,
+    .markdown-content table.formula-table td {
+      border: none !important;
+      padding: 0.4em 0.6em !important;
+      text-align: left !important;
+      width: 25% !important;
+      vertical-align: top !important;
+      font-family: 'SimSun', '宋体', serif !important;
+      background-color: #fff !important; /* 单元格也保持白底 */
+    }
+
+    .markdown-content table[style*="border: none"] tr,
+    .markdown-content table.formula-table tr {
+      background: transparent !important;
+    }
+
+    /* HTML 内容样式 - 与 Markdown 内容样式保持一致 */
+    .html-content {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .html-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5em 0;
+      font-size: 12px;
+    }
+
+    .html-content table th,
+    .html-content table td {
+      border: 1px solid var(--border-light);
+      padding: 0.5em;
+      text-align: left;
+    }
+
+    .html-content table th {
+      background: var(--msd-bg-tint);
+      font-weight: 600;
+    }
+
+    /* 方剂内容表格特殊样式 - 每行4个药材，无边框，对齐整齐 */
+    .html-content table[style*="border: none"],
+    .html-content table.formula-table {
+      border: none !important;
+    }
+
+    .html-content table[style*="border: none"],
+    .html-content table.formula-table {
+      background-color: #fff !important; /* 方剂内容保持白底，不使用宣纸底纹 */
+    }
+
+    .html-content table[style*="border: none"] td,
+    .html-content table.formula-table td {
+      border: none !important;
+      padding: 0.4em 0.6em !important;
+      text-align: left !important;
+      width: 25% !important;
+      vertical-align: top !important;
+      font-family: 'SimSun', '宋体', serif !important;
+      background-color: #fff !important; /* 单元格也保持白底 */
+    }
+
+    .html-content table[style*="border: none"] tr,
+    .html-content table.formula-table tr {
+      background: transparent !important;
+    }
+
+    /* 宣纸底纹样式（米黄色纹理） */
+    .bg-rice-paper {
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(248, 244, 235, 0.3) 2px,
+          rgba(248, 244, 235, 0.3) 4px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(248, 244, 235, 0.2) 2px,
+          rgba(248, 244, 235, 0.2) 4px
+        ),
+        linear-gradient(135deg, #faf8f3 0%, #f5f1e8 100%);
+      background-color: #faf8f3;
+    }
+
+    /* 侧边栏患者列表优化 */
+    #clinic-list .text-sm {
+      font-size: 15px !important; /* [修改] 患者名字加大 */
+    }
+    #clinic-list .text-\[11px\] {
+      font-size: 13px !important; /* [修改] 摘要文字加大 */
+    }
+
+    /* 右侧看板折叠功能样式 */
+    .sidebar-right {
+      transition: transform 0.3s ease, width 0.3s ease, opacity 0.3s ease;
+      position: relative;
+    }
+
+    .sidebar-right.collapsed {
+      transform: translateX(100%);
+      width: 0 !important;
+      min-width: 0 !important;
+      overflow: visible; /* 允许按钮显示 */
+      border: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sidebar-toggle-btn {
+      position: absolute;
+      left: -32px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 64px;
+      background: var(--msd-primary);
+      border: none;
+      border-radius: 8px 0 0 8px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 10;
+      pointer-events: auto; /* 确保按钮始终可点击 */
+    }
+
+    .sidebar-toggle-btn:hover {
+      background: var(--msd-primary-dark);
+      box-shadow: -2px 0 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar-right.collapsed .sidebar-toggle-btn {
+      left: 0;
+      border-radius: 0 8px 8px 0;
+      opacity: 1; /* 折叠时按钮仍然可见 */
+      pointer-events: auto; /* 确保按钮可点击 */
+    }
+
+    .sidebar-right.hidden .sidebar-toggle-btn {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar-toggle-btn {
+        left: -28px;
+        width: 28px;
+        height: 56px;
+      }
+
+      .sidebar-right.collapsed .sidebar-toggle-btn {
+        left: 0;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="./Clinical Chat_files/mobile_mode.css">
+
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.bottom-0{bottom:0px}.left-0{left:0px}.right-0{right:0px}.right-1\.5{right:0.375rem}.right-2\.5{right:0.625rem}.top-0{top:0px}.top-1\.5{top:0.375rem}.top-1\/2{top:50%}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.ml-2{margin-left:0.5rem}.ml-4{margin-left:1rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mb-0\.5{margin-bottom:0.125rem}.mt-0\.5{margin-top:0.125rem}.mb-1\.5{margin-bottom:0.375rem}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-14{height:3.5rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-full{height:100%}.h-screen{height:100vh}.max-h-\[120px\]{max-height:120px}.min-h-0{min-height:0px}.min-h-\[44px\]{min-height:44px}.w-10{width:2.5rem}.w-12{width:3rem}.w-8{width:2rem}.w-80{width:20rem}.w-9{width:2.25rem}.w-full{width:100%}.w-screen{width:100vw}.min-w-0{min-width:0px}.max-w-3xl{max-width:48rem}.max-w-full{max-width:100%}.max-w-\[80\%\]{max-width:80%}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-pointer{cursor:pointer}.cursor-not-allowed{cursor:not-allowed}.select-none{-webkit-user-select:none;user-select:none}.resize-none{resize:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-row{flex-direction:row}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-0\.5{gap:0.125rem}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-8{gap:2rem}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.overflow-x-hidden{overflow-x:hidden}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.break-words{overflow-wrap:break-word}.rounded{border-radius:0.25rem}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.rounded-full{border-radius:9999px}.rounded-2xl{border-radius:1rem}.rounded-t-lg{border-top-left-radius:0.5rem;border-top-right-radius:0.5rem}.rounded-tl-sm{border-top-left-radius:0.125rem}.border{border-width:1px}.border-2{border-width:2px}.border-y{border-top-width:1px;border-bottom-width:1px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-l-4{border-left-width:4px}.border-dashed{border-style:dashed}.border-blue-100{--tw-border-opacity:1;border-color:rgb(219 234 254 / var(--tw-border-opacity, 1))}.border-blue-200{--tw-border-opacity:1;border-color:rgb(191 219 254 / var(--tw-border-opacity, 1))}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-200\/50{border-color:rgb(226 232 240 / 0.5)}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225 / var(--tw-border-opacity, 1))}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.border-amber-100{--tw-border-opacity:1;border-color:rgb(254 243 199 / var(--tw-border-opacity, 1))}.border-l-transparent{border-left-color:transparent}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255 / var(--tw-bg-opacity, 1))}.bg-blue-50\/50{background-color:rgb(239 246 255 / 0.5)}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-slate-400{--tw-bg-opacity:1;background-color:rgb(148 163 184 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-50\/50{background-color:rgb(248 250 252 / 0.5)}.bg-slate-50\/80{background-color:rgb(248 250 252 / 0.8)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/20{background-color:rgb(255 255 255 / 0.2)}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-200{--tw-bg-opacity:1;background-color:rgb(226 232 240 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-amber-500{--tw-gradient-from:#f59e0b var(--tw-gradient-from-position);--tw-gradient-to:rgb(245 158 11 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-blue-600{--tw-gradient-from:#2563eb var(--tw-gradient-from-position);--tw-gradient-to:rgb(37 99 235 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-purple-600{--tw-gradient-from:#9333ea var(--tw-gradient-from-position);--tw-gradient-to:rgb(147 51 234 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-slate-50{--tw-gradient-from:#f8fafc var(--tw-gradient-from-position);--tw-gradient-to:rgb(248 250 252 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-amber-600{--tw-gradient-to:#d97706 var(--tw-gradient-to-position)}.to-blue-50{--tw-gradient-to:#eff6ff var(--tw-gradient-to-position)}.to-indigo-600{--tw-gradient-to:#4f46e5 var(--tw-gradient-to-position)}.to-pink-600{--tw-gradient-to:#db2777 var(--tw-gradient-to-position)}.to-red-500{--tw-gradient-to:#ef4444 var(--tw-gradient-to-position)}.p-2{padding:0.5rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-3{padding:0.75rem}.px-1\.5{padding-left:0.375rem;padding-right:0.375rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-8{padding-top:2rem;padding-bottom:2rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.pl-4{padding-left:1rem}.pr-20{padding-right:5rem}.pr-8{padding-right:2rem}.pt-2{padding-top:0.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[13px\]{font-size:13px}.text-\[8px\]{font-size:8px}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-6{line-height:1.5rem}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-wider{letter-spacing:0.05em}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-blue-700{--tw-text-opacity:1;color:rgb(29 78 216 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/80{color:rgb(255 255 255 / 0.8)}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.opacity-50{opacity:0.5}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:gap-1\.5:hover{gap:0.375rem}.hover\:gap-2:hover{gap:0.5rem}.hover\:border-green-500:hover{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.hover\:border-l-slate-200:hover{--tw-border-opacity:1;border-left-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.hover\:bg-blue-100:hover{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-500:hover{--tw-bg-opacity:1;background-color:rgb(100 116 139 / var(--tw-bg-opacity, 1))}.hover\:bg-red-50:hover{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.hover\:from-blue-700:hover{--tw-gradient-from:#1d4ed8 var(--tw-gradient-from-position);--tw-gradient-to:rgb(29 78 216 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:from-purple-700:hover{--tw-gradient-from:#7e22ce var(--tw-gradient-from-position);--tw-gradient-to:rgb(126 34 206 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.hover\:to-indigo-700:hover{--tw-gradient-to:#4338ca var(--tw-gradient-to-position)}.hover\:to-pink-700:hover{--tw-gradient-to:#be185d var(--tw-gradient-to-position)}.hover\:text-slate-600:hover{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.hover\:shadow:hover{--tw-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-lg:hover{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-sm:hover{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-blue-500:focus{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-1:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-blue-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(59 130 246 / var(--tw-ring-opacity, 1))}.group:hover .group-hover\:bg-slate-300{--tw-bg-opacity:1;background-color:rgb(203 213 225 / var(--tw-bg-opacity, 1))}.group:hover .group-hover\:text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:flex{display:flex}.sm\:hidden{display:none}.sm\:w-auto{width:auto}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:justify-start{justify-content:flex-start}.sm\:px-3{padding-left:0.75rem;padding-right:0.75rem}.sm\:pr-4{padding-right:1rem}}@media (min-width: 768px){.md\:inline{display:inline}.md\:hidden{display:none}}@media (min-width: 1024px){.lg\:inline{display:inline}.lg\:hidden{display:none}}</style><style id="client-theme-vars">:root { --primary: #1E40AF; --primary-dark: #1E3A8A; --primary-light: #eff6ff; --accent: #60A5FA; --background: #fdfbff; --msd-primary: #1E40AF; --msd-primary-dark: #1E3A8A; --msd-accent: #60A5FA; --msd-bg-tint: #eff6ff; --primary-green: #1E40AF; --primary-green-dark: #1E3A8A; --primary-green-darker: #1e3a8a; --primary-green-light: #60A5FA; --primary-green-lighter: #eff6ff; --primary-green-pale: #f0f9ff; --primary-green-darker: #1e3a8a }</style></head>
+
+<body class="h-screen w-screen flex overflow-hidden fixed top-0 left-0 page-chat">
+
+  <!-- 左侧：用户信息 & 模式切换 -->
+
+  <aside class="w-80 border-r flex flex-col flex-shrink-0 layout-stable" style="border-color: var(--border-light); background: var(--white); box-shadow: 2px 0 10px rgba(0,0,0,0.02); min-width: var(--sidebar-width); max-width: var(--sidebar-width); width: var(--sidebar-width);">
+
+    <!-- 顶部用户与连接信息 -->
+
+    <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+
+      <div class="flex items-center gap-2">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user-circle" aria-hidden="true" style="color: var(--primary-green-dark);" class="lucide lucide-user-circle"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="10" r="3"></circle><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"></path></svg>
+
+        <div>
+
+          <div class="text-[11px] text-slate-500 flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" aria-hidden="true" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>当前用户</span>
+          </div>
+
+          <div id="sidebar-user" class="text-sm font-semibold text-slate-900 flex items-center gap-1.5">13086730697</div>
+
+        </div>
+
+      </div>
+
+      <div class="text-right">
+
+        <div id="ws-status" class="text-xs font-medium flex items-center gap-1.5 justify-end status-indicator text-medical-green"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="wifi" aria-hidden="true" class="lucide lucide-wifi text-medical-green"><path d="M12 20h.01"></path><path d="M2 8.82a15 15 0 0 1 20 0"></path><path d="M5 12.859a10 10 0 0 1 14 0"></path><path d="M8.5 16.429a5 5 0 0 1 7 0"></path></svg><span>已连接</span></div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="window.location.href=&#39;settings_web.html&#39;" class="text-[11px] px-2.5 py-1 rounded-lg text-white shadow-sm hover:shadow-md flex items-center gap-1.5 hover:gap-2 transition-all" style="background: var(--msd-primary); border-radius: var(--radius-md);" title="个人设置">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="settings" aria-hidden="true" class="lucide lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <span class="font-semibold">设置</span>
+          </button>
+          <button onclick="redirectToLogin()" class="text-[11px] flex items-center gap-1 hover:gap-1.5 transition-all" style="color: var(--msd-primary);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="log-in" aria-hidden="true" class="lucide lucide-log-in"><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path></svg>
+            <span>重新登录</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- 连接说明 -->
+
+    <div class="px-4 py-2.5 border-b border-slate-200 bg-slate-50/50">
+
+      <div id="connection-note" class="text-[11px] text-slate-500 flex items-center gap-1.5"></div>
+
+    </div>
+
+
+
+    <!-- 模式切换 Tab -->
+
+    <div class="flex border-b border-slate-200 text-xs font-medium">
+
+    <button id="mode-tab-clinic" onclick="switchMode('clinic')" class="flex-1 py-1.5 flex items-center justify-center gap-1.5 rounded-lg transition-all" style="background: var(--msd-primary); color: white;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+  <span>患者记录</span>
+</button>
+
+<button id="mode-tab-corpus" onclick="switchMode('corpus')" class="flex-1 py-1.5 flex items-center justify-center gap-1.5 rounded-lg transition-all" style="background: white; color: var(--msd-primary);">
+  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain-circuit"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path><path d="M9 13a4.5 4.5 0 0 0 3-4"></path><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"></path><path d="M3.477 10.896a4 4 0 0 1 .585-.396"></path><path d="M6 18a4 4 0 0 1-1.967-.516"></path><path d="M12 13h4"></path><path d="M12 18h6a2 2 0 0 1 2 2v1"></path><path d="M12 8h8"></path><path d="M16 8V5a2 2 0 0 1 2-2"></path><circle cx="16" cy="13" r=".5"></circle><circle cx="18" cy="3" r=".5"></circle><circle cx="20" cy="21" r=".5"></circle><circle cx="20" cy="8" r=".5"></circle></svg>
+  <span>医知快答</span>
+</button>
+
+      </button>
+
+    </div>
+
+
+
+    <!-- 模式内容 -->
+
+    <div class="flex-1 overflow-y-auto custom-scrollbar bg-slate-50">
+
+      <!-- 问诊模式 -->
+
+      <div id="clinic-panel" class="h-full flex flex-col">
+
+        <div class="px-4 py-2.5 text-[11px] text-slate-500 border-b border-slate-200 flex items-center justify-between gap-2">
+
+          <div class="flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="users" aria-hidden="true" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><path d="M16 3.128a4 4 0 0 1 0 7.744"></path><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><circle cx="9" cy="7" r="4"></circle></svg>
+            <span>近期患者 <span id="clinic-count" class="font-semibold text-medical-green">10</span></span>
+          </div>
+          <button onclick="syncPatients(true)" class="px-2.5 py-1 text-[11px] border rounded-lg flex items-center gap-1 transition-all" style="border-color: var(--msd-primary); color: var(--msd-primary); background: transparent; border-radius: 4px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="refresh-cw" aria-hidden="true" class="lucide lucide-refresh-cw icon-bounce"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+            <span>同步后端</span>
+          </button>
+
+        </div>
+
+        <!-- 患者搜索框 -->
+        <div class="px-4 py-2 border-b border-slate-200">
+          <div class="relative">
+            <input id="patient-search-input" type="text" placeholder="搜索客户姓名..." class="w-full px-3 py-1.5 pr-8 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 border-medical-green" style="--tw-ring-color: var(--msd-primary);" oninput="searchPatients(this.value)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="search" aria-hidden="true" class="lucide lucide-search absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+          </div>
+        </div>
+
+        <!-- 新增患者按钮（固定） -->
+        <div class="px-4 py-2 border-b border-slate-200 bg-white" style="position:sticky;top:0;z-index:1">
+          <button class="w-full text-left text-[11px] font-medium rounded-lg bg-emerald-500 text-white border border-transparent hover:bg-emerald-600 hover:shadow-sm flex items-center justify-center gap-1.5 px-2 py-1" onclick="selectNewClinicPatient()">
+            <i data-lucide="user-plus" width="12"></i>
+            <span>新增患者</span>
+          </button>
+        </div>
+
+        <div id="clinic-list" class="flex-1 overflow-y-auto">
+          <!-- 患者列表由JS动态渲染 -->
+      
+          <div data-patient-row="true" data-patient-id-value="罗芳_39_女_1779170015530" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">罗</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>患者编号：</div>
+                <div class="font-medium">5530</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">罗芳</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">女</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">19小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">发病时间：腺肌瘤.多囊十多年史，末生孩子前<span class="font-semibold text-medical-green">月经</span>周期不规律2一3个月一次，人工受孕4次，24年人工受孕成功产子，产子后<span class="font-semibold text-medical-green">月经</span>周期推迟3一4天，现<span class="font-semibold text-medical-green">月经</span>前一天腹就痛，<span class="font-semibold text-medical-green">月经</span>期前3天腹特痛，痛得无法自理，第四天<span class="font-semibold text-medical-green"><span class="font-semibold text-medical-green">腹痛</span></span>减轻，热敷和肛门塞止痛药可缓解，<span class="font-semibold text-medical-green">月经</span>期前3天量特多，大血块，后面4天小血块，腰胀痛，乳房不胀痛，子宫偏大，7一8天干净，睡眠差，难入睡，易惊醒，口不干，口不苦，大便一日1一2次，小便夜1一2次，血压128/82，心率93
+即往史：胆结石</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="黄秀梅_68_女_1779169416709" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">黄</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>患者编号：</div>
+                <div class="font-medium">6709</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">黄秀梅</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">女</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">19小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">过敏性寻麻疹半年左右，全身都痒，上半身痒好一点，腰至腿痒甚，痒一抓有小红疹子出来，不抓没有疹子但也痒，遇热痒加重，晚上痒甚，晚上痒难入睡，每晚擦刺激性膏子或酒精4一5次痒缓解入睡，口不干，口不苦，大便一日2一3次&lt;正常便.排不净感&gt;小便夜1一2次，血压128/72，心率60 舌红苔黄腻</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="向禹修_6_男_1779181425365" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">向</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">5365</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">向禹修</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">男</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">16小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">暂无症状</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="倪玉雪_25_男_1779176035154" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">倪</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">5154</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">倪玉雪</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">男</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">17小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">25岁  支气管炎  鼻涕<span class="font-semibold text-medical-green">鼻塞</span><span class="font-semibold text-medical-green">咳嗽</span>3天昨喝酒<span class="font-semibold text-medical-green">咳嗽</span>频繁，咽痒<span class="font-semibold text-medical-green">咽痛</span>，<span class="font-semibold text-medical-green">咳嗽</span><span class="font-semibold text-medical-green">胸闷</span><span class="font-semibold text-medical-green">胸痛</span>，扁桃体红肿，双肺呼粗，大便2日一行</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="罗芳_39_女_1779170016168" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">罗</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">6168</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">罗芳</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">女</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询3次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">19小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">腺肌瘤.多囊十多年史，末生孩子前<span class="font-semibold text-medical-green">月经</span>周期不规律2一3个月一次，人工受孕4次，24年人工受孕成功产子，产子后<span class="font-semibold text-medical-green">月经</span>周期推迟3一4天，现<span class="font-semibold text-medical-green">月经</span>前一天腹就痛，<span class="font-semibold text-medical-green">月经</span>期前3天腹特痛，痛得无法自理，第四天<span class="font-semibold text-medical-green"><span class="font-semibold text-medical-green">腹痛</span></span>减轻，热敷和肛门塞止痛药可缓解，<span class="font-semibold text-medical-green">月经</span>期前3天量特多，大血块，后面4天小血块，腰胀痛，乳房不胀痛，子宫偏大，7一8天干净，睡眠差，难入睡，易惊醒，口不干，口不苦，大便一日1一2次，小便夜1一2次，血压128/82，心率93</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="徐文红_59_女_1779162954200" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">徐</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">4200</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">徐文红</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">女</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">21小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">左侧膝<span class="font-semibold text-medical-green">关节</span>行走时胀痛3年余，晚间酸痛，但冬天及用护膝后不疼，久坐后腰部及左侧臀部及大腿胀痛，平躺不疼</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="黄时意_1_男_1779153490115" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">黄</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">0115</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">黄时意</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">男</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">23小时前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/19</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500"><span class="font-semibold text-medical-green">咳嗽</span>昨起多，清鼻涕，双肺湿啰音喘，大便可昨成型，食纳可，舌淡苔薄白</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="尤梅兰_36_女_1779104057076" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">尤</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">7076</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">尤梅兰</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">女</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">1天前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/18</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">暂无症状</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="杨沛其_10_男_1779087767332" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">杨</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">7332</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">杨沛其</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">男</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询1次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">1天前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/18</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">抽动症，抽动2年加重一月努嘴眨眼擤鼻伉嗓手抽筋，舔唇，鼻甲红肿，大便可，鱼际红</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        
+          <div data-patient-row="true" data-patient-id-value="苏敏_43_女_1779074645058" class="group px-4 py-3 flex items-center gap-3 cursor-pointer transition-all border-l-4 border-l-transparent hover:bg-white hover:border-l-slate-200" style="" onclick="selectClinicPatient(this.getAttribute(&#39;data-patient-id-value&#39;))">
+            <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+              <div data-patient-avatar="true" class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all bg-slate-200 text-slate-500 border-2 border-white shadow-sm group-hover:bg-slate-300">苏</div>
+              <div data-patient-id="true" class="text-[8px] text-slate-400 whitespace-nowrap text-center leading-tight">
+                <div>客户编号：</div>
+                <div class="font-medium">5058</div>
+              </div>
+            </div>
+            <div class="flex-1 overflow-hidden min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <span data-patient-name="true" class="text-sm font-bold text-slate-700 truncate">苏敏</span>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                  
+                  <span class="text-[10px] text-slate-500 whitespace-nowrap">女</span>
+                </div>
+              </div>
+              <div data-patient-timeline-meta="true" class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5 flex-wrap">
+                <span data-patient-visits="true" class="whitespace-nowrap">咨询2次</span>
+                <span data-patient-divider="primary" class="text-slate-300">|</span>
+                <span data-patient-last-visit="true" class="whitespace-nowrap">1天前</span>
+                <span class="text-slate-300">|</span><span class="whitespace-nowrap">首次咨询：05/18</span>
+              </div>
+              <div data-patient-summary="true" class="text-[11px] truncate mt-0.5 text-slate-400 group-hover:text-slate-500">宫血</div>
+            </div>
+            <button class="px-2 flex items-center justify-center text-slate-600 hover:text-red-500 transition-all hover:bg-red-50 rounded-lg flex-shrink-0" onclick="deleteClinicPatient(this.closest(&#39;[data-patient-row]&#39;).getAttribute(&#39;data-patient-id-value&#39;), event); event.stopPropagation();" title="删除该记录">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trash-2" aria-hidden="true" class="lucide lucide-trash-2 icon-bounce"><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <!-- 数据库闲聊模式 -->
+
+      <div id="corpus-panel" class="h-full flex flex-col hidden">
+
+        <!-- 医生自有数据库（doc ragdb）：上方勾选+上传，下方整块左侧显示预览 -->
+        <div class="px-4 py-2 border-b border-slate-200 flex-1 min-h-0 flex flex-col" style="background: var(--msd-bg-tint);">
+          <div class="text-[11px] font-medium text-slate-700 mb-2 flex-shrink-0">🩺 医生自有数据库（TXT）</div>
+          <div class="flex items-center justify-between gap-2 flex-shrink-0">
+            <label class="flex items-center gap-2 text-[11px] text-slate-700 select-none cursor-pointer">
+              <input id="toggle-doc-ragdb" type="checkbox" class="accent-medical-green" onchange="onToggleDocRagdb()">
+              <span>医知快答启用自有库</span>
+            </label>
+          </div>
+          <div class="mt-2 flex items-center gap-2 flex-shrink-0">
+            <input type="file" id="doc-ragdb-upload" accept=".txt" class="hidden" onchange="handleDocRagdbUpload(event)">
+            <button onclick="document.getElementById(&#39;doc-ragdb-upload&#39;).click()" class="flex-1 px-3 py-2 text-[11px] rounded-lg bg-white transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md" style="border: 1px dashed var(--msd-primary); color: var(--msd-primary); background: rgba(0, 95, 96, 0.03); border-radius: var(--radius-md);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="upload" aria-hidden="true" class="lucide lucide-upload icon-bounce"><path d="M12 3v12"></path><path d="m17 8-5-5-5 5"></path><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path></svg>
+              <span>上传/覆盖 TXT（云端保存）</span>
+            </button>
+            <span id="doc-ragdb-status" class="text-[10px] text-slate-500 whitespace-nowrap">未上传</span>
+          </div>
+          <div class="mt-2 flex-shrink-0">
+            <button type="button" onclick="clearCorpusChatAndStartNew()" class="w-full px-3 py-2 text-[11px] rounded-lg border border-slate-300 text-slate-600 bg-white hover:bg-slate-50 hover:border-medical-green hover:text-medical-green transition-all flex items-center justify-center gap-2" title="清空医知快答聊天记录，仅针对 common">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="message-square-plus" aria-hidden="true" class="lucide lucide-message-square-plus"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"></path><path d="M12 8v6"></path><path d="M9 11h6"></path></svg>
+              <span>开启新对话</span>
+            </button>
+          </div>
+          <div id="doc-ragdb-preview" class="mt-2 flex-1 min-h-0 flex flex-col border-t border-slate-100 pt-2" style="display: none;"><span class="text-slate-400 text-[10px] flex-shrink-0">已保存：</span><div id="doc-ragdb-preview-text" class="flex-1 min-h-0 overflow-y-auto text-[11px] text-slate-600 leading-relaxed whitespace-pre-wrap break-words mt-1 custom-scrollbar" title="云端已保存内容预览"></div></div>
+        </div>
+
+        <div id="corpus-list" class="flex-1 overflow-y-auto min-h-0"></div>
+
+      </div>
+
+    </div>
+
+</aside>
+
+
+
+  <!-- 右侧：聊天区 -->
+
+  <main class="flex-1 flex flex-row bg-white layout-stable min-w-0">
+
+    <!-- 左侧：聊天区域（包含header、患者信息栏、聊天内容、输入框） -->
+    <div class="flex-1 flex flex-col overflow-hidden min-w-0 layout-stable fixed-height-container">
+
+      <header class="h-14 flex items-center justify-between px-5 flex-shrink-0 relative z-40" style="background: var(--msd-primary); color: white; border-bottom: none; height: var(--header-height);">
+
+        <div class="flex items-center gap-3">
+
+          <div class="w-10 h-10 rounded-lg text-white flex items-center justify-center text-sm font-bold shadow-sm" style="background: rgba(255, 255, 255, 0.16);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="stethoscope" aria-hidden="true" class="lucide lucide-stethoscope"><path d="M11 2v2"></path><path d="M5 2v2"></path><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"></path><path d="M8 15a6 6 0 0 0 12 0v-3"></path><circle cx="20" cy="10" r="2"></circle></svg>
+          </div>
+
+          <div>
+
+            <div class="font-semibold text-white flex items-center gap-2" style="font-size: 16px; font-weight: 500;">
+              <span id="header-workbench-title">口服智能体质评估台</span>
+            </div>
+
+            <div id="header-user" class="flex items-center gap-1" style="font-size: 12px; color: rgba(255, 255, 255, 0.8);">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user" aria-hidden="true" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span id="header-user-text">已登录：13086730697</span>
+              <span id="header-db-name" class="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-white/20" style="">口服汤剂</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="text-[11px] px-3 py-1.5 rounded-md flex items-center gap-1.5" style="background: rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.95);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="radio" aria-hidden="true" class="lucide lucide-radio"><path d="M16.247 7.761a6 6 0 0 1 0 8.478"></path><path d="M19.075 4.933a10 10 0 0 1 0 14.134"></path><path d="M4.925 19.067a10 10 0 0 1 0-14.134"></path><path d="M7.753 16.239a6 6 0 0 1 0-8.478"></path><circle cx="12" cy="12" r="2"></circle></svg>
+          <span id="header-brand">守一 ● 口服</span>
+        </div>
+
+      <button id="mobile-sidebar-open-btn" class="mobile-header-btn hidden" type="button" aria-label="Open sidebar"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="menu" aria-hidden="true" class="lucide lucide-menu"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></button><button id="mobile-right-panel-open-btn" class="mobile-header-btn hidden" type="button" aria-label="Open timeline panel"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="clock-3" aria-hidden="true" class="lucide lucide-clock-3"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6h4"></path></svg></button></header><div id="mobile-chat-summary-bar" class="mobile-chat-summary hidden"><div class="mobile-chat-summary-main"><div class="mobile-chat-summary-mode" id="mobile-chat-summary-mode"></div><div class="mobile-chat-summary-title" id="mobile-chat-summary-title"></div><div class="mobile-chat-summary-subtitle" id="mobile-chat-summary-subtitle"></div></div><div class="mobile-chat-summary-badge" id="mobile-chat-summary-badge"></div></div>
+
+      <!-- 患者信息固定显示栏（选中患者时显示）- 允许内容换行 -->
+      <section id="patient-info-bar" class="border-b border-slate-100 bg-slate-50/80 backdrop-blur px-5 py-2.5 flex-shrink-0 custom-scrollbar" style="min-height: var(--patient-info-bar-height); max-height: 200px; overflow-y: auto; overflow-x: hidden;">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-start gap-8 text-xs flex-wrap flex-1 min-w-0">
+            <div class="flex flex-col gap-0.5 flex-shrink-0">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">性别/年龄</span>
+                <span class="font-medium text-slate-700 text-sm whitespace-nowrap"><span id="patient-info-gender">女</span> / <span id="patient-info-age">-</span></span>
+            </div>
+            <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">主要困扰</span>
+                <span id="patient-info-symptom" class="font-bold text-slate-900 break-words" style="word-wrap: break-word; word-break: break-word; overflow-wrap: break-word; line-height: 1.5;" title="右手中指无名指夜里睡着了麻到醒二月余，，醒过来活动一下就缓解，右上后臂有酸痛，一按会有向手指放射的感觉，有腰两侧酸痛，腰骶骨处痛，有骨刺，39岁确诊神经性脊柱炎，服用强的松，三年前已停药，睡觉需要服用安眠药，下肢酸，白天一动或者情绪一急就出汗，夜里不出虚汗，易烦躁，易疲劳，口干后出现干咳，喝水就能缓解">右手中指无名指夜里睡着了麻到醒二月余，，醒过来活动一下就缓解，右上后臂有酸痛，一按会有向手指放射的感觉，有腰两侧酸痛，腰骶骨处痛，有骨刺，39岁确诊神经性脊柱炎，服用强的松，三年前已停药，睡觉需要服用安眠药，下肢酸，白天一动或者情绪一急就出汗，夜里不出虚汗，易烦躁，易疲劳，口干后出现干咳，喝水就能缓解</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 pl-4 border-l border-slate-200 ml-4 flex-shrink-0">
+             <button id="btn-start-followup" onclick="showFollowupSymptomForm()" class="px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-600 rounded-md text-[11px] font-bold hover:bg-blue-100 transition-all flex items-center gap-1.5 whitespace-nowrap">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="refresh-cw" aria-hidden="true" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg> 记录跟进
+             </button>
+             <button id="btn-show-prescription" onclick="handlePrescriptionButtonClick(event)" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-md text-[11px] font-bold hover:border-medical-green hover:text-medical-green transition-all flex items-center gap-1.5 shadow-sm whitespace-nowrap btn-prescription">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="file-text" aria-hidden="true" class="lucide lucide-file-text"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg> <span id="prescription-btn-text">展示调理笺</span>
+            </button>
+        <button id="mobile-patient-info-toggle" class="mobile-patient-info-toggle" type="button" aria-label="Collapse patient info"></button></div>
+      </div>
+    </section>
+
+      <!-- 复诊症状输入表单 - 固定高度避免跳动 -->
+      <section id="followup-symptom-section" class="hidden border-b border-blue-100 bg-blue-50/50 px-5 py-4 flex-shrink-0 overflow-hidden" style="height: var(--followup-form-height); min-height: var(--followup-form-height); max-height: var(--followup-form-height);">
+      <div class="max-w-3xl mx-auto bg-white border border-blue-100 rounded-xl px-4 py-3 shadow-sm h-full flex flex-col">
+        <div class="flex justify-between items-center mb-2 flex-shrink-0">
+            <h3 class="text-xs font-bold text-blue-700 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="refresh-cw" aria-hidden="true" class="lucide lucide-refresh-cw"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg> 新增跟进记录</h3>
+            <button onclick="cancelFollowupSymptomForm()" class="text-slate-400 hover:text-slate-600 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+        </div>
+        <textarea id="followup-symptom-input" rows="2" class="w-full text-sm border border-slate-200 rounded-lg p-2 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none flex-1" placeholder="请输入近期的身体状态变化..."></textarea>
+        <div class="flex justify-end mt-2 flex-shrink-0">
+            <button onclick="confirmFollowupSymptom()" class="px-4 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition-colors shadow-sm whitespace-nowrap">确认并开始评估</button>
+        </div>
+      </div>
+      </section>
+
+      <!-- 问诊模式：新增患者时显示的表单 - 固定最小高度避免跳动 -->
+      <section id="clinic-form-section" class="border-b border-slate-200 bg-gradient-to-br from-slate-50 to-blue-50 px-5 py-4 flex-shrink-0 overflow-y-auto custom-scrollbar hidden" style="min-height: var(--new-patient-form-min-height); max-height: calc(100vh - var(--header-height) - var(--input-section-min-height) - 120px);">
+      <div class="max-w-3xl mx-auto bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl px-5 py-4 shadow-lg">
+        <div class="flex items-center justify-between mb-3 flex-shrink-0">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg text-medical-green-dark flex items-center justify-center shadow-sm flex-shrink-0" style="background: linear-gradient(to bottom right, var(--primary-green-lighter), var(--primary-green-light));">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="user-plus" aria-hidden="true" class="lucide lucide-user-plus"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" x2="19" y1="8" y2="14"></line><line x1="22" x2="16" y1="11" y2="11"></line></svg>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-slate-900">新增客户基本信息</div>
+              <div class="text-[11px] text-slate-500">请先填写完整客户信息并保存，随后再开始评估。</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-600">姓名</label>
+            <input id="new-patient-name" type="text" class="w-full border border-slate-300 rounded px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-2" style="--tw-ring-color: var(--msd-primary);" placeholder="例如：张三">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-600">年龄</label>
+            <input id="new-patient-age" type="number" min="0" max="150" class="w-full border border-slate-300 rounded px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-2" style="--tw-ring-color: var(--msd-primary);" placeholder="例如：24">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-600">性别</label>
+            <select id="new-patient-gender" class="w-full border border-slate-300 rounded px-2.5 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-2" style="--tw-ring-color: var(--msd-primary);">
+              <option value="男" selected="">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-600">客户手机号</label>
+            <input id="new-patient-phone" type="tel" class="w-full border border-slate-300 rounded px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-2" style="--tw-ring-color: var(--msd-primary);" placeholder="用于联系客户（可选）">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[11px] text-slate-600">客户备注</label>
+            <input id="new-patient-note" type="text" class="w-full border border-slate-300 rounded px-2.5 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-2" style="--tw-ring-color: var(--msd-primary);" placeholder="过敏史、重要既往史等（可选）">
+          </div>
+        </div>
+        <div class="space-y-1 mb-3">
+          <label class="text-[11px] text-slate-600">主要困扰 / 当前身体特征</label>
+          <textarea id="new-patient-symptom" rows="3" class="w-full border border-slate-300 rounded px-2.5 py-1.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-2" style="--tw-ring-color: var(--msd-primary);" placeholder="请简要描述客户的主要困扰、持续时间等关键信息。"></textarea>
+        </div>
+        <div class="flex items-center justify-between">
+          <div id="new-patient-error" class="text-[11px] text-red-600"></div>
+          <div class="flex items-center gap-2">
+            <button onclick="saveNewPatient(false)" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 text-xs font-medium hover:bg-slate-50 shadow-sm hover:shadow transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="save" aria-hidden="true" class="lucide lucide-save"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"></path><path d="M7 3v4a1 1 0 0 0 1 1h7"></path></svg>
+              <span>保存但不评估</span>
+            </button>
+            <button onclick="saveNewPatient(true)" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg gradient-medical-btn text-white text-xs font-medium shadow-md hover:shadow-lg transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="stethoscope" aria-hidden="true" class="lucide lucide-stethoscope"><path d="M11 2v2"></path><path d="M5 2v2"></path><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"></path><path d="M8 15a6 6 0 0 0 12 0v-3"></path><circle cx="20" cy="10" r="2"></circle></svg>
+              <span>保存并开始评估</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      </section>
+
+      <section id="chat-container" class="flex-1 overflow-y-auto overflow-x-hidden p-5 space-y-4 custom-scrollbar scrollable-content" style="background: #f8fafc; min-height: 0;">
+
+          <div class="flex justify-start message-assistant">
+
+            <div class="max-w-[80%]">
+
+              <div class="mb-1.5 text-[10px] text-slate-400  flex items-center gap-1.5 ">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bot" aria-hidden="true" class="lucide lucide-bot"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg><span>助手</span>
+                <span>·</span>
+                <span>15:35:08</span>
+
+              </div>
+
+              <div class="px-3.5 py-2.5 text-[13px] leading-6 shadow-md rounded-2xl bg-white border border-slate-200 text-slate-900 rounded-2xl rounded-tl-sm shadow-sm message-bubble">
+
+                <div class="interactive-questions space-y-2 mt-2" data-question-count="4"><div class="interactive-question-summary">共 4 个问题，可上下滑动查看</div><div class="interactive-question-card border border-slate-200 rounded-md px-2 py-1.5 bg-slate-50"><div class="flex flex-col gap-2"><div class="interactive-question-title text-[11px] font-medium text-slate-900">右手中指和无名指麻木的具体感觉是？</div><div class="interactive-option-list flex flex-wrap gap-1.5"><button onclick="selectQuestionOption(this)" data-option="像针刺" data-question="右手中指和无名指麻木的具体感觉是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-0-option-0">
+              像针刺
+            </button><button onclick="selectQuestionOption(this)" data-option="像蚂蚁爬" data-question="右手中指和无名指麻木的具体感觉是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-0-option-1">
+              像蚂蚁爬
+            </button><button onclick="selectQuestionOption(this)" data-option="像戴手套" data-question="右手中指和无名指麻木的具体感觉是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-0-option-2">
+              像戴手套
+            </button><button onclick="selectQuestionOption(this)" data-option="发木感" data-question="右手中指和无名指麻木的具体感觉是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-0-option-3">
+              发木感
+            </button><button onclick="selectQuestionOption(this)" data-option="其他" data-question="右手中指和无名指麻木的具体感觉是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-0-option-4">
+              其他
+            </button></div></div></div><div class="interactive-question-card border border-slate-200 rounded-md px-2 py-1.5 bg-slate-50"><div class="flex flex-col gap-2"><div class="interactive-question-title text-[11px] font-medium text-slate-900">右上后臂酸痛与手指麻木是同时出现还是先后出现？</div><div class="interactive-option-list flex flex-wrap gap-1.5"><button onclick="selectQuestionOption(this)" data-option="同时出现" data-question="右上后臂酸痛与手指麻木是同时出现还是先后出现？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-1-option-0">
+              同时出现
+            </button><button onclick="selectQuestionOption(this)" data-option="先有手臂酸痛后有麻木" data-question="右上后臂酸痛与手指麻木是同时出现还是先后出现？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-1-option-1">
+              先有手臂酸痛后有麻木
+            </button><button onclick="selectQuestionOption(this)" data-option="先有麻木后有手臂酸痛" data-question="右上后臂酸痛与手指麻木是同时出现还是先后出现？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-1-option-2">
+              先有麻木后有手臂酸痛
+            </button><button onclick="selectQuestionOption(this)" data-option="不确定" data-question="右上后臂酸痛与手指麻木是同时出现还是先后出现？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-1-option-3">
+              不确定
+            </button></div></div></div><div class="interactive-question-card border border-slate-200 rounded-md px-2 py-1.5 bg-slate-50"><div class="flex flex-col gap-2"><div class="interactive-question-title text-[11px] font-medium text-slate-900">腰两侧和腰骶部的疼痛性质是？</div><div class="interactive-option-list flex flex-wrap gap-1.5"><button onclick="selectQuestionOption(this)" data-option="酸痛" data-question="腰两侧和腰骶部的疼痛性质是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-2-option-0">
+              酸痛
+            </button><button onclick="selectQuestionOption(this)" data-option="胀痛" data-question="腰两侧和腰骶部的疼痛性质是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-2-option-1">
+              胀痛
+            </button><button onclick="selectQuestionOption(this)" data-option="刺痛" data-question="腰两侧和腰骶部的疼痛性质是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-2-option-2">
+              刺痛
+            </button><button onclick="selectQuestionOption(this)" data-option="隐痛" data-question="腰两侧和腰骶部的疼痛性质是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-2-option-3">
+              隐痛
+            </button><button onclick="selectQuestionOption(this)" data-option="其他" data-question="腰两侧和腰骶部的疼痛性质是？" class="interactive-option-btn px-2 py-0.5 text-[10px] font-medium rounded border border-medical-green-light bg-white text-medical-green-dark hover:bg-medical-green-pale hover:border-green-500 transition-colors" id="question-1779240088493-2-option-4">
+              其他
+            </button></div></div></div><div class="interactive-question-card border border-slate-200 rounded-md px-2 py-1.5 bg-slate-50"><div class="flex flex-col gap-2"><div class="interactive-question-title text-[11px] font-medium text-slate-900">请描述一下您的饮食习惯、大便情况（如是否便秘、腹泻）以及有无怕冷或怕热的感觉</div><div class="text-[11px] text-slate-500">请在下方输入框中回答此问题</div></div></div></div>
+
+              </div>
+
+              
+
+            </div>
+
+          </div>
+
+        
+
+          <div class="flex justify-start message-assistant">
+
+            <div class="max-w-[80%]">
+
+              <div class="mb-1.5 text-[10px] text-slate-400  flex items-center gap-1.5 ">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bot" aria-hidden="true" class="lucide lucide-bot"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg><span>助手</span>
+                <span>·</span>
+                <span>15:35:23</span>
+
+              </div>
+
+              <div class="px-3.5 py-2.5 text-[13px] leading-6 shadow-md rounded-2xl bg-white border border-slate-200 text-slate-900 rounded-2xl rounded-tl-sm shadow-sm message-bubble">
+
+                <div class="whitespace-pre-wrap break-words text-[13px] leading-6 bg-rice-paper rounded-lg p-3 border border-amber-100">AI分析最可能的评估方向为:
+ &gt; 神经性脊柱炎-慢性</div>
+
+              </div>
+
+              
+
+            </div>
+
+          </div>
+
+        
+
+          <div class="flex justify-start message-assistant">
+
+            <div class="max-w-[80%]">
+
+              <div class="mb-1.5 text-[10px] text-slate-400  flex items-center gap-1.5 ">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bot" aria-hidden="true" class="lucide lucide-bot"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg><span>助手</span>
+                <span>·</span>
+                <span>15:35:28</span>
+
+              </div>
+
+              <div class="px-3.5 py-2.5 text-[13px] leading-6 shadow-md rounded-2xl bg-white border border-slate-200 text-slate-900 rounded-2xl rounded-tl-sm shadow-sm message-bubble">
+
+                <div class="whitespace-pre-wrap break-words text-[13px] leading-6 bg-rice-paper rounded-lg p-3 border border-amber-100">【神经性脊柱炎】
+体质倾向分析:
+  &gt; 肾虚督空证
+病理推导:
+  &gt; &gt; 慢性病优先脏腑体质识别，患者病程长（39岁确诊，现56岁），处于稳定期，以虚损为主，故采用脏腑体质识别，定位在肾与督脉。
+&gt; 患者主诉右手中指无名指麻木、右上臂酸痛放射至手指，结合神经性脊柱炎病史，病理为慢性炎症导致神经根受压或周围神经病变，中医转译为督脉空虚、经络失养；腰两侧及腰骶骨痛、骨刺，为肾虚督空、筋骨失养；下肢酸、易疲劳、口干干咳、烦躁、自汗，为肾阴亏虚、虚火内扰；舌红有芒刺、苔腻厚，提示阴虚内热兼有湿浊，但整体以虚为主。
+&gt; 患者处于慢性稳定期，无急性炎症指标（如CRP升高），符合RAG中稳定期分支；主症腰脊酸痛、周身酸困乏力、脊柱强直（骨刺），舌淡胖（虽舌红但整体虚象），脉沉细（未提供但可推断），符合肾虚督空证；无寒湿阻闭的冷痛、得温痛减等特征，故排除寒湿证。</div>
+
+              </div>
+
+              
+
+            </div>
+
+          </div>
+
+        
+
+          <div class="flex justify-start message-assistant">
+
+            <div class="max-w-[80%]">
+
+              <div class="mb-1.5 text-[10px] text-slate-400  flex items-center gap-1.5 ">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bot" aria-hidden="true" class="lucide lucide-bot"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg><span>助手</span>
+                <span>·</span>
+                <span>15:35:35</span>
+
+              </div>
+
+              <div class="px-3.5 py-2.5 text-[13px] leading-6 shadow-md rounded-2xl bg-white border border-slate-200 text-slate-900 rounded-2xl rounded-tl-sm shadow-sm message-bubble">
+
+                <div class="html-content text-[13px] leading-6 bg-rice-paper rounded-lg p-3 border border-amber-100">
+                ## [神经性脊柱炎] - 肾虚督空证
+
+● **[口服汤剂]治疗方案**
+
+## 三痹汤加减
+
+**是否紧急**: 否
+
+
+### 临床逻辑
+
+患者56岁，神经性脊柱炎病史，处于慢性稳定期，证属肾虚督空证。主症腰脊酸痛、下肢酸、易疲劳、自汗、口干干咳、烦躁、舌红有芒刺、苔腻厚，为肾阴亏虚、虚火内扰兼湿浊。方选三痹汤补肾强督、益气养血，加葛根、片姜黄缓解上肢麻木放射痛，加枸杞子、熟地、菟丝子滋肾阴，加酸枣仁安神，加忍冬藤、土茯苓清虚热利湿。
+
+
+### 方剂组成
+
+
+<table>
+  <tbody><tr>
+    <td>独活 12g</td>
+    <td>秦艽 12g</td>
+    <td>当归 12g</td>
+    <td>川芎 9g</td>
+  </tr>
+  <tr>
+    <td>黄芪 20g</td>
+    <td>生地 15g</td>
+    <td>白芍 12g</td>
+    <td>党参 12g</td>
+  </tr>
+  <tr>
+    <td>茯苓 15g</td>
+    <td>续断 12g</td>
+    <td>川牛膝 12g</td>
+    <td>杜仲 12g</td>
+  </tr>
+  <tr>
+    <td>防风 9g</td>
+    <td>肉桂 3g</td>
+    <td>细辛 2g</td>
+    <td>炙甘草 6g</td>
+  </tr>
+  <tr>
+    <td>葛根 30g</td>
+    <td>片姜黄 12g</td>
+    <td>枸杞子 15g</td>
+    <td>熟地 15g</td>
+  </tr>
+  <tr>
+    <td>菟丝子 12g</td>
+    <td>酸枣仁 15g</td>
+    <td>忍冬藤 20g</td>
+    <td>土茯苓 20g</td>
+  </tr>
+</tbody></table>
+
+
+**用法**: 每日1剂，水煎，分2次温服。
+
+
+**疗程**: 7剂
+
+
+**特殊处理**: 细辛先煎30分钟；肉桂后下。
+
+
+**指引**: 忌生冷、油腻、辛辣；避风寒；监测血压、血糖；若出现皮疹或胃肠不适，及时复诊。
+LA－B27)(+)。X线摄片示:左股骨头关节狭窄，有坏死趋势。诊断为AS，后予布洛芬、磺胺嘧啶控制病情，但病情反复发作，为求进一步治疗来诊。刻诊:腰痛，左下肢紧痛，天气潮湿及变冷则疼痛加重，左下肢后侧紧痛(沿膀胱经走行)，左上肢麻木疼痛发紧，食可，二便可，余无明显不适。舌淡红，苔薄白，脉沉弱。患者左股骨头关节狭窄，有坏死趋势，为Ⅲ级，且反复腰痛6年，HLA－B27(+)，符合AS的诊断标准。西医诊断:AS。中医诊断:腰痛。证属阳虚型。治则:温肾壮阳活络。予阳和汤加减。药物组成:生麻黄9g，制附子(先煎8h)30g，北细辛30g，鹿茸片(单煎兑入)6g，龟版胶(烊化)30g，淫羊藿30g，仙茅15g，骨碎补45g，鸡血藤30g。日1剂，水煎2次取汁300mL，分早、晚2次餐后服。服28剂。2010－12－01二诊，患者腰痛、腿痛症状消失，左上肢麻木、疼痛等感觉消失，偶有下肢发紧，手足心有汗出，怕冷症状明显改善，近1个月口渴、口苦明显，久坐后腰痠。易早醒，食可，偶有便秘，小便可。今晨起左髋外侧痠痛，昨晚饮酒，行走时稍疼痛。舌淡红，苔薄白，脉沉弱。初诊方加黄柏15g、知母15g，服30剂。2011－01－03三诊，HLA－B27(－)，疼痛消失。
+3. 10万中医病案：更年期综合征 (女/59岁) - 张建华，女，59岁，干部，2014年3月1日初诊。头晕耳鸣失眠5年，伴周身阵发性烘热烦躁。患者自述52岁自然经闭，经闭2年后，时时烘热烦躁汗出，头晕耳鸣，入睡困难，容易醒，每年秋冬加重，春夏减轻或缓解。近日头晕耳鸣加重，失眠，入睡困难，睡后易醒，多梦，时有心悸，迩来寒热交作，时时烘热烦躁汗出，两眼干涩，巅顶有压迫紧束感，双上肢及颈部麻木不适，精神抑郁，萎靡不振，情绪不稳定，纳可，二便正常。舌质稍红苔薄白，脉细软。妇科诊断为:更年期综合征。中医体质识别属冲任虚损，阴阳失和。治法:益肾调肝，养心安神，燮理阴阳。处方:党参10g，黄芪15g，丹参10g，熟地黄30g，当归15g，酸枣仁20g，白芍15g，茯神12g，陈皮10g，远志12g，淫羊藿20g，枸杞子15g，山萸肉10g，夜交藤20g，桂枝15g，鸡血藤30g，炙甘草10g。5剂，水煎服。二诊(3月6日):药后头晕耳鸣失眠减轻，寒热得罢，汗出减少，烘热夜减，且短时即退。脉细，舌淡红，苔薄白。原方续服5剂。三诊(3月11日):药后精神抑郁好转，情绪稳定，巅顶有压迫紧束感、双上肢及颈部麻木明显改善，已基本不出汗，睡眠欠稳，仍感阵阵发热，但未出汗。脉、舌如前。前方加制香附15g以疏肝理气，加强调肝作用。7剂，水煎服。四诊(3月18日):自觉身体状态较前明显好转，眼睛干涩已好，睡眠尚可，心情愉快，为巩固疗效，上方去桂枝、夜交藤、远志加五味子10g增加滋肾固肾的作用，再服10剂而愈。
+4. 10万中医病案：类风湿关节炎 (女/50岁) - 吴某，女，50岁。诉：周身关节疼痛一年，一年来手指关节僵硬疼痛以拇食中指为最，晨起握物困难，稍事活动后逐渐缓解，近日来周身疼痛，夜间以肩部酸痛困倦，时轻时重，进行性加重，现手指小关节肿痛、两膝关节疼痛为主，遇冷更甚，全身乏力，经常服用风湿骨痛丸，外敷风湿止痛膏，有时服止痛片治疗，曾在当地就医，查：抗“O”阳性，类风湿因子阳性，诊断为类风湿关节炎，服泼尼松治疗效不著，来诊。查：双手X线片示骨质疏松。双膝关节间隙变窄，无骨质破坏，血沉：30mm/h，抗“O”：400u，类风湿因子(+)，脉象沉细，两尺无力，舌质红稍腻，查经脉发现手足阳明经脉，手足少阳之脉，足少阴经脉，条索样结节明显，诊断：着痹(类风湿性关节炎)，证属：寒凝痹瘀，阻滞经脉，治疗以温补肝肾，蠲痹除湿，活血通络。中药方以独活寄生汤加味，生黄芪30g，独活9g，桑寄生30g，炒杜仲12g，青风藤9g，细辛6g，当归9g，桂枝24g，透骨草9g，骨碎补9g，鸡血藤15g，伸筋草9g，苏土元9g，石楠叶9g，穿山龙9g，炒白术15g，煎服，每日一剂，每天药渣浸泡手足。针灸取穴：百会、八邪、天柱、大椎(针罐)、肾俞(针罐)、悬钟、申脉，每日一次，10次一疗程。休息3天后再行第二疗程。经10天治疗后，手指关节肿胀疼痛明显减轻，关节活动较前大有好转，僵硬改善，患者诉近来便溏，前方加肉豆蔻9g，继服如法治疗，经50天治疗后关节肿胀疼痛消失，活动灵活，手可持物劳动，查：抗“O”、类风湿因子正常。临床治愈。
+5. 10万中医病案：失眠 - 通络化瘀补肾调肝治疗颈椎病
+　　颈椎病症见颈肩背痛，手足麻木，头晕耳鸣，失眠为脉络瘀阻，肾督亏虚，肝阳上扰，治以通络化瘀补肾调肝。
+　　王某某，女，56岁。2005年9月12日初诊。
+　　肩颈痛，头晕耳鸣二年余，加重半月。
+　　初诊：患者诉二年前无明显诱因出现间断性头晕，肩痛，手臂麻木，未予明确诊治。近半月因劳累后病情加重，甚时伴脑鸣、耳鸣、视物昏花，手足指趾时麻木，求治我院，摄颈椎X线片示：颈椎骨质增生，诊为颈椎病。遂就治朱师。症见颈、肩、背疼痛，时手指、足趾麻木不适，头晕耳鸣、视物昏花、自觉脑鸣，腰酸困痛，腿软，身体倦怠，纳可，二便调，眠差。查：舌淡暗，苔白，脉沉弱。双侧肩颈肌肉紧张，压痛（++）。颈椎X线示：颈椎骨质增生（颈椎4-6前缘唇形样变）。西医诊断为颈椎病，中医诊断为痹证。证属：脉络瘀阻、肾督亏虚、肝阳上扰，治以通络化瘀、补肾固督、平肝潜阳，拟方葛根汤合斑龙丸加减。药用：葛根9g、桂枝5g、赤、白芍各5g、鹿角片5g、桃仁、红花各5g、川芎5g、地龙4g、白芷4g、天麻3g、钩藤5、络石藤5g、骨碎补5g、补骨脂5g、青风藤5g、天虫4g、徐长卿7g、甘草2g水蛭胶囊4粒、土鳖虫胶囊4粒、蜈蚣胶囊45g、全虫胶囊4粒。水煎服，日1剂，连服半月。
+　　二诊（2005年10月17日）：服药后患者腰酸困痛，腿软已解，头晕耳鸣，脑鸣，较前减轻，仍肩颈痛，手足麻木、疼痛，眠差、入睡困难，纳可，二便调，舌淡暗，苔白，脉沉弱。一诊方加元肉4g、磁石5g、珍珠母7g、石决明7g、炒枣仁4g、五味子4g、青风藤5g。日1剂，连服半月。
+　　三诊（2005年11月25日）：头晕耳鸣及脑鸣症状已解，仍肩颈部肌肉略痛，眠可，但易醒，时晨起口苦，易怒。纳食可，二便调，舌淡暗，苔薄黄，脉沉弱略弦。二诊方减骨碎补、补骨脂、威灵仙、元肉；加龙胆草3g、柴胡5g，日1剂，继服1月。
+　　按：颈椎病又称颈椎关节综合征，是由于颈椎间盘退行性变性，周围骨质、小关节及软组织发生一系列病理改变，压迫或刺激颈神经根、脊髓、椎动脉等组织产生的一组临床综合病症。轻者头、颈、肩臂疼痛麻木，重者可致肢体酸软乏力，甚至二便失禁、瘫痪。属于中医 “痹证”、“眩晕”、“筋伤”、“痿证”等范畴，临床见证复杂，轻重不一。现在临床按照症状不同分大致分为以下几型：神经根型、脊髓型、椎动脉型、混合型（上述几型混合并见）、交感神经型、颈型。本例患者为混合型，症状繁杂，但在体质识别中要把握循经体质识别，重视督脉、太阳经络受邪，脉络瘀阻。久病肾督亏虚，筋骨脉络失养，瘀血阻滞不通，而致颈肩背痛，腰酸困痛，腿软，手足麻木为病之本；故仍以葛根汤合斑龙丸加活血化瘀药以治病求本，取葛根汤调和营卫、舒筋缓急治疗颈项脊背强痛，斑龙丸用鹿角、巴戟天等补肾固督强脊，在上两方基础上加减，取桃红、川芎、白芷引药上行，直达病所，补骨脂、骨碎补助补骨生髓，天麻、钩藤、青风藤、徐长卿、络石藤祛风通络止痛，桃仁、红花、赤芍活血化瘀，虫类药土元、水蛭、蜈蚣、地龙，并用散剂装胶囊来加强活血化瘀、搜风通络之效，诸药合用共奏化瘀通络、补肾固督、平肝熄风之功。二诊症以眠差、入睡困难，头晕耳鸣，脑鸣为主，属久病肾督亏虚，肝肾同源，阴虚阳亢、神魂失养、阳不入阴、风阳上扰而致之标实症，故在一诊方加元肉、炒枣仁、五味子以酸收补肝，养血安神，磁石、珍珠母、石决明重镇安神，潜降肝阳。三诊诸症解，惟眠欠安，时口苦，易怒，苔薄黄，脉沉弱略弦为肝郁化热之象，故减温热之骨碎补、补骨脂、威灵仙、元肉；加龙胆草、柴胡清泄肝热，条达肝气，针对口苦，易怒而设，因药证相合，故获良效。本案患者临床表现繁杂，朱师认为体质识别时当谨守病机，治病求本，标本兼顾，以虚实为纲，紧密结合脏腑体质识别，在活血通络、补肾固督的基础上，强调从肝论治颈椎病的重要性。
+老师审阅意见：同意（签名）朱宗元
+整   理   者：董秋梅       
+时        间：2009年3月7日
+ 
+医案信息
+[医案标题]：朱宗元 化瘀通络、补肾调肝治疗颈椎病
+[原始资源]：回顾性医案
+[医案编号]：015H003                     
+[医院病历号]：200520211
+[关 键 词]：
+　　中医诊断：（评估方向）痹证  （证候）脉络瘀阻、肾督亏虚、肝阳上扰
+　　西医诊断：颈椎病（混合型）
+　　治    法：通络化瘀、补肾调肝
+    方    药：葛根汤加斑龙丸加减
+[体质识别要点]：
+　　患者诉二年前无明显诱因出现间断性头晕，肩痛，手臂麻木，未予明确诊治。近半月因劳累后病情加重，甚时伴脑鸣、耳鸣、视物昏花，手足指趾时麻木，求治我院，摄X线片示：颈椎骨质增生，诊为颈椎病。患者愿服中医药治疗，遂就诊朱师处。颈、肩、背疼痛，时手指、足趾麻木不适，头晕耳鸣、视物昏花、自觉脑鸣，腰酸困痛，腿软，身体倦怠，纳可，二便调，眠差。舌淡暗，苔白，脉沉弱。查：双侧肩颈肌肉紧张，压痛（++）。颈椎X线示：颈椎骨质增生（颈椎4-6前缘唇形样变）。
+　　在体质识别中把握循经体质识别，重视督脉、太阳经络受邪，脉络瘀阻，肾督亏虚和肝气、肝阳失调的病理关健，确立化瘀通络和补肾调肝的治疗大法，并贯穿于疾病始终。但在病变过程中由于病属混合型颈椎病，临床见证繁多，除把握脉络瘀阻督脉、太阳经之外，其阴虚阳亢，风阳上扰，阳不入阴，肝经郁热之病机不可忽视，相应采用平肝潜阳、养血安神、清热疏肝等药物，而获良效，强调从肝论治的重要性。
+[疗　    效]：调整治疗三个月，诸证改善明显，有效。
+老师审阅意见：同意（签名） 朱宗元
+整   理   者：董秋梅       
+时        间：2009年3月7日
+
+              </div>
+
+              </div>
+
+              
+
+            </div>
+
+          </div>
+
+        </section>
+
+      <section class="border-t border-slate-200/50 glass p-4 shadow-lg flex-shrink-0 fixed-input-section" style="min-height: var(--input-section-min-height);">
+
+      <div class="mb-2 flex items-center justify-between flex-shrink-0 flex-wrap gap-2">
+
+        <span id="chat-mode-hint" class="text-xs text-slate-500 flex items-center gap-1.5 flex-shrink-0">输入消息后回车，或点击发送</span>
+
+        <span class="text-[11px] text-slate-400 flex items-center gap-1 flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="type" aria-hidden="true" class="lucide lucide-type"><path d="M12 4v16"></path><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"></path><path d="M9 20h6"></path></svg>
+          <span class="hidden md:inline">当前支持文本对话和图像上传</span>
+        </span>
+
+      </div>
+
+      <div class="relative flex-shrink-0 w-full">
+
+        <!-- 响应式输入框容器：小屏幕上按钮在下，大屏幕上按钮在右 -->
+        <div class="flex flex-col sm:flex-row gap-2 items-end">
+          <!-- 输入框：占据主要空间 -->
+          <div class="flex-1 w-full relative">
+            <textarea id="chat-input" rows="1" placeholder="请输入要发送给助手的内容" class="w-full border border-slate-300 rounded-xl px-4 py-3 pr-20 sm:pr-4 text-sm focus:outline-none focus:ring-2 bg-white/90 backdrop-blur-sm transition-all resize-none leading-6 min-h-[44px] max-h-[120px]" style="--tw-ring-color: var(--primary-green);" onkeydown="if(event.key===&#39;Enter&#39;){ if(!event.shiftKey){ event.preventDefault(); sendChat(); } }" oninput="autoResizeChatInput(this)" data-mobile-keyboard-aware="true"></textarea>
+
+            <!-- 小屏幕上的内嵌按钮：上传图像和发送 -->
+            <div class="absolute right-1.5 top-1.5 flex items-center gap-1.5 sm:hidden">
+              <input type="file" id="image-upload-input" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+              <button onclick="document.getElementById(&#39;image-upload-input&#39;).click()" class="h-9 w-9 flex items-center justify-center rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white transition-all shadow-md hover:shadow-lg flex-shrink-0" title="上传图像">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="image" aria-hidden="true" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+              </button>
+              <button onclick="sendChat()" class="h-9 w-10 flex items-center justify-center rounded-lg gradient-medical-btn text-white transition-all shadow-md hover:shadow-lg flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-up" aria-hidden="true" class="lucide lucide-arrow-up"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- 按钮组：大屏幕上在右侧，小屏幕上在下方 -->
+          <div class="flex items-center gap-1.5 flex-shrink-0 w-full sm:w-auto justify-end sm:justify-start">
+            <!-- 上传图像按钮（大屏幕） -->
+            <input type="file" id="image-upload-input-desktop" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+            <button onclick="document.getElementById(&#39;image-upload-input-desktop&#39;).click()" class="hidden sm:flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white transition-all shadow-md hover:shadow-lg flex-shrink-0" title="上传图像">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="image" aria-hidden="true" class="lucide lucide-image icon-bounce"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+            </button>
+
+            <!-- 发送按钮（大屏幕） -->
+            <button onclick="sendChat()" class="hidden sm:flex h-9 w-12 items-center justify-center rounded-lg gradient-medical-btn text-white transition-all shadow-md hover:shadow-lg flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-up" aria-hidden="true" class="lucide lucide-arrow-up icon-bounce"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
+            </button>
+
+            <!-- 生成诊疗建议按钮（只在患者问诊模式显示） -->
+            <button id="btn-generate-treatment" onclick="generateTreatmentPlan()" class="h-8 px-2 sm:px-3 flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-medium transition-all shadow-md hover:shadow-lg flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="stethoscope" aria-hidden="true" class="lucide lucide-stethoscope icon-bounce"><path d="M11 2v2"></path><path d="M5 2v2"></path><path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"></path><path d="M8 15a6 6 0 0 0 12 0v-3"></path><circle cx="20" cy="10" r="2"></circle></svg>
+              <span id="btn-generate-treatment-text-lg" class="hidden lg:inline">结束问答并生成调理笺</span>
+              <span id="btn-generate-treatment-text-md" class="lg:hidden hidden md:inline">生成调理笺</span>
+              <span id="btn-generate-treatment-text-sm" class="md:hidden">生成调理笺</span>
+            </button>
+
+            <!-- 联网搜索开关按钮（只在医知快答模式显示） -->
+            <button id="btn-online-search-toggle" onclick="toggleOnlineSearch()" class="h-8 px-2 sm:px-3 flex items-center justify-center gap-1 rounded-lg bg-slate-400 hover:bg-slate-500 text-white text-xs font-medium transition-all shadow-sm flex-shrink-0 opacity-50 hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="search" aria-hidden="true" id="icon-online-search" class="lucide lucide-search icon-bounce"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+              <span class="hidden lg:inline">联网搜索</span>
+              <span class="lg:hidden">搜索</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      </section>
+
+    </div>
+
+    <!-- 顶部提示栏（用于显示各种提示信息） -->
+    <div id="top-notification-bar" class="fixed top-0 left-0 right-0 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-2 shadow-lg z-50 hidden">
+      <div class="flex items-center justify-between max-w-full">
+        <div class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="info" aria-hidden="true" class="lucide lucide-info"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+          <span id="top-notification-text" class="text-sm font-medium">提示信息</span>
+        </div>
+        <button onclick="hideTopNotificationBar()" class="text-white/80 hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 底部连接状态栏（仅在连接异常时显示） -->
+    <div id="connection-status-bar" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-4 py-2 shadow-lg z-50 hidden">
+      <div class="flex items-center justify-between max-w-full">
+        <div class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="alert-circle" aria-hidden="true" class="lucide lucide-alert-circle animate-pulse"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+          <span id="connection-status-text" class="text-sm font-medium">连接断开，3秒后自动重连（1/5）...</span>
+        </div>
+        <button onclick="hideConnectionStatusBar()" class="text-white/80 hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 右侧：就诊时间线 + 参考文献 侧边栏（只在患者问诊模式显示） -->
+    <aside id="patient-timeline-sidebar" class="sidebar-right">
+      <!-- 折叠按钮 -->
+      <button id="sidebar-toggle-btn" class="sidebar-toggle-btn" onclick="toggleRightSidebar()" title="折叠/展开侧边栏">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-right" aria-hidden="true" id="sidebar-toggle-icon" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"></path></svg>
+      </button>
+      <!-- 上半：就诊时间线 -->
+      <div class="flex-1 flex flex-col min-h-0" style="min-height: 0; flex: 1 1 50%;">
+        <div class="tl-header flex-shrink-0">跟进时间线</div>
+        <div id="patient-timeline-sidebar-content" class="tl-body custom-scrollbar" style="overflow-y: auto; overflow-x: hidden; min-height: 0; flex: 1;"><div class="tl-node"><div class="tl-dot"></div><div class="tl-date">2026/05/17</div><div class="tl-content"><div class="tl-title">神经性脊柱炎</div><div class="tl-desc">肾虚督空证 - 三痹汤加减</div></div></div></div>
+      </div>
+      <!-- 下半：循证依据 -->
+      <div class="flex-1 flex flex-col min-h-0" style="min-height: 0; flex: 1 1 50%;">
+        <div class="px-4 py-3 bg-slate-50 cursor-pointer hover:bg-slate-100 flex items-center justify-between transition-colors border-y border-slate-200 sticky top-0 z-10 select-none flex-shrink-0">
+          <div class="text-lg font-bold text-slate-700 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="book-open-check" aria-hidden="true" style="color: var(--msd-primary);" class="lucide lucide-book-open-check"><path d="M12 21V7"></path><path d="m16 12 2 2 4-4"></path><path d="M22 6V4a1 1 0 0 0-1-1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4H3a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 0 1-1v-1.3"></path></svg>
+            <span>循证依据</span>
+          </div>
+        </div>
+        <div id="sidebar-references-content" class="flex-1 overflow-y-auto overflow-x-hidden p-4 custom-scrollbar bg-rice-paper" style="min-height: 0; flex: 1;"><div class="text-sm text-slate-400 text-center py-4">暂无参考文献</div></div>
+      </div>
+    <button id="mobile-right-drawer-close" class="mobile-drawer-close" type="button" aria-label="Close timeline panel"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="x" aria-hidden="true" class="lucide lucide-x"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></aside>
+
+  </main>
+
+
+
+    <!-- ======== 拆分JS模块 ======== -->
+  <script src="./js/utils.js"></script>
+  <script src="./js/patient-detail.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/chat.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/clinic.js"></script>
+  <script src="./js/websocket.js"></script>
+  <script src="./js/mock-data.js"></script>
+  <script src="./js/followup.js"></script>
+
+
+
+
+<div id="mobile-chat-backdrop" class="mobile-chat-backdrop"></div>
+
+</body></html>
