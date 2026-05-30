@@ -279,10 +279,14 @@ LLM 仅可作为未来"症状标准化"预留能力。
 
 | 函数名 | 是否被 diagnose() 调用 | 当前用途 | 是否含 prompt | 是否需要人工检查 |
 |---|---|---|---|---|
-| normalize_symptoms | 否 | 仅使用 alias_map + colloquial_map 本地映射 | 否 | 是。确认不接入 diagnose() |
-| _call_llm_api | 否 | LLM API 调用封装（预留） | 否。prompt 由调用者传入 | 是。确认不被 diagnose() 调用 |
-| _call_deepseek_api | 否 | DeepSeek API 调用（预留） | 否 | 是。确认不被 diagnose() 调用 |
-| _call_gemini_api | 否 | Gemini API 调用（预留） | 否 | 是。确认不被 diagnose() 调用 |
+| _query_local_criteria | 是（工具1） | Agent 本地诊断标准查询 | 否 | 代码逻辑 |
+| _online_query | 是（工具2） | Agent 在线查询默沙东/PubMed | 含 LLM prompt | 必须约束来源 |
+| _get_cached_criteria | 是 | 工具1+2的便捷入口 | 否（路由逻辑） | 代码逻辑 |
+| _recall_candidates | 是 | 从症状/病名召回候选疾病 | 否（keyword_index） | 代码逻辑 |
+| _fill_missing_criteria | 是（旁路） | 按需补齐诊断标准 | 含 LLM prompt | 受 source 约束 |
+| normalize_symptoms | 否 | 仅 SYNONYM_MAP 本地映射 | 否 | 不接入 diagnose() |
+| _call_deepseek | 是 | DeepSeek API 调用 | 由 caller 传入 prompt | 被 diagnose 调用 |
+| _call_gemini | 是 | Gemini API 调用 | 由 caller 传入 prompt | 备选 provider |
 
 ---
 

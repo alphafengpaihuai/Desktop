@@ -1,211 +1,188 @@
-# M1 诊断鉴别模块实现指令
+# M1 Agent 诊断引擎 v6 — 实现指令
 
-M1 的核心目标是提高病名匹配准确度：先最大化候选召回，再用 required_criteria 和 exclusion_criteria 收窄，最终输出最符合患者资料的规范疾病名称。
+M1 核心目标：**以患者症状、体征、检查结果为查询条件，在本地疾病库 + 诊断卡片库中检索匹配，通过 Agent 工具集 + 追问循环，输出 Top 1-3 规范疾病名称。**
 
 ## 总体原则
-- 所有诊断和鉴别诊断必须基于预先构建的"疾病诊断标准知识库"，该知识库中的诊断标准必须来自本指令列出的权威循证医学信源。
-- 模型仅负责"对比打分"，不负责"生成诊断"。
-- 严禁依赖大语言模型自身的医学知识生成病名。
-- 诊断输出必须包含：主诊断、次诊断。
-
-## 强制信源（仅限以下来源）
-诊断标准、鉴别诊断要点、金标准等所有临床依据，必须且仅能来自以下信源：
-1. 默沙东诊疗手册专业版 (Merck Manual Professional)
-2. PubMed 文献数据库（优先选择系统综述、荟萃分析、临床指南）
-3. StatPearls / NCBI Bookshelf（同行评审的临床综述）
-4. 其他循证医学在线网页
-
-严禁使用任何其他信源，包括但不限于：百度百科、个人博客、论坛、社交媒体、商业医疗网站等。
-
-## 离线阶段：构建诊断标准库
-1. 为600种目标疾病逐一构建结构化诊断卡片，字段包括：
-   - 疾病名称（西医，ICD-11）
-   - 诊断依据：临床症状、体征、实验室检查、影像学
-   - 金标准（如有）
-   - 鉴别诊断要点（与相似疾病的关键区分点）
-   - 数据来源（必须标注具体信源，如"MSD Manual Professional"、"PubMed PMID xxxxx"等）
-     如果本地缺乏可核对的病名，可在线查询强制性源并纳入缓存。
-2. 诊断标准中的每一条，均需附注出处原文或摘要，并标明是"必要条件"还是"支持证据"。
+- 所有诊断必须基于本地疾病诊断标准知识库（`diseases_core.json`，1279 条）和诊断卡片库（`data/m1_diagnostic_cards.json`，699 张）。
+- 模型仅负责"对比打分+信息缺口判断"，不负责"生成诊断"或"生成诊断标准"。
+- 大语言模型基于对症状的理解，先分科、后比对诊断标准，选择最匹配的病名。
+- 严禁依赖大语言模型自身的医学知识生成病名或诊断标准。
+- 追问循环 ≤ 2 轮，每次追问 ≤ 2 个问题，避免无限循环。
 
 ## 输入
-- 患者基本信息：年龄、性别
-- 主诉、现病史、既往史
-- 体征（查体所见）
-- 理化指标（实验室、影像学等）
+- `patient_mentioned_disease`：患者提到的病名或医生初步诊断（**仅作为召回关键词之一，不作诊断依据**）
+- `chief_complaint`：主诉
+- `symptoms`：症状列表
+- `signs`：体征列表
+- `labs`：实验室检查列表
+- `imaging`：影像学检查列表
+- `negative_findings`：明确阴性结果列表
+- `duration`：病程
+- `onset`：起病方式
+- `age` / `gender`：人口学信息
+- `_followup_answers`（可选）：上一轮追问的答案，用于追问循环
 
-### 输入标准化规则
+**同义表达归一化强化匹配**（代码中 `SYNONYM_MAP` / `normalize_text`），例如：
+- "喘不上气 / 气紧 / 憋气" → 呼吸困难
+- "拉肚子 / 稀便" → 腹泻
+- "咽痛 / 喉咙痛" → 咽喉痛
 
-模型先将患者输入标准化为以下字段：
+标准化只用于召回和比对，**不得用于生成最终诊断**。
 
+## Agent 工具集
+
+### 工具1：查询本地诊断标准（`_query_local_criteria`）
+- **调用时机**：需要获取某个候选疾病的具体诊断标准时
+- **输入**：疾病名称（中文/英文/中英混合）
+- **输出**：该疾病的 `diagnostic_criteria`、`typical_symptoms`、`differential_diagnosis`
+- **匹配策略**：
+  1. 精确匹配中文名（`diseaseName_cn`）
+  2. 精确匹配英文名（`disease_name`，通过 `name_index`）
+  3. 部分子串匹配中文名
+  4. 若命中诊断卡片库（`diagnostic_cards`），优先使用卡片中的详细数据
+- **若本地无该疾病条目** → 返回 `{"status": "NOT_FOUND_IN_LOCAL_DB"}`
+
+### 工具2：在线查询默沙东/PubMed（`_online_query`）
+- **调用时机**：
+  1. 工具1返回 `NOT_FOUND_IN_LOCAL_DB` 时
+  2. 本地诊断标准与患者表现存在明显差异时
+  3. 怀疑存在最新诊断标准或本地标准已过时时
+- **输入**：疾病名称 + 检索源（`msd` / `pubmed`）
+- **输出**：从权威信源获取的最新诊断标准摘要
+- **注意**：获取到的诊断标准自动缓存入 `_online_cache`（6 个月有效期），并自动追加到 `diseases_core.json`
+
+### 便捷入口：`_get_cached_criteria`
+- 自动决定使用工具1还是工具2
+- 先查本地库（工具1）→ 未找到则在线查询（工具2）
+
+## 知识库结构
+
+### diseases_core.json（1279 条）
 | 字段 | 说明 |
-|---|---|
-| patient_mentioned_disease | 患者提到的病名或医生初步诊断 |
-| chief_complaint | 主诉 |
-| symptoms | 症状 |
-| signs | 体征 |
-| labs | 实验室检查 |
-| imaging | 影像学检查 |
-| negative_findings | 明确阴性结果 |
-| duration | 病程 |
-| onset | 起病方式 |
-| severity | 严重程度 |
-| location | 症状部位 |
-| trigger_relief | 诱因和缓解因素 |
+|:---|:---|
+| `diseaseName_cn` | 疾病中文名 |
+| `disease_name` | 疾病英文名 |
+| `diagnostic_criteria` | 诊断标准 |
+| `typical_symptoms` | 典型症状列表 |
+| `differential_diagnosis` | 鉴别诊断列表 |
+| `_card_source` | 来源标记（`diagnostic_card` / `diagnostic_card_only`） |
 
-同义表达必须归一化，例如：
+### data/m1_diagnostic_cards.json（699 张诊断卡片）
+| 字段 | 说明 |
+|:---|:---|
+| `sequence` | 序号 001-699 |
+| `diseaseName_cn` | 疾病中文名 |
+| `disease_name` | 疾病英文名 |
+| `diagnostic_criteria` | 逐条诊断标准（结构化） |
+| `typical_symptoms` | 典型症状明细 |
+| `differential_diagnosis` | 需鉴别的疾病列表 |
+| `red_flags` | 红旗征 |
+| `specialist_referral_criteria` | 专科转诊标准 |
 
-| 原始表达 | 归一化结果 |
-|---|---|
-| 喘不上气 / 气紧 / 憋气 | 呼吸困难 |
-| 拉肚子 / 稀便 | 腹泻 |
-| 头晕转圈 | 眩晕 |
-| 胸口压着痛 | 胸痛 |
+## 缓存规则
+| 缓存 | 路径 | 有效期 | 说明 |
+|:---|:---|:---|:---|
+| diseases_core.json | 项目根目录 | 永久 | 在线查询结果自动追加 |
+| 在线缓存 | `_online_cache`（内存） | 6 个月 | 键：`疾病名|源`，避免重复查询 |
+| 诊断标准补齐日志 | `data/disease_cache/criteria_filled_log.json` | 永久 | 已补齐过的疾病不再查询 |
 
-标准化只用于召回和比对，不得生成最终诊断。
+## Agent 推理流程
 
-## 在线阶段：反向检索与打分流程
+```
+临床资料输入
+  │
+  ▼
+第一步：标准化输入（normalize_input）
+  │  同义表达归一化，字段分类
+  ▼
+第二步：生成初始假设（_recall_candidates）
+  │  1. 患者提到的病名精确匹配
+  │  2. 症状关键词模糊匹配（keyword_index）
+  │  3. 限制最多 20 个候选
+  ▼
+第三步：检索诊断标准（每个候选病）
+  │  _get_cached_criteria(候选病名)
+  │    ├─ 工具1（本地查询）
+  │    └─ 工具2（在线查询，6个月缓存）
+  ▼
+第四步：LLM Agent 逐一验证 + 信息缺口判断
+  │  比对患者资料与每个候选病的诊断标准
+  │  ├─ 信息足以区分 → 模式一（DIAGNOSIS_READY）
+  │  └─ 信息不足 → 模式二（NEED_MORE_INFO）
+  │       ↓ 生成 1-2 个追问问题
+  │       ↓ 外部收集答案 → _followup_answers
+  │       ↓ 返回第三步重新比对（≤ 2 轮）
+  ▼
+第五步：输出
+  模式一：{"diagnosis_calibration": {"calibrated_diagnosis": ["病名1", ...]}, "source": "llm"}
+  模式二：{"status": "NEED_MORE_INFO", "questions": ["追问1？", ...]}
+```
 
-### 0. 系统粗过滤（前置步骤）
+## 追问循环规则
+- **触发条件**：LLM Agent 比对后发现信息不足以在候选病之间做出明确区分
+  - 核心症状重叠（如不同腹痛病因共享同一症状）
+  - 缺少关键检查结果（如体温、血常规、影像学）
+  - 缺少鉴别所需的关键病史（如发作诱因、缓解因素）
+- **追问数量**：每次 ≤ 2 个问题
+- **追问内容**：必须具体、可操作、基于候选病诊断标准中提到的信息点
+- **不能重复**：本轮追问不能与上一轮（`_followup_answers` 中已有的问题）重复
+- **循环终止**：最多进行 2 轮追问循环。2 轮后仍不足以区分时，输出当前最佳猜测
+- **追问嵌入**：在 LLM prompt 的"患者资料"部分末尾追加 `_followup_answers` 内容
 
-根据患者症状/主诉推断最可能的 1-3 个器官系统（如呼吸、消化、循环、皮肤等），后续检索只在该系统所属疾病内进行。
-系统标签从每个疾病的 `source_verified_medical_summary.definition_and_core_problem` 中的"是XX相关诊断条目"提取。
-"发热"一词不纳入系统推断（太泛化，会导致跨系统噪音）。
+## 输出规范
 
-### 1. 多路召回（双轨）
-
-两条轨道在系统过滤后并行执行：
-
-**a. 症状轨（多路召回）：** 在推断的器官系统内，进行四路并行召回：
-   - 路1（病名匹配）：患者提到的病名精确/模糊匹配疾病库；
-   - 路2（主诉匹配）：主诉命中疾病的 key_symptom_pattern；
-   - 路3（关键特征匹配）：患者症状/体征命中 key_exam_findings / local_retrieval_keywords（最高权重）；
-   - 路4（语义召回）：多个患者症状同时出现在 diagnostic_criteria 中（低权重）。
-
-**b. 病名轨：** LLM 根据患者主诉和关键临床表现，从本地疾病库名称列表中选出最可能的 3-5 个病名。
-
-**合并与去重：**
-- 两条轨道结果合并，用中文名（diseaseName_cn）去重；
-- 同一疾病可能有英文版（含具体标准）和中文版（仅泛化模板），优先保留有具体标准的版本；
-- 合并后按关键特征匹配数 + 具体标准优先级重排，取前 12 个给 LLM 裁判。
-
-**限制：**
-- AI 生成的病名只能作为召回关键词；
-- 最终候选疾病必须存在于本地疾病库；
-- 本地库不存在的病名不得进入最终输出。
-
-### 2. LLM 逻辑裁判
-
-LLM 接收患者完整资料与前 12 个候选病的诊断标准，逐条比对，选出 Top 1-3 诊断。
-
-按以下优先级排序：
-1. 患者明确提到的病名与本地库规范病名匹配；
-2. required_criteria 与患者资料匹配程度高；
-3. exclusion_criteria 未命中；
-4. 疾病能同时解释主诉、主要症状和关键客观检查；
-5. 与相似疾病相比具有更明确的区分点。
-
-required_criteria 明显不符者排除。命中 exclusion_criteria 者排除。
-
-### 3. 鉴别诊断
-
-基于危险信号规则，强制检查红线疾病，输出排除结论。若触发紧急征，立即中断，输出 emergency_alert。
-
-## 诊断轨规则
-
-你是疾病库匹配器。根据患者输入，先提取病名、主诉、症状、体征、实验室和影像信息。
-
-### 匹配流程
-
-1. 用症状、体征、检查结果直接检索本地疾病库；
-2. 可生成少量可能病名作为召回关键词，但候选病必须存在于本地疾病库；
-3. 合并候选后，按 required_criteria 和 exclusion_criteria 比对；
-
-   候选疾病排序优先级如下：
-   - 患者明确提到的病名与本地库规范病名或别名匹配；
-   - required_criteria 与患者资料匹配程度高；
-   - exclusion_criteria 未命中；
-   - 疾病能同时解释主诉、主要症状和关键客观检查；
-   - 与相似疾病相比，具有更明确的区分点。
-
-   不得仅凭症状数量多判定疾病更匹配。
-
-4. required_criteria 明显不符者排除；
-
-   注意区分以下情况（不一定排除，但需仔细比对）：
-   - 同一疾病的不同名称、缩写、别名；
-   - 上位病名与下位病名；
-   - 急性期与慢性期；
-   - 原发病与并发症；
-   - 症状诊断与病因诊断；
-   - 疾病本身与检查异常。
-
-   优先输出更具体、更能解释患者资料的规范疾病名称。
-
-   示例：
-   - "咳嗽"不是疾病名，应优先匹配急性支气管炎、肺炎、咳嗽变异性哮喘等；
-   - "贫血"若有病因证据，应优先输出缺铁性贫血、巨幼细胞性贫血等；
-   - "肝功能异常"若病因明确，应优先输出对应疾病，而非单纯异常结果。
-
-5. 命中 exclusion_criteria 者排除；
-6. 多个候选相近时，选择与患者资料最一致者；
-7. 只输出最匹配的 Top 1-3 个疾病名称。
-
-### 禁止
-- 自由创造病名；
-- 输出本地库外疾病；
-- 输出证型；
-- 输出处方；
-- 输出推理过程。
-
-### 相似疾病强制鉴别
-
-当 Top 候选病种之间存在高度重叠的症状时（如过敏性鼻炎 vs 急性支气管炎、CVA vs UACS），
-必须同时对这两个病种的鉴别诊断特征进行比对。
-
-- 每个候选病的 `evidence` 中，必须包含至少 1 条针对最易混淆疾病的排除证据。
-- 若无法提供明确的排除证据，该候选病的置信度必须降为 medium 或 low。
-
-## 输出格式
-
-严格按以下 JSON Schema 输出，无额外文字：
-
+### 模式一：信息足够时
 ```json
 {
   "diagnosis_calibration": {
-    "original_input": "用户原始输入的诊断",
-    "calibrated_diagnosis": ["校验后的规范病名1", "校验后的规范病名2"],
-    "icd11_code": ["代码1", "代码2"],
-    "confidence": "high/medium/low",
-    "reason": "匹配依据简述"
+    "original_input": "患者提到的病名",
+    "calibrated_diagnosis": ["病名1", "病名2"]
   },
-  "anchor_diseases": [
-    {
-      "name": "病名",
-      "icd11_code": "代码或null",
-      "type": "primary/secondary",
-      "confidence": "high/medium/low",
-      "evidence": [
-        {
-          "criterion": "诊断标准具体条目",
-          "type": "necessary/supportive",
-          "match": true/false,
-          "detail": "患者具体表现与匹配说明"
-        }
-      ],
-      "exclusion_of_similar": {
-        "confused_disease": "最易混淆的相似疾病",
-        "exclusion_point": "排除该病的关键依据"
-      }
-    }
-  ],
-  "missing_info": ["尚需补充的检查或信息"],
-  "cache_hit": true/false,
-  "source": "local_cache / merck_manual"
+  "source": "llm",
+  "cache_hit": false
 }
 ```
 
-## 核心规则
-1. 共病独立列出：每项共病须有症状依据。
-2. 缺失信息：应列出关键检查或病史。
-3. 禁止未经校验的高置信度诊断：绝对禁止在未进行强制信源校验的情况下输出 high 置信度诊断。
-4. 病名规范：须符合 ICD-11 或临床规范名称。
+### 模式二：信息不足时
+```json
+{
+  "status": "NEED_MORE_INFO",
+  "current_top_candidates": ["候选病名1", "候选病名2"],
+  "cannot_decide_because": "两者共享核心症状XX，缺少XX信息可区分",
+  "questions": ["追问1：患者有无XX？", "追问2：XX检查结果？"],
+  "missing_info": ["缺失信息标签1", "缺失信息标签2"]
+}
+```
+
+## 兜底（LLM 不可用时）
+当 LLM API 不可用时（`llm_api_available() == False`）：
+- 使用 `_keyword_fallback()` 做关键词模糊搜索
+- 使用口语化病名→标准名映射表（`slang_map`）
+- 输出格式同模式一，`source` 标记为 `"code_fallback"`
+
+## 禁止
+- ❌ 创造病名或诊断标准
+- ❌ 输出本地库外的疾病
+- ❌ 输出证型、处方、置信度、推理过程
+- ❌ 依赖大语言模型自身的医学知识生成诊断
+- ❌ 追问循环超过 2 轮
+- ❌ 单次追问超过 2 个问题
+- ❌ 重复上一轮已问过的问题
+
+## 代码文件对应关系
+
+| 提示词步骤 | 对应方法 | 位置 |
+|:---|:---|:---|
+| 标准化输入 | `normalize_input()` | m1_engine.py 第 226 行 |
+| 同义归一化 | `normalize_text()` + `SYNONYM_MAP` | 文件头部 |
+| 生成初始假设 | `_recall_candidates()` | m1_engine.py 第 892 行 |
+| 工具1：本地查询 | `_query_local_criteria()` | m1_engine.py 第 555 行 |
+| 工具2：在线查询 | `_online_query()` | m1_engine.py 第 621 行 |
+| 便捷入口 | `_get_cached_criteria()` | m1_engine.py 第 728 行 |
+| Agent 诊断主流程 | `diagnose()` | m1_engine.py 第 745 行 |
+| 关键词兜底 | `_keyword_fallback()` | m1_engine.py 第 378 行 |
+| 诊断标准补齐 | `_fill_missing_criteria()` | m1_engine.py 第 254 行 |
+| JSON 输出 | `diagnose_json()` | m1_engine.py 第 936 行 |
+| 诊断卡片库 | `self.diagnostic_cards` | m1_engine.py `__init__` 中加载 |
+| 主数据源 | `data/m1_diagnostic_cards.json` | 699 张诊断卡片 |
+| 合并核心库 | `diseases_core.json` | 1279 条（含卡片数据） |
