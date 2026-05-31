@@ -1,0 +1,19 @@
+{
+  "thresholds": {
+    "spo2": { "max": 90, "operator": "le" },
+    "sbp": { "max": 180, "operator": "ge" },
+    "dbp": { "max": 110, "operator": "ge" },
+    "sbp_low": { "min": 80, "operator": "le" },
+    "hr": { "max": 130, "operator": "ge" },
+    "hr_low": { "min": 45, "operator": "le" },
+    "temp": { "max": 40, "operator": "ge" }
+  },
+  "keyword_signals": [
+    "急性胸痛", "胸痛", "意识改变", "意识模糊", "意识下降",
+    "大出血", "大量出血", "阴道大量出血", "吐血", "咯血", "便血", "黑便", "呕血",
+    "重度呼吸困难", "呼吸困难", "呼吸急促",
+    "偏瘫", "失语", "抽搐", "惊厥",
+    "休克表现", "血压下降",
+    "妊娠期大量出血", "妊娠期剧烈腹痛"
+  ]
+}

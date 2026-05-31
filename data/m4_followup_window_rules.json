@@ -1,0 +1,47 @@
+{
+  "acute_infection": {
+    "expected_onset_days": 3,
+    "expected_significant_days": 7,
+    "description": "急性感染（上呼吸道感染、急性咽炎等）"
+  },
+  "subacute_cough": {
+    "expected_onset_days": 5,
+    "expected_significant_days": 14,
+    "description": "亚急性咳嗽"
+  },
+  "chronic_disease": {
+    "expected_onset_days": 14,
+    "expected_significant_days": 30,
+    "description": "慢性病（高血压、糖尿病、失眠等）"
+  },
+  "pain_musculoskeletal": {
+    "expected_onset_days": 7,
+    "expected_significant_days": 21,
+    "description": "肌肉骨骼系统疼痛（腰痛、颈椎病等）"
+  },
+  "skin_disease": {
+    "expected_onset_days": 7,
+    "expected_significant_days": 21,
+    "description": "皮肤病（湿疹、荨麻疹等）"
+  },
+  "gynecology_cycle_related": {
+    "expected_onset_days": 14,
+    "expected_significant_days": 30,
+    "description": "妇科周期相关（痛经、月经不调等）"
+  },
+  "gastroenterology": {
+    "expected_onset_days": 7,
+    "expected_significant_days": 21,
+    "description": "消化系统（胃炎、功能性消化不良等）"
+  },
+  "respiratory": {
+    "expected_onset_days": 5,
+    "expected_significant_days": 14,
+    "description": "呼吸系统（支气管炎、肺炎等）"
+  },
+  "neurological": {
+    "expected_onset_days": 14,
+    "expected_significant_days": 30,
+    "description": "神经系统（偏头痛、头痛等）"
+  }
+}
