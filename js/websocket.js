@@ -538,12 +538,45 @@
               }];
             }
             savePatientMessagesCache();
-            console.log(`[DEBUG] 收到患者[${messagePatientId}]的回复，但当前选中的患者是[${currentPatientId}]，已保存到缓存但不显示`);
-            // 清空pendingPatientId，避免后续消息也保存到错误的患者
-            if (pendingPatientId === messagePatientId) {
-              pendingPatientId = null;
+            var msgPId = message.patient_id || message.patientId || message.patient_uuid || message.uuid;
+            var activeId = window.currentPatientId;
+            if (!activeId && window.activeClinicSelection) activeId = window.activeClinicSelection.id;
+            if (!activeId && window.activeClinicSelection && window.activeClinicSelection.patient) activeId = window.activeClinicSelection.patient.id || window.activeClinicSelection.patient.patient_id;
+            
+            if (!window.currentPatientId && msgPId) {
+              window.currentPatientId = msgPId;
+              console.log("[WS_AUTO_RESTORE] 自动恢复 currentPatientId:", msgPId);
             }
-            return; // 不显示消息
+            if ((!window.activeClinicSelection || (window.activeClinicSelection && window.activeClinicSelection.type == "new")) && msgPId) {
+              var foundP = null;
+              if (window.clinicSessions) {
+                for (var pi = 0; pi < window.clinicSessions.length; pi++) {
+                  var pt = window.clinicSessions[pi];
+                  if (pt.id === msgPId || pt.patient_id === msgPId || pt.uuid === msgPId) { foundP = pt; break; }
+                }
+              }
+              window.activeClinicSelection = { type: "patient", id: msgPId, patient: foundP || null };
+              console.log("[WS_AUTO_RESTORE] 自动恢复 activeClinicSelection:", msgPId);
+            }
+            
+            var finalActiveId = window.currentPatientId || (window.activeClinicSelection ? window.activeClinicSelection.id : null) || msgPId;
+            var shouldDisplay = finalActiveId === msgPId;
+            
+            console.log("[WS_MESSAGE_MATCH]", {
+              messagePatientId: msgPId,
+              activePatientIdBefore: activeId,
+              finalActivePatientId: finalActiveId,
+              currentPatientId: window.currentPatientId,
+              activeClinicSelection: window.activeClinicSelection ? window.activeClinicSelection.id : null,
+              shouldDisplay: shouldDisplay
+            });
+            
+            if (shouldDisplay) {
+              console.log("[DEBUG] WS消息匹配当前患者，准备渲染:", msgPId);
+            } else {
+              if (pendingPatientId === msgPId) { pendingPatientId = null; }
+              return;
+            }
           }
 
           // 如果是医知快答频道的消息，且当前在医知快答模式，确保currentPatientId正确设置

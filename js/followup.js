@@ -6,7 +6,7 @@
             console.log('[复诊提醒] 找到患者行:', rows.length);
             rows.forEach(row => {
               const id = row.getAttribute('data-patient-id-value');
-              const session = clinicSessions.find(s => s.id === id);
+              const session = (window.clinicSessions || []).find(s => s.id === id);
               console.log('[复诊提醒] 患者:', id, session ? session.name : 'not found');
               if (session && session.needsFollowUp) {
                 if (row.querySelector('.followup-bell-btn')) return; // 已添加过
@@ -224,7 +224,7 @@
           // 显示演示模式提示
           const note = document.getElementById('connection-note');
           if (note) {
-            note.innerHTML = '<span style="display:flex;align-items:center;gap:6px"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span style="color:#065f46">📖 演示模式 — 点击患者可查看循证医学参考</span></span>';
+            note.innerHTML = '<span style="display:flex;align-items:center;gap:6px;color:#065f46">🔔 复诊提醒 — 如需复诊的患者会显示铃铛图标</span>';
             note.className = 'text-[11px] flex items-center gap-1.5';
           }
 
@@ -233,5 +233,5 @@
             setTimeout(() => lucide.createIcons(), 50);
           }
 
-          console.log('[演示模式] 已注入5位模拟患者数据，含循证医学内容');
+          console.log('[复诊提醒] 已加载复诊提醒功能');
 

@@ -1,4 +1,39 @@
     async function saveNewPatient(startQa = false) {
+// 统一患者ID规范化
+function normalizePatientId(patient) {
+  if (!patient) return null;
+  var pid = patient.id || patient.patient_id || patient.uuid || 'local_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  patient.id = pid;
+  patient.patient_id = pid;
+  patient.uuid = pid;
+  return pid;
+}
+
+// 合并患者入列表（不覆盖已有患者）
+function mergePatientIntoList(newPatient) {
+  window.allPatients = Array.isArray(window.allPatients) ? window.allPatients : [];
+  window.clinicSessions = Array.isArray(window.clinicSessions) ? window.clinicSessions : [];
+  var pid2 = normalizePatientId(newPatient);
+  if (!pid2) return null;
+  var merge = function(list) {
+    var i = list.length;
+    while (i--) {
+      if (list[i].id === pid2 || list[i].patient_id === pid2 || list[i].uuid === pid2) {
+        var merged = list.slice();
+        merged[i] = Object.assign({}, merged[i], newPatient);
+        return merged;
+      }
+    }
+    var result = [newPatient];
+    var j = 0;
+    while (j < list.length) { result.push(list[j]); j++; }
+    return result;
+  };
+  window.allPatients = merge(window.allPatients);
+  window.clinicSessions = merge(window.clinicSessions);
+  return pid2;
+}
+
 
       const nameEl = document.getElementById('new-patient-name');
 
@@ -108,12 +143,17 @@
       const summary = newPatient.summary || (symptom.length > 40 ? symptom.slice(0, 40) + '…' : symptom);
       newPatient = { ...newPatient, summary };
 
+      const patientId = newPatient.id || newPatient.patient_id || newPatient.uuid || 'local_' + Date.now();
+      newPatient.id = patientId;
+      newPatient.patient_id = patientId;
+      newPatient.uuid = patientId;
+
       // 将新患者添加到所有患者列表的开头
       allPatients = [newPatient, ...allPatients];
       // 应用当前搜索（如果有）
       applyPatientSearch(patientSearchQuery);
 
-      activeClinicSelection = { type: 'patient', id: newPatient.id };
+      activeClinicSelection = { type: 'patient', id: patientId };
 
       // 切换消息：新患者默认没有聊天记录，不要在这里阻塞等待云端 chatlog
       // 否则一旦远端 chatlog 接口卡住，会导致“保存并开始问诊”没有任何反应且后端收不到WS消息。
@@ -173,13 +213,26 @@
           allPatients = [newPatient, ...allPatients];
           applyPatientSearch(patientSearchQuery);
         }
-        activeClinicSelection = { type: 'patient', id: newPatient.id };
+        activeClinicSelection = { type: 'patient', id: patientId };
         renderClinicPanel();
         updateClinicDetailUI();
         updateModeSpecificUI();
       } catch (e) {
         console.warn('[DEBUG] 创建患者后刷新列表失败（已忽略）:', e);
       }
+
+      console.log('[CREATE_PATIENT_DONE]', {
+        newPatient: newPatient,
+        patientId: patientId,
+        currentPatientId: window.currentPatientId
+      });
+
+      console.log('[START_ASSESSMENT_REQUEST]', {
+        patientId: patientId,
+        newPatient: newPatient,
+        currentPatientId: window.currentPatientId,
+        activeClinicSelection: window.activeClinicSelection
+      });
 
       if (startQa) {
         // 保存并开始问诊：立即启动交互性问答
@@ -192,15 +245,15 @@
         }
 
         // 验证患者ID（静默处理）
-        if (!newPatient || !newPatient.id) {
-          console.warn('患者创建失败，无法启动问诊');
+        if (!patientId || typeof patientId !== 'string') {
+          console.error('[START_ASSESSMENT_ABORT] patientId异常', { patientId: patientId, newPatient: newPatient });
           return;
         }
 
         console.log('[DEBUG] start_interactive_qa: 准备启动', {
           ws_readyState: ws ? ws.readyState : null,
           phone: currentUser.phone,
-          patient_id: newPatient.id,
+          patient_id: patientId,
           db_choice: selectedClinicDb || getClientDefaultDb()
         });
 
@@ -217,7 +270,21 @@
         }
 
         // 立即启动交互性问答，后端会立即返回第一个问题
-        pendingPatientId = newPatient.id;
+        // 启动问诊前强制设置当前患者状态
+        window.currentPatientId = patientId;
+        window.activeClinicSelection = window.activeClinicSelection || {};
+        window.activeClinicSelection.type = "patient";
+        window.activeClinicSelection.id = patientId;
+        window.activeClinicSelection.patient = newPatient;
+
+        // 启动问诊前强制设置当前患者状态
+        window.currentPatientId = patientId;
+        window.activeClinicSelection = window.activeClinicSelection || {};
+        window.activeClinicSelection.type = "patient";
+        window.activeClinicSelection.id = patientId;
+        window.activeClinicSelection.patient = newPatient;
+
+        pendingPatientId = patientId;
 
         const payload = {
           token: currentUser.token || '',
@@ -227,7 +294,7 @@
           message_data: {
             text: '',
             mode: 'clinic',
-            patient_id: newPatient.id,
+            patient_id: patientId,
             start_interactive_qa: true,
             db_choice: selectedClinicDb || getClientDefaultDb(),
             default_db: getClientDefaultDb(),
@@ -255,6 +322,11 @@
             db_choice: payload.message_data.db_choice,
             debug_ts: payload.message_data.debug_ts
           });
+          // 发送前再次确保当前患者状态（防止同步操作覆盖）
+            window.currentPatientId = patientId;
+            window.activeClinicSelection = window.activeClinicSelection || {};
+            window.activeClinicSelection.type = "patient";
+            window.activeClinicSelection.id = patientId;
           ws.send(JSON.stringify(payload));
         } catch (e) {
           errorEl.textContent = `启动交互性问答失败：${e.message}`;

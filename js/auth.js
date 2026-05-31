@@ -117,13 +117,8 @@
 
       const hint = document.getElementById('chat-mode-hint');
 
-      const isNewClinic =
-
-        activeMode === 'clinic' &&
-
-        activeClinicSelection &&
-
-        activeClinicSelection.type === 'new';
+      const selection = window.activeClinicSelection;
+      const isNewClinic = window.activeMode === 'clinic' && selection && selection.type === 'new' && !window.currentPatientId;
 
       if (formSection) {
 
@@ -216,7 +211,7 @@
         // 控制患者信息栏和侧边栏
         const timelineSidebar = document.getElementById('patient-timeline-sidebar');
         if (infoBar) {
-          if (activeMode === 'corpus') {
+          if (window.activeMode === 'corpus') {
             // 医知快答模式下，隐藏患者信息栏和侧边栏
             infoBar.classList.add('hidden');
             if (prescriptionBtn) {
@@ -256,7 +251,7 @@
 
       // 控制按钮显示/隐藏
       if (btnGenerateTreatment) {
-        if (activeMode === 'clinic') {
+        if (window.activeMode === 'clinic') {
           // 患者问诊模式：显示生成诊疗建议按钮
           btnGenerateTreatment.classList.remove('hidden');
         } else {
@@ -266,7 +261,7 @@
       }
 
       if (btnOnlineSearchToggle) {
-        if (activeMode === 'corpus') {
+        if (window.activeMode === 'corpus') {
           // 医知快答模式：显示联网搜索开关按钮
           btnOnlineSearchToggle.classList.remove('hidden');
           updateOnlineSearchButtonState();

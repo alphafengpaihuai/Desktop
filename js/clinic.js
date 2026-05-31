@@ -21,11 +21,11 @@
       });
 
       // 如果有搜索，显示所有搜索结果；否则只显示前10个
-      const items = patientSearchQuery ? sortedSessions : sortedSessions.slice(0, 10);
+      const items = window.patientSearchQuery ? sortedSessions : sortedSessions.slice(0, 10);
 
-      console.log(`[DEBUG] renderClinicPanel: clinicSessions.length=${clinicSessions.length}, items.length=${items.length}, patientSearchQuery="${patientSearchQuery}"`);
+      console.log(`[DEBUG] renderClinicPanel: clinicSessions.length=${clinicSessions.length}, items.length=${items.length}, window.patientSearchQuery ="${window.patientSearchQuery}"`);
 
-      count.textContent = patientSearchQuery ? `${items.length} / ${allPatients.length}` : items.length;
+      count.textContent = window.patientSearchQuery ? `${items.length} / ${allPatients.length}` : items.length;
 
       const isNewActive = activeClinicSelection && activeClinicSelection.type === 'new';
       const newCls = isNewActive
@@ -870,45 +870,35 @@
 
 
     function selectNewClinicPatient() {
-      // 先保存当前患者的消息（如果当前有选中的患者）
-      if (currentPatientId) {
-        if (messages.length > 0) {
-          patientMessagesCache[currentPatientId] = [...messages];
-          savePatientMessagesCache();
-          console.log(`[DEBUG] 保存患者[${currentPatientId}]的消息，共${messages.length}条`);
-        }
-      }
+    console.log('[DEBUG] selectNewClinicPatient called');
+    console.log('[DEBUG] activeMode:', window.activeMode);
+    console.log('[DEBUG] activeClinicSelection before:', window.activeClinicSelection);
 
-      // 清空当前患者ID和消息
-      currentPatientId = null;
-      messages.length = 0;
-      renderMessages();
+    window.activeMode = 'clinic';
+    window.activeClinicSelection = { type: 'new' };
+    window.currentPatientId = null;
+    window.messages = [];
 
-      // 清空复诊流程状态
-      isInFollowupFlow = false;
-      followupSymptom = '';
-
-      // 隐藏复诊症状输入表单
-      const followupSection = document.getElementById('followup-symptom-section');
-      if (followupSection) followupSection.classList.add('hidden');
-
-      stopClinicChatlogRefreshTimer();
-      activeClinicSelection = { type: 'new' };
-      saveLastSelectedPatient(null);
-
-      // 隐藏患者信息栏
-      updatePatientInfoBar(null);
-
-      renderClinicPanel();
-
-      updateClinicDetailUI();
-
+    if (typeof renderMessages === 'function') {
+        renderMessages(window.messages);
     }
 
+    if (typeof renderClinicPanel === 'function') {
+        renderClinicPanel();
+    }
 
+    // 防止 renderClinicPanel 覆盖新增状态
+    window.activeClinicSelection = { type: 'new' };
 
-    // 计算字符串相似度（使用简单的编辑距离算法）
-    function calculateSimilarity(str1, str2) {
+    if (typeof updateClinicDetailUI === 'function') {
+        updateClinicDetailUI();
+    }
+
+    console.log('[DEBUG] activeClinicSelection after:', window.activeClinicSelection);
+    console.log('[DEBUG] form hidden:', document.getElementById('clinic-form-section')?.classList.contains('hidden'));
+}
+
+window.selectNewClinicPatient = selectNewClinicPatient;function calculateSimilarity(str1, str2) {
       if (!str1 || !str2) return 0;
       const s1 = str1.toLowerCase();
       const s2 = str2.toLowerCase();
@@ -954,7 +944,7 @@
 
     // 应用患者搜索
     function applyPatientSearch(query) {
-      patientSearchQuery = query;
+      window.window.window.patientSearchQuery = query;
 
       if (!query || query.trim() === '') {
         // 没有搜索，显示所有患者（但只显示前10个）

@@ -52,6 +52,10 @@
     }
 
     async function syncPatients(showMsg = false) {
+      // 确保所有状态从 window 读取
+      window.activeClinicSelection = window.activeClinicSelection || null;
+      window.activeMode = window.activeMode || "clinic";
+      window.currentPatientId = window.currentPatientId || null;
       if (!currentUser.phone) {
         clinicSessions = [];
         allPatients = [];
@@ -76,24 +80,40 @@
             ).trim();
             return !taggedClientId || taggedClientId === getCurrentClientId();
           });
-        allPatients = Array.isArray(filtered) ? filtered : [];  // 保存所有患者
+        // 合并服务端和本地患者数据（服务端空时不覆盖本地已有数据）
+        const serverPatients = Array.isArray(filtered) ? filtered : [];
+        if (serverPatients.length > 0) {
+          // 用服务端数据更新/补充本地数据
+          const existingMap = new Map();
+          (window.allPatients || []).forEach(p => existingMap.set(p.id, p));
+          serverPatients.forEach(p => existingMap.set(p.id, p));
+          allPatients = Array.from(existingMap.values());
+        } else if (window.allPatients && window.allPatients.length > 0) {
+          // 后端返回空列表但本地有数据：保留本地，不覆盖
+          console.log('[DEBUG] syncPatients: 后端返回空列表，保留本地患者数据');
+          allPatients = window.allPatients;
+        } else {
+          allPatients = [];
+        }
         console.log(`[DEBUG] syncPatients: 获取到${allPatients.length}个患者`, allPatients);
         // 应用当前搜索（如果有）
         applyPatientSearch(patientSearchQuery);
         console.log(`[DEBUG] syncPatients: applyPatientSearch后，clinicSessions.length=${clinicSessions.length}`, clinicSessions);
         // 如果之前没有选中患者，或者选中的患者不在完整列表中，尝试恢复上次选中的患者。
-        // 搜索结果为空时不能清空当前选中患者，否则顶部复诊/调理笺按钮会被误隐藏。
-        if (!activeClinicSelection || !activeClinicSelection.id || activeClinicSelection.type === 'new' || !getPatientById(activeClinicSelection.id)) {
+        // 但如果是主动的"新增患者"模式（type === 'new'），不要覆盖它
+        if (activeClinicSelection && activeClinicSelection.type === 'new' && !window.currentPatientId) {
+          // 保持新增患者模式不变，不自动跳转到第一个患者
+        } else if (!activeClinicSelection || !activeClinicSelection.id || !getPatientById(activeClinicSelection.id)) {
           // 尝试恢复上次选中的患者
           loadLastSelectedPatient();
           // 检查上次选中的患者是否还在列表中
-          if (activeClinicSelection.id && getPatientById(activeClinicSelection.id)) {
+          if (activeClinicSelection && activeClinicSelection.id && getPatientById(activeClinicSelection.id)) {
             // 上次选中的患者还在，继续使用
           } else if (allPatients.length > 0) {
             // 上次选中的患者不在，选择第一个患者
             activeClinicSelection = { type: 'patient', id: allPatients[0].id };
             saveLastSelectedPatient(allPatients[0].id);
-          } else {
+          } else if (!window.currentPatientId) {
             // 没有患者，选择新增患者模式
             activeClinicSelection = { type: 'new' };
             saveLastSelectedPatient(null);
@@ -119,9 +139,9 @@
               const updated = getPatientById(activeClinicSelection.id) || patient;
               updatePatientInfoBar(updated);
             }
-          } else {
+          } else if (!window.currentPatientId) {
             currentPatientId = null;
-            messages.length = 0;
+            window.messages = [];
             try {
               renderMessages();
             } catch (e) {
