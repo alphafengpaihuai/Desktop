@@ -153,22 +153,22 @@ function mergePatientIntoList(newPatient) {
       // 应用当前搜索（如果有）
       applyPatientSearch(patientSearchQuery);
 
-      activeClinicSelection = { type: 'patient', id: patientId };
+      window.activeClinicSelection = { type: 'patient', id: patientId };
 
       // 切换消息：新患者默认没有聊天记录，不要在这里阻塞等待云端 chatlog
       // 否则一旦远端 chatlog 接口卡住，会导致“保存并开始问诊”没有任何反应且后端收不到WS消息。
-      if (currentPatientId && currentPatientId !== newPatient.id) {
+      if (window.currentPatientId && window.currentPatientId !== newPatient.id) {
         try {
           if (messages.length > 0) {
-            patientMessagesCache[currentPatientId] = [...messages];
+            patientMessagesCache[window.currentPatientId] = [...messages];
             savePatientMessagesCache();
-            console.log(`[DEBUG] 保存患者[${currentPatientId}]的消息，共${messages.length}条`);
+            console.log(`[DEBUG] 保存患者[${window.currentPatientId}]的消息，共${messages.length}条`);
           }
         } catch (e) {
           console.warn('[DEBUG] 保存旧患者消息缓存失败:', e);
         }
       }
-      currentPatientId = newPatient.id;
+      window.currentPatientId = newPatient.id;
       messages.length = 0;
       renderMessages();
       updateSidebarReferencesFromMessages();
@@ -213,7 +213,7 @@ function mergePatientIntoList(newPatient) {
           allPatients = [newPatient, ...allPatients];
           applyPatientSearch(patientSearchQuery);
         }
-        activeClinicSelection = { type: 'patient', id: patientId };
+        window.activeClinicSelection = { type: 'patient', id: patientId };
         renderClinicPanel();
         updateClinicDetailUI();
         updateModeSpecificUI();
@@ -258,7 +258,9 @@ function mergePatientIntoList(newPatient) {
         });
 
         // 先确保 WebSocket 已连接（可能页面刚加载或重连中），否则后端收不到消息
-        const connected = await ensureWsConnected();
+        const connected = typeof window.ensureWsConnected === 'function'
+          ? await window.ensureWsConnected()
+          : false;
         console.log('[DEBUG] start_interactive_qa: ensureWsConnected结果', {
           connected,
           ws_readyState: ws ? ws.readyState : null
@@ -314,6 +316,7 @@ function mergePatientIntoList(newPatient) {
         }
 
         try {
+          console.log('[WS_SEND_START_INTERACTIVE_QA]', JSON.stringify(payload, null, 2));
           console.log('[DEBUG] start_interactive_qa: 即将发送WS消息', {
             ws_readyState: ws ? ws.readyState : null,
             phone: payload.phone,
@@ -339,6 +342,14 @@ function mergePatientIntoList(newPatient) {
 
     }
 
+    // 暴露到全局，供 HTML onclick 使用
+    console.log('[BOOT] mock-data.js loaded');
+    if (typeof saveNewPatient === 'function') {
+      window.saveNewPatient = saveNewPatient;
+      console.log('[BOOT] window.saveNewPatient registered:', typeof window.saveNewPatient);
+    } else {
+      console.error('[BOOT] saveNewPatient not found:', typeof saveNewPatient);
+    }
 
 
     // 页面卸载时清理资源
@@ -747,8 +758,8 @@ function mergePatientIntoList(newPatient) {
           
           // 自动选中第一个患者，触发循证内容填充到右侧面板
           if (clinicSessions.length > 0) {
-            activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
-            const firstPatient = getPatientById(activeClinicSelection.id);
+            window.activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
+            const firstPatient = getPatientById(window.activeClinicSelection.id);
             if (firstPatient) {
               setTimeout(() => {
                 window._showEbmContent(firstPatient.id, firstPatient.name);
@@ -886,7 +897,7 @@ function mergePatientIntoList(newPatient) {
 
           // 选中第一个患者
           if (clinicSessions.length > 0) {
-            activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
+            window.activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
           }
 
           // 重新渲染
@@ -894,8 +905,8 @@ function mergePatientIntoList(newPatient) {
           updateClinicDetailUI();
           
           // 更新患者信息栏
-          if (activeClinicSelection && activeClinicSelection.type === 'patient') {
-            const patient = getPatientById(activeClinicSelection.id);
+          if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient') {
+            const patient = getPatientById(window.activeClinicSelection.id);
             if (patient) {
               updatePatientInfoBar(patient);
             }
@@ -985,8 +996,8 @@ function mergePatientIntoList(newPatient) {
           };
 
           // 为当前选中的患者显示循证内容
-          if (activeClinicSelection && activeClinicSelection.type === 'patient') {
-            const patient = getPatientById(activeClinicSelection.id);
+          if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient') {
+            const patient = getPatientById(window.activeClinicSelection.id);
             if (patient) {
               setTimeout(() => {
                 window._showEbmContent(patient.id, patient.name);
@@ -1011,4 +1022,3 @@ function mergePatientIntoList(newPatient) {
       }, 3000); // 等待3秒，给syncPatients时间尝试连接后端
 
     });
-

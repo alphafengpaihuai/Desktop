@@ -8,7 +8,7 @@
         return;
       }
 
-      if (!patient || activeClinicSelection.type !== 'patient') {
+      if (!patient || window.activeClinicSelection.type !== 'patient') {
         infoBar.classList.add('hidden');
         // 没有选中患者时调理笺按钮仍可点击（会提示请先选择患者）
         const prescriptionBtn = document.getElementById('btn-show-prescription');
@@ -330,11 +330,11 @@
 
     // 刷新当前患者信息（从服务器获取最新数据）
     async function refreshCurrentPatientInfo() {
-      if (activeMode !== 'clinic' || !activeClinicSelection || activeClinicSelection.type !== 'patient') {
+      if (activeMode !== 'clinic' || !window.activeClinicSelection || window.activeClinicSelection.type !== 'patient') {
         return; // 不在问诊模式或没有选中患者
       }
 
-      const patientId = activeClinicSelection.id;
+      const patientId = window.activeClinicSelection.id;
       if (!patientId || !currentUser.phone) {
         return;
       }
@@ -365,7 +365,7 @@
           updatePatientInfoBar(updatedPatient);
 
           // 如果当前选中的就是这个患者，也更新UI
-          if (activeClinicSelection.id === patientId) {
+          if (window.activeClinicSelection.id === patientId) {
             renderClinicPanel();
           }
         } else {

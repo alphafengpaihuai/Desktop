@@ -29,6 +29,7 @@ DANGER_THRESHOLDS = {
 DANGER_KEYWORDS = [
     "急性胸痛", "意识改变", "意识下降", "大出血",
     "重度呼吸困难", "呼吸困难", "胸痛",
+    "气促", "夜间气促", "喘憋", "发热加重",
     "大量出血", "大出血", "阴道大量出血",
     "吐血", "咯血", "便血",
 ]
@@ -713,6 +714,9 @@ class M4RoutingEngine:
             "disease_name_validation": kwargs.get("disease_name_validation", {}),
             "routing_decision": kwargs.get("routing_decision", {}),
             "danger_signals": kwargs.get("danger_signals", {"triggered": False, "signals": []}),
+            "formal_prescription_allowed": False,
+            "formula_candidates": [],
+            "modification_candidates": [],
         }
 
     def _call_llm(self, prompt: str) -> Optional[str]:

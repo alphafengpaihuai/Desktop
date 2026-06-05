@@ -162,7 +162,12 @@ def _headers(row) -> dict[str, int]:
 
 
 def build_disease_manifest(excel_path: str | Path = DEFAULT_EXCEL) -> dict:
-    path = resolve_excel_path(excel_path)
+    try:
+        path = resolve_excel_path(excel_path)
+    except FileNotFoundError:
+        if Path(excel_path) == DEFAULT_EXCEL and MANIFEST_PATH.exists():
+            return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+        raise
     wb = load_workbook(path, read_only=True, data_only=True)
     diseases_by_name: dict[str, dict] = {}
     disease_occurrence_count: dict[str, int] = {}

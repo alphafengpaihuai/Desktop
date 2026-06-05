@@ -223,8 +223,8 @@
           } else {
             // 患者问诊模式下，根据是否有选中患者来决定是否显示
             // updatePatientInfoBar 函数会处理具体显示逻辑，包括侧边栏
-            if (activeClinicSelection && activeClinicSelection.type === 'patient' && activeClinicSelection.id) {
-              const patient = getPatientById(activeClinicSelection.id);
+            if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient' && window.activeClinicSelection.id) {
+              const patient = getPatientById(window.activeClinicSelection.id);
               if (patient) {
                 updatePatientInfoBar(patient);
                 // 侧边栏会在updatePatientInfoBar中通过renderPatientTimelineSidebar控制
@@ -282,11 +282,11 @@
 
     // 在新窗口展示调理笺页面（使用当前选中患者ID）
     function showPrescriptionPage() {
-      if (activeMode !== 'clinic' || !activeClinicSelection || activeClinicSelection.type !== 'patient') {
+      if (activeMode !== 'clinic' || !window.activeClinicSelection || window.activeClinicSelection.type !== 'patient') {
         showTopNotificationBar('请先在患者记录模式下选择一位已生成' + getPrescriptionTitle(selectedClinicDb) + '的患者。', 'amber');
         return;
       }
-      const patientId = activeClinicSelection.id;
+      const patientId = window.activeClinicSelection.id;
       if (!patientId) {
         showTopNotificationBar('当前未选中有效客户，无法展示' + getPrescriptionTitle(selectedClinicDb) + '。', 'amber');
         return;
@@ -391,7 +391,7 @@
     // 显示复诊症状输入表单
     function showFollowupSymptomForm() {
       // 检查是否在问诊模式且有选中的患者
-      if (activeMode !== 'clinic' || !activeClinicSelection || activeClinicSelection.type !== 'patient') {
+      if (activeMode !== 'clinic' || !window.activeClinicSelection || window.activeClinicSelection.type !== 'patient') {
         appendMessage('system', '请先选择客户。');
         return;
       }
@@ -428,8 +428,8 @@
       followupSymptom = '';
 
       // 重新更新患者信息栏，以显示"开始复诊"按钮
-      if (activeClinicSelection && activeClinicSelection.type === 'patient' && activeClinicSelection.id) {
-        const patient = getPatientById(activeClinicSelection.id);
+      if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient' && window.activeClinicSelection.id) {
+        const patient = getPatientById(window.activeClinicSelection.id);
         if (patient) {
           updatePatientInfoBar(patient);
         }
@@ -439,12 +439,12 @@
     // 确认复诊症状并开始复诊流程
     function confirmFollowupSymptom() {
       // 检查是否在问诊模式且有选中的患者
-      if (activeMode !== 'clinic' || !activeClinicSelection || activeClinicSelection.type !== 'patient') {
+      if (activeMode !== 'clinic' || !window.activeClinicSelection || window.activeClinicSelection.type !== 'patient') {
         appendMessage('system', '请先选择客户。');
         return;
       }
 
-      const patientId = activeClinicSelection.id;
+      const patientId = window.activeClinicSelection.id;
       if (!patientId) {
         appendMessage('system', '请先选择客户。');
         return;
@@ -559,8 +559,8 @@
       if (!clinicPanel || !corpusPanel || !tabClinic || !tabCorpus) return;
 
       // 保存当前消息（在切换模式前）
-      if (currentPatientId && messages.length > 0) {
-        patientMessagesCache[currentPatientId] = messages.map(msg => {
+      if (window.currentPatientId && messages.length > 0) {
+        patientMessagesCache[window.currentPatientId] = messages.map(msg => {
           const msgCopy = { ...msg };
           if (msgCopy.content && typeof msgCopy.content === 'string') {
             msgCopy.content = { text: msgCopy.content };
@@ -571,7 +571,7 @@
           return msgCopy;
         });
         savePatientMessagesCache();
-        console.log(`[DEBUG] 切换模式前保存患者[${currentPatientId}]的消息，共${messages.length}条`);
+        console.log(`[DEBUG] 切换模式前保存患者[${window.currentPatientId}]的消息，共${messages.length}条`);
       }
 
       if (mode === 'clinic') {
@@ -592,8 +592,8 @@
         stopAiAssistantRefreshTimer();
 
         // 切换到患者问诊模式：恢复之前选中的患者消息（如果有）
-        if (activeClinicSelection && activeClinicSelection.type === 'patient' && activeClinicSelection.id) {
-          const patientId = activeClinicSelection.id;
+        if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient' && window.activeClinicSelection.id) {
+          const patientId = window.activeClinicSelection.id;
           const patient = getPatientById(patientId);
           await switchPatientMessages(patientId, patient);
           // 启动患者模式聊天记录定时刷新（每5秒），便于其他端上传的新消息同步展示
@@ -601,7 +601,7 @@
         } else {
           // 没有选中患者，清空消息并停止患者聊天刷新
           stopClinicChatlogRefreshTimer();
-          currentPatientId = null;
+          window.currentPatientId = null;
           messages.length = 0;
           renderMessages();
         }

@@ -142,6 +142,8 @@
       });
     }
 
+    window.ensureWsConnected = ensureWsConnected;
+
     function connectWs() {
 
       // 取消之前的重连计划
@@ -159,6 +161,7 @@
 
 
       ws = new WebSocket(WS_URL);
+      window.ws = ws;
 
 
 
@@ -186,7 +189,7 @@
 
         // WebSocket连接建立后，如果当前在AI助手频道，发送一个空消息来激活连接
         // 这样后端就能记录连接并主动推送聊天记录
-        if (activeMode === 'corpus' && currentPatientId === 'common' && currentUser && currentUser.phone) {
+        if (activeMode === 'corpus' && window.currentPatientId === 'common' && currentUser && currentUser.phone) {
           console.log('[DEBUG] WebSocket连接建立，当前在AI助手频道，发送空消息激活连接以获取聊天记录');
           try {
             // 医知快答拉取 common 聊天记录需要 token，发送前从 localStorage 再读一次
@@ -295,13 +298,74 @@
           }
 
           // 处理JSON消息
-          const data = JSON.parse(event.data);
+          let data = JSON.parse(event.data);
+          if (typeof data === 'string') {
+            try {
+              const reparsed = JSON.parse(data);
+              if (reparsed && typeof reparsed === 'object') data = reparsed;
+            } catch (e) {}
+          }
+          console.log('[RAW_WS_BUSINESS_MESSAGE]', data);
+          console.log('[RAW_WS_BUSINESS_KEYS]', Object.keys(data || {}));
+          if (data && (data.payload || data.data)) {
+            console.log('[RAW_WS_BUSINESS_PAYLOAD]', data.payload || data.data);
+          }
 
           // 处理心跳响应（JSON格式）
           if (data.type === 'pong') {
             console.log('[HEARTBEAT] 收到心跳响应');
             return;
           }
+
+          let parsedAnswer = data.answer || null;
+          if (typeof parsedAnswer === 'string') {
+            try {
+              const maybeAnswer = JSON.parse(parsedAnswer);
+              if (maybeAnswer && typeof maybeAnswer === 'object') parsedAnswer = maybeAnswer;
+            } catch (e) {}
+          }
+          if (parsedAnswer && typeof parsedAnswer === 'object' && typeof parsedAnswer.text === 'string') {
+            try {
+              const maybeText = JSON.parse(parsedAnswer.text);
+              if (maybeText && typeof maybeText === 'object' && maybeText.type === 'selection_q') {
+                parsedAnswer = maybeText;
+              }
+            } catch (e) {}
+          }
+
+          const selectionMessage =
+            data.type === 'selection_q'
+              ? data
+              : parsedAnswer && parsedAnswer.type === 'selection_q'
+                ? parsedAnswer
+                : null;
+
+          if (selectionMessage) {
+            console.log('[WS_SELECTION_Q_RECEIVED]', selectionMessage);
+
+            if (typeof window.renderSelectionQuestions === 'function') {
+              window.renderSelectionQuestions(selectionMessage);
+            } else if (typeof renderSelectionQuestions === 'function') {
+              renderSelectionQuestions(selectionMessage);
+            } else {
+              console.error('[WS_SELECTION_Q_RENDER_MISSING] renderSelectionQuestions 未定义');
+            }
+
+            return;
+          }
+
+
+          // 处理结构化诊断结果 (diagnosis_result) — 完整处方笺
+          if (data.type === 'diagnosis_result') {
+            console.log('[WS_DIAGNOSIS_RESULT_RECEIVED]', data);
+            var diagnosis = data.diagnosis || {};
+            var rec = diagnosis.recommendation || '';
+            if (typeof appendMessage === 'function') {
+              appendMessage('assistant', { text: rec });
+            }
+            return;
+          }
+
 
           // 处理文件上传响应
           if (data.answer && data.answer.file_upload) {
@@ -440,6 +504,11 @@
                 return;
               }
               // 其他状态的空消息，用于调试时显示
+              // ★ 新增：识别 selection_q 类型，走问题卡片渲染
+              if (msgType === 'selection_q' || messageContent.type === 'selection_q') {
+                renderSelectionQuestions(data);
+                return;
+              }
               messageContent = { text: JSON.stringify(data, null, 2) };
             }
 
@@ -463,7 +532,7 @@
 
               // 如果消息属于某个患者，但当前没有选中该患者，则保存到缓存但不显示
               // 例外：医知快答频道的消息在医知快答模式下应该显示
-              if (messagePatientId && currentPatientId !== messagePatientId && !shouldShowAiAssistantMessage) {
+              if (messagePatientId && window.currentPatientId !== messagePatientId && !shouldShowAiAssistantMessage) {
                 // 保存到缓存但不显示
                 if (patientMessagesCache[messagePatientId]) {
                   patientMessagesCache[messagePatientId].push({
@@ -479,14 +548,14 @@
                   }];
                 }
                 savePatientMessagesCache();
-                console.log(`[DEBUG] 收到用户消息[${messagePatientId}]，但当前选中的患者是[${currentPatientId}]，已保存到缓存但不显示`);
+                console.log(`[DEBUG] 收到用户消息[${messagePatientId}]，但当前选中的患者是[${window.currentPatientId}]，已保存到缓存但不显示`);
                 return;
               }
 
-              // 如果是医知快答频道的消息，且当前在医知快答模式，确保currentPatientId正确设置
-              if (shouldShowAiAssistantMessage && currentPatientId !== 'common') {
-                console.log(`[DEBUG] 收到医知快答用户消息，切换到医知快答频道（currentPatientId: ${currentPatientId} -> common）`);
-                currentPatientId = 'common';
+              // 如果是医知快答频道的消息，且当前在医知快答模式，确保window.currentPatientId正确设置
+              if (shouldShowAiAssistantMessage && window.currentPatientId !== 'common') {
+                console.log(`[DEBUG] 收到医知快答用户消息，切换到医知快答频道（window.currentPatientId: ${window.currentPatientId} -> common）`);
+                window.currentPatientId = 'common';
               }
 
               // 显示用户消息（传递时间戳用于去重）
@@ -515,13 +584,13 @@
           const messagePatientId = data.answer?.patient_id || pendingPatientId || null;
 
           // 特殊处理：医知快答频道的消息（patient_id为"common"）应该在医知快答模式下显示
-          // 如果当前在医知快答模式，无论currentPatientId是什么，都应该显示医知快答的消息
+          // 如果当前在医知快答模式，无论window.currentPatientId是什么，都应该显示医知快答的消息
           const isAiAssistantMessage = messagePatientId === 'common';
           const shouldShowAiAssistantMessage = isAiAssistantMessage && activeMode === 'corpus';
 
           // 如果消息属于某个患者，但当前没有选中该患者（新增患者模式或切换到了其他患者），则保存到该患者的缓存但不显示
           // 例外：医知快答频道的消息在医知快答模式下应该显示
-          if (messagePatientId && currentPatientId !== messagePatientId && !shouldShowAiAssistantMessage) {
+          if (messagePatientId && window.currentPatientId !== messagePatientId && !shouldShowAiAssistantMessage) {
             // 消息属于某个患者，但当前没有选中该患者
             // 保存到该患者的缓存中，但不显示在当前界面
             if (patientMessagesCache[messagePatientId]) {
@@ -545,7 +614,7 @@
             
             if (!window.currentPatientId && msgPId) {
               window.currentPatientId = msgPId;
-              console.log("[WS_AUTO_RESTORE] 自动恢复 currentPatientId:", msgPId);
+              console.log("[WS_AUTO_RESTORE] 自动恢复 window.currentPatientId:", msgPId);
             }
             if ((!window.activeClinicSelection || (window.activeClinicSelection && window.activeClinicSelection.type == "new")) && msgPId) {
               var foundP = null;
@@ -556,7 +625,7 @@
                 }
               }
               window.activeClinicSelection = { type: "patient", id: msgPId, patient: foundP || null };
-              console.log("[WS_AUTO_RESTORE] 自动恢复 activeClinicSelection:", msgPId);
+              console.log("[WS_AUTO_RESTORE] 自动恢复 window.activeClinicSelection:", msgPId);
             }
             
             var finalActiveId = window.currentPatientId || (window.activeClinicSelection ? window.activeClinicSelection.id : null) || msgPId;
@@ -579,10 +648,10 @@
             }
           }
 
-          // 如果是医知快答频道的消息，且当前在医知快答模式，确保currentPatientId正确设置
-          if (shouldShowAiAssistantMessage && currentPatientId !== 'common') {
-            console.log(`[DEBUG] 收到医知快答消息，切换到医知快答频道（currentPatientId: ${currentPatientId} -> common）`);
-            currentPatientId = 'common';
+          // 如果是医知快答频道的消息，且当前在医知快答模式，确保window.currentPatientId正确设置
+          if (shouldShowAiAssistantMessage && window.currentPatientId !== 'common') {
+            console.log(`[DEBUG] 收到医知快答消息，切换到医知快答频道（window.currentPatientId: ${window.currentPatientId} -> common）`);
+            window.currentPatientId = 'common';
           }
 
           // 如果消息属于当前显示的患者（或没有patient_id），正常显示并保存
@@ -591,7 +660,7 @@
           appendMessage('assistant', messageContent, assistantTimestamp);
 
           // 清空pendingPatientId，表示已收到回复
-          if (currentPatientId && currentPatientId === messagePatientId) {
+          if (window.currentPatientId && window.currentPatientId === messagePatientId) {
             pendingPatientId = null;
           }
 
@@ -636,8 +705,8 @@
                 setTimeout(() => {
                   refreshCurrentPatientInfo();
                   // 刷新完成后，重新更新患者信息栏以显示"开始复诊"按钮
-                  if (currentPatientId) {
-                    const patient = getPatientById(currentPatientId);
+                  if (window.currentPatientId) {
+                    const patient = getPatientById(window.currentPatientId);
                     if (patient) {
                       updatePatientInfoBar(patient);
                     }
@@ -677,7 +746,7 @@
         }
       }
 
-      if (activeMode === 'clinic' && activeClinicSelection && activeClinicSelection.type === 'new') {
+      if (activeMode === 'clinic' && window.activeClinicSelection && window.activeClinicSelection.type === 'new') {
 
         alert('当前为新增客户，请先填写并保存客户基本信息。');
 
@@ -753,8 +822,8 @@
       }
       // 患者问诊模式必须包含数据库选择
       // 确定患者ID：患者问诊模式使用实际患者ID，医知快答模式使用 common
-      const patientId = activeMode === 'clinic' && activeClinicSelection.type === 'patient'
-        ? activeClinicSelection.id
+      const patientId = activeMode === 'clinic' && window.activeClinicSelection.type === 'patient'
+        ? window.activeClinicSelection.id
         : (activeMode === 'corpus' ? 'common' : '');
 
       const payload = {
@@ -856,12 +925,12 @@
       if (!(await ensureConnected())) return;
 
       // 检查是否在问诊模式且有选中的患者
-      if (activeMode !== 'clinic' || !activeClinicSelection || activeClinicSelection.type !== 'patient') {
+      if (activeMode !== 'clinic' || !window.activeClinicSelection || window.activeClinicSelection.type !== 'patient') {
         appendMessage('system', '请先选择客户并完成评估后再生成' + docTitle + '。');
         return;
       }
 
-      const patientId = activeClinicSelection.id;
+      const patientId = window.activeClinicSelection.id;
       if (!patientId) {
         appendMessage('system', '请先选择客户。');
         return;
@@ -906,6 +975,3 @@
         showConnectionStatusBar('WebSocket未连接，无法生成' + docTitle, 'red');
       }
     }
-
-
-

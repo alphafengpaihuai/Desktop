@@ -189,7 +189,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T14:40:18.068567+00:00"
+      "mined_at": "2026-05-27T14:40:18.068567+00:00",
+      "evidence_grade": "high",
+      "evidence_grade_reason": "标题提示临床研究/RCT/系统综述证据：Curcumin and Type 2 Diabetes Mellitus: Prevention and Treatment. | Curcumin extract improves beta cell functions in obese patients with type 2 diabetes: a randomized controlled trial. | Curcumin Attenuates Hyperglycemia and Inflammation in Type 2 Diabetes Mellitus: Quantitative Analysis of Randomized Controlled Trial."
     },
     "Anovulatory Uterine Bleeding (AUB-O)": {
       "western_disease_name": "Anovulatory Uterine Bleeding (AUB-O)",
@@ -356,7 +358,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T14:41:51.703925+00:00"
+      "mined_at": "2026-05-27T14:41:51.703925+00:00",
+      "evidence_grade": "low",
+      "evidence_grade_reason": "标题相关但证据链不足：Astragaloside IV attenuates orbital inflammation in Graves' orbitopathy through suppression of autophagy."
     },
     "Hunt综合征": {
       "western_disease_name": "Hunt综合征",
@@ -491,7 +495,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T14:42:36.714666+00:00"
+      "mined_at": "2026-05-27T14:42:36.714666+00:00",
+      "evidence_grade": "medium_high",
+      "evidence_grade_reason": "标题提示动物实验或明确疾病模型，不能写成临床有效：Oxymatrine ameliorates epithelial mesenchymal transition in IgA nephropathy induced rats."
     },
     "IgA血管炎": {
       "western_disease_name": "IgA血管炎",
@@ -563,22 +569,41 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T14:43:05.142842+00:00"
+      "mined_at": "2026-05-27T14:43:05.142842+00:00",
+      "evidence_grade": "medium",
+      "evidence_grade_reason": "标题提示机制/细胞/综述证据，外推有限：[Effects of Astragalus membranaceus on cytokine secretion of peripheral dendritic cells in children with Henoch-Schonlein purpura in the acute phase]."
     },
     "IgA血管炎/过敏性紫癜": {
       "western_disease_name": "IgA血管炎/过敏性紫癜",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "ACE",
+        "TNF",
+        "IL6",
+        "CRP",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "IgA Vasculitis",
+        "disease_pmids": [
+          "33309134",
+          "30879080",
+          "32384035",
+          "37755547",
+          "38261310",
+          "22560577",
+          "17499709",
+          "40208688",
+          "37497206",
+          "38211969"
+        ]
       },
-      "mined_at": "2026-05-27T14:43:05.144504+00:00"
+      "mined_at": "2026-06-03T06:52:43.145828+00:00"
     },
     "IgA血管炎性肾炎": {
       "western_disease_name": "IgA血管炎性肾炎",
@@ -620,17 +645,34 @@
     "Vogt-小柳-原田综合征": {
       "western_disease_name": "Vogt-小柳-原田综合征",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "VEGFA",
+        "AKT1",
+        "IL6",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Vogt-Koyanagi-Harada disease",
+        "disease_pmids": [
+          "36195600",
+          "38168905",
+          "25097674",
+          "35096888",
+          "37828081",
+          "34041239",
+          "24734166",
+          "40203473",
+          "34918133",
+          "37204477"
+        ]
       },
-      "mined_at": "2026-05-27T14:43:09.011640+00:00"
+      "mined_at": "2026-06-03T06:52:38.877415+00:00"
     },
     "infantile hemangioma": {
       "western_disease_name": "infantile hemangioma",
@@ -743,17 +785,34 @@
     "上睑下垂": {
       "western_disease_name": "上睑下垂",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "VEGFA",
+        "STAT3",
+        "CRP",
+        "TNF",
+        "AR"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Ptosis",
+        "disease_pmids": [
+          "30740406",
+          "39230499",
+          "37554604",
+          "39366127",
+          "32322981",
+          "38461944",
+          "22142750",
+          "30004830",
+          "36978846",
+          "39945841"
+        ]
       },
-      "mined_at": "2026-05-27T14:43:51.637899+00:00"
+      "mined_at": "2026-06-03T08:03:58.726993+00:00"
     },
     "下肢动脉硬化闭塞症": {
       "western_disease_name": "下肢动脉硬化闭塞症",
@@ -788,17 +847,34 @@
     "下肢深静脉血栓形成": {
       "western_disease_name": "下肢深静脉血栓形成",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "CRP",
+        "IL6",
+        "TNF",
+        "VEGFA",
+        "MMP2"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Lower extremity deep vein thrombosis",
+        "disease_pmids": [
+          "35168306",
+          "36564248",
+          "37129518",
+          "27791958",
+          "34659512",
+          "40593456",
+          "35979763",
+          "41167495",
+          "36181038",
+          "38651063"
+        ]
       },
-      "mined_at": "2026-05-27T14:43:51.640804+00:00"
+      "mined_at": "2026-06-03T09:11:26.467901+00:00"
     },
     "下肢静脉曲张": {
       "western_disease_name": "下肢静脉曲张",
@@ -849,18 +925,123 @@
     },
     "不稳定型心绞痛": {
       "western_disease_name": "不稳定型心绞痛",
-      "disease_pathway": "",
-      "key_targets": [],
-      "evidence_based_herbs": [],
-      "evidence_confidence": "Insufficient",
+      "disease_pathway": "炎症免疫通路",
+      "key_targets": [
+        "CRP",
+        "IL6",
+        "TNF",
+        "PTGS2",
+        "INS"
+      ],
+      "evidence_based_herbs": [
+        {
+          "herb": "丹参",
+          "mechanism": "tanshinone、Salvia miltiorrhiza 文献中与 CRP、IL6、TNF 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "CRP",
+            "IL6",
+            "TNF"
+          ],
+          "evidence_pmids": [
+            "37651454",
+            "40584629",
+            "29181731"
+          ],
+          "matched_terms": [
+            "tanshinone",
+            "Salvia miltiorrhiza"
+          ],
+          "evidence_titles": [
+            "The efficacy and safety of sodium tanshinone &#x2161;A sulfonate injection in the treatment of unstable angina pectoris: A systematic review and meta-analysis.",
+            "Efficacy and safety of Danhong injection on inflammatory factors and vascular endothelial function in patients with unstable angina pectoris: a systematic review and meta-analysis of randomized clinical trials.",
+            "Sodium Tanshinone II A Sulfonate Injection as Adjuvant Treatment for Unstable Angina Pectoris: A Meta-Analysis of 17 Randomized Controlled Trials."
+          ]
+        },
+        {
+          "herb": "虎杖",
+          "mechanism": "Polygonum cuspidatum 文献中与 CRP、IL6、TNF 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "CRP",
+            "IL6",
+            "TNF"
+          ],
+          "evidence_pmids": [
+            "34416295"
+          ],
+          "matched_terms": [
+            "Polygonum cuspidatum"
+          ],
+          "evidence_titles": [
+            "Treating unstable angina with detoxifying and blood-activating formulae: A randomized controlled trial."
+          ]
+        },
+        {
+          "herb": "山楂",
+          "mechanism": "Crataegus pinnatifida 文献中与 CRP、IL6、TNF 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "CRP",
+            "IL6",
+            "TNF"
+          ],
+          "evidence_pmids": [
+            "34416295"
+          ],
+          "matched_terms": [
+            "Crataegus pinnatifida"
+          ],
+          "evidence_titles": [
+            "Treating unstable angina with detoxifying and blood-activating formulae: A randomized controlled trial."
+          ]
+        }
+      ],
+      "evidence_confidence": "High",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "disease_target_query": "(\"Unstable Angina\") AND (ACE OR ACE2 OR AKT1 OR AR OR C-reactive protein OR COX-2 OR CRP OR EGFR OR ERK1 OR ERK2 OR ESR1 OR HIF-1alpha OR HIF1A OR IFN-gamma OR IFNG OR IL-10 OR IL-1beta OR IL-6 OR IL10 OR IL1B OR IL6 OR INS OR JAK2 OR Janus kinase 2 OR MAPK1 OR MAPK3 OR MMP2 OR MMP9 OR NF-kappaB OR NF-κB OR NFKB1 OR NOS2 OR PTGS2 OR STAT3 OR TGF-beta OR TGFB1 OR TNF OR TNF-alpha OR TP53 OR VEGF OR VEGFA OR androgen receptor OR angiotensin-converting enzyme OR angiotensin-converting enzyme 2 OR cyclooxygenase-2 OR epidermal growth factor receptor OR estrogen receptor alpha OR hypoxia-inducible factor 1-alpha OR iNOS OR inducible nitric oxide synthase OR insulin OR interferon gamma OR interleukin-1 beta OR interleukin-10 OR interleukin-6 OR matrix metalloproteinase-2 OR matrix metalloproteinase-9 OR p53 OR protein kinase B OR signal transducer and activator of transcription 3 OR transforming growth factor beta OR tumor necrosis factor OR vascular endothelial growth factor)",
+        "pubmed_disease_name": "Unstable Angina",
+        "disease_pmids": [
+          "28845751",
+          "30415610",
+          "29146124",
+          "41369941",
+          "21874796",
+          "39297531",
+          "37381774",
+          "20937099",
+          "32014245",
+          "11509060"
+        ],
+        "target_scores": [
+          {
+            "target": "CRP",
+            "score": 23
+          },
+          {
+            "target": "IL6",
+            "score": 17
+          },
+          {
+            "target": "TNF",
+            "score": 8
+          },
+          {
+            "target": "PTGS2",
+            "score": 3
+          },
+          {
+            "target": "INS",
+            "score": 1
+          },
+          {
+            "target": "IL10",
+            "score": 1
+          }
+        ]
       },
-      "mined_at": "2026-05-27T15:05:03.843164+00:00"
+      "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
+      "mined_at": "2026-06-03T06:52:51.221185+00:00",
+      "evidence_grade": "high",
+      "evidence_grade_reason": "标题提示临床研究/RCT/系统综述证据：The efficacy and safety of sodium tanshinone &#x2161;A sulfonate injection in the treatment of unstable angina pectoris: A systematic review and meta-analysis. | Efficacy and safety of Danhong injection on inflammatory factors and vascular endothelial function in patients with unstable angina pectoris: a systematic review and meta-analysis of randomized clinical trials. | Sodium Tanshinone II A Sulfonate Injection as Adjuvant Treatment for Unstable Angina Pectoris: A Meta-Analysis of 17 Randomized Controlled Trials."
     },
     "不育症": {
       "western_disease_name": "不育症",
@@ -912,17 +1093,32 @@
     "中心性浆液性脉络膜视网膜病变": {
       "western_disease_name": "中心性浆液性脉络膜视网膜病变",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "VEGFA",
+        "IL6",
+        "NOS2"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Central serous chorioretinopathy",
+        "disease_pmids": [
+          "38301969",
+          "33999854",
+          "38531681",
+          "26691378",
+          "32923941",
+          "31819359",
+          "34648069",
+          "34416788",
+          "38235642",
+          "30505108"
+        ]
       },
-      "mined_at": "2026-05-27T15:05:11.945980+00:00"
+      "mined_at": "2026-06-03T08:03:56.072939+00:00"
     },
     "不明原因发热": {
       "western_disease_name": "不明原因发热",
@@ -1005,32 +1201,66 @@
     "中耳胆脂瘤": {
       "western_disease_name": "中耳胆脂瘤",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "TP53",
+        "EGFR",
+        "IL6",
+        "NOS2"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Middle ear cholesteatoma",
+        "disease_pmids": [
+          "34028225",
+          "34233375",
+          "26989841",
+          "34172659",
+          "39174880",
+          "20887552",
+          "38890701",
+          "37106264",
+          "21860983",
+          "38542003"
+        ]
       },
-      "mined_at": "2026-05-27T15:05:27.894622+00:00"
+      "mined_at": "2026-06-03T08:04:03.865020+00:00"
     },
     "中间葡萄膜炎": {
       "western_disease_name": "中间葡萄膜炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "VEGFA",
+        "IL6",
+        "ACE",
+        "EGFR"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Intermediate uveitis",
+        "disease_pmids": [
+          "30509444",
+          "28516270",
+          "41077357",
+          "32603726",
+          "28942074",
+          "40157547",
+          "37976519",
+          "22837757",
+          "27886802",
+          "40522452"
+        ]
       },
-      "mined_at": "2026-05-27T15:05:27.895332+00:00"
+      "mined_at": "2026-06-03T08:04:05.983164+00:00"
     },
     "中性粒细胞减少症": {
       "western_disease_name": "中性粒细胞减少症",
@@ -1067,17 +1297,34 @@
     "丹毒】 【erysipelas": {
       "western_disease_name": "丹毒】 【erysipelas",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "CRP",
+        "IL6",
+        "VEGFA",
+        "NOS2"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Erysipelas",
+        "disease_pmids": [
+          "39029031",
+          "35312415",
+          "7724661",
+          "11924823",
+          "30962836",
+          "28976997",
+          "29461220",
+          "37623960",
+          "30384547",
+          "17911435"
+        ]
       },
-      "mined_at": "2026-05-27T15:05:30.664441+00:00"
+      "mined_at": "2026-06-03T06:52:51.413987+00:00"
     },
     "丹毒": {
       "western_disease_name": "丹毒",
@@ -1195,13 +1442,16 @@
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "Fewer than 3 PubMed-supported target candidates.",
+      "failure_type": "weak_target_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Breast tuberculosis",
+        "disease_pmids": [
+          "30797285",
+          "36751149"
+        ]
       },
-      "mined_at": "2026-05-27T15:05:51.395822+00:00"
+      "mined_at": "2026-06-03T09:11:10.940513+00:00"
     },
     "主动脉瓣狭窄": {
       "western_disease_name": "主动脉瓣狭窄",
@@ -1315,17 +1565,34 @@
     "乳腺癌": {
       "western_disease_name": "乳腺癌",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "IL6",
+        "STAT3",
+        "EGFR",
+        "TNF",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Breast cancer",
+        "disease_pmids": [
+          "35705809",
+          "32679107",
+          "31215501",
+          "28791816",
+          "32703721",
+          "37095176",
+          "36933872",
+          "40425576",
+          "33848267",
+          "40024431"
+        ]
       },
-      "mined_at": "2026-05-27T15:06:06.697681+00:00"
+      "mined_at": "2026-06-03T11:05:22.366729+00:00"
     },
     "乳腺纤维瘤": {
       "western_disease_name": "乳腺纤维瘤",
@@ -1345,17 +1612,34 @@
     "乳腺纤维腺瘤": {
       "western_disease_name": "乳腺纤维腺瘤",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "IL10",
+        "EGFR",
+        "VEGFA",
+        "IL6",
+        "TP53"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Breast fibroadenoma",
+        "disease_pmids": [
+          "27822759",
+          "38847725",
+          "32565805",
+          "33664817",
+          "35571636",
+          "30008850",
+          "24301790",
+          "38594742",
+          "18090908",
+          "28356938"
+        ]
       },
-      "mined_at": "2026-05-27T15:06:06.698911+00:00"
+      "mined_at": "2026-06-03T08:04:11.281118+00:00"
     },
     "乳酸酸中毒": {
       "western_disease_name": "乳酸酸中毒",
@@ -1501,17 +1785,33 @@
     "产后出血": {
       "western_disease_name": "产后出血",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "INS",
+        "IL6",
+        "PTGS2",
+        "TNF"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Postpartum hemorrhage",
+        "disease_pmids": [
+          "38233317",
+          "26045324",
+          "36997396",
+          "31830299",
+          "36513430",
+          "24863025",
+          "36742387",
+          "36909311",
+          "40728334",
+          "36094838"
+        ]
       },
-      "mined_at": "2026-05-27T15:06:37.749802+00:00"
+      "mined_at": "2026-06-03T09:11:42.648697+00:00"
     },
     "产后多汗": {
       "western_disease_name": "产后多汗",
@@ -1920,32 +2220,66 @@
     "传染性单核细胞增多症": {
       "western_disease_name": "传染性单核细胞增多症",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "CRP",
+        "IL6",
+        "NOS2",
+        "STAT3",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Infectious mononucleosis",
+        "disease_pmids": [
+          "38509369",
+          "38642164",
+          "40715093",
+          "32603431",
+          "39703509",
+          "22123662",
+          "28108590",
+          "14978113",
+          "40175486",
+          "6779371"
+        ]
       },
-      "mined_at": "2026-05-27T15:40:33.784723+00:00"
+      "mined_at": "2026-06-03T09:11:58.510398+00:00"
     },
     "伤寒": {
       "western_disease_name": "伤寒",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "IL6",
+        "STAT3",
+        "JAK2",
+        "IL1B"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Typhoid fever",
+        "disease_pmids": [
+          "30030897",
+          "33640781",
+          "39408592",
+          "38497655",
+          "35308424",
+          "40769465",
+          "38501873",
+          "18616693",
+          "40315236",
+          "35149176"
+        ]
       },
-      "mined_at": "2026-05-27T15:40:33.785419+00:00"
+      "mined_at": "2026-06-03T09:12:06.011718+00:00"
     },
     "传染性红斑": {
       "western_disease_name": "传染性红斑",
@@ -2269,17 +2603,34 @@
     "体位性低血压": {
       "western_disease_name": "体位性低血压",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "ACE",
+        "INS",
+        "CRP",
+        "AR",
+        "VEGFA"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Orthostatic hypotension",
+        "disease_pmids": [
+          "38147328",
+          "34815965",
+          "34752479",
+          "12716821",
+          "30665788",
+          "36649688",
+          "17180654",
+          "35754069",
+          "40537187",
+          "17610390"
+        ]
       },
-      "mined_at": "2026-05-27T15:41:52.706841+00:00"
+      "mined_at": "2026-06-03T08:04:15.124255+00:00"
     },
     "体癣": {
       "western_disease_name": "体癣",
@@ -2310,17 +2661,34 @@
     "便秘": {
       "western_disease_name": "便秘",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "EGFR",
+        "TNF",
+        "AR",
+        "INS",
+        "STAT3"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Constipation",
+        "disease_pmids": [
+          "36050763",
+          "37775347",
+          "18397984",
+          "31652531",
+          "36469000",
+          "41370399",
+          "35639825",
+          "31615937",
+          "34543864",
+          "33508990"
+        ]
       },
-      "mined_at": "2026-05-27T15:41:56.491906+00:00"
+      "mined_at": "2026-06-03T07:25:38.160767+00:00"
     },
     "便血": {
       "western_disease_name": "便血",
@@ -2512,37 +2880,73 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T15:42:19.480603+00:00"
+      "mined_at": "2026-05-27T15:42:19.480603+00:00",
+      "evidence_grade": "medium_high",
+      "evidence_grade_reason": "标题提示动物实验或明确疾病模型，不能写成临床有效：Xiongshao Zhitong granules alleviate nitroglycerin-induced migraine by regulating the TRPV1-mediated NLRP3 inflammatory pathway in rats. | Shaoyao Gancao decoction alleviates the central hyperalgesia of recurrent NTG-induced migraine in rats by regulating the NGF/TRPV1/COX-2 signal pathway."
     },
     "儿童急性扁桃体炎": {
       "western_disease_name": "儿童急性扁桃体炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "CRP",
+        "TNF",
+        "IL10",
+        "IL6",
+        "NOS2"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Acute tonsillitis in children",
+        "disease_pmids": [
+          "28260599",
+          "37751263",
+          "39441195",
+          "38691798",
+          "39441193",
+          "38506028",
+          "37057777",
+          "39107694",
+          "34116211",
+          "27096391"
+        ]
       },
-      "mined_at": "2026-05-27T15:42:19.481389+00:00"
+      "mined_at": "2026-06-03T10:08:18.375414+00:00"
     },
     "儿童急性腹泻": {
       "western_disease_name": "儿童急性腹泻",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "CRP",
+        "IL6",
+        "TNF",
+        "AKT1",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Acute Gastroenteritis",
+        "disease_pmids": [
+          "38497655",
+          "40429459",
+          "37189804",
+          "40631898",
+          "25160667",
+          "38447492",
+          "28633964",
+          "35746763",
+          "38983994",
+          "33411074"
+        ]
       },
-      "mined_at": "2026-05-27T15:42:19.490570+00:00"
+      "mined_at": "2026-06-03T06:53:03.777372+00:00"
     },
     "儿童抽动障碍": {
       "western_disease_name": "儿童抽动障碍",
@@ -2830,43 +3234,75 @@
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "Fewer than 3 PubMed-supported target candidates.",
+      "failure_type": "weak_target_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Congenital preauricular fistula",
+        "disease_pmids": [
+          "34236254"
+        ]
       },
-      "mined_at": "2026-05-27T15:43:18.806982+00:00"
+      "mined_at": "2026-06-03T08:04:13.640404+00:00"
     },
     "先天性聋": {
       "western_disease_name": "先天性聋",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "ACE",
+        "NOS2",
+        "TGFB1",
+        "ESR1"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Congenital hearing loss",
+        "disease_pmids": [
+          "38440980",
+          "36565323",
+          "31428722",
+          "41612696",
+          "37670778",
+          "32929324",
+          "17205875",
+          "36130215"
+        ]
       },
-      "mined_at": "2026-05-27T15:43:18.807829+00:00"
+      "mined_at": "2026-06-03T08:04:19.661048+00:00"
     },
     "先天性青光眼": {
       "western_disease_name": "先天性青光眼",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TGFB1",
+        "VEGFA",
+        "TNF",
+        "IL6"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Congenital glaucoma",
+        "disease_pmids": [
+          "28549150",
+          "32421983",
+          "40147616",
+          "38671671",
+          "35663518",
+          "32742340",
+          "24521159",
+          "29775216",
+          "32626511",
+          "27941161"
+        ]
       },
-      "mined_at": "2026-05-27T15:43:18.808521+00:00"
+      "mined_at": "2026-06-03T08:04:22.113688+00:00"
     },
     "先天性心脏病": {
       "western_disease_name": "先天性心脏病",
@@ -2996,18 +3432,98 @@
     },
     "冠状动脉粥样硬化性心脏病": {
       "western_disease_name": "冠状动脉粥样硬化性心脏病",
-      "disease_pathway": "",
-      "key_targets": [],
-      "evidence_based_herbs": [],
-      "evidence_confidence": "Insufficient",
+      "disease_pathway": "炎症免疫通路",
+      "key_targets": [
+        "CRP",
+        "IL6",
+        "TNF",
+        "INS",
+        "VEGFA"
+      ],
+      "evidence_based_herbs": [
+        {
+          "herb": "三七",
+          "mechanism": "Panax notoginseng 文献中与 IL6、TNF、VEGFA 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "IL6",
+            "TNF",
+            "VEGFA"
+          ],
+          "evidence_pmids": [
+            "39399124"
+          ],
+          "matched_terms": [
+            "Panax notoginseng"
+          ],
+          "evidence_titles": [
+            "Network Pharmacology and Experimental Verification: SanQi-DanShen Treats Coronary Heart Disease by Inhibiting the PI3K/AKT Signaling Pathway."
+          ]
+        }
+      ],
+      "evidence_confidence": "High",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "disease_target_query": "(\"Coronary Heart Disease\") AND (ACE OR ACE2 OR AKT1 OR AR OR C-reactive protein OR COX-2 OR CRP OR EGFR OR ERK1 OR ERK2 OR ESR1 OR HIF-1alpha OR HIF1A OR IFN-gamma OR IFNG OR IL-10 OR IL-1beta OR IL-6 OR IL10 OR IL1B OR IL6 OR INS OR JAK2 OR Janus kinase 2 OR MAPK1 OR MAPK3 OR MMP2 OR MMP9 OR NF-kappaB OR NF-κB OR NFKB1 OR NOS2 OR PTGS2 OR STAT3 OR TGF-beta OR TGFB1 OR TNF OR TNF-alpha OR TP53 OR VEGF OR VEGFA OR androgen receptor OR angiotensin-converting enzyme OR angiotensin-converting enzyme 2 OR cyclooxygenase-2 OR epidermal growth factor receptor OR estrogen receptor alpha OR hypoxia-inducible factor 1-alpha OR iNOS OR inducible nitric oxide synthase OR insulin OR interferon gamma OR interleukin-1 beta OR interleukin-10 OR interleukin-6 OR matrix metalloproteinase-2 OR matrix metalloproteinase-9 OR p53 OR protein kinase B OR signal transducer and activator of transcription 3 OR transforming growth factor beta OR tumor necrosis factor OR vascular endothelial growth factor)",
+        "pubmed_disease_name": "Coronary Heart Disease",
+        "disease_pmids": [
+          "18413553",
+          "33731931",
+          "20031199",
+          "16613757",
+          "10733371",
+          "35598196",
+          "32957369",
+          "11822971",
+          "39415256",
+          "39699295"
+        ],
+        "target_scores": [
+          {
+            "target": "CRP",
+            "score": 17
+          },
+          {
+            "target": "IL6",
+            "score": 16
+          },
+          {
+            "target": "TNF",
+            "score": 10
+          },
+          {
+            "target": "INS",
+            "score": 3
+          },
+          {
+            "target": "VEGFA",
+            "score": 3
+          },
+          {
+            "target": "JAK2",
+            "score": 2
+          },
+          {
+            "target": "NFKB1",
+            "score": 1
+          },
+          {
+            "target": "STAT3",
+            "score": 1
+          },
+          {
+            "target": "MAPK3",
+            "score": 1
+          },
+          {
+            "target": "NOS2",
+            "score": 1
+          }
+        ]
       },
-      "mined_at": "2026-05-27T15:43:48.057165+00:00"
+      "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
+      "mined_at": "2026-06-03T07:25:39.703708+00:00",
+      "evidence_grade": "low_medium",
+      "evidence_grade_reason": "网络药理/分子对接或少量实验验证，不可单独作为 high：Network Pharmacology and Experimental Verification: SanQi-DanShen Treats Coronary Heart Disease by Inhibiting the PI3K/AKT Signaling Pathway."
     },
     "冻伤": {
       "western_disease_name": "冻伤",
@@ -3132,7 +3648,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T15:44:16.396409+00:00"
+      "mined_at": "2026-05-27T15:44:16.396409+00:00",
+      "evidence_grade": "low_medium",
+      "evidence_grade_reason": "网络药理/分子对接或少量实验验证，不可单独作为 high：Network Pharmacology and Experimental Verification: SanQi-DanShen Treats Coronary Heart Disease by Inhibiting the PI3K/AKT Signaling Pathway."
     },
     "冻疮": {
       "western_disease_name": "冻疮",
@@ -3264,18 +3782,97 @@
     },
     "前列腺炎": {
       "western_disease_name": "前列腺炎",
-      "disease_pathway": "",
-      "key_targets": [],
-      "evidence_based_herbs": [],
-      "evidence_confidence": "Insufficient",
+      "disease_pathway": "炎症免疫通路",
+      "key_targets": [
+        "AR",
+        "TNF",
+        "STAT3",
+        "PTGS2",
+        "JAK2"
+      ],
+      "evidence_based_herbs": [
+        {
+          "herb": "枸杞子",
+          "mechanism": "Lycium barbarum 文献中与 STAT3、JAK2 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "STAT3",
+            "JAK2"
+          ],
+          "evidence_pmids": [
+            "40896864"
+          ],
+          "matched_terms": [
+            "Lycium barbarum"
+          ],
+          "evidence_titles": [
+            "Lycium barbarum polysaccharides alleviate experimental autoimmune prostatitis by putrescine/TRAF/JAK/STAT-mediated Th17 differentiation."
+          ]
+        }
+      ],
+      "evidence_confidence": "High",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "disease_target_query": "(\"Prostatitis\") AND (ACE OR ACE2 OR AKT1 OR AR OR C-reactive protein OR COX-2 OR CRP OR EGFR OR ERK1 OR ERK2 OR ESR1 OR HIF-1alpha OR HIF1A OR IFN-gamma OR IFNG OR IL-10 OR IL-1beta OR IL-6 OR IL10 OR IL1B OR IL6 OR INS OR JAK2 OR Janus kinase 2 OR MAPK1 OR MAPK3 OR MMP2 OR MMP9 OR NF-kappaB OR NF-κB OR NFKB1 OR NOS2 OR PTGS2 OR STAT3 OR TGF-beta OR TGFB1 OR TNF OR TNF-alpha OR TP53 OR VEGF OR VEGFA OR androgen receptor OR angiotensin-converting enzyme OR angiotensin-converting enzyme 2 OR cyclooxygenase-2 OR epidermal growth factor receptor OR estrogen receptor alpha OR hypoxia-inducible factor 1-alpha OR iNOS OR inducible nitric oxide synthase OR insulin OR interferon gamma OR interleukin-1 beta OR interleukin-10 OR interleukin-6 OR matrix metalloproteinase-2 OR matrix metalloproteinase-9 OR p53 OR protein kinase B OR signal transducer and activator of transcription 3 OR transforming growth factor beta OR tumor necrosis factor OR vascular endothelial growth factor)",
+        "pubmed_disease_name": "Prostatitis",
+        "disease_pmids": [
+          "23143785",
+          "39327570",
+          "39985573",
+          "39633456",
+          "38238760",
+          "39505776",
+          "39455902",
+          "38279967",
+          "39057128",
+          "41576699"
+        ],
+        "target_scores": [
+          {
+            "target": "AR",
+            "score": 7
+          },
+          {
+            "target": "TNF",
+            "score": 6
+          },
+          {
+            "target": "STAT3",
+            "score": 3
+          },
+          {
+            "target": "PTGS2",
+            "score": 2
+          },
+          {
+            "target": "JAK2",
+            "score": 2
+          },
+          {
+            "target": "NOS2",
+            "score": 2
+          },
+          {
+            "target": "IL6",
+            "score": 2
+          },
+          {
+            "target": "CRP",
+            "score": 1
+          },
+          {
+            "target": "EGFR",
+            "score": 1
+          },
+          {
+            "target": "ACE",
+            "score": 1
+          }
+        ]
       },
-      "mined_at": "2026-05-27T15:44:49.211999+00:00"
+      "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
+      "mined_at": "2026-06-03T07:25:52.728301+00:00",
+      "evidence_grade": "low",
+      "evidence_grade_reason": "标题相关但证据链不足：Lycium barbarum polysaccharides alleviate experimental autoimmune prostatitis by putrescine/TRAF/JAK/STAT-mediated Th17 differentiation."
     },
     "前交叉韧带损伤": {
       "western_disease_name": "前交叉韧带损伤",
@@ -3305,18 +3902,118 @@
     },
     "前列腺癌": {
       "western_disease_name": "前列腺癌",
-      "disease_pathway": "",
-      "key_targets": [],
-      "evidence_based_herbs": [],
-      "evidence_confidence": "Insufficient",
+      "disease_pathway": "炎症免疫通路",
+      "key_targets": [
+        "STAT3",
+        "IL6",
+        "TNF",
+        "AR",
+        "EGFR"
+      ],
+      "evidence_based_herbs": [
+        {
+          "herb": "淫羊藿",
+          "mechanism": "icariin、Epimedium 文献中与 STAT3、TNF、EGFR 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "STAT3",
+            "TNF",
+            "EGFR"
+          ],
+          "evidence_pmids": [
+            "38778379",
+            "41418734"
+          ],
+          "matched_terms": [
+            "icariin",
+            "Epimedium"
+          ],
+          "evidence_titles": [
+            "Icaritin-curcumol activates CD8 + T cells through regulation of gut microbiota and the DNMT1/IGFBP2 axis to suppress the development of prostate cancer.",
+            "Unveiling the therapeutic mechanism of Epimedium Herba on prostate cancer through network pharmacology and experimental validation."
+          ]
+        },
+        {
+          "herb": "姜黄",
+          "mechanism": "curcumin 文献中与 STAT3、IL6 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "STAT3",
+            "IL6"
+          ],
+          "evidence_pmids": [
+            "38374014"
+          ],
+          "matched_terms": [
+            "curcumin"
+          ],
+          "evidence_titles": [
+            "Curcumin Enhances the Anti-Cancer Efficacy of CDK4/6 Inhibitors in Prostate Cancer."
+          ]
+        }
+      ],
+      "evidence_confidence": "High",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "disease_target_query": "(\"Prostate cancer\") AND (ACE OR ACE2 OR AKT1 OR AR OR C-reactive protein OR COX-2 OR CRP OR EGFR OR ERK1 OR ERK2 OR ESR1 OR HIF-1alpha OR HIF1A OR IFN-gamma OR IFNG OR IL-10 OR IL-1beta OR IL-6 OR IL10 OR IL1B OR IL6 OR INS OR JAK2 OR Janus kinase 2 OR MAPK1 OR MAPK3 OR MMP2 OR MMP9 OR NF-kappaB OR NF-κB OR NFKB1 OR NOS2 OR PTGS2 OR STAT3 OR TGF-beta OR TGFB1 OR TNF OR TNF-alpha OR TP53 OR VEGF OR VEGFA OR androgen receptor OR angiotensin-converting enzyme OR angiotensin-converting enzyme 2 OR cyclooxygenase-2 OR epidermal growth factor receptor OR estrogen receptor alpha OR hypoxia-inducible factor 1-alpha OR iNOS OR inducible nitric oxide synthase OR insulin OR interferon gamma OR interleukin-1 beta OR interleukin-10 OR interleukin-6 OR matrix metalloproteinase-2 OR matrix metalloproteinase-9 OR p53 OR protein kinase B OR signal transducer and activator of transcription 3 OR transforming growth factor beta OR tumor necrosis factor OR vascular endothelial growth factor)",
+        "pubmed_disease_name": "Prostate cancer",
+        "disease_pmids": [
+          "38880227",
+          "35710492",
+          "29636108",
+          "33287566",
+          "40706636",
+          "39560993",
+          "41530744",
+          "14689586",
+          "33559852",
+          "34158658"
+        ],
+        "target_scores": [
+          {
+            "target": "STAT3",
+            "score": 24
+          },
+          {
+            "target": "IL6",
+            "score": 19
+          },
+          {
+            "target": "TNF",
+            "score": 8
+          },
+          {
+            "target": "AR",
+            "score": 7
+          },
+          {
+            "target": "EGFR",
+            "score": 5
+          },
+          {
+            "target": "VEGFA",
+            "score": 5
+          },
+          {
+            "target": "AKT1",
+            "score": 3
+          },
+          {
+            "target": "INS",
+            "score": 2
+          },
+          {
+            "target": "TP53",
+            "score": 1
+          },
+          {
+            "target": "IL10",
+            "score": 1
+          }
+        ]
       },
-      "mined_at": "2026-05-27T15:45:21.212903+00:00"
+      "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
+      "mined_at": "2026-06-03T09:12:28.015521+00:00",
+      "evidence_grade": "low_medium",
+      "evidence_grade_reason": "网络药理/分子对接或少量实验验证，不可单独作为 high：Icaritin-curcumol activates CD8 + T cells through regulation of gut microbiota and the DNMT1/IGFBP2 axis to suppress the development of prostate cancer. | Unveiling the therapeutic mechanism of Epimedium Herba on prostate cancer through network pharmacology and experimental validation. | Curcumin Enhances the Anti-Cancer Efficacy of CDK4/6 Inhibitors in Prostate Cancer."
     },
     "前庭大腺炎": {
       "western_disease_name": "前庭大腺炎",
@@ -3336,32 +4033,66 @@
     "前庭神经炎": {
       "western_disease_name": "前庭神经炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "CRP",
+        "AR",
+        "INS",
+        "TNF",
+        "PTGS2"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Vestibular neuritis",
+        "disease_pmids": [
+          "30949613",
+          "16496559",
+          "36381739",
+          "40940013",
+          "25307984",
+          "30079052",
+          "41371229",
+          "40621094",
+          "20980744",
+          "27435969"
+        ]
       },
-      "mined_at": "2026-05-27T15:45:21.214499+00:00"
+      "mined_at": "2026-06-03T08:04:25.737843+00:00"
     },
     "前置胎盘": {
       "western_disease_name": "前置胎盘",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "VEGFA",
+        "TNF",
+        "TP53",
+        "MMP2",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Placenta previa",
+        "disease_pmids": [
+          "29409879",
+          "36374543",
+          "23127895",
+          "31322233",
+          "34927512",
+          "37434137",
+          "36412218",
+          "26863111",
+          "37946069",
+          "34558384"
+        ]
       },
-      "mined_at": "2026-05-27T15:45:21.214967+00:00"
+      "mined_at": "2026-06-03T09:12:23.684839+00:00"
     },
     "前置胎盘出血": {
       "western_disease_name": "前置胎盘出血",
@@ -3380,18 +4111,98 @@
     },
     "功能失调性子宫出血": {
       "western_disease_name": "功能失调性子宫出血",
-      "disease_pathway": "",
-      "key_targets": [],
-      "evidence_based_herbs": [],
-      "evidence_confidence": "Insufficient",
+      "disease_pathway": "炎症免疫通路",
+      "key_targets": [
+        "VEGFA",
+        "TNF",
+        "INS",
+        "TP53",
+        "PTGS2"
+      ],
+      "evidence_based_herbs": [
+        {
+          "herb": "黄芩",
+          "mechanism": "Scutellaria baicalensis 文献中与 TNF、TP53、PTGS2 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "TNF",
+            "TP53",
+            "PTGS2"
+          ],
+          "evidence_pmids": [
+            "36117506"
+          ],
+          "matched_terms": [
+            "Scutellaria baicalensis"
+          ],
+          "evidence_titles": [
+            "Identification and verification of effective components of Huanghuai for dysfunctional uterine bleeding based on network pharmacology and molecular docking."
+          ]
+        }
+      ],
+      "evidence_confidence": "High",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "disease_target_query": "(\"Dysfunctional uterine bleeding\") AND (ACE OR ACE2 OR AKT1 OR AR OR C-reactive protein OR COX-2 OR CRP OR EGFR OR ERK1 OR ERK2 OR ESR1 OR HIF-1alpha OR HIF1A OR IFN-gamma OR IFNG OR IL-10 OR IL-1beta OR IL-6 OR IL10 OR IL1B OR IL6 OR INS OR JAK2 OR Janus kinase 2 OR MAPK1 OR MAPK3 OR MMP2 OR MMP9 OR NF-kappaB OR NF-κB OR NFKB1 OR NOS2 OR PTGS2 OR STAT3 OR TGF-beta OR TGFB1 OR TNF OR TNF-alpha OR TP53 OR VEGF OR VEGFA OR androgen receptor OR angiotensin-converting enzyme OR angiotensin-converting enzyme 2 OR cyclooxygenase-2 OR epidermal growth factor receptor OR estrogen receptor alpha OR hypoxia-inducible factor 1-alpha OR iNOS OR inducible nitric oxide synthase OR insulin OR interferon gamma OR interleukin-1 beta OR interleukin-10 OR interleukin-6 OR matrix metalloproteinase-2 OR matrix metalloproteinase-9 OR p53 OR protein kinase B OR signal transducer and activator of transcription 3 OR transforming growth factor beta OR tumor necrosis factor OR vascular endothelial growth factor)",
+        "pubmed_disease_name": "Dysfunctional uterine bleeding",
+        "disease_pmids": [
+          "11702316",
+          "38037193",
+          "27787478",
+          "12485460",
+          "41155220",
+          "10379879",
+          "10383713",
+          "9678075",
+          "23870474",
+          "39038361"
+        ],
+        "target_scores": [
+          {
+            "target": "VEGFA",
+            "score": 11
+          },
+          {
+            "target": "TNF",
+            "score": 7
+          },
+          {
+            "target": "INS",
+            "score": 6
+          },
+          {
+            "target": "TP53",
+            "score": 5
+          },
+          {
+            "target": "PTGS2",
+            "score": 3
+          },
+          {
+            "target": "MAPK3",
+            "score": 3
+          },
+          {
+            "target": "MMP2",
+            "score": 3
+          },
+          {
+            "target": "AR",
+            "score": 2
+          },
+          {
+            "target": "EGFR",
+            "score": 1
+          },
+          {
+            "target": "ESR1",
+            "score": 1
+          }
+        ]
       },
-      "mined_at": "2026-05-27T15:45:21.215925+00:00"
+      "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
+      "mined_at": "2026-06-03T08:04:34.453037+00:00",
+      "evidence_grade": "low_medium",
+      "evidence_grade_reason": "网络药理/分子对接或少量实验验证，不可单独作为 high：Identification and verification of effective components of Huanghuai for dysfunctional uterine bleeding based on network pharmacology and molecular docking."
     },
     "前庭大腺囊肿": {
       "western_disease_name": "前庭大腺囊肿",
@@ -3573,28 +4384,44 @@
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "Fewer than 3 PubMed-supported target candidates.",
+      "failure_type": "weak_target_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Suppurative parotitis",
+        "disease_pmids": [
+          "15770580",
+          "42117127",
+          "12875591",
+          "3599388",
+          "7495443",
+          "33087427"
+        ]
       },
-      "mined_at": "2026-05-27T15:45:57.663621+00:00"
+      "mined_at": "2026-06-03T09:12:27.933142+00:00"
     },
     "化脓性骨髓炎": {
       "western_disease_name": "化脓性骨髓炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "IL6",
+        "VEGFA",
+        "CRP"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Suppurative osteomyelitis",
+        "disease_pmids": [
+          "38830934",
+          "29191501",
+          "8632383"
+        ]
       },
-      "mined_at": "2026-05-27T15:45:57.664195+00:00"
+      "mined_at": "2026-06-03T10:08:14.628668+00:00"
     },
     "化脓性髋关节炎": {
       "western_disease_name": "化脓性髋关节炎",
@@ -3603,13 +4430,24 @@
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "Fewer than 3 PubMed-supported target candidates.",
+      "failure_type": "weak_target_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Septic arthritis of the hip",
+        "disease_pmids": [
+          "37192073",
+          "30520802",
+          "39334397",
+          "35669032",
+          "32301824",
+          "38543601",
+          "31687776",
+          "37730930",
+          "39695443",
+          "25729527"
+        ]
       },
-      "mined_at": "2026-05-27T15:45:57.664637+00:00"
+      "mined_at": "2026-06-03T09:12:33.729168+00:00"
     },
     "医院获得性肺炎": {
       "western_disease_name": "医院获得性肺炎",
@@ -3678,17 +4516,25 @@
     "单纯性甲状腺肿": {
       "western_disease_name": "单纯性甲状腺肿",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "INS",
+        "CRP",
+        "AR"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Simple goiter",
+        "disease_pmids": [
+          "20583539",
+          "19191747",
+          "20093166"
+        ]
       },
-      "mined_at": "2026-05-27T15:46:18.995728+00:00"
+      "mined_at": "2026-06-03T08:04:31.247496+00:00"
     },
     "半月板损伤": {
       "western_disease_name": "半月板损伤",
@@ -3725,17 +4571,34 @@
     "单纯疱疹病毒性角膜炎": {
       "western_disease_name": "单纯疱疹病毒性角膜炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "IL6",
+        "PTGS2",
+        "JAK2",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Herpes simplex keratitis",
+        "disease_pmids": [
+          "38908077",
+          "40394801",
+          "36573068",
+          "37765049",
+          "35033543",
+          "40768806",
+          "28491875",
+          "30317007",
+          "41754438",
+          "36384541"
+        ]
       },
-      "mined_at": "2026-05-27T15:46:36.822207+00:00"
+      "mined_at": "2026-06-03T09:12:50.448357+00:00"
     },
     "单纯糠疹": {
       "western_disease_name": "单纯糠疹",
@@ -3971,7 +4834,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T15:47:33.621906+00:00"
+      "mined_at": "2026-05-27T15:47:33.621906+00:00",
+      "evidence_grade": "low",
+      "evidence_grade_reason": "标题相关但证据链不足：Molecular Targets of Curcumin and Its Therapeutic Potential for Ovarian Cancer. | Curcumin suppresses malignant behaviors of ovarian cancer through regulation of tumor-associated macrophages."
     },
     "原发性视网膜色素变性": {
       "western_disease_name": "原发性视网膜色素变性",
@@ -3980,13 +4845,13 @@
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "Fewer than 3 PubMed-supported target candidates.",
+      "failure_type": "weak_target_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
+        "pubmed_disease_name": "Primary retinitis pigmentosa",
         "disease_pmids": []
       },
-      "mined_at": "2026-05-27T15:47:33.622774+00:00"
+      "mined_at": "2026-06-03T08:04:32.367603+00:00"
     },
     "原发性血小板增多症": {
       "western_disease_name": "原发性血小板增多症",
@@ -4021,17 +4886,34 @@
     "原发性闭角型青光眼": {
       "western_disease_name": "原发性闭角型青光眼",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "MMP9",
+        "IL6",
+        "STAT3",
+        "IL1B",
+        "TGFB1"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Primary angle-closure glaucoma",
+        "disease_pmids": [
+          "38573908",
+          "38546604",
+          "33396423",
+          "39143611",
+          "26854036",
+          "34979790",
+          "26401171",
+          "39936063",
+          "36631983",
+          "41581036"
+        ]
       },
-      "mined_at": "2026-05-27T15:47:48.427314+00:00"
+      "mined_at": "2026-06-03T08:04:40.367593+00:00"
     },
     "原发性醛固酮增多症": {
       "western_disease_name": "原发性醛固酮增多症",
@@ -4264,22 +5146,41 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T15:48:51.107222+00:00"
+      "mined_at": "2026-05-27T15:48:51.107222+00:00",
+      "evidence_grade": "low_medium",
+      "evidence_grade_reason": "网络药理/分子对接或少量实验验证，不可单独作为 high：Efficacy and mechanisms of Xiangsha Liujunzi Decoction for gastroesophageal reflux disease: A study integrating meta-analysis, network pharmacology and molecular docking."
     },
     "变应性接触性皮炎": {
       "western_disease_name": "变应性接触性皮炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "IL6",
+        "IL10",
+        "NFKB1",
+        "IFNG"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Allergic Contact Dermatitis",
+        "disease_pmids": [
+          "37149370",
+          "37629154",
+          "31836457",
+          "18460878",
+          "31145193",
+          "30570582",
+          "8291258",
+          "32347968",
+          "34324721",
+          "41087613"
+        ]
       },
-      "mined_at": "2026-05-27T15:48:51.108674+00:00"
+      "mined_at": "2026-06-03T06:53:05.961815+00:00"
     },
     "发育迟缓": {
       "western_disease_name": "发育迟缓",
@@ -4345,18 +5246,97 @@
     },
     "口腔扁平苔藓": {
       "western_disease_name": "口腔扁平苔藓",
-      "disease_pathway": "",
-      "key_targets": [],
-      "evidence_based_herbs": [],
-      "evidence_confidence": "Insufficient",
+      "disease_pathway": "炎症免疫通路",
+      "key_targets": [
+        "TP53",
+        "TNF",
+        "IL6",
+        "VEGFA",
+        "PTGS2"
+      ],
+      "evidence_based_herbs": [
+        {
+          "herb": "黄芩",
+          "mechanism": "baicalein 文献中与 TNF、IL6 靶点共同出现，需人工复核具体调控方向。",
+          "targets": [
+            "TNF",
+            "IL6"
+          ],
+          "evidence_pmids": [
+            "35473353"
+          ],
+          "matched_terms": [
+            "baicalein"
+          ],
+          "evidence_titles": [
+            "Mechanism of Huashi Xingyu Qingre recipe in treating oral lichen planus based on network pharmacology and clinical trial verification."
+          ]
+        }
+      ],
+      "evidence_confidence": "High",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "disease_target_query": "(\"Oral lichen planus\") AND (ACE OR ACE2 OR AKT1 OR AR OR C-reactive protein OR COX-2 OR CRP OR EGFR OR ERK1 OR ERK2 OR ESR1 OR HIF-1alpha OR HIF1A OR IFN-gamma OR IFNG OR IL-10 OR IL-1beta OR IL-6 OR IL10 OR IL1B OR IL6 OR INS OR JAK2 OR Janus kinase 2 OR MAPK1 OR MAPK3 OR MMP2 OR MMP9 OR NF-kappaB OR NF-κB OR NFKB1 OR NOS2 OR PTGS2 OR STAT3 OR TGF-beta OR TGFB1 OR TNF OR TNF-alpha OR TP53 OR VEGF OR VEGFA OR androgen receptor OR angiotensin-converting enzyme OR angiotensin-converting enzyme 2 OR cyclooxygenase-2 OR epidermal growth factor receptor OR estrogen receptor alpha OR hypoxia-inducible factor 1-alpha OR iNOS OR inducible nitric oxide synthase OR insulin OR interferon gamma OR interleukin-1 beta OR interleukin-10 OR interleukin-6 OR matrix metalloproteinase-2 OR matrix metalloproteinase-9 OR p53 OR protein kinase B OR signal transducer and activator of transcription 3 OR transforming growth factor beta OR tumor necrosis factor OR vascular endothelial growth factor)",
+        "pubmed_disease_name": "Oral lichen planus",
+        "disease_pmids": [
+          "23143785",
+          "10865927",
+          "37555396",
+          "38628035",
+          "41517938",
+          "36471086",
+          "40664993",
+          "40572744",
+          "30836913",
+          "17418619"
+        ],
+        "target_scores": [
+          {
+            "target": "TP53",
+            "score": 7
+          },
+          {
+            "target": "TNF",
+            "score": 3
+          },
+          {
+            "target": "IL6",
+            "score": 3
+          },
+          {
+            "target": "VEGFA",
+            "score": 3
+          },
+          {
+            "target": "PTGS2",
+            "score": 2
+          },
+          {
+            "target": "JAK2",
+            "score": 2
+          },
+          {
+            "target": "STAT3",
+            "score": 1
+          },
+          {
+            "target": "CRP",
+            "score": 1
+          },
+          {
+            "target": "ACE",
+            "score": 1
+          },
+          {
+            "target": "TGFB1",
+            "score": 1
+          }
+        ]
       },
-      "mined_at": "2026-05-27T15:48:55.047039+00:00"
+      "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
+      "mined_at": "2026-06-03T08:04:48.716613+00:00",
+      "evidence_grade": "high",
+      "evidence_grade_reason": "标题提示临床研究/RCT/系统综述证据：Mechanism of Huashi Xingyu Qingre recipe in treating oral lichen planus based on network pharmacology and clinical trial verification."
     },
     "口腔溃疡": {
       "western_disease_name": "口腔溃疡",
@@ -4488,7 +5468,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T15:49:13.869787+00:00"
+      "mined_at": "2026-05-27T15:49:13.869787+00:00",
+      "evidence_grade": "medium_high",
+      "evidence_grade_reason": "标题提示动物实验或明确疾病模型，不能写成临床有效：Recent Progress in Traditional Chinese Medicines and Their Mechanism in the Treatment of Allergic Rhinitis. | Sanfeng Tongqiao Dripping Pills alleviate House Dust Mite-induced allergic rhinitis in mice by inhibiting Th2 differentiation and repairing the nasal epithelial barrier. | Traditional Chinese Medicine for Allergic Rhinitis: Mechanisms, Evidence, and Gut-Immune Axis Targets."
     },
     "口臭": {
       "western_disease_name": "口臭",
@@ -4614,7 +5596,9 @@
         ]
       },
       "mining_policy": "Targets and herbs require PubMed co-occurrence evidence; no inference-only additions.",
-      "mined_at": "2026-05-27T15:49:17.098454+00:00"
+      "mined_at": "2026-05-27T15:49:17.098454+00:00",
+      "evidence_grade": "medium_high",
+      "evidence_grade_reason": "标题提示动物实验或明确疾病模型，不能写成临床有效：Nanoliposomal Coencapsulation of Dorema aucheri Extract and Curcumin; Enhanced Cytotoxicity, Apoptosis Induction, and Inhibition of EGFR Gene Expression in Oral Cancer Cells OCC-02. | Chemopreventive activity of systemically administered curcumin on oral cancer in the 4-nitroquinoline 1-oxide model. | Triptolide represses oral cancer cell proliferation, invasion, migration, and angiogenesis in co-inoculation with U937 cells."
     },
     "史蒂文斯-约翰逊综合征": {
       "western_disease_name": "史蒂文斯-约翰逊综合征",
@@ -4677,17 +5661,34 @@
     "后葡萄膜炎": {
       "western_disease_name": "后葡萄膜炎",
       "disease_pathway": "",
-      "key_targets": [],
+      "key_targets": [
+        "TNF",
+        "IL6",
+        "VEGFA",
+        "ACE",
+        "IL10"
+      ],
       "evidence_based_herbs": [],
       "evidence_confidence": "Insufficient",
       "source": "Agent_Web_Mining",
-      "failure_reason": "No reliable English PubMed disease query name.",
-      "failure_type": "missing_pubmed_name",
+      "failure_reason": "No PubMed target-herb evidence found.",
+      "failure_type": "weak_herb_evidence",
       "source_records": {
-        "pubmed_disease_name": "",
-        "disease_pmids": []
+        "pubmed_disease_name": "Posterior uveitis",
+        "disease_pmids": [
+          "40378634",
+          "32777852",
+          "39761510",
+          "30449643",
+          "28516270",
+          "26367092",
+          "30850198",
+          "41077357",
+          "31692803",
+          "40157547"
+        ]
       },
-      "mined_at": "2026-05-27T15:49:35.324601+00:00"
+      "mined_at": "2026-06-03T08:04:50.188322+00:00"
     },
     "吉兰-巴雷综合征": {
       "western_disease_name": "吉兰-巴雷综合征",
@@ -4723,9 +5724,9 @@
     }
   },
   "metadata": {
-    "updated_at": "2026-05-27T15:49:36.880710+00:00",
+    "updated_at": "2026-06-03T11:05:22.367115+00:00",
     "source": "Agent_Web_Mining",
     "strict_policy": "No verified target-herb PubMed evidence means Insufficient.",
-    "processed_in_this_run": 50
+    "processed_in_this_run": 1
   }
 }

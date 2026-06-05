@@ -34,7 +34,13 @@ ROOT = Path(__file__).resolve().parents[1]
 INPUT_CACHE = ROOT / "data" / "disease_pharmacology_cache_rebuilt.json"
 TEMP_OUTPUT = ROOT / "data" / "mined_pharmacology_temp.json"
 TRACE_OUTPUT = ROOT / "data" / "mined_pharmacology_trace.jsonl"
+FAILED_QUERY_OUTPUT = ROOT / "data" / "mined_pharmacology_failed_queries.jsonl"
+COMPONENT_SYNONYM_PATCH_PATH = ROOT / "data" / "pharmacology_component_synonym_patch_breast_cancer.json"
 NAME_MAPPING_PATH = ROOT / "m1_name_mapping.json"
+DATA_NAME_MAPPING_PATH = ROOT / "data" / "m1_name_mapping.json"
+ALIAS_PATCH_PATH = ROOT / "data" / "m1_alias_map_patch.json"
+ROOT_ALIAS_MAP_PATH = ROOT / "m1_alias_map.json"
+AUX_ALIAS_MAP_PATH = ROOT / "data" / "m1_disease_alias_map.json"
 
 NCBI_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 DEFAULT_SAVE_EVERY = 10
@@ -165,6 +171,9 @@ def main() -> None:
         (name, entry) for name, entry in cache.items()
         if isinstance(entry, dict) and entry.get("evidence_confidence") == "Insufficient"
     ]
+    if args.names_file:
+        selected_names = load_selected_names(Path(args.names_file))
+        insufficient = [(name, entry) for name, entry in insufficient if name in selected_names]
     if args.offset:
         insufficient = insufficient[args.offset:]
     if args.limit:
@@ -194,6 +203,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Mine conservative PubMed pharmacology evidence.")
     parser.add_argument("--limit", type=int, default=5, help="Process at most N insufficient diseases.")
     parser.add_argument("--offset", type=int, default=0, help="Skip first N insufficient diseases.")
+    parser.add_argument("--names-file", default="", help="Optional JSON list of exact disease names to process.")
     parser.add_argument("--concurrency", type=int, default=DEFAULT_CONCURRENCY)
     parser.add_argument("--save-every", type=int, default=DEFAULT_SAVE_EVERY)
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT)
@@ -206,6 +216,19 @@ def parse_args() -> argparse.Namespace:
     if args.write:
         args.dry_run = False
     return args
+
+
+def load_selected_names(path: Path) -> set[str]:
+    if not path.is_absolute():
+        path = ROOT / path
+    data = load_json(path, [])
+    if isinstance(data, list):
+        return {str(item).strip() for item in data if str(item).strip()}
+    if isinstance(data, dict):
+        values = data.get("names", [])
+        if isinstance(values, list):
+            return {str(item).strip() for item in values if str(item).strip()}
+    return set()
 
 
 async def process_all(
@@ -264,6 +287,16 @@ def mine_one_disease(
         target_scores = score_targets(disease_articles)
         key_targets = [target for target, _score in target_scores[:5]]
         if len(key_targets) < 3:
+            append_failed_query(build_failed_query_record(
+                zh_name=disease_name,
+                en_name=pubmed_disease_name,
+                query_stage="disease_pubmed",
+                query=disease_query,
+                target_terms=all_target_terms(),
+                articles=disease_articles,
+                blocked_reason="no_target_or_outcome",
+                recommendation_hint="keep_empty",
+            ))
             return insufficient_result(
                 disease_name,
                 "Fewer than 3 PubMed-supported target candidates.",
@@ -272,8 +305,18 @@ def mine_one_disease(
                 failure_type="weak_target_evidence",
             )
 
-        herb_evidence = mine_herbs_for_targets(pubmed_disease_name, key_targets, args)
+        herb_evidence = mine_herbs_for_targets(disease_name, pubmed_disease_name, key_targets, args)
         if not herb_evidence:
+            append_failed_query(build_failed_query_record(
+                zh_name=disease_name,
+                en_name=pubmed_disease_name,
+                query_stage="disease_pubmed",
+                query=disease_query,
+                target_terms=all_target_terms(),
+                articles=disease_articles,
+                blocked_reason="weak_herb_evidence",
+                recommendation_hint="review_query_strategy",
+            ))
             return insufficient_result(
                 disease_name,
                 "No PubMed target-herb evidence found.",
@@ -317,18 +360,152 @@ def mine_one_disease(
 
 
 def build_disease_target_query(disease_name: str) -> str:
-    target_terms = " OR ".join(sorted({alias for aliases in TARGET_ALIASES.values() for alias in aliases}))
+    target_terms = " OR ".join(all_target_terms())
     return f'("{disease_name}") AND ({target_terms})'
 
 
+def all_target_terms() -> list[str]:
+    return sorted({alias for aliases in TARGET_ALIASES.values() for alias in aliases})
+
+
 def resolve_pubmed_disease_name(disease_name: str) -> str:
-    if has_cjk(disease_name):
-        mapping = load_json(NAME_MAPPING_PATH, {})
-        mapped = str(mapping.get(disease_name, "")).strip() if isinstance(mapping, dict) else ""
-        if mapped and not has_cjk(mapped):
-            return mapped
+    resolved = resolve_pubmed_disease_mapping(disease_name)
+    return resolved.get("suggested_en_name", "")
+
+
+def resolve_pubmed_disease_mapping(disease_name: str) -> dict[str, str]:
+    """Resolve a local disease label to a conservative English PubMed query.
+
+    Order:
+    1. exact / cleaned name in m1_name_mapping.json
+    2. exact / cleaned diseaseName_cn or aliases in m1_alias_map_patch.json
+    3. auxiliary disease alias maps
+    4. non-CJK disease name itself
+
+    No automatic translation is performed.
+    """
+    raw = str(disease_name or "").strip()
+    cleaned = clean_disease_label(raw)
+    names_to_try = [raw, cleaned]
+
+    for path in (NAME_MAPPING_PATH, DATA_NAME_MAPPING_PATH):
+        mapping = load_json(path, {})
+        if not isinstance(mapping, dict):
+            continue
+        for name in names_to_try:
+            mapped = valid_english(mapping.get(name, ""))
+            if mapped:
+                return resolved_mapping(raw, cleaned, mapped, "existing_mapping", f"exact match in {path.name}")
+
+    alias_patch_hit = resolve_from_alias_patch(names_to_try)
+    if alias_patch_hit:
+        return alias_patch_hit
+
+    aux_hit = resolve_from_aux_alias_maps(names_to_try)
+    if aux_hit:
+        return aux_hit
+
+    if raw and not has_cjk(raw):
+        return resolved_mapping(raw, cleaned, raw, "non_cjk_input", "input contains no CJK characters")
+    return resolved_mapping(raw, cleaned, "", "manual_needed", "no reliable local English mapping")
+
+
+def resolve_from_alias_patch(names_to_try: list[str]) -> dict[str, str]:
+    patch = load_json(ALIAS_PATCH_PATH, [])
+    if not isinstance(patch, list):
+        return {}
+    normalized_try = {normalize_name(name) for name in names_to_try if name}
+    for entry in patch:
+        if not isinstance(entry, dict):
+            continue
+        aliases = entry.get("aliases", {}) if isinstance(entry.get("aliases"), dict) else {}
+        zh_values = [
+            entry.get("diseaseName_cn", ""),
+            entry.get("canonical_disease_name", ""),
+            *aliases.get("zh_standard", []),
+            *aliases.get("zh_common", []),
+            *aliases.get("zh_clinical_short", []),
+            *aliases.get("possible_misspellings", []),
+        ]
+        if not normalized_try.intersection(normalize_name(value) for value in zh_values if value):
+            continue
+        en_values = aliases.get("en_standard", [])
+        for en_name in en_values:
+            valid = valid_english(en_name)
+            if valid:
+                return resolved_mapping(
+                    names_to_try[0],
+                    names_to_try[-1],
+                    valid,
+                    "existing_alias_patch",
+                    "matched m1_alias_map_patch.json en_standard",
+                )
+    return {}
+
+
+def resolve_from_aux_alias_maps(names_to_try: list[str]) -> dict[str, str]:
+    aux = load_json(AUX_ALIAS_MAP_PATH, {})
+    if isinstance(aux, dict):
+        for name in names_to_try:
+            row = aux.get(name)
+            if isinstance(row, dict):
+                valid = valid_english(row.get("canonical_disease_name", ""))
+                if valid:
+                    return resolved_mapping(name, clean_disease_label(name), valid, "existing_aux_alias", "matched data/m1_disease_alias_map.json")
+            for key, value in aux.items():
+                if not isinstance(value, dict):
+                    continue
+                aliases = value.get("aliases", [])
+                if name in aliases:
+                    valid = valid_english(value.get("canonical_disease_name", ""))
+                    if valid:
+                        return resolved_mapping(name, clean_disease_label(name), valid, "existing_aux_alias", "matched auxiliary alias list")
+
+    root_alias = load_json(ROOT_ALIAS_MAP_PATH, {})
+    if isinstance(root_alias, dict):
+        for name in names_to_try:
+            mapped = root_alias.get(name) or root_alias.get(name.lower())
+            valid = valid_english(mapped)
+            if valid:
+                return resolved_mapping(name, clean_disease_label(name), valid, "existing_alias_map", "matched root m1_alias_map.json")
+    return {}
+
+
+def resolved_mapping(raw: str, cleaned: str, en_name: str, source: str, reason: str) -> dict[str, str]:
+    return {
+        "zh_name": raw,
+        "clean_zh_name": cleaned,
+        "suggested_en_name": en_name,
+        "source": source,
+        "reason": reason,
+    }
+
+
+def clean_disease_label(name: str) -> str:
+    text = str(name or "").strip()
+    text = re.sub(r"【[^】]*[A-Za-z][^】]*】", "", text)
+    text = re.sub(r"\[[^\]]*[A-Za-z][^\]]*\]", "", text)
+    text = re.sub(r"\([^)]*[A-Za-z][^)]*\)", "", text)
+    text = re.sub(r"（[^）]*[A-Za-z][^）]*）", "", text)
+    text = text.replace("】", " ").replace("【", " ")
+    text = re.sub(r"(?<=[\u4e00-\u9fff])\s+[A-Za-z][A-Za-z -]*$", "", text)
+    text = re.sub(r"\s+", "", text)
+    return text.strip(" ，,;；:：")
+
+
+def normalize_name(name: str) -> str:
+    return clean_disease_label(name).lower().replace(" ", "").replace("-", "")
+
+
+def valid_english(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text or has_cjk(text):
         return ""
-    return disease_name.strip()
+    if not re.search(r"[A-Za-z]", text):
+        return ""
+    if len(text) < 4:
+        return ""
+    return text
 
 
 def has_cjk(text: str) -> bool:
@@ -347,8 +524,14 @@ def score_targets(articles: list[PubMedArticle]) -> list[tuple[str, int]]:
     return scores.most_common()
 
 
-def mine_herbs_for_targets(disease_name: str, key_targets: list[str], args: argparse.Namespace) -> list[dict[str, Any]]:
+def mine_herbs_for_targets(
+    zh_name: str,
+    disease_name: str,
+    key_targets: list[str],
+    args: argparse.Namespace,
+) -> list[dict[str, Any]]:
     evidence_by_herb: dict[str, dict[str, Any]] = {}
+    herb_aliases_map = load_effective_herb_aliases()
     for target in key_targets[:5]:
         aliases = TARGET_ALIASES.get(target, [target])
         target_query = " OR ".join(f'"{alias}"' for alias in aliases)
@@ -356,12 +539,31 @@ def mine_herbs_for_targets(disease_name: str, key_targets: list[str], args: argp
         action_query = " OR ".join(ACTION_TERMS[:12])
         query = f'("{disease_name}") AND ({target_query}) AND ({herb_query}) AND ({action_query})'
         articles = pubmed_search_fetch(query, args.retmax_target_herb, args.timeout)
+        matched = collect_query_matches(articles, aliases, herb_aliases_map)
+        blocked_reason = infer_target_herb_blocked_reason(articles, matched)
+        append_failed_query(build_failed_query_record(
+            zh_name=zh_name,
+            en_name=disease_name,
+            query_stage="target_herb",
+            query=query,
+            target_terms=aliases,
+            herb_terms=TCM_QUERY_TERMS,
+            component_terms=all_component_terms(herb_aliases_map),
+            outcome_terms=ACTION_TERMS[:12],
+            articles=articles,
+            matched_herb_terms=matched["herb_terms"],
+            matched_component_terms=matched["component_terms"],
+            matched_target_terms=matched["target_terms"],
+            matched_outcome_terms=matched["outcome_terms"],
+            blocked_reason=blocked_reason,
+            recommendation_hint=recommendation_for_blocked_reason(blocked_reason),
+        ))
         for article in articles:
             if not title_matches_disease(article.title, disease_name):
                 continue
             if not contains_action_term(article.text):
                 continue
-            for herb, herb_aliases in HERB_ALIASES.items():
+            for herb, herb_aliases in herb_aliases_map.items():
                 matched_alias = next((alias for alias in herb_aliases if contains_alias(article.text, alias)), "")
                 if not matched_alias:
                     continue
@@ -394,6 +596,143 @@ def mine_herbs_for_targets(disease_name: str, key_targets: list[str], args: argp
         results.append(item)
     results.sort(key=lambda item: (len(item["targets"]), len(item["evidence_pmids"])), reverse=True)
     return results
+
+
+def load_effective_herb_aliases() -> dict[str, list[str]]:
+    aliases = {herb: list(values) for herb, values in HERB_ALIASES.items()}
+    patch = load_json(COMPONENT_SYNONYM_PATCH_PATH, [])
+    if not isinstance(patch, list):
+        return aliases
+    for row in patch:
+        if not isinstance(row, dict):
+            continue
+        if row.get("status") != "reviewed_candidate":
+            continue
+        if row.get("scope") != "miner_recognition_only":
+            continue
+        herb = str(row.get("mapped_herb", "")).strip()
+        component = str(row.get("component", "")).strip()
+        if not herb or not component:
+            continue
+        values = aliases.setdefault(herb, [])
+        if component not in values:
+            values.append(component)
+    return aliases
+
+
+def all_component_terms(herb_aliases_map: dict[str, list[str]] | None = None) -> list[str]:
+    source = herb_aliases_map or HERB_ALIASES
+    terms: list[str] = []
+    for aliases in source.values():
+        terms.extend(aliases)
+    return sorted(set(terms), key=str.lower)
+
+
+def collect_query_matches(
+    articles: list[PubMedArticle],
+    target_aliases: list[str],
+    herb_aliases_map: dict[str, list[str]] | None = None,
+) -> dict[str, list[str]]:
+    aliases_source = herb_aliases_map or HERB_ALIASES
+    herb_matches: set[str] = set()
+    component_matches: set[str] = set()
+    target_matches: set[str] = set()
+    outcome_matches: set[str] = set()
+    for article in articles:
+        text = article.text
+        for aliases in aliases_source.values():
+            for alias in aliases:
+                if contains_alias(text, alias):
+                    component_matches.add(alias)
+        for herb, aliases in aliases_source.items():
+            if any(contains_alias(text, alias) for alias in aliases):
+                herb_matches.add(herb)
+        for alias in target_aliases:
+            if contains_alias(text, alias):
+                target_matches.add(alias)
+        lower = text.lower()
+        for term in ACTION_TERMS[:12]:
+            if term in lower:
+                outcome_matches.add(term)
+    return {
+        "herb_terms": sorted(herb_matches),
+        "component_terms": sorted(component_matches, key=str.lower),
+        "target_terms": sorted(target_matches, key=str.lower),
+        "outcome_terms": sorted(outcome_matches, key=str.lower),
+    }
+
+
+def infer_target_herb_blocked_reason(articles: list[PubMedArticle], matches: dict[str, list[str]]) -> str:
+    if not articles:
+        return "no_hit"
+    if not matches["target_terms"] or not matches["outcome_terms"]:
+        return "no_target_or_outcome"
+    if not matches["herb_terms"]:
+        return "no_herb_term"
+    if not matches["component_terms"]:
+        return "no_component_term"
+    return "parser_miss_suspected"
+
+
+def recommendation_for_blocked_reason(reason: str) -> str:
+    if reason == "no_herb_term":
+        return "review_herb_synonym"
+    if reason == "no_component_term":
+        return "review_component_synonym"
+    if reason == "parser_miss_suspected":
+        return "review_parser"
+    if reason == "no_hit":
+        return "keep_empty"
+    return "review_query_strategy"
+
+
+def build_failed_query_record(
+    *,
+    zh_name: str,
+    en_name: str,
+    query_stage: str,
+    query: str,
+    target_terms: list[str] | None = None,
+    herb_terms: list[str] | None = None,
+    component_terms: list[str] | None = None,
+    outcome_terms: list[str] | None = None,
+    articles: list[PubMedArticle] | None = None,
+    matched_herb_terms: list[str] | None = None,
+    matched_component_terms: list[str] | None = None,
+    matched_target_terms: list[str] | None = None,
+    matched_outcome_terms: list[str] | None = None,
+    blocked_reason: str = "weak_herb_evidence",
+    recommendation_hint: str = "keep_empty",
+) -> dict[str, Any]:
+    samples = list(articles or [])[:5]
+    return {
+        "zh_name": zh_name,
+        "en_name": en_name,
+        "query_stage": query_stage,
+        "query": query,
+        "target_terms": target_terms or [],
+        "herb_terms": herb_terms or [],
+        "component_terms": component_terms or [],
+        "outcome_terms": outcome_terms or [],
+        "pubmed_hit_count": len(articles or []),
+        "sample_pmids": [article.pmid for article in samples],
+        "sample_titles": [article.title for article in samples],
+        "sample_abstract_snippets": [snippet(article.abstract) for article in samples],
+        "matched_herb_terms": matched_herb_terms or [],
+        "matched_component_terms": matched_component_terms or [],
+        "matched_target_terms": matched_target_terms or [],
+        "matched_outcome_terms": matched_outcome_terms or [],
+        "blocked_reason": blocked_reason,
+        "recommendation_hint": recommendation_hint,
+        "logged_at": now_iso(),
+    }
+
+
+def snippet(text: str, limit: int = 320) -> str:
+    compact = re.sub(r"\s+", " ", text or "").strip()
+    if len(compact) <= limit:
+        return compact
+    return compact[:limit].rstrip() + "..."
 
 
 def contains_alias(text: str, alias: str) -> bool:
@@ -569,6 +908,12 @@ def append_trace(result: dict[str, Any]) -> None:
     TRACE_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with TRACE_OUTPUT.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(result, ensure_ascii=False) + "\n")
+
+
+def append_failed_query(record: dict[str, Any]) -> None:
+    FAILED_QUERY_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    with FAILED_QUERY_OUTPUT.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
 def now_iso() -> str:

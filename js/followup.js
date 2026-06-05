@@ -126,7 +126,7 @@
 
           // 选中第一个患者
           if (clinicSessions.length > 0) {
-            activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
+            window.activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
           }
 
           // 重新渲染
@@ -134,8 +134,8 @@
           updateClinicDetailUI();
           
           // 更新患者信息栏
-          if (activeClinicSelection && activeClinicSelection.type === 'patient') {
-            const patient = getPatientById(activeClinicSelection.id);
+          if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient') {
+            const patient = getPatientById(window.activeClinicSelection.id);
             if (patient) {
               updatePatientInfoBar(patient);
             }
@@ -212,8 +212,8 @@
           };
 
           // 为当前选中的患者显示循证内容
-          if (activeClinicSelection && activeClinicSelection.type === 'patient') {
-            const patient = getPatientById(activeClinicSelection.id);
+          if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient') {
+            const patient = getPatientById(window.activeClinicSelection.id);
             if (patient) {
               setTimeout(() => {
                 window._showEbmContent(patient.id, patient.name);

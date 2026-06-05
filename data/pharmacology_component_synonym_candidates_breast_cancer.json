@@ -1,0 +1,393 @@
+[
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "celastrol",
+    "term_type": "component",
+    "possible_source_herb": "雷公藤",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "37196541"
+    ],
+    "sample_titles": [
+      "Celastrol as an emerging anticancer agent: Current status, challenges and therapeutic strategies."
+    ],
+    "sample_abstract_snippets": [
+      "Celastrol is a pentacyclic triterpenoid extracted from the traditional Chinese medicine Tripterygium wilfordii Hook F., which has multiple pharmacological activities."
+    ],
+    "matched_targets": [
+      "STAT3",
+      "EGFR"
+    ],
+    "matched_outcomes": [
+      "inhibit",
+      "suppress",
+      "reduce"
+    ],
+    "evidence_context": "review",
+    "suggested_action": "add_component_synonym_candidate",
+    "risk_note": "来源可候选为雷公藤，但本条是综述/策略性标题，不能直接作为乳腺癌临床有效证据；需人工确认是否只补 component synonym，不提升 evidence grade。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "luteolin",
+    "term_type": "component",
+    "possible_source_herb": "",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "33352494"
+    ],
+    "sample_titles": [
+      "Luteolin suppresses androgen receptor-positive triple-negative breast cancer cell proliferation and metastasis by epigenetic regulation of MMP9 expression via the AKT/mTOR signaling pathway."
+    ],
+    "sample_abstract_snippets": [
+      "Triple-negative breast cancer (TNBC) represents up to 20% of all breast cancers. This cancer lacks the expression of the estrogen receptor, progesterone receptor, and human epidermal growth factor receptor 2."
+    ],
+    "matched_targets": [
+      "EGFR"
+    ],
+    "matched_outcomes": [
+      "suppress"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "manual_review",
+    "risk_note": "木犀草素来源广泛，不宜直接映射到单一中药；且标题提示细胞增殖/转移实验，不能外推为临床 high。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "glycyrrhetinic acid",
+    "term_type": "component",
+    "possible_source_herb": "甘草",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "37011418"
+    ],
+    "sample_titles": [
+      "Glycyrrhetinic acid suppresses breast cancer metastasis by inhibiting M2-like macrophage polarization via activating JNK1/2 signaling."
+    ],
+    "sample_abstract_snippets": [
+      "Breast cancer metastasis is leading cause of cancer death among women worldwide. Tumor-associated macrophages (TAMs) have been considered as potential targets for treating breast cancer metastasis."
+    ],
+    "matched_targets": [
+      "IL-10"
+    ],
+    "matched_outcomes": [
+      "suppress",
+      "inhibit"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "add_component_synonym_candidate",
+    "risk_note": "可作为甘草相关成分候选；需人工确认实验类型、是否与当前靶点同链路，以及安全性边界，不得直接升为 clinical high。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "saikosaponin A",
+    "term_type": "component",
+    "possible_source_herb": "柴胡",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "31214035"
+    ],
+    "sample_titles": [
+      "Saikosaponin A Inhibits Breast Cancer by Regulating Th1/Th2 Balance."
+    ],
+    "sample_abstract_snippets": [
+      "Saikosaponin A (SSa) is isolated from the dried root of Radix Bupleuri , an herb widely used in traditional Chinese medicine, exerting antitumor activities."
+    ],
+    "matched_targets": [
+      "IL-10"
+    ],
+    "matched_outcomes": [
+      "inhibit"
+    ],
+    "evidence_context": "animal",
+    "suggested_action": "add_component_synonym_candidate",
+    "risk_note": "可候选映射柴胡；需人工确认是否为动物/细胞模型、是否同靶点同转归，不可直接作为临床疗效证据。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "bruceine D",
+    "term_type": "component",
+    "possible_source_herb": "鸦胆子",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "38043386"
+    ],
+    "sample_titles": [
+      "Bruceine D suppresses CAF-promoted TNBC metastasis under TNF-α stimulation by inhibiting Notch1-Jagged1/NF-κB(p65) signaling."
+    ],
+    "sample_abstract_snippets": [
+      "Triple-negative breast cancer (TNBC) has a poor prognosis because of its high degree of malignancy and the lack of effective treatment options."
+    ],
+    "matched_targets": [
+      "IL6",
+      "TNF"
+    ],
+    "matched_outcomes": [
+      "suppress",
+      "inhibit"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "add_component_synonym_candidate",
+    "risk_note": "可候选来源为鸦胆子；需人工确认是否适合作为口服单味中药药理证据，癌症体外/机制实验不能外推为 clinical high。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "withaferin A",
+    "term_type": "component",
+    "possible_source_herb": "",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "37067392"
+    ],
+    "sample_titles": [
+      "Withaferin A inhibits breast cancer-induced osteoclast differentiation."
+    ],
+    "sample_abstract_snippets": [
+      "Bone is the most prone to metastatic spread of breast cancer cells for each subtype of the disease. Bone metastasis-related complications including severe pain and pathological fractures affect patients' quality of life."
+    ],
+    "matched_targets": [
+      "IL6"
+    ],
+    "matched_outcomes": [
+      "inhibit"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "manual_review",
+    "risk_note": "不是当前中药单味词表中的明确来源药；即使保留也只能作为天然产物候选，不能直接入正式中药 synonym。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "worenine",
+    "term_type": "component",
+    "possible_source_herb": "黄连",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "41580768"
+    ],
+    "sample_titles": [
+      "Single-cell transcriptomics uncover RNF130-mediated TNF-α pathway activation and worenine synergy with paclitaxel in breast cancer."
+    ],
+    "sample_abstract_snippets": [
+      "Triple-negative breast cancer (TNBC) is distinguished by high invasiveness and a tendency for recurrence."
+    ],
+    "matched_targets": [
+      "TNF"
+    ],
+    "matched_outcomes": [
+      "activate"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "manual_review",
+    "risk_note": "可疑黄连生物碱成分，但需要确认来源、给药方式和证据模型；不能因与 paclitaxel 协同标题直接加入正式 synonym。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "euphorbia factor L1",
+    "term_type": "component",
+    "possible_source_herb": "千金子",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "37709489"
+    ],
+    "sample_titles": [
+      "Euphorbia factor L1 suppresses breast cancer liver metastasis via DDR1-mediated immune infiltration."
+    ],
+    "sample_abstract_snippets": [
+      "Euphorbia factor L1 (EFL1), a lathyrane-type diterpenoid from the medicinal herb Euphorbia lathyris L., has been documented to possess various pharmacologic actives."
+    ],
+    "matched_targets": [
+      "TNF"
+    ],
+    "matched_outcomes": [
+      "suppress"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "manual_review",
+    "risk_note": "来源药安全边界较高，且癌症转移模型不能外推为临床 high；如补 synonym 必须先做安全和用药规范审查。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "total glucosides of paeony",
+    "term_type": "component",
+    "possible_source_herb": "白芍/赤芍",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "35841664"
+    ],
+    "sample_titles": [
+      "Total glucosides of paeony inhibit breast cancer growth by inhibiting TAMs infiltration through NF-κB/CCL2 signaling."
+    ],
+    "sample_abstract_snippets": [
+      "The high density of tumor-associated macrophages (TAMs) and inflammatory factors are crucial elements leading to tumor immune tolerance."
+    ],
+    "matched_targets": [
+      "IL-10"
+    ],
+    "matched_outcomes": [
+      "inhibit"
+    ],
+    "evidence_context": "animal",
+    "suggested_action": "manual_review",
+    "risk_note": "可疑芍药总苷候选；需确认是白芍还是赤芍来源以及模型证据强度，不直接入正式 synonym。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "Jiawei Yanghe Decoction",
+    "term_type": "formula",
+    "possible_source_herb": "",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "36933872"
+    ],
+    "sample_titles": [
+      "Jiawei Yanghe Decoction suppresses breast cancer by regulating immune responses via JAK2/STAT3 signaling pathway."
+    ],
+    "sample_abstract_snippets": [
+      "Jiawei Yanghe Decoction (JWYHD) is a widely used traditional Chinese medicine prescription in the clinical setting for the treatment of autoimmune diseases."
+    ],
+    "matched_targets": [
+      "IL6",
+      "STAT3",
+      "EGFR",
+      "TNF"
+    ],
+    "matched_outcomes": [
+      "suppress"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "do_not_add",
+    "risk_note": "方剂名不得直接拆成单味药 evidence，也不得作为 component synonym；最多保留为人工阅读线索。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "Jiawei Xiaoyao Wan",
+    "term_type": "formula",
+    "possible_source_herb": "",
+    "existing_synonym_hit": false,
+    "sample_pmids": [
+      "38513380"
+    ],
+    "sample_titles": [
+      "Uncovering the effect and mechanism of Jiawei Xiaoyao Wan in treating breast cancer complicated with depression based on network pharmacology and experimental analysis."
+    ],
+    "sample_abstract_snippets": [
+      "Depression is a clinically common co-morbidity in breast cancer cases that brings negative outcomes on quality of life and potentially survival."
+    ],
+    "matched_targets": [
+      "IL6",
+      "STAT3",
+      "EGFR",
+      "TNF"
+    ],
+    "matched_outcomes": [
+      "treating"
+    ],
+    "evidence_context": "network_pharmacology",
+    "suggested_action": "do_not_add",
+    "risk_note": "方剂名且含网络药理，不能拆方入单味药，也不能单独判 high。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "Salvia miltiorrhiza",
+    "term_type": "herb",
+    "possible_source_herb": "丹参",
+    "existing_synonym_hit": true,
+    "sample_pmids": [
+      "36933872"
+    ],
+    "sample_titles": [
+      "Jiawei Yanghe Decoction suppresses breast cancer by regulating immune responses via JAK2/STAT3 signaling pathway."
+    ],
+    "sample_abstract_snippets": [
+      "Jiawei Yanghe Decoction (JWYHD) is a widely used traditional Chinese medicine prescription in the clinical setting for the treatment of autoimmune diseases."
+    ],
+    "matched_targets": [
+      "STAT3"
+    ],
+    "matched_outcomes": [
+      "suppress"
+    ],
+    "evidence_context": "cell",
+    "suggested_action": "do_not_add",
+    "risk_note": "已命中现有 synonym；但来源上下文主要是方剂/模型研究，不能作为新增 synonym 或单味药有效证据。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "Tripterygium wilfordii",
+    "term_type": "herb",
+    "possible_source_herb": "雷公藤",
+    "existing_synonym_hit": true,
+    "sample_pmids": [
+      "37196541"
+    ],
+    "sample_titles": [
+      "Celastrol as an emerging anticancer agent: Current status, challenges and therapeutic strategies."
+    ],
+    "sample_abstract_snippets": [
+      "Celastrol is a pentacyclic triterpenoid extracted from the traditional Chinese medicine Tripterygium wilfordii Hook F., which has multiple pharmacological activities."
+    ],
+    "matched_targets": [
+      "STAT3",
+      "EGFR"
+    ],
+    "matched_outcomes": [
+      "suppress"
+    ],
+    "evidence_context": "review",
+    "suggested_action": "do_not_add",
+    "risk_note": "已命中现有 synonym；雷公藤高风险，且本轮仅为 synonym 审计，不可直接加药或提升证据。",
+    "can_add_to_formal_synonym_now": false
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "candidate_term": "Ginkgo biloba",
+    "term_type": "herb",
+    "possible_source_herb": "银杏叶",
+    "existing_synonym_hit": true,
+    "sample_pmids": [
+      "39346127"
+    ],
+    "sample_titles": [
+      "Nano-Ayurvedic Medicine Approaches Using Ginkgo biloba -Phytochemicals Functionalized Gold Nanoparticles Against Breast Cancer."
+    ],
+    "sample_abstract_snippets": [
+      "Breast cancer is a significant global health issue, contributing to 15% of cancer-related deaths."
+    ],
+    "matched_targets": [
+      "IL-10"
+    ],
+    "matched_outcomes": [
+      "inhibit"
+    ],
+    "evidence_context": "unknown",
+    "suggested_action": "do_not_add",
+    "risk_note": "已命中现有 synonym；标题为纳米/草本功能化材料方向，不应作为口服单味中药药理证据直接采用。",
+    "can_add_to_formal_synonym_now": false
+  }
+]

@@ -292,9 +292,17 @@ class FollowupRouter:
         elif "诊断标准卡片" in error_message:
             unavailable = ["原病名诊断标准卡片缺失"]
             inquiries = ["缺少原病名诊断标准，必须通过 M1 查询本地库或在缓存中检索"]
+            route_action = "RETURN_TO_M1"
+            route_reason = "缺少原病名诊断标准，需返回 M1 补齐诊断依据后再进入 M4"
         else:
             unavailable = [error_message]
             inquiries = ["信息不完整，需要通过 M1 追问补充"]
+            route_action = "PENDING"
+            route_reason = "信息不足以做出路由决策，建议转 M1 追问后重新进入 M4"
+
+        if "route_action" not in locals():
+            route_action = "PENDING"
+            route_reason = "信息不足以做出路由决策，建议转 M1 追问后重新进入 M4"
 
         trace_info = self.trace.build()
         return {
@@ -302,8 +310,8 @@ class FollowupRouter:
             "unavailable_info": unavailable,
             "required_inquiries": inquiries,
             "routing_decision": {
-                "action": "PENDING",
-                "reason": "信息不足以做出路由决策，建议转 M1 追问后重新进入 M4",
+                "action": route_action,
+                "reason": route_reason,
             },
             "danger_signals": danger_result or {"triggered": False, "signals": [], "recommendation": ""},
             "evidence_trace": trace_info,

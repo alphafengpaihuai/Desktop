@@ -226,7 +226,12 @@ def _merge_list(entry: dict[str, Any], field: str, values: list[Any]) -> None:
 
 
 def build_excel_diagnostic_details(excel_path: str | Path = DEFAULT_EXCEL) -> dict[str, Any]:
-    path = manifest_builder.resolve_excel_path(excel_path)
+    try:
+        path = manifest_builder.resolve_excel_path(excel_path)
+    except FileNotFoundError:
+        if Path(excel_path) == DEFAULT_EXCEL and DETAILS_PATH.exists():
+            return json.loads(DETAILS_PATH.read_text(encoding="utf-8"))
+        raise
     manifest = manifest_builder.build_disease_manifest(path)
     wb = load_workbook(path, read_only=True, data_only=True)
     details_by_name: dict[str, dict[str, Any]] = {}

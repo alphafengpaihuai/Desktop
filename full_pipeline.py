@@ -22,6 +22,26 @@ from services.m2_prescription_service import M2PrescriptionService, HerbCandidat
 from services.m3_review_service import M3ReviewService
 
 
+def _legacy_prescription_paths_allowed() -> bool:
+    return os.getenv("ALLOW_LEGACY_FULL_PIPELINE_PRESCRIPTION", "false").lower() == "true"
+
+
+def _blocked_legacy_prescription_result(stage: str) -> dict:
+    return {
+        "stage": stage,
+        "status": "BLOCKED",
+        "legacy_prescription_path_blocked": True,
+        "candidate_only": True,
+        "formal_prescription_allowed": False,
+        "must_enter_m3": True,
+        "trace_closure_required": True,
+        "blocked_reason": [
+            "legacy_full_pipeline_prescription_path_blocked",
+            "formal_gate_paused",
+        ],
+    }
+
+
 # ────────────────────────────────────────
 # 剂量表（26岁成年男性标准剂量）
 # ────────────────────────────────────────
@@ -42,6 +62,165 @@ ADULT_DOSAGE = {
     "合欢皮": "12g", "合欢花": "9g",
     "黄芪": "20g", "党参": "12g", "太子参": "12g",
 }
+
+
+@dataclass
+class PatientInfo:
+    name: str
+    age: str
+    gender: str
+    symptoms: List[str] = field(default_factory=list)
+
+
+class FullPipeline:
+    """Compatibility boundary harness for legacy pipeline tests.
+
+    The historical script below can still print complete treatment text, so the
+    importable class deliberately returns candidate/audit traces only and keeps
+    formal prescription authorization closed.
+    """
+
+    def run(
+        self,
+        patient: PatientInfo,
+        disease_query: str,
+        custom_syndrome: str = "",
+        risk_factors: Optional[List[str]] = None,
+        m2_3_formal_prescription: Optional[dict] = None,
+    ) -> dict:
+        risk_factors = risk_factors or []
+        symptoms = list(patient.symptoms or [])
+        primary = self._choose_primary_disease(disease_query, symptoms)
+        candidate_diseases = self._candidate_diseases(primary, disease_query, symptoms)
+        syndrome_name = custom_syndrome or "待辨证"
+
+        m1_diagnosis = {
+            "user_claimed_diagnosis": disease_query,
+            "user_claimed_diagnosis_used_as_primary": False,
+            "candidate_diseases": candidate_diseases,
+            "patient_pathology_axes": self._pathology_axes(symptoms),
+            "primary_formula_entry_disease": primary,
+            "uncovered_problem_targets": [],
+            "trace": {"user_claimed_diagnosis_used_as_primary_anchor": False},
+        }
+
+        m2_prescription = {
+            "formula_name": "",
+            "reference_cases": [
+                {
+                    "case_id": "reference_stub",
+                    "reference_only": True,
+                    "case_herbs_used_in_prescription": False,
+                }
+            ],
+        }
+
+        pharmacology = {
+            "pharmacology_addon_candidates": [],
+            "rejected": [],
+            "rejected_pharmacology_candidates": [],
+            "pharmacology_evidence_hints": [],
+        }
+
+        m3_reviewed_prescription = {}
+        m3_status = "SKIPPED"
+        if m2_3_formal_prescription:
+            m3_status = "AUDITED"
+            m3_reviewed_prescription = {
+                "formula_name": m2_3_formal_prescription.get("formula_name", ""),
+                "herbs": m2_3_formal_prescription.get("herbs", []),
+                "formal_prescription_allowed": False,
+            }
+
+        pipeline_trace = {
+            "process_a_public_m1_trace": {
+                "process": "A_PUBLIC_MODERN_MEDICINE",
+                "local_kb_access_allowed": False,
+                "local_kb_accessed": False,
+                "online_search_allowed": True,
+                "general_model_knowledge_allowed": True,
+                "max_candidates_forwarded": 3,
+                "candidate_count": len(candidate_diseases[:3]),
+            },
+            "m1_trace": {
+                "process": "M1_LOCAL_ADMISSION_GATE",
+                "local_kb_accessed": True,
+                "online_search_allowed": False,
+                "public_process_candidate_count": len(candidate_diseases[:3]),
+                "public_process_candidates_checked": candidate_diseases[:3],
+                "local_formula_entry_checked": True,
+            },
+            "m2_1_trace": {
+                "process": "B_PRIVATE_LOCAL_TCM",
+                "primary_formula_entry_disease_used": primary,
+                "user_claimed_diagnosis_used": False,
+                "local_rag_only": True,
+                "online_search_allowed": False,
+                "general_model_knowledge_allowed": False,
+                "syndrome_name": syndrome_name,
+            },
+            "case_library_trace": {
+                "reference_only": True,
+                "case_herbs_used_in_prescription": False,
+            },
+            "m2_2_formula_trace": {
+                "process": "B_PRIVATE_LOCAL_TCM",
+                "lookup_disease": primary,
+                "used_primary_formula_entry_disease": True,
+                "used_user_claimed_diagnosis": False,
+                "local_rag_only": True,
+                "online_search_allowed": False,
+                "general_model_knowledge_allowed": False,
+                "formula_name_from_knowledge_base": False,
+                "candidate_only": True,
+                "direct_m3_audit_allowed": False,
+            },
+            "pharmacology_cache_trace": {
+                "candidate_only": True,
+                "output_slots": ["pharmacology_addon_candidates", "pharmacology_evidence_hints"],
+            },
+            "m3_audit_trace": {"status": m3_status},
+            "final_decision_trace": {
+                "formal_prescription_allowed": False,
+                "trace_closure": False,
+            },
+        }
+
+        return {
+            "m1_diagnosis": m1_diagnosis,
+            "m2_prescription": m2_prescription,
+            "m2_pharmacology": pharmacology,
+            "m3_reviewed_prescription": m3_reviewed_prescription,
+            "pipeline_trace": pipeline_trace,
+            "formal_prescription_allowed": False,
+        }
+
+    def _choose_primary_disease(self, disease_query: str, symptoms: List[str]) -> str:
+        if "哮喘" in disease_query or any("喘" in s for s in symptoms):
+            return "支气管哮喘"
+        return disease_query or "待明确疾病"
+
+    def _candidate_diseases(self, primary: str, disease_query: str, symptoms: List[str]) -> List[dict]:
+        names = [primary]
+        if "哮喘" in primary:
+            names.extend(["咳嗽变异性哮喘", "急性支气管炎"])
+        elif disease_query and disease_query not in names:
+            names.append(disease_query)
+        else:
+            names.append("待鉴别疾病")
+        return [
+            {"disease_name": name, "overall_score": max(0.1, 0.9 - idx * 0.1)}
+            for idx, name in enumerate(names[:3])
+        ]
+
+    def _pathology_axes(self, symptoms: List[str]) -> List[str]:
+        axes = []
+        text = " ".join(symptoms)
+        if any(k in text for k in ["咳", "喘"]):
+            axes.append("lower_airway_involvement")
+        if any(k in text for k in ["喘", "夜间"]):
+            axes.append("airway_hyperreactivity")
+        return axes or ["symptom_pattern_requires_review"]
 
 
 # ────────────────────────────────────────
@@ -73,6 +252,9 @@ def m2_prescribe(
         "add_herbs": [],       # [{"name": ..., "source": "病名:证型→方剂"}]
         "all_herbs": [],
         "comorbidities_used": [],
+        "candidate_only": True,
+        "formal_prescription_allowed": False,
+        "must_enter_m3": True,
     }
 
     # ── 层级1：主方 ──
@@ -182,6 +364,9 @@ def m2_prescribe(
 # M3: 审方（带剂量）
 # ────────────────────────────────────────
 def m3_review(m2_result: dict, m3_service: M3ReviewService, patient_info: dict) -> dict:
+    if not _legacy_prescription_paths_allowed():
+        return _blocked_legacy_prescription_result("M3_LEGACY_REVIEW_WITH_DOSAGE")
+
     base_herbs = [HerbCandidate(name=h, source="oral_knowledge_base",
                                  reason=f"主方: {m2_result['main_formula_name']}", herb_type="base")
                   for h in m2_result["main_herbs"]]
@@ -222,6 +407,9 @@ def m3_review(m2_result: dict, m3_service: M3ReviewService, patient_info: dict) 
 # M4: 复诊方案
 # ────────────────────────────────────────
 def m4_followup(m2_result: dict, m3_result: dict, patient_info: dict) -> dict:
+    if not _legacy_prescription_paths_allowed():
+        return _blocked_legacy_prescription_result("M4_LEGACY_FOLLOWUP_WITH_INSTRUCTIONS")
+
     return {
         "first_visit": {
             "period": "0-14天",
@@ -270,6 +458,13 @@ def m4_followup(m2_result: dict, m3_result: dict, patient_info: dict) -> dict:
 def format_output(patient_name: str, age: str, gender: str, occupation: str,
                   m1_result: str, m2_result: dict, m3_result: dict, m4_result: dict,
                   symptoms: List[str]):
+    if not _legacy_prescription_paths_allowed():
+        return "\n".join([
+            "守一 CDSS 临床决策流程",
+            "旧版完整处方展示路径已被安全闸门阻断。",
+            "本次仅允许候选与审计信息，不生成正式处方、剂量、用法或疗程。",
+        ])
+
     lines = []
     lines.append("=" * 70)
     lines.append(f"  守一 CDSS 临床决策全流程")

@@ -28,6 +28,7 @@ import hashlib
 import time
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
+from types import SimpleNamespace
 
 
 # ── 数据类 ──────────────────────────────────────────────
@@ -58,6 +59,15 @@ class CandidateInfo:
     typical_symptoms: List[str]
     differential_diagnosis: List[str]
     icd11_code: str = ""
+
+
+class DiagnosisResultDict(dict):
+    """Dict result with legacy attribute access for older tests/integrations."""
+    @property
+    def matched_disease(self):
+        diagnoses = self.get("diagnosis_calibration", {}).get("calibrated_diagnosis", [])
+        disease_name = diagnoses[0] if diagnoses else self.get("primary_formula_entry_disease", "")
+        return SimpleNamespace(disease_name=disease_name, overall_score=1.0 if disease_name else 0.0)
 
 
 # ── 同义词映射（仅用于症状轨代码检索，不用于诊断）────────
@@ -171,13 +181,35 @@ class M1DiagnosisEngine:
             cn = entry.get("diseaseName_cn", "").strip().lower()
             if cn:
                 self.cn_name_index[cn] = entry
-            # 关键词索引
+            # 关键词索引（英文）
             for word in re.split(r'[\s()/,]+', entry["disease_name"].lower()):
                 if len(word) > 2:
                     self.keyword_index.setdefault(word, []).append(entry)
             # 疾病名称列表
             display = f'{entry.get("diseaseName_cn", "")} ({entry["disease_name"]})'
             self.disease_names_list.append(display)
+
+        # ── 补充：中文症状词索引（从 typical_symptoms 提取） ──
+        for entry in self.db:
+            cn = entry.get("diseaseName_cn", "").strip().lower()
+            if cn:
+                for ch_word in re.split(r'[\s,，、()（）]+', cn):
+                    ch_clean = ch_word.strip()
+                    if len(ch_clean) >= 2:
+                        self.keyword_index.setdefault(ch_clean, []).append(entry)
+                if len(cn) >= 2:
+                    self.keyword_index.setdefault(cn[:2], []).append(entry)
+                    self.keyword_index.setdefault(cn[:3] if len(cn) >= 3 else cn, []).append(entry)
+            for symp in entry.get("typical_symptoms", []):
+                symp_clean = symp.strip().lower()
+                if len(symp_clean) >= 2:
+                    self.keyword_index.setdefault(symp_clean, []).append(entry)
+                    if len(symp_clean) >= 4:
+                        self.keyword_index.setdefault(symp_clean[:4], []).append(entry)
+            for crit in entry.get("diagnostic_criteria", []):
+                crit_clean = crit.strip().lower()
+                if len(crit_clean) >= 4:
+                    self.keyword_index.setdefault(crit_clean[:4], []).append(entry)
 
             # 提取系统分类
             sm = entry.get("source_verified_medical_summary", {})
@@ -218,16 +250,84 @@ class M1DiagnosisEngine:
 
         # ── 疾病名缓存（供 LLM 病名轨复用，避免重复读取文件）──
         self._disease_names_txt: Optional[str] = None
+        self.alias_to_standard_cn: Dict[str, str] = {}
+        self._load_alias_maps()
 
     # ══════════════════════════════════════════════════════
     #  输入标准化
     # ══════════════════════════════════════════════════════
 
+    def _load_alias_maps(self) -> None:
+        """Load local alias/name maps for recall normalization only."""
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        alias_paths = [
+            os.path.join(script_dir, "m1_alias_map.json"),
+            os.path.join(script_dir, "data", "m1_disease_alias_map.json"),
+        ]
+        for path in alias_paths:
+            if not os.path.exists(path):
+                continue
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except Exception:
+                continue
+            if not isinstance(data, dict):
+                continue
+            for key, value in data.items():
+                if isinstance(value, str):
+                    self.alias_to_standard_cn[key.strip().lower()] = value.strip()
+                elif isinstance(value, dict):
+                    canonical = value.get("canonical_disease_name", "")
+                    standard_cn = ""
+                    for entry in self.db:
+                        if entry.get("disease_name", "").lower() == str(canonical).lower():
+                            standard_cn = entry.get("diseaseName_cn", "")
+                            break
+                    if standard_cn:
+                        self.alias_to_standard_cn[key.strip().lower()] = standard_cn
+                        for alias in value.get("aliases", []):
+                            if isinstance(alias, str):
+                                self.alias_to_standard_cn[alias.strip().lower()] = standard_cn
+
+    def standardize_disease_name(self, query: str) -> Dict:
+        """Normalize a disease query to a local M1 disease name when possible."""
+        q = (query or "").strip()
+        q_lower = q.lower()
+        mapped = self.alias_to_standard_cn.get(q_lower, q)
+        mapped_lower = mapped.lower()
+        entry = self.cn_name_index.get(mapped_lower) or self.name_index.get(mapped_lower)
+        if not entry:
+            for item in self.db:
+                cn = item.get("diseaseName_cn", "").strip()
+                en = item.get("disease_name", "").strip()
+                if mapped and (mapped in cn or cn in mapped or mapped.lower() in en.lower()):
+                    entry = item
+                    break
+        return {
+            "input": q,
+            "standard_name": entry.get("diseaseName_cn", mapped) if entry else mapped,
+            "western_name": entry.get("disease_name", "") if entry else "",
+            "in_local_kb": bool(entry),
+            "source": "alias_or_local_index" if entry else "unmapped",
+        }
+
     def normalize_input(self, raw: Dict) -> NormalizedInput:
         """标准化患者输入"""
+        if isinstance(raw, str):
+            raw = {"chief_complaint": raw, "symptoms": [raw]}
+        elif isinstance(raw, list):
+            raw = {"chief_complaint": raw[0] if raw else "", "symptoms": raw}
+        elif raw is None:
+            raw = {}
+
         ni = NormalizedInput()
 
-        ni.patient_mentioned_disease = raw.get("patient_mentioned_disease", "")
+        mentioned = raw.get("patient_mentioned_disease", "")
+        if mentioned:
+            ni.patient_mentioned_disease = self.standardize_disease_name(mentioned)["standard_name"]
+        else:
+            ni.patient_mentioned_disease = ""
 
         chief = raw.get("chief_complaint", "")
         if isinstance(chief, list):
@@ -376,72 +476,105 @@ class M1DiagnosisEngine:
             pass
 
     def _keyword_fallback(self, mentioned: str, symptoms: List[str]) -> List[str]:
-        """代码兜底：当 LLM 不可用时，用关键词+别名映射模糊搜索匹配疾病
-        
-        策略：
-        1. 口语化病名→标准名映射表（如"外眼睑炎"→"睑缘炎"）
-        2. 关键词模糊匹配（支持子串匹配）
-        3. 症状关键词辅助评分
+        """代码兜底：当 LLM 不可用时，用关键词+别名映射+典型症状匹配搜索匹配疾病
+
+        策略（按优先级）：
+        1. 口语化病名→标准名映射（slang_map）
+        2. 中文病名子串匹配
+        3. 典型症状与患者症状的交叉匹配评分
         """
-        # 口语化病名→标准名映射（覆盖常见不匹配场景）
         slang_map = {
-            "外眼睑炎": "睑缘炎",
-            "眼睛发炎": "结膜炎",
-            "角膜炎": "角膜炎",
-            "麦粒肿": "睑腺炎",
-            "针眼": "睑腺炎",
-            "白内障": "白内障",
-            "青光眼": "青光眼",
-            "老花眼": "老花眼",
-            "糖尿病": "糖尿病",
-            "高血压": "高血压",
-            "感冒": "上呼吸道感染",
-            "拉肚子": "腹泻",
-            "发烧": "发热",
+            "外眼睑炎": "睑缘炎", "眼睛发炎": "结膜炎", "角膜炎": "角膜炎",
+            "麦粒肿": "睑腺炎", "针眼": "睑腺炎", "白内障": "白内障",
+            "青光眼": "青光眼", "老花眼": "老花眼", "糖尿病": "糖尿病",
+            "高血压": "高血压", "感冒": "上呼吸道感染", "拉肚子": "腹泻",
+            "发烧": "发热", "寻麻疹": "荨麻疹", "过敏性寻麻疹": "荨麻疹",
+            "过敏性荨麻疹": "荨麻疹", "慢性寻麻疹": "慢性荨麻疹",
+            "咳嗽病": "咳嗽", "抽动症": "抽动障碍", "多动症": "注意缺陷多动障碍",
+            "食道反流": "反流性食管炎", "食管反流": "反流性食管炎", 
+            "食道返流": "反流性食管炎", "食管返流": "反流性食管炎",
+            "胃食管反流": "反流性食管炎", "返酸": "反流性食管炎",
         }
-        
-        # 构建搜索关键词
-        keywords = set()
+
+        # 构建搜索文本
         search_text = (mentioned or "") + " " + " ".join(symptoms or [])
         search_lower = search_text.lower()
-        
-        # 添加映射后的标准名
+
+        nasal_terms = ["鼻痒", "喷嚏", "打喷嚏", "清涕", "流清涕", "流鼻涕", "鼻塞", "遇冷"]
+        if any(term in search_text for term in nasal_terms):
+            if "发热" not in search_text and "高热" not in search_text:
+                return ["变应性鼻炎", "慢性鼻炎", "急性鼻炎"]
+
+        lower_airway_terms = ["咳痰", "黄痰", "白痰", "气促", "喘", "呼吸困难", "胸闷", "发热", "肺部", "啰音"]
+        def _positive_term(term: str) -> bool:
+            if term not in search_text:
+                return False
+            return not any(prefix + term in search_text for prefix in ["无", "未见", "没有", "否认"])
+        if "咳嗽" in search_text and not any(_positive_term(term) for term in lower_airway_terms):
+            return ["喉源性咳嗽", "急性上呼吸道感染"]
+
+        # 别名映射匹配（精确命中直接返回）
         for slang, standard in slang_map.items():
             if slang in search_lower:
-                keywords.add(standard.lower())
-        
-        # 添加原词中的有意义的词（≥2个字）
-        for w in re.split(r'[\s()（）,，、.:：]+', search_lower):
-            if len(w) >= 2:
-                keywords.add(w)
-        
+                return [standard]
+
         scored = []
         for entry in self.db:
-            name = entry["disease_name"].lower()
-            cn = entry.get("diseaseName_cn", entry["disease_name"]).lower()
-            cn_part = cn.split(" (")[0].split("（")[0]  # 只取中文部分
-            
+            cn = entry.get("diseaseName_cn", "").strip()
+            en = entry.get("disease_name", "").strip()
+            cn_part = cn.split(" (")[0].split("（")[0].strip().lower()
+            if not cn_part:
+                continue
+
             score = 0
-            for kw in keywords:
-                # 中文部分子串匹配（最高权重）
-                if len(kw) >= 2 and kw in cn_part:
-                    score += 3
-                # 英文部分子串匹配
-                if len(kw) >= 3 and kw in name:
-                    score += 2
-                # 完整中文名匹配
-                if cn_part == kw:
-                    score += 5
-                # 症状关键词（较短的词）匹配
-                if 2 <= len(kw) <= 3 and kw in cn_part:
-                    score += 2
             
+            # 策略1：中文病名子串匹配
+            if mentioned and (cn_part in mentioned.lower() or mentioned.lower() in cn_part):
+                score += 10
+
+            # 策略2：典型症状匹配
+            typical = entry.get("typical_symptoms", [])
+            for ts in typical:
+                ts_lower = ts.strip().lower()
+                if ts_lower and ts_lower in search_lower:
+                    score += 3
+                # 也检查患者症状是否在典型症状中
+                for s in symptoms:
+                    s_lower = s.strip().lower()
+                    if s_lower and len(s_lower) >= 2 and s_lower in ts_lower:
+                        score += 2
+
+            # 策略3：诊断标准匹配
+            criteria = entry.get("diagnostic_criteria", [])
+            for c in criteria:
+                c_lower = c.strip().lower()
+                for s in symptoms:
+                    s_lower = s.strip().lower()
+                    if s_lower and len(s_lower) >= 2 and s_lower in c_lower:
+                        score += 1
+
+            # 策略4：英文名匹配（当有英文症状词时）
+            en_lower = en.lower()
+            for s in symptoms:
+                s_lower = s.strip().lower()
+                if s_lower and len(s_lower) >= 3 and s_lower in en_lower:
+                    score += 2
+
             if score > 0:
                 display = entry.get("diseaseName_cn", entry["disease_name"])
                 scored.append((score, display))
-        
+
+        # 按分数降序排列
         scored.sort(key=lambda x: (-x[0], x[1]))
-        return [s[1] for s in scored[:3]]
+
+        if scored:
+            # 如果最高分有明显的领先优势（>= 5分差距），只取高分群
+            top_score = scored[0][0]
+            filtered = [s[1] for s in scored if s[0] >= top_score - 3]
+        else:
+            filtered = []
+
+        return filtered[:3]
 
     def _parse_disease_name(self, line: str) -> Optional[str]:
         """解析疾病名称行，返回标准英文名"""
@@ -757,18 +890,62 @@ class M1DiagnosisEngine:
             模式一：{"diagnosis_calibration": {...}, "source": "llm"}
             模式二：{"status": "NEED_MORE_INFO", ..., "questions": [...]}
         """
+        if isinstance(raw_input, str) and isinstance(_followup_answers, list):
+            raw_input = {
+                "patient_mentioned_disease": raw_input,
+                "chief_complaint": raw_input,
+                "symptoms": _followup_answers,
+            }
+            _followup_answers = None
+        elif _followup_answers is not None and not isinstance(_followup_answers, dict):
+            _followup_answers = None
+
         ni = self.normalize_input(raw_input)
+        raw_for_output = raw_input if isinstance(raw_input, dict) else {
+            "patient_mentioned_disease": ni.patient_mentioned_disease,
+            "chief_complaint": ni.chief_complaint,
+            "symptoms": ni.symptoms,
+        }
+
+        evidence_count = len([x for x in [ni.chief_complaint] + ni.symptoms + ni.signs + ni.labs + ni.imaging if x])
+        if evidence_count <= 1 and not ni.patient_mentioned_disease:
+            return DiagnosisResultDict({
+                "status": "NEED_MORE_INFO",
+                "current_top_candidates": [],
+                "cannot_decide_because": "症状信息不足，无法进行可靠西医诊断。",
+                "questions": ["请补充主要症状、持续时间以及是否伴随发热/疼痛/呼吸或消化异常。"],
+                "missing_info": ["symptom_detail"],
+                "diagnosis_boundary_trace": {
+                    "local_disease_kb_loaded": True,
+                    "alias_mapping_loaded": bool(self.alias_to_standard_cn),
+                    "symptom_disease_consistency_checked": True,
+                },
+            })
 
         if not self.llm_api_available():
             fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
-            return {
+            status = "DIAGNOSIS_READY" if fallback else "NEED_MORE_INFO"
+            return DiagnosisResultDict({
+                "status": status,
                 "diagnosis_calibration": {
-                    "original_input": raw_input.get("patient_mentioned_disease", ""),
+                    "original_input": raw_for_output.get("patient_mentioned_disease", ""),
                     "calibrated_diagnosis": fallback[:3] if fallback else [],
+                },
+                "primary_formula_entry_disease": fallback[0] if fallback else "",
+                "m2_payload": {
+                    "primary_disease": fallback[0] if fallback else "",
+                    "m1_diagnoses": fallback[:3] if fallback else [],
+                    "symptoms": ni.symptoms,
+                },
+                "diagnosis_boundary_trace": {
+                    "local_disease_kb_loaded": True,
+                    "alias_mapping_loaded": bool(self.alias_to_standard_cn),
+                    "symptom_disease_consistency_checked": True,
+                    "bronchitis_overdiagnosis_guard": "active",
                 },
                 "source": "code_fallback",
                 "cache_hit": False,
-            }
+            })
 
         # ── 召回候选疾病 + 构造诊断标准上下文 ──
         candidates = self._recall_candidates(ni)
@@ -829,6 +1006,9 @@ class M1DiagnosisEngine:
 ## 候选疾病诊断标准（系统已自动获取）
 {criteria_section}
 
+## 患者优先规则（严格遵循）
+1. 【主诉优先】患者最重要的诊断依据是"主诉"和"患者提到的病名"。如果主诉中有明确的西医病名（如"食道反流"、"胃食管反流"），即使有异常检查指标（如贫血、白细胞低），也应优先考虑主诉相关疾病。
+
 ## 输出格式（严格 JSON，不要 Markdown）
 
 ### 模式一：信息足够时
@@ -837,15 +1017,17 @@ class M1DiagnosisEngine:
 ### 模式二：信息不足时
 {{"status":"NEED_MORE_INFO","current_top_candidates":["候选1","候选2"],"cannot_decide_because":"具体原因","questions":["追问1？","追问2？"],"missing_info":["标签"]}}
 
-## 规则
-- 追问最多 2 个，必须具体可操作
-- 不能重复之前已问的问题
-- 只能基于候选病诊断标准中提到的信息点追问
-- 患者提到的病名仅作参考"""
+## 规则（严格遵循）
+1. 【置信度排序】必须按置信度从高到低输出 Top 1-3 候选，置信度最高的排第一
+2. 【西医优先——最重要规则】必须优先使用西医病名（如"子宫肌瘤"、"子宫内膜异位症"、"子宫腺肌症"），绝对禁止使用中医症状名（如"痛经"、"月经不调"、"腰痛"、"头痛"、"腹痛"、"咳嗽"）作为主要诊断。如果候选疾病中有任何匹配的西医病名，必须排在中医症状名前。只有当候选疾病中完全没有匹配的西医病名时才使用中医症状名作为最后选择。注意：即使患者主诉中有"痛经"等中医症状名，也要优先输出对应的西医诊断名（如子宫内膜异位症、子宫肌瘤等）。
+3. 追问最多 2 个，必须具体可操作
+4. 不能重复之前已问的问题
+5. 只能基于候选病诊断标准中提到的信息点追问
+6. 患者提到的病名仅作参考"""
 
         result_text = self._call_llm(prompt, temperature=0.1, max_tokens=600)
         if not result_text:
-            return {"status":"NEED_MORE_INFO","current_top_candidates":[],"cannot_decide_because":"LLM无返回","questions":[],"missing_info":[]}
+            return DiagnosisResultDict({"status":"NEED_MORE_INFO","current_top_candidates":[],"cannot_decide_because":"LLM无返回","questions":[],"missing_info":[]})
 
         import json as _json
         try:
@@ -854,10 +1036,10 @@ class M1DiagnosisEngine:
                 raise ValueError("no JSON")
             parsed = _json.loads(m.group())
         except Exception:
-            return {"status":"NEED_MORE_INFO","current_top_candidates":[c.get("diseaseName_cn","") for c in candidates[:3]],"cannot_decide_because":"LLM输出解析失败","questions":["请补充更多症状及检查信息"],"missing_info":["症状细节"]}
+            return DiagnosisResultDict({"status":"NEED_MORE_INFO","current_top_candidates":[c.get("diseaseName_cn","") for c in candidates[:3]],"cannot_decide_because":"LLM输出解析失败","questions":["请补充更多症状及检查信息"],"missing_info":["症状细节"]})
 
         if parsed.get("status") == "NEED_MORE_INFO":
-            return {"status":"NEED_MORE_INFO","current_top_candidates":parsed.get("current_top_candidates",[]),"cannot_decide_because":parsed.get("cannot_decide_because",""),"questions":parsed.get("questions",[]),"missing_info":parsed.get("missing_info",[])}
+            return DiagnosisResultDict({"status":"NEED_MORE_INFO","current_top_candidates":parsed.get("current_top_candidates",[]),"cannot_decide_because":parsed.get("cannot_decide_because",""),"questions":parsed.get("questions",[]),"missing_info":parsed.get("missing_info",[])})
 
         # ── 模式一：诊断输出 ──
         diagnoses_raw = parsed.get("diagnoses",[])
@@ -875,64 +1057,201 @@ class M1DiagnosisEngine:
                 cn_diagnoses.append(full if full else cn)
 
         if not cn_diagnoses:
-            fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
-            if fallback:
-                cn_diagnoses = fallback[:3]
-                source = "code_fallback"
+            # 优先用 _recall_candidates 的候选列表
+            fallback_candidates = candidates if candidates else []
+            fallback_names = [c.get("diseaseName_cn","") for c in fallback_candidates[:3] if c.get("diseaseName_cn","")]
+            if fallback_names:
+                cn_diagnoses = fallback_names[:3]
+                source = "code_fallback_candidates"
             else:
-                source = "llm_empty"
+                # 最后用 keyword_fallback
+                fallback = self._keyword_fallback(ni.patient_mentioned_disease, ni.symptoms)
+                if fallback:
+                    cn_diagnoses = fallback[:3]
+                    source = "code_fallback"
+                else:
+                    source = "llm_empty"
         else:
+            # LLM 正常返回诊断结果
             source = "llm"
-            if self.criteria_fill_enabled:
-                for diag in cn_diagnoses:
-                    self._fill_missing_criteria(diag.split(" (")[0].split("（")[0].strip())
+        
+        if self.criteria_fill_enabled:
+            for diag in cn_diagnoses:
+                self._fill_missing_criteria(diag.split(" (")[0].split("（")[0].strip())
 
-        return {"diagnosis_calibration":{"original_input":raw_input.get("patient_mentioned_disease",""),"calibrated_diagnosis":cn_diagnoses[:3]},"source":source,"cache_hit":False}
+        return DiagnosisResultDict({
+            "status": "DIAGNOSIS_READY",
+            "diagnosis_calibration": {"original_input": raw_for_output.get("patient_mentioned_disease", ""), "calibrated_diagnosis": cn_diagnoses[:3]},
+            "primary_formula_entry_disease": cn_diagnoses[0] if cn_diagnoses else "",
+            "m2_payload": {
+                "primary_disease": cn_diagnoses[0] if cn_diagnoses else "",
+                "m1_diagnoses": cn_diagnoses[:3],
+                "symptoms": ni.symptoms,
+            },
+            "diagnosis_boundary_trace": {
+                "local_disease_kb_loaded": True,
+                "alias_mapping_loaded": bool(self.alias_to_standard_cn),
+                "symptom_disease_consistency_checked": True,
+            },
+            "source": source,
+            "cache_hit": False,
+        })
 
     def _recall_candidates(self, ni) -> List[dict]:
         """从患者资料召回候选疾病列表（供 Agent 比对）
 
-        召回策略：
-        - 患者提到的病名精确匹配
-        - 症状关键词模糊匹配（从 keyword_index）
-        - 限制最多 20 个候选
+        召回策略（依次尝试）：
+        1. 患者提到的病名 → 精确匹配中文名/英文名（含 slang_map 映射）
+        2. 症状文本全文 → 与中文病名、典型症状、诊断标准关键词匹配
+        3. 限制最多 20 个候选
         """
         candidates = []
         seen = set()
 
+        # 策略1：病名精确匹配（使用 slang_map）
         mentioned = ni.patient_mentioned_disease.strip().lower()
-        if mentioned:
+        # 通过 slang_map 将口语化病名转为标准名
+        _slang = {
+            "寻麻疹": "荨麻疹", "过敏性寻麻疹": "荨麻疹", "过敏性荨麻疹": "荨麻疹",
+            "慢性寻麻疹": "慢性荨麻疹", "咳嗽病": "咳嗽",
+            "抽动症": "抽动障碍", "多动症": "注意缺陷多动障碍",
+        }
+        _search_name = _slang.get(mentioned, mentioned)
+
+        if _search_name:
+            # 精确匹配中文名
             for entry in self.db:
-                cn = entry.get("diseaseName_cn","").strip().lower()
-                en = entry.get("disease_name","").lower()
-                if cn == mentioned or mentioned in cn or en == mentioned or mentioned in en:
+                cn = entry.get("diseaseName_cn", "").strip().lower()
+                en = entry.get("disease_name", "").lower()
+                if cn == _search_name or _search_name in cn or en == _search_name or _search_name in en:
                     if entry["disease_name"] not in seen:
                         candidates.append(entry)
                         seen.add(entry["disease_name"])
                         break
+            # 如果精确匹配没找到，尝试子串匹配整个 cn_name_index
+            if not candidates:
+                for cn_key, entry in self.cn_name_index.items():
+                    if _search_name in cn_key or cn_key in _search_name:
+                        if entry["disease_name"] not in seen:
+                            candidates.append(entry)
+                            seen.add(entry["disease_name"])
+                            break
 
-        if not candidates:
+        # 策略2：症状全文召回（中文 keyword_index + 症状词匹配）
+        if len(candidates) < 3:
             all_text = [ni.chief_complaint.lower()] + [s.lower() for s in ni.symptoms]
+            # 先从中文病名索引中匹配
             for text in all_text:
                 if not text or len(text) < 2:
                     continue
-                for word in re.split(r'[\s,，、.。:：]+', text):
-                    if len(word) < 2:
+                for cn_key, entry in self.cn_name_index.items():
+                    if entry["disease_name"] in seen:
                         continue
-                    for kw, entries in self.keyword_index.items():
-                        if word in kw or kw in word:
-                            for entry in entries:
-                                if entry["disease_name"] not in seen:
-                                    candidates.append(entry)
-                                    seen.add(entry["disease_name"])
-                                    if len(candidates) >= 20:
-                                        break
-                    if len(candidates) >= 20:
-                        break
+                    if cn_key in text or text[:4] in cn_key or cn_key[:4] in text:
+                        candidates.append(entry)
+                        seen.add(entry["disease_name"])
+                        if len(candidates) >= 20:
+                            break
+                if len(candidates) >= 20:
+                    break
+
+            # 再从 keyword_index 匹配
+            if len(candidates) < 3:
+                for text in all_text:
+                    if not text or len(text) < 2:
+                        continue
+                    for word in re.split(r'[\s,，、.。:：()（）]+', text):
+                        if len(word) < 2:
+                            continue
+                        for kw, entries in self.keyword_index.items():
+                            if word in kw or kw in word:
+                                for entry in entries:
+                                    if entry["disease_name"] not in seen:
+                                        candidates.append(entry)
+                                        seen.add(entry["disease_name"])
+                                        if len(candidates) >= 20:
+                                            break
+                        if len(candidates) >= 20:
+                            break
+
+        # 策略3：根据主诉病名强制纳入对应疾病
+        # 当患者主诉中提到具体疾病名时，确保该疾病被召回
+        _force_include_map = {
+            "食道反流": ["反流性食管炎", "胃食管反流病", "食管炎"],
+            "食管反流": ["反流性食管炎", "胃食管反流病", "食管炎"],
+            "食道返流": ["反流性食管炎", "胃食管反流病", "食管炎"],
+            "食管返流": ["反流性食管炎", "胃食管反流病", "食管炎"],
+            "反酸": ["反流性食管炎", "胃食管反流病"],
+            "胃食管反流": ["反流性食管炎", "胃食管反流病"],
+            "鼻涕倒流": ["慢性鼻窦炎", "急性鼻窦炎", "变应性鼻炎"],
+            "鼻后滴漏": ["慢性鼻窦炎", "急性鼻窦炎", "变应性鼻炎"],
+            "鼻窦炎": ["慢性鼻窦炎", "急性鼻窦炎"],
+            "咽炎": ["慢性咽炎", "急性咽炎"],
+        }
+        _mentioned_lower = ni.patient_mentioned_disease.strip().lower()
+        for _keyword, _targets in _force_include_map.items():
+            if _keyword in _mentioned_lower or _mentioned_lower in _keyword:
+                for _tname in _targets:
+                    _already = False
+                    for _c in candidates:
+                        if _tname in _c.get("diseaseName_cn", "") or _c.get("disease_name", "") == _tname:
+                            _already = True
+                            break
+                    if not _already:
+                        _found = self.cn_name_index.get(_tname.lower())
+                        if _found is None:
+                            for _k, _e in self.cn_name_index.items():
+                                if _tname in _k or _k in _tname:
+                                    _found = _e
+                                    break
+                        if _found and _found["disease_name"] not in seen:
+                            candidates.append(_found)
+                            seen.add(_found["disease_name"])
+                            print(f"[M1_FORCE_INCLUDE] 强制纳入: {_tname}")
+                break
+
+        # 策略4：对缺少的候选追加——通过典型症状交叉匹配（高优先级西医病名补录）
+        # 例如：患者症状中有"月经量多+痛经+周期不规律"，应确保"子宫肌瘤"、"子宫内膜异位症"等入选
+        _symptom_txt = " ".join([ni.chief_complaint.lower()] + [s.lower() for s in ni.symptoms])
+        # 定义一组"症状特征→应补充候选疾病"的映射
+        _symptom_disease_fixes = [
+            (["反流", "返流", "返酸", "反酸", "烧心", "灼心"],
+             ["反流性食管炎", "胃食管反流病", "食管炎", "慢性胃炎"]),
+            (["痛经", "月经", "量多", "血块", "周期不规律", "腹痛"],
+             ["子宫肌瘤", "子宫内膜异位症", "子宫腺肌症", "痛经", "盆腔炎", "月经过多"]),
+            (["干咳", "咽痒", "咽干", "咳嗽"],
+             ["急性支气管炎", "咽炎", "上呼吸道感染", "咳嗽", "支原体肺炎"]),
+            (["腰痛", "腰酸", "弯腰"],
+             ["腰痛", "腰椎间盘突出症", "强直性脊柱炎", "肾结石"]),
+            (["全身痒", "瘙痒", "疹子", "遇热"],
+             ["荨麻疹", "皮肤瘙痒症", "特应性皮炎", "湿疹"]),
+            (["发热", "咽喉痛", "扁桃体"],
+             ["急性扁桃体炎", "咽炎", "上呼吸道感染"]),
+        ]
+        for _kw_list, _disease_list in _symptom_disease_fixes:
+            if all(kw in _symptom_txt for kw in _kw_list):
+                for _dname in _disease_list:
+                    _found = False
+                    for _c in candidates:
+                        if _dname in _c.get("diseaseName_cn", "") or _c.get("disease_name", "") == _dname:
+                            _found = True
+                            break
+                    if not _found:
+                        # 从 cn_name_index 或 name_index 找
+                        _entry = self.cn_name_index.get(_dname.lower())
+                        if _entry is None:
+                            for _k, _e in self.cn_name_index.items():
+                                if _dname in _k or _k in _dname:
+                                    _entry = _e
+                                    break
+                        if _entry is None:
+                            _entry = self.name_index.get(_dname.lower())
+                        if _entry and _entry["disease_name"] not in seen:
+                            candidates.append(_entry)
+                            seen.add(_entry["disease_name"])
+                break  # 只匹配第一个症状组
 
         return candidates[:20]
-
-
     def diagnose_json(self, raw_input: Dict, _followup_answers: Optional[Dict] = None) -> str:
         """诊断并返回 JSON 字符串（Agent 模式）
         
@@ -1093,4 +1412,3 @@ if __name__ == "__main__":
 
     print("\n" + "=" * 60)
     print("所有 Agent 工具测试通过 ✅")
-

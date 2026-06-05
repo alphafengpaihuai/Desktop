@@ -1,0 +1,107 @@
+[
+  {
+    "zh_name": "IgA血管炎性肾炎",
+    "recommended_en_name": "IgA vasculitis nephritis",
+    "aliases": [
+      "Henoch-Schonlein purpura nephritis",
+      "Henoch-Schönlein purpura nephritis",
+      "HSP nephritis"
+    ],
+    "confirm_level": "manual_confirm",
+    "reason": "中文 anchor 明确指 IgA 血管炎肾脏受累，但英文存在 IgA vasculitis nephritis 与 HSP nephritis 两套常用写法，建议确认项目主名规范后再合并。",
+    "risk_note": "若直接并入 IgA Vasculitis，可能丢失肾炎并发/受累部位；若单列 nephritis，后续检索需避免与 IgA nephropathy 混淆。"
+  },
+  {
+    "zh_name": "下肢动脉硬化闭塞症",
+    "recommended_en_name": "Lower extremity arteriosclerosis obliterans",
+    "aliases": [
+      "Lower extremity atherosclerotic occlusive disease",
+      "Peripheral arterial disease of lower extremity",
+      "Lower limb arteriosclerosis obliterans"
+    ],
+    "confirm_level": "manual_confirm",
+    "reason": "中文 anchor 明确，但 PubMed 更常用 peripheral arterial disease / lower extremity artery disease 等宽口径名称，需确认是否并入 PAD 还是保留下肢闭塞性病变独立 anchor。",
+    "risk_note": "若使用 PAD 作为主检索名，可能扩大到非闭塞性、非下肢或泛动脉疾病文献。"
+  },
+  {
+    "zh_name": "乙状窦血栓性静脉炎",
+    "recommended_en_name": "Sigmoid sinus thrombophlebitis",
+    "aliases": [
+      "Lateral sinus thrombophlebitis",
+      "Otogenic sigmoid sinus thrombophlebitis",
+      "Sigmoid sinus thrombosis"
+    ],
+    "confirm_level": "manual_confirm",
+    "reason": "英文病名基本明确，但 thrombophlebitis、thrombosis、otogenic subtype 在 PubMed 中召回边界不同，建议确认是否强调感染性静脉炎。",
+    "risk_note": "若用 sigmoid sinus thrombosis，可能召回非感染性脑静脉窦血栓；若用 otogenic，会漏掉非耳源性病例。"
+  },
+  {
+    "zh_name": "产褥感染",
+    "recommended_en_name": "Puerperal infection",
+    "aliases": [
+      "Postpartum infection",
+      "Puerperal sepsis"
+    ],
+    "confirm_level": "manual_confirm",
+    "reason": "中文 anchor 明确，但 puerperal infection 与 puerperal sepsis 严重度不同，建议确认当前库是感染总称还是脓毒症风险入口。",
+    "risk_note": "若直接使用 puerperal sepsis，可能把普通产褥感染过度升级为脓毒症；若只用 infection，可能漏掉急重症红旗文献。"
+  },
+  {
+    "zh_name": "儿童反复呼吸道感染",
+    "recommended_en_name": "Recurrent respiratory tract infections in children",
+    "aliases": [
+      "Recurrent respiratory infections in children",
+      "Pediatric recurrent respiratory tract infections",
+      "Recurrent respiratory tract infection"
+    ],
+    "confirm_level": "manual_confirm",
+    "reason": "儿科高频且中文明确，但本质更像临床综合征/风险入口，不是单一标准疾病实体，建议确认是否允许作为 M1 anchor。",
+    "risk_note": "若作为正式映射，PubMed 召回会混入免疫缺陷、过敏、腺样体肥大、哮喘等多类病因研究。"
+  },
+  {
+    "zh_name": "儿童急性扁桃体炎",
+    "recommended_en_name": "Acute tonsillitis in children",
+    "aliases": [
+      "Pediatric acute tonsillitis",
+      "Acute tonsillitis"
+    ],
+    "confirm_level": "merge_now",
+    "reason": "疾病名明确，儿童限定不会明显改变疾病本体；可用 Acute tonsillitis in children 保留儿科检索边界，同时把 Acute tonsillitis 作为谨慎别名。",
+    "risk_note": "合并时建议不要把 tonsillitis 单独作为中文主键，避免与慢性扁桃体炎或扁桃体肥大混淆。"
+  },
+  {
+    "zh_name": "儿童抽动障碍",
+    "recommended_en_name": "Tic disorder in children",
+    "aliases": [
+      "Pediatric tic disorder",
+      "Tic disorder",
+      "Tourette syndrome"
+    ],
+    "confirm_level": "manual_confirm",
+    "reason": "中文 anchor 明确，但 tic disorder 与 Tourette syndrome 不是完全等价，建议确认是否包括 Tourette 综合征或仅泛指儿童抽动障碍。",
+    "risk_note": "若把 Tourette syndrome 作为强别名，可能把慢性运动/发声抽动亚型扩大为 Tourette 专病。"
+  },
+  {
+    "zh_name": "前置胎盘出血",
+    "recommended_en_name": "Placenta previa",
+    "aliases": [
+      "Bleeding placenta previa",
+      "Placenta previa bleeding",
+      "Antepartum hemorrhage due to placenta previa"
+    ],
+    "confirm_level": "reject_or_delay",
+    "reason": "更适合作为前置胎盘的出血表现或 alias，不建议作为独立正式 anchor 直接合并。",
+    "risk_note": "若独立合并，可能与已存在的 Placenta previa 重复，并把症状/并发出血当成单独病名入口。"
+  },
+  {
+    "zh_name": "化脓性骨髓炎",
+    "recommended_en_name": "Pyogenic osteomyelitis",
+    "aliases": [
+      "Suppurative osteomyelitis",
+      "Bacterial osteomyelitis"
+    ],
+    "confirm_level": "merge_now",
+    "reason": "标准西医疾病名明确，pyogenic/suppurative/bacterial osteomyelitis 均为常见检索表达，不属于宽泛症状。",
+    "risk_note": "合并时不建议把 Osteomyelitis 单独作为强 alias，避免扩大到非化脓性或特殊病因骨髓炎。"
+  }
+]

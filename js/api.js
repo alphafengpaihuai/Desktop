@@ -59,7 +59,7 @@
       if (!currentUser.phone) {
         clinicSessions = [];
         allPatients = [];
-        activeClinicSelection = { type: 'new' };
+        window.activeClinicSelection = { type: 'new' };
         renderClinicPanel();
         updateClinicDetailUI();
         return;
@@ -101,21 +101,21 @@
         console.log(`[DEBUG] syncPatients: applyPatientSearch后，clinicSessions.length=${clinicSessions.length}`, clinicSessions);
         // 如果之前没有选中患者，或者选中的患者不在完整列表中，尝试恢复上次选中的患者。
         // 但如果是主动的"新增患者"模式（type === 'new'），不要覆盖它
-        if (activeClinicSelection && activeClinicSelection.type === 'new' && !window.currentPatientId) {
+        if (window.activeClinicSelection && window.activeClinicSelection.type === 'new' && !window.currentPatientId) {
           // 保持新增患者模式不变，不自动跳转到第一个患者
-        } else if (!activeClinicSelection || !activeClinicSelection.id || !getPatientById(activeClinicSelection.id)) {
+        } else if (!window.activeClinicSelection || !window.activeClinicSelection.id || !getPatientById(window.activeClinicSelection.id)) {
           // 尝试恢复上次选中的患者
           loadLastSelectedPatient();
           // 检查上次选中的患者是否还在列表中
-          if (activeClinicSelection && activeClinicSelection.id && getPatientById(activeClinicSelection.id)) {
+          if (window.activeClinicSelection && window.activeClinicSelection.id && getPatientById(window.activeClinicSelection.id)) {
             // 上次选中的患者还在，继续使用
           } else if (allPatients.length > 0) {
             // 上次选中的患者不在，选择第一个患者
-            activeClinicSelection = { type: 'patient', id: allPatients[0].id };
+            window.activeClinicSelection = { type: 'patient', id: allPatients[0].id };
             saveLastSelectedPatient(allPatients[0].id);
           } else if (!window.currentPatientId) {
             // 没有患者，选择新增患者模式
-            activeClinicSelection = { type: 'new' };
+            window.activeClinicSelection = { type: 'new' };
             saveLastSelectedPatient(null);
           }
         }
@@ -123,11 +123,11 @@
         updateClinicDetailUI();
         // 仅在患者问诊模式下恢复患者消息；若当前是医知快答模式，不覆盖聊天内容（避免刷新后内容被切回患者）
         if (activeMode === 'clinic') {
-          if (activeClinicSelection && activeClinicSelection.type === 'patient' && activeClinicSelection.id) {
-            const patient = getPatientById(activeClinicSelection.id);
+          if (window.activeClinicSelection && window.activeClinicSelection.type === 'patient' && window.activeClinicSelection.id) {
+            const patient = getPatientById(window.activeClinicSelection.id);
             if (patient) {
               try {
-                await switchPatientMessages(activeClinicSelection.id, patient);
+                await switchPatientMessages(window.activeClinicSelection.id, patient);
               } catch (e) {
                 console.warn('[DEBUG] syncPatients: 恢复聊天消息失败（已忽略）:', e);
               }
@@ -136,11 +136,11 @@
               } catch (e) {
                 console.warn('[DEBUG] syncPatients: 刷新患者详情失败（已忽略）:', e);
               }
-              const updated = getPatientById(activeClinicSelection.id) || patient;
+              const updated = getPatientById(window.activeClinicSelection.id) || patient;
               updatePatientInfoBar(updated);
             }
           } else if (!window.currentPatientId) {
-            currentPatientId = null;
+            window.currentPatientId = null;
             window.messages = [];
             try {
               renderMessages();
@@ -154,8 +154,8 @@
         console.warn('[DEBUG] 同步病案失败，保留当前患者选择与按钮状态:', err);
         renderClinicPanel();
         updateClinicDetailUI();
-        if (activeMode === 'clinic' && activeClinicSelection && activeClinicSelection.type === 'patient') {
-          const currentPatient = getPatientById(activeClinicSelection.id);
+        if (activeMode === 'clinic' && window.activeClinicSelection && window.activeClinicSelection.type === 'patient') {
+          const currentPatient = getPatientById(window.activeClinicSelection.id);
           if (currentPatient) updatePatientInfoBar(currentPatient);
         }
         appendMessage('system', `同步病案失败：${err.message}`);
@@ -215,12 +215,12 @@
     // 启动患者模式聊天记录定时刷新（每5秒拉取当前选中患者的云端 chatlog）
     function startClinicChatlogRefreshTimer() {
       stopClinicChatlogRefreshTimer();
-      if (!activeClinicSelection || activeClinicSelection.type !== 'patient' || !activeClinicSelection.id) {
+      if (!window.activeClinicSelection || window.activeClinicSelection.type !== 'patient' || !window.activeClinicSelection.id) {
         return;
       }
       console.log('[DEBUG] 启动患者模式聊天记录定时刷新（每5秒）');
       function tick() {
-        if (activeMode !== 'clinic' || !currentPatientId || currentPatientId !== activeClinicSelection.id) return;
+        if (activeMode !== 'clinic' || !window.currentPatientId || window.currentPatientId !== window.activeClinicSelection.id) return;
         if (!currentUser || !currentUser.phone) return;
         refreshClinicPatientMessages();
       }
@@ -238,11 +238,11 @@
 
     // 刷新当前选中患者的聊天记录：与云端比对，只追加新消息，避免整页重绘导致闪烁
     async function refreshClinicPatientMessages() {
-      if (activeMode !== 'clinic' || !currentPatientId || !activeClinicSelection || activeClinicSelection.type !== 'patient' || activeClinicSelection.id !== currentPatientId) {
+      if (activeMode !== 'clinic' || !window.currentPatientId || !window.activeClinicSelection || window.activeClinicSelection.type !== 'patient' || window.activeClinicSelection.id !== window.currentPatientId) {
         return;
       }
       try {
-        const raw = await fetchPatientChatlog(currentPatientId);
+        const raw = await fetchPatientChatlog(window.currentPatientId);
         const cloudMessages = normalizeChatlogMessages(raw);
         if (cloudMessages.length === 0) return;
         const existingIds = new Set(messages.map(m => (m && m.uuid) || ''));
@@ -270,7 +270,7 @@
     // 这样 append_common_chatlog 写入的数据能可靠同步到前端（即使 WebSocket 未连接）
     async function refreshAiAssistantMessages() {
       // 只在AI助手频道时刷新
-      if (activeMode !== 'corpus' || currentPatientId !== 'common') {
+      if (activeMode !== 'corpus' || window.currentPatientId !== 'common') {
         return;
       }
 

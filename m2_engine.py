@@ -4,6 +4,7 @@ M2 辨证选方引擎 v1 — 中医辅助诊疗系统「守一」
 基于 M2_SOURCE_PROMPT.md 实现。
 核心原则：提示词驱动，LLM 深度参与，代码仅执行确定性规则。
 """
+import os
 import json
 import re
 import time
@@ -80,22 +81,42 @@ class M2SyndromeSelector:
         age: str = "",
         weight: str = "",
     ) -> Dict:
-        """主入口：辨证选方 + 病案检索 + 加减控制（LLM 优先，代码兜底）"""
+        """兼容入口：内部串联 M2-1 辨证 trace 与 M2-2 候选方合同。"""
+        m2_1 = self.run_m2_1_syndrome_reasoning(
+            primary_disease=primary_disease,
+            symptoms=symptoms,
+            signs=signs,
+            tongue=tongue,
+            pulse=pulse,
+            cold_heat=cold_heat,
+            stool_urine=stool_urine,
+            sleep=sleep,
+            appetite=appetite,
+            labs=labs,
+            imaging=imaging,
+            age=age,
+            weight=weight,
+        )
+        if m2_1.get("status") == "NO_CANDIDATE":
+            return m2_1
 
-        # ── Step 1：加载候选证型池 ──
-        syndromes = self._load_syndromes(primary_disease)
-        if not syndromes:
-            return {
-                "primary_disease": primary_disease,
-                "error": f"'{primary_disease}' 不在知识库或下无证型数据",
-                "needs_manual_review": True,
-            }
+        m2_2 = self.run_m2_2_formula_candidates(
+            primary_disease=primary_disease,
+            syndrome_trace=m2_1.get("syndrome_trace", {}),
+            symptoms=symptoms or [],
+        )
+        if m2_2.get("status") == "NO_CANDIDATE":
+            m2_2["syndrome_trace"] = m2_1.get("syndrome_trace", {})
+            m2_2["evidence_trace"] = m2_1.get("evidence_trace", [])
+            return m2_2
 
-        # ── Step 2：LLM 不可用时用代码兜底 ──
-        if not self._llm_available():
-            return self._fallback_full(primary_disease, syndromes, symptoms)
-
-        # ── Step 3：构造 LLM prompt ──
+        first_candidate = (m2_2.get("formula_candidates") or [{}])[0]
+        formula = {
+            "name": first_candidate.get("formula_name", ""),
+            "herbs": first_candidate.get("herbs", []),
+            "source": first_candidate.get("source", "data/m2_formula_knowledge.json"),
+        }
+        cases = self._search_cases(primary_disease, m2_1.get("selected_syndrome_key", ""))
         patient_info = {
             "symptoms": symptoms or [],
             "signs": signs or [],
@@ -110,58 +131,323 @@ class M2SyndromeSelector:
             "age": age,
             "weight": weight,
         }
-        prompt = self._build_prompt(primary_disease, syndromes, patient_info)
-
-        # ── Step 4：调用 LLM ──
-        llm_result = self._call_llm(prompt)
-        parsed = None
-        if llm_result:
-            parsed = self._parse_llm_result(llm_result, syndromes)
-        if not parsed:
-            return self._fallback_full(primary_disease, syndromes, symptoms)
-
-        # ── Step 5：读取绑定方剂和 herbs ──
-        selected = parsed["selected_syndrome"]
-        syndrome_data = syndromes.get(selected["name"])
-        if not syndrome_data:
-            return self._fallback_full(primary_disease, syndromes, symptoms)
-
-        name_match = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
-        syndrome_display = name_match.group(1) if name_match else selected["name"]
-
-        formula_name = syndrome_data.get("formula_name", "")
-        herbs = syndrome_data.get("herbs", [])
-
-        # ── Step 6：病案检索（基于病名+证型） ──
-        cases = self._search_cases(primary_disease, selected["name"])
-        if not cases:
-            llm_case = self._fetch_reference_case_from_llm(primary_disease, selected["name"], patient_info)
-            if llm_case:
-                cases = [llm_case]
-
-        # ── Step 7：药物加减控制（基于病案参考） ──
-        modifications = self._generate_modifications(primary_disease, selected["name"],
-                                                      herbs, cases, patient_info)
-
-        return {
+        modifications = self._generate_modifications(
+            primary_disease,
+            m2_1.get("selected_syndrome_key", ""),
+            formula.get("herbs", []),
+            cases,
+            patient_info,
+        )
+        result = {
             "primary_disease": primary_disease,
+            "status": "PASS",
             "syndrome_differentiation": {
                 "selected_syndrome": {
-                    "name": syndrome_display,
-                    "reason": selected.get("reason", ""),
+                    "name": m2_1.get("syndrome_trace", {}).get("syndrome_name", ""),
+                    "reason": m2_1.get("syndrome_trace", {}).get("reasoning_summary", ""),
                 },
-                "differentiation_framework": parsed.get("differentiation_framework", "脏腑"),
+                "differentiation_framework": m2_1.get("differentiation_framework", "脏腑"),
             },
-            "formula": {
-                "name": formula_name,
+            "formula": formula,
+            "formula_candidates": m2_2.get("formula_candidates", []),
+            "candidate_only": True,
+            "need_m2_3": True,
+            "must_enter_m3": True,
+            "no_candidate": False,
+            "modifications": modifications,
+            "modification_candidates": self._normalize_modification_candidates(
+                modifications,
+                primary_disease,
+                symptoms or [],
+            ),
+            "case_references": cases,
+            "syndrome_trace": m2_1.get("syndrome_trace", {}),
+            "evidence_trace": m2_1.get("evidence_trace", []),
+            "input_trace": m2_1.get("input_trace", {}),
+            "needs_manual_review": False,
+            "formal_prescription_allowed": False,
+        }
+        return self._strip_forbidden_prescription_fields(result)
+
+    def _strip_forbidden_prescription_fields(self, value):
+        forbidden = {
+            "prescription_text", "final_formula", "complete_formula", "final_prescription",
+            "prescription", "full_formula", "dosage", "dose", "用法", "疗程",
+        }
+        if isinstance(value, dict):
+            cleaned = {}
+            removed = []
+            for key, item in value.items():
+                if key in forbidden:
+                    removed.append(key)
+                    continue
+                if key == "formal_prescription_allowed":
+                    cleaned[key] = False
+                    if item is True:
+                        removed.append(key)
+                    continue
+                cleaned[key] = self._strip_forbidden_prescription_fields(item)
+            if removed:
+                existing = cleaned.get("forbidden_fields_removed", [])
+                cleaned["forbidden_fields_removed"] = sorted(set(existing + removed))
+                cleaned["legacy_prescription_path_blocked"] = True
+            return cleaned
+        if isinstance(value, list):
+            return [self._strip_forbidden_prescription_fields(item) for item in value]
+        return value
+
+    def run_m2_1_syndrome_reasoning(
+        self,
+        primary_disease: str,
+        symptoms: Optional[List[str]] = None,
+        signs: Optional[List[str]] = None,
+        tongue: str = "",
+        pulse: str = "",
+        cold_heat: Optional[List[str]] = None,
+        stool_urine: Optional[List[str]] = None,
+        sleep: Optional[List[str]] = None,
+        appetite: Optional[List[str]] = None,
+        labs: Optional[List[str]] = None,
+        imaging: Optional[List[str]] = None,
+        age: str = "",
+        weight: str = "",
+    ) -> Dict:
+        """M2-1 独立入口：只做辨证 trace，不输出方剂、处方、剂量。"""
+        symptoms = symptoms or []
+        input_trace = {
+            "m1_primary_disease_received": primary_disease,
+            "symptoms_received": symptoms,
+            "knowledge_source": "data/m2_formula_knowledge.json",
+            "stage": "M2_1",
+        }
+        syndromes = self._load_syndromes(primary_disease)
+        if not syndromes:
+            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                primary_disease=primary_disease,
+                reason=f"'{primary_disease}' 不在知识库或下无证型数据",
+                missing_key=primary_disease,
+                searched_terms=[primary_disease],
+                input_trace=input_trace,
+            ))
+
+        patient_info = {
+            "symptoms": symptoms,
+            "signs": signs or [],
+            "tongue": tongue,
+            "pulse": pulse,
+            "cold_heat": cold_heat or [],
+            "stool_urine": stool_urine or [],
+            "sleep": sleep or [],
+            "appetite": appetite or [],
+            "labs": labs or [],
+            "imaging": imaging or [],
+            "age": age,
+            "weight": weight,
+        }
+        parsed = None
+        if self._llm_available():
+            llm_result = self._call_llm(self._build_prompt(primary_disease, syndromes, patient_info))
+            parsed = self._parse_llm_result(llm_result, syndromes) if llm_result else None
+        if not parsed:
+            parsed = self._fallback_parse(syndromes, primary_disease, symptoms)
+        if not parsed:
+            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                primary_disease=primary_disease,
+                reason="LLM 与代码兜底均无法得出辨证结果",
+                missing_key=primary_disease,
+                searched_terms=[primary_disease],
+                input_trace=input_trace,
+            ))
+
+        selected = parsed.get("selected_syndrome", {})
+        selected_key = selected.get("name", "")
+        syndrome_data = syndromes.get(selected_key, {})
+        name_match = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+        syndrome_display = name_match.group(1) if name_match else selected_key
+        reason = selected.get("reason") or parsed.get("reasoning") or selected.get("trigger") or "知识库证型匹配"
+        result = {
+            "stage": "M2_1",
+            "status": "PASS",
+            "primary_disease": primary_disease,
+            "selected_syndrome_key": selected_key,
+            "differentiation_framework": parsed.get("differentiation_framework", "脏腑"),
+            "syndrome_trace": {
+                "syndrome_name": syndrome_display,
+                "evidence": [s for s in symptoms if isinstance(s, str) and s.strip()],
+                "reasoning_summary": reason,
+                "confidence": 0.7 if syndrome_display else 0.0,
+            },
+            "evidence_trace": [
+                {"source": "patient_symptom", "text": s}
+                for s in symptoms if isinstance(s, str) and s.strip()
+            ],
+            "input_trace": input_trace,
+            "formal_prescription_allowed": False,
+        }
+        return self._strip_forbidden_prescription_fields(result)
+
+    def run_m2_2_formula_candidates(
+        self,
+        primary_disease: str,
+        syndrome_trace: Optional[Dict] = None,
+        symptoms: Optional[List[str]] = None,
+    ) -> Dict:
+        """M2-2 独立入口：只查方剂候选，不输出正式处方。"""
+        symptoms = symptoms or []
+        syndrome_trace = syndrome_trace or {}
+        input_trace = {
+            "m1_primary_disease_received": primary_disease,
+            "symptoms_received": symptoms,
+            "knowledge_source": "data/m2_formula_knowledge.json",
+            "stage": "M2_2",
+        }
+        syndromes = self._load_syndromes(primary_disease)
+        if not syndromes:
+            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                primary_disease=primary_disease,
+                reason=f"'{primary_disease}' 不在知识库或下无证型数据",
+                missing_key=primary_disease,
+                searched_terms=[primary_disease],
+                input_trace=input_trace,
+            ))
+
+        syndrome_name = syndrome_trace.get("syndrome_name", "")
+        selected_key = ""
+        for key, data in syndromes.items():
+            trigger = str(data.get("trigger", ""))
+            if syndrome_name and (syndrome_name == key or syndrome_name in trigger):
+                selected_key = key
+                break
+        if not selected_key:
+            fallback = self._fallback_parse(syndromes, primary_disease, symptoms)
+            selected_key = (fallback or {}).get("selected_syndrome", {}).get("name", "")
+        if not selected_key or selected_key not in syndromes:
+            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                primary_disease=primary_disease,
+                reason=f"'{primary_disease}' 未找到可匹配证型对应方剂",
+                missing_key=syndrome_name or primary_disease,
+                searched_terms=[primary_disease, syndrome_name],
+                input_trace=input_trace,
+            ))
+
+        syndrome_data = syndromes[selected_key]
+        formula_name = syndrome_data.get("formula_name", "")
+        herbs = syndrome_data.get("herbs", [])
+        if not formula_name:
+            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                primary_disease=primary_disease,
+                reason=f"证型 '{selected_key}' 缺少绑定方剂",
+                missing_key=selected_key,
+                searched_terms=[primary_disease, syndrome_name, selected_key],
+                input_trace=input_trace,
+            ))
+
+        name_match = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+        display = syndrome_name or (name_match.group(1) if name_match else selected_key)
+        result = {
+            "stage": "M2_2",
+            "status": "PASS",
+            "primary_disease": primary_disease,
+            "candidate_only": True,
+            "need_m2_3": True,
+            "must_enter_m3": True,
+            "no_candidate": False,
+            "formula_candidates": [{
+                "disease_name": primary_disease,
+                "syndrome_name": display,
+                "formula_name": formula_name,
                 "herbs": herbs,
                 "source": "data/m2_formula_knowledge.json",
-            },
-            "modifications": modifications,
-            "case_references": cases,
-            "needs_manual_review": False,
-            "missing_info": parsed.get("missing_info", []),
+            }],
+            "searched_terms": [primary_disease, syndrome_name, selected_key],
+            "input_trace": input_trace,
+            "formal_prescription_allowed": False,
         }
+        return self._strip_forbidden_prescription_fields(result)
+
+    def _build_no_candidate(self, primary_disease: str, reason: str, missing_key: str,
+                            searched_terms: List[str], input_trace: Optional[Dict] = None) -> Dict:
+        return {
+            "primary_disease": primary_disease,
+            "status": "NO_CANDIDATE",
+            "formula_candidates": [],
+            "modification_candidates": [],
+            "candidate_only": True,
+            "need_m2_3": True,
+            "must_enter_m3": True,
+            "no_candidate": True,
+            "reason": reason,
+            "searched_terms": searched_terms,
+            "missing_key": missing_key,
+            "syndrome_trace": {
+                "syndrome_name": "",
+                "evidence": [],
+                "reasoning_summary": reason,
+                "confidence": 0.0,
+            },
+            "evidence_trace": [],
+            "input_trace": input_trace or {},
+            "needs_manual_review": True,
+        }
+
+    def _with_candidate_contract(self, result: Dict, primary_disease: str,
+                                 symptoms: List[str], input_trace: Dict) -> Dict:
+        selected = result.get("syndrome_differentiation", {}).get("selected_syndrome", {})
+        syndrome_name = selected.get("name", "")
+        reason = selected.get("reason", "") or selected.get("trigger", "") or "知识库证型匹配"
+        result["status"] = result.get("status", "PASS")
+        result["candidate_only"] = True
+        result["need_m2_3"] = True
+        result["must_enter_m3"] = True
+        result["no_candidate"] = False
+        result["formula_candidates"] = [{
+            "disease_name": primary_disease,
+            "syndrome_name": syndrome_name,
+            "formula_name": result.get("formula", {}).get("name", ""),
+            "source": result.get("formula", {}).get("source", "data/m2_formula_knowledge.json"),
+        }] if result.get("formula", {}).get("name") else []
+        result["syndrome_trace"] = {
+            "syndrome_name": syndrome_name,
+            "evidence": [s for s in symptoms if isinstance(s, str) and s.strip()],
+            "reasoning_summary": reason,
+            "confidence": 0.7 if syndrome_name else 0.0,
+        }
+        result["evidence_trace"] = [
+            {"source": "patient_symptom", "text": s}
+            for s in symptoms if isinstance(s, str) and s.strip()
+        ]
+        result["input_trace"] = input_trace
+        result["modification_candidates"] = self._normalize_modification_candidates(
+            result.get("modifications", []),
+            primary_disease,
+            symptoms,
+        )
+        return result
+
+    def _normalize_modification_candidates(self, modifications: List[Dict],
+                                           disease_name: str,
+                                           symptoms: List[str]) -> List[Dict]:
+        normalized = []
+        symptom_text = "；".join(symptoms or [])
+        for item in modifications or []:
+            if not isinstance(item, dict):
+                continue
+            herb = item.get("herb", "")
+            if not herb:
+                continue
+            evidence = item.get("source") or item.get("evidence_sources") or "case_reference_or_herb_kb"
+            if isinstance(evidence, str):
+                evidence = [evidence]
+            normalized.append({
+                "herb": herb,
+                "action": item.get("action", "candidate_add"),
+                "reason": item.get("reason", ""),
+                "target_disease": item.get("target_disease", disease_name),
+                "target_symptom": item.get("target_symptom", item.get("matched_symptom", symptom_text)),
+                "western_pathology": item.get("western_pathology", item.get("western_pathology_target", "symptom_targeted_support")),
+                "evidence_sources": evidence,
+            })
+        return normalized
 
     # ══════════════════════════════════════════════════════
     #  Prompt 构建
@@ -557,6 +843,20 @@ class M2SyndromeSelector:
             sleep, appetite, labs, imaging, age, weight,
             pregnancy (bool), lactation (bool)
         """
+        if os.getenv("ALLOW_LEGACY_M2_FULL_PIPELINE", "false").lower() != "true":
+            return {
+                "pipeline": "m2+m3_full",
+                "status": "BLOCKED",
+                "legacy_prescription_path_blocked": True,
+                "candidate_only": True,
+                "must_enter_m3": True,
+                "trace_closure_required": True,
+                "formal_prescription_allowed": False,
+                "blocked_reason": [
+                    "legacy_full_pipeline_contains_final_prescription_and_dosage",
+                    "formal_gate_paused",
+                ],
+            }
         # ── 1. M2 辨证选方 ──
         m2_result = self.process(
             primary_disease=primary_disease,
@@ -709,6 +1009,12 @@ class M2SyndromeSelector:
 
     def _extract_dosages(self, herbs: list, primary_disease: str) -> dict:
         """从知识库 full_decoction 中提取药物剂量"""
+        if os.getenv("ALLOW_LEGACY_DOSAGE_EXTRACTION", "false").lower() != "true":
+            return {
+                "_blocked": True,
+                "legacy_prescription_path_blocked": True,
+                "formal_prescription_allowed": False,
+            }
         dosages = {}
         disease_data = self.kb.get(primary_disease, {})
         if not disease_data:

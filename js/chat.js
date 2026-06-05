@@ -28,7 +28,7 @@
         const msgImgUrl = msgContent.imgurl || '';
 
         // 对于AI助手频道，如果文本内容完全相同，就认为是重复消息（不管时间戳）
-        if (currentPatientId === 'common') {
+        if (window.currentPatientId === 'common') {
           if (messageText && msgText && messageText.trim() === msgText.trim()) {
             return true;
           }
@@ -75,9 +75,9 @@
       });
 
       // 如果有当前病人ID，更新缓存（每次添加消息都保存）
-      if (currentPatientId) {
+      if (window.currentPatientId) {
         // 深拷贝消息数组，避免引用问题
-        patientMessagesCache[currentPatientId] = messages.map(msg => {
+        patientMessagesCache[window.currentPatientId] = messages.map(msg => {
           const msgCopy = { ...msg };
           // 确保content字段格式正确
           if (msgCopy.content && typeof msgCopy.content === 'string') {
@@ -90,7 +90,7 @@
           return msgCopy;
         });
         savePatientMessagesCache();
-        console.log(`[DEBUG] 更新患者[${currentPatientId}]的消息缓存，共${messages.length}条`);
+        console.log(`[DEBUG] 更新患者[${window.currentPatientId}]的消息缓存，共${messages.length}条`);
       }
 
       renderMessages();
@@ -310,6 +310,11 @@
       const content = (rawContent && typeof rawContent === 'object')
         ? { ...rawContent }
         : { text: typeof rawContent === 'string' ? rawContent : '' };
+
+      // 保留 html 标记，跳过文本处理
+      if (content.html) {
+        return content;
+      }
 
       const originalText = normalizeQingdaReplyText(stripLeakedRagPromptText(content.text || ''), role);
       const extracted = extractReferencesFromText(originalText);
@@ -892,7 +897,7 @@
       if (!container) return;
 
       // 仅在问诊模式且选中患者时显示内容；否则显示占位
-      if (activeMode !== 'clinic' || !currentPatientId) {
+      if (activeMode !== 'clinic' || !window.currentPatientId) {
         container.innerHTML = '<div class="text-lg text-slate-400 text-center py-4">暂无参考文献</div>';
         return;
       }
@@ -997,7 +1002,7 @@
     // 从当前患者的消息中抽取参考文献，更新侧边栏（只保留最近10条）
     function updateSidebarReferencesFromMessages() {
       // 仅在问诊模式且有当前患者时处理
-      if (activeMode !== 'clinic' || !currentPatientId) {
+      if (activeMode !== 'clinic' || !window.currentPatientId) {
         sidebarReferences = [];
         renderSidebarReferences();
         return;
@@ -1163,6 +1168,9 @@
             }).join('') + `</div>`;
           }
           contentHtml += `</div></div>`;
+        } else if (content.html) {
+          // html 标记的内容直接渲染（如诊断卡片）
+          contentHtml += '<div class="html-direct">' + content.text + '</div>';
         } else {
         // 对于 Markdown 内容，保留原始文本（包括空行）；对于普通文本，使用 normalizeMessageText
         let rawText = normalizeComplianceText(content.text || '');
@@ -1222,8 +1230,8 @@
         const shouldShowInlineRag = (
           typeof activeMode !== 'undefined' &&
           activeMode === 'corpus' &&
-          typeof currentPatientId !== 'undefined' &&
-          currentPatientId !== 'common'
+          typeof window.currentPatientId !== 'undefined' &&
+          window.currentPatientId !== 'common'
         );
         if (ragContents && ragContents.length > 0 && !isUser && !isSystem && shouldShowInlineRag) {
           contentHtml += `<div class="mt-3 pt-2 border-t border-slate-200 bg-rice-paper rounded-lg p-3">
@@ -1310,7 +1318,321 @@
 
     }
 
-    function normalizeComplianceText(value) {
+    
+
+// ===== 结构化追问问题渲染（2025-06-01 新增） =====
+
+/**
+ * 将自定义 DOM 节点追加到聊天容器末尾（不经过 messages 数组）
+ * 用于显示问题卡片等交互式元素
+ */
+function appendCustomMessageToChat(containerEl) {
+  var chatContainer = document.getElementById('chat-container');
+  if (!chatContainer) return;
+
+  var wrapper = document.createElement('div');
+  wrapper.className = 'flex justify-start';
+  wrapper.innerHTML = '<div class="max-w-[80%]"><div class="px-3.5 py-2.5 text-[13px] leading-6 shadow-md rounded-2xl bg-white border border-slate-200 rounded-tl-sm message-bubble selection-q-bubble"></div></div>';
+  var bubble = wrapper.querySelector('.message-bubble');
+  bubble.appendChild(containerEl);
+
+  chatContainer.appendChild(wrapper);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  if (typeof lucide !== 'undefined' && lucide.createIcons) {
+    lucide.createIcons();
+  }
+}
+
+function extractSelectionQuestions(message) {
+  // 处理 answer 可能是字符串的情况
+  var answer = message && message.answer;
+  if (typeof answer === 'string') {
+    try {
+      answer = JSON.parse(answer);
+    } catch (e) {
+      answer = null;
+    }
+  }
+  answer = answer || {};
+
+  var payload = message && message.payload ? message.payload : {};
+  var data = message && message.data ? message.data : {};
+
+  var hasQuestions = !!message.questions;
+  var hasPayloadQuestions = !!(message.payload && message.payload.questions);
+  var hasDataQuestions = !!(message.data && message.data.questions);
+  var hasAnswer = !!message.answer;
+  var answerType = typeof message.answer;
+  var answerKeys = message.answer && typeof message.answer === 'object' ? Object.keys(message.answer) : null;
+
+  console.log('[EXTRACT_SOURCE_DEBUG]', {
+    hasQuestions: hasQuestions,
+    hasPayloadQuestions: hasPayloadQuestions,
+    hasDataQuestions: hasDataQuestions,
+    hasAnswer: hasAnswer,
+    answerType: answerType,
+    answerKeys: answerKeys,
+    answerStringified: hasAnswer && typeof message.answer === 'object'
+      ? JSON.stringify(message.answer).slice(0, 500)
+      : null
+  });
+
+  // 从 answer 中提取深层嵌套（answer.payload / answer.data）
+  var answerPayload = answer.payload || {};
+  var answerData = answer.data || {};
+
+  var source =
+    // 顶层
+    message.questions ||
+    message.question_list ||
+    message.items ||
+    message.qa_items ||
+    message.selection_questions ||
+    // payload 层
+    payload.questions ||
+    payload.question_list ||
+    payload.items ||
+    payload.qa_items ||
+    payload.selection_questions ||
+    // data 层
+    data.questions ||
+    data.question_list ||
+    data.items ||
+    data.qa_items ||
+    data.selection_questions ||
+    // answer 层
+    answer.questions ||
+    answer.question_list ||
+    answer.items ||
+    answer.qa_items ||
+    answer.selection_questions ||
+    // answer.payload 层
+    answerPayload.questions ||
+    answerPayload.question_list ||
+    answerPayload.items ||
+    answerPayload.qa_items ||
+    answerPayload.selection_questions ||
+    // answer.data 层
+    answerData.questions ||
+    answerData.question_list ||
+    answerData.items ||
+    answerData.qa_items ||
+    answerData.selection_questions ||
+    // 兜底：如果 answer.type 是 selection_q，尝试找任何数组字段
+    (answer.type === 'selection_q' && (
+      findFirstArray(answer) ||
+      findFirstArray(answerPayload) ||
+      findFirstArray(answerData)
+    )) ||
+    [];
+
+  if (!Array.isArray(source)) {
+    console.log('[EXTRACT_SOURCE_NO_ARRAY]', {
+      sourceType: typeof source,
+      source: source
+    });
+    return [];
+  }
+
+  return source.map(function(q, index) {
+    q = q || {};
+    var text =
+      q.question ||
+      q.text ||
+      q.title ||
+      q.content ||
+      q.label ||
+      '';
+
+    var options =
+      q.options ||
+      q.choices ||
+      q.answers ||
+      q.option_list ||
+      [];
+
+    return {
+      id: q.id || q.question_id || ('q_' + (index + 1)),
+      text: text,
+      options: Array.isArray(options) ? options : []
+    };
+  }).filter(function(q) { return q.text; });
+}
+
+// 辅助函数：在对象中找第一个数组字段
+function findFirstArray(obj) {
+  if (!obj || typeof obj !== 'object') return null;
+  var keys = Object.keys(obj);
+  for (var i = 0; i < keys.length; i++) {
+    var val = obj[keys[i]];
+    if (Array.isArray(val)) return val;
+  }
+  return null;
+}
+
+function shouldRenderSelectionQuestions(message) {
+  var answer = message && message.answer ? message.answer : {};
+  var payload = message && message.payload ? message.payload : {};
+  var data = message && message.data ? message.data : {};
+  var type = message && message.type;
+  var nestedType = payload.type || data.type || answer.type;
+  var hasQuestionArray = extractSelectionQuestions(message).length > 0;
+  return hasQuestionArray && (
+    type === 'selection_q' ||
+    type === 'question_batch' ||
+    type === 'interactive_qa' ||
+    nestedType === 'selection_q' ||
+    nestedType === 'question_batch' ||
+    nestedType === 'interactive_qa' ||
+    hasQuestionArray
+  );
+}
+
+/**
+ * 渲染追问问题卡片（每轮最多显示 3 个）
+ */
+function renderSelectionQuestions(message) {
+  var patientId =
+    message.patient_id ||
+    message.patientId ||
+    (message.answer && (message.answer.patient_id || message.answer.patientId)) ||
+    (message.payload && (message.payload.patient_id || message.payload.patientId)) ||
+    (message.data && (message.data.patient_id || message.data.patientId)) ||
+    window.currentPatientId;
+
+  var questions = extractSelectionQuestions(message);
+
+  console.log('[SELECTION_QUESTIONS_EXTRACTED]', {
+    patientId: patientId,
+    count: questions.length,
+    questions: questions
+  });
+
+    if (!questions.length) {
+    // 检查 answer 里是否有 text 等字段，提示后端格式问题
+    var ans = message && message.answer;
+    var ansType = typeof ans;
+    var hasText = ans && (ans.text || (typeof ans === 'object' && ans.text));
+    var hint = '后端返回的 answer 不含结构化 questions';
+    if (hasText || ansType === 'string') {
+      hint += '，而是文本 answer（text=' + (typeof ans === 'string' ? ans.slice(0, 80) : (ans.text || '').slice(0, 80)) + '…），需要后端改为 selection_q 格式';
+    }
+    console.log('[SELECTION_QUESTIONS_EMPTY]', hint, 'messageType:', message && message.type, 'answerKeys:', ans && typeof ans === 'object' ? Object.keys(ans) : null);
+    if (typeof appendMessage === 'function') appendMessage('system', hint);
+    return;
+  }
+
+  window.pendingSelectionQuestions = questions.slice(3);
+  window.currentSelectionAnswers = message._preserveSelectionAnswers
+    ? (window.currentSelectionAnswers || {})
+    : {};
+
+  var visibleQuestions = questions.slice(0, 3);
+  window.currentVisibleSelectionQuestionIds = visibleQuestions.map(function(q) { return q.id; });
+
+  var container = document.createElement('div');
+  container.className = 'selection-question-group';
+
+  visibleQuestions.forEach(function(q) {
+    var card = document.createElement('div');
+    card.className = 'selection-question-card';
+    card.setAttribute('data-selection-question-id', q.id);
+
+    var title = document.createElement('div');
+    title.className = 'selection-question-title';
+    title.textContent = q.text;
+
+    var optionWrap = document.createElement('div');
+    optionWrap.className = 'selection-option-wrap';
+
+    var options = q.options.length ? q.options : ['是', '否', '不确定', '其他'];
+    options.forEach(function(opt) {
+      var btn = document.createElement('button');
+      btn.className = 'selection-option-btn';
+      btn.textContent = typeof opt === 'string' ? opt : (opt.label || opt.text || opt.value || '选项');
+
+      btn.onclick = function() {
+        window.currentSelectionAnswers[q.id] = {
+          question: q.text,
+          answer: btn.textContent
+        };
+
+        optionWrap.querySelectorAll('button').forEach(function(b) {
+          b.classList.remove('selected');
+        });
+        btn.classList.add('selected');
+
+        checkSelectionQuestionCompletion(patientId);
+      };
+
+      optionWrap.appendChild(btn);
+    });
+
+    card.appendChild(title);
+    card.appendChild(optionWrap);
+    container.appendChild(card);
+  });
+
+  appendCustomMessageToChat(container);
+}
+
+/**
+ * 检查当前轮次问题是否全部回答完毕
+ */
+function checkSelectionQuestionCompletion(patientId) {
+  var visibleIds = window.currentVisibleSelectionQuestionIds || [];
+  var answers = window.currentSelectionAnswers || {};
+  var allVisibleAnswered = visibleIds.length > 0 && visibleIds.every(function(id) {
+    return Boolean(answers[id]);
+  });
+
+  if (!allVisibleAnswered) return;
+
+  if (window.pendingSelectionQuestions && window.pendingSelectionQuestions.length > 0) {
+    var next = {
+      type: 'selection_q',
+      patient_id: patientId,
+      questions: window.pendingSelectionQuestions,
+      _preserveSelectionAnswers: true
+    };
+
+    window.pendingSelectionQuestions = [];
+    renderSelectionQuestions(next);
+    return;
+  }
+
+  sendSelectionAnswers(patientId, window.currentSelectionAnswers);
+}
+
+var checkSelectionQuestionsCompleted = checkSelectionQuestionCompletion;
+window.extractSelectionQuestions = extractSelectionQuestions;
+window.shouldRenderSelectionQuestions = shouldRenderSelectionQuestions;
+window.renderSelectionQuestions = renderSelectionQuestions;
+window.checkSelectionQuestionCompletion = checkSelectionQuestionCompletion;
+window.sendSelectionAnswers = sendSelectionAnswers;
+
+/**
+ * 将追问答案提交给后端
+ */
+function sendSelectionAnswers(patientId, answers) {
+  var payload = {
+    type: 'selection_answers',
+    patient_id: patientId,
+    answers: answers
+  };
+
+  if (window.ws && window.ws.readyState === WebSocket.OPEN) {
+    window.ws.send(JSON.stringify(payload));
+    console.log('[SELECTION_ANSWERS_SENT]', payload);
+  } else {
+    console.error('[SELECTION_ANSWERS_SEND_FAILED]', payload);
+    if (typeof appendMessage === 'function') appendMessage('system', 'WebSocket 未连接，答案暂未发送。');
+  }
+}
+
+
+function normalizeComplianceText(value) {
       if (value == null) return value;
       return String(value)
         .replace(/病名诊断/g, '评估结论')
@@ -1455,6 +1777,3 @@
         return escapeHtml(text);
       }
     }
-
-
-

@@ -100,7 +100,7 @@
     "normalized_complaint": "腹痛",
     "must_consider": [
       {"disease_name": "Acute Pancreatitis", "reason": "上腹痛向背部放射、呕吐、淀粉酶或脂肪酶升高时需考虑。", "priority": 0.9, "red_flag_relevant": true, "mapping_status": "in_m1"},
-      {"disease_name": "Appendicitis", "reason": "转移性右下腹痛、发热、压痛或反跳痛时必须排除。", "priority": 0.88, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+      {"disease_name": "Appendicitis", "reason": "转移性右下腹痛、发热、压痛或反跳痛时必须排除。", "priority": 0.88, "red_flag_relevant": true, "mapping_status": "in_m1"}
     ],
     "common_differentials": [{"disease_name": "Cholecystitis", "mapping_status": "in_m1"}, {"disease_name": "Bowel Obstruction", "mapping_status": "not_in_m1"}, {"disease_name": "Ectopic Pregnancy", "mapping_status": "not_in_m1"}],
     "red_flags": ["腹膜刺激征", "休克", "持续呕吐", "黑便", "妊娠可能"],
@@ -147,7 +147,7 @@
   "黑便/呕血": {
     "normalized_complaint": "黑便/呕血",
     "must_consider": [
-      {"disease_name": "Upper Gastrointestinal Bleeding", "reason": "呕血、黑便、头晕、低血压或贫血时必须排除活动性消化道出血。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+      {"disease_name": "Upper Gastrointestinal Bleeding", "reason": "呕血、黑便、头晕、低血压或贫血时必须排除活动性消化道出血。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "in_m1"}
     ],
     "common_differentials": [{"disease_name": "Peptic Ulcer Disease", "mapping_status": "in_m1"}, {"disease_name": "Liver Cirrhosis", "mapping_status": "in_m1"}, {"disease_name": "Gastric Cancer", "mapping_status": "not_in_m1"}],
     "red_flags": ["低血压", "心动过速", "贫血", "晕厥", "抗凝用药"],
@@ -182,7 +182,7 @@
     "normalized_complaint": "少尿/无尿",
     "must_consider": [
       {"disease_name": "Acute Kidney Injury", "reason": "尿量明显减少、肌酐上升、电解质异常或容量问题时必须评估。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "in_m1"},
-      {"disease_name": "Urinary Retention", "reason": "膀胱膨隆、排尿困难或下腹胀痛时需考虑梗阻。", "priority": 0.86, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
+      {"disease_name": "Urinary Retention", "reason": "膀胱膨隆、排尿困难或下腹胀痛时需考虑梗阻。", "priority": 0.86, "red_flag_relevant": true, "mapping_status": "in_m1"}
     ],
     "common_differentials": [{"disease_name": "Sepsis", "mapping_status": "in_m1"}, {"disease_name": "Chronic Kidney Disease", "mapping_status": "in_m1"}, {"disease_name": "Hydronephrosis", "mapping_status": "not_in_m1"}],
     "red_flags": ["无尿", "高钾", "肺水肿", "意识改变", "休克"],
@@ -304,7 +304,7 @@
       {"disease_name": "Ectopic Pregnancy", "reason": "早孕腹痛、阴道流血、晕厥或低血压时必须排除。", "priority": 0.99, "red_flag_relevant": true, "mapping_status": "not_in_m1"},
       {"disease_name": "Placental Abruption", "reason": "中晚孕腹痛、阴道流血、子宫压痛或胎动异常时必须排除。", "priority": 0.98, "red_flag_relevant": true, "mapping_status": "not_in_m1"}
     ],
-    "common_differentials": [{"disease_name": "Miscarriage", "mapping_status": "not_in_m1"}, {"disease_name": "Preterm Labor", "mapping_status": "not_in_m1"}, {"disease_name": "Appendicitis", "mapping_status": "not_in_m1"}],
+    "common_differentials": [{"disease_name": "Miscarriage", "mapping_status": "not_in_m1"}, {"disease_name": "Preterm Labor", "mapping_status": "not_in_m1"}, {"disease_name": "Appendicitis", "mapping_status": "in_m1"}],
     "red_flags": ["晕厥", "低血压", "大量出血", "胎动减少", "持续腹痛"],
     "first_checks": ["生命体征", "妊娠周数", "血红蛋白", "盆腔或产科超声", "胎儿评估按孕周"],
     "must_not_miss": ["Ectopic Pregnancy", "Placental Abruption", "Severe Hemorrhage"],

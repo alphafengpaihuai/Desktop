@@ -232,19 +232,14 @@
 
     // 问诊模式下左侧的选择状态：{ type: 'patient' | 'new', id?: string }
 
-    let activeClinicSelection = {
-
-      type: 'new',
-
-      id: null
-
-    };
+    // 问诊模式下左侧的选择状态：{ type: 'patient' | 'new', id?: string }
+    window.activeClinicSelection = window.activeClinicSelection || { type: 'new', id: null };
 
     // 页面加载时立即从 localStorage 恢复上次选中的患者，避免刷新后选中项丢失
     try {
       const lastId = localStorage.getItem(getClientStorageKey('last_selected_patient_id'));
       if (lastId && String(lastId).trim()) {
-        activeClinicSelection = { type: 'patient', id: lastId.trim() };
+        window.activeClinicSelection = { type: 'patient', id: lastId.trim() };
       }
     } catch (e) { /* ignore */ }
 
@@ -253,7 +248,7 @@
       try {
         const lastPatientId = localStorage.getItem(getClientStorageKey('last_selected_patient_id'));
         if (lastPatientId) {
-          activeClinicSelection = { type: 'patient', id: lastPatientId };
+          window.activeClinicSelection = { type: 'patient', id: lastPatientId };
         }
       } catch (e) {
         console.error('加载上次选中的患者失败:', e);
@@ -298,7 +293,7 @@
     let sidebarReferences = [];
 
     // 当前病人的ID
-    let currentPatientId = null;
+    window.currentPatientId = window.currentPatientId || null;
 
     function getPatientById(patientId) {
       const id = String(patientId || '').trim();
@@ -461,9 +456,9 @@
     // 切换病人时，保存当前病人消息并加载新病人消息（按 uuid 去重，云端优先）
     async function switchPatientMessages(newPatientId, patientData = null) {
       // 保存当前病人的消息（确保在切换前保存）
-      if (currentPatientId && currentPatientId !== newPatientId) {
+      if (window.currentPatientId && window.currentPatientId !== newPatientId) {
         // 始终保存当前消息状态到缓存
-        patientMessagesCache[currentPatientId] = messages.map(msg => {
+        patientMessagesCache[window.currentPatientId] = messages.map(msg => {
           const msgCopy = { ...msg };
           // 确保content字段格式正确（只有当content是字符串时才转换，不要覆盖已有的对象）
           if (msgCopy.content && typeof msgCopy.content === 'string') {
@@ -479,12 +474,12 @@
           return msgCopy;
         });
         savePatientMessagesCache();
-        console.log(`[DEBUG] 保存患者[${currentPatientId}]的消息，共${messages.length}条`);
+        console.log(`[DEBUG] 保存患者[${window.currentPatientId}]的消息，共${messages.length}条`);
       }
 
       // 切换到新病人
-      const oldPatientId = currentPatientId;
-      currentPatientId = newPatientId;
+      const oldPatientId = window.currentPatientId;
+      window.currentPatientId = newPatientId;
 
       // 加载新病人的消息
       // 优先级：1. 云端 chatlog（新接口），2. localStorage 缓存

@@ -1,0 +1,722 @@
+[
+  {
+    "zh_name": "IgA血管炎性肾炎",
+    "clean_zh_name": "IgA血管炎性肾炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "IgA vasculitis nephritis",
+    "triage_class": "C_manual_high_value",
+    "reason": "IgA 血管炎肾脏受累，高价值肾病/免疫病，英文需人工确认是否采用 IgA vasculitis nephritis 或 Henoch-Schonlein purpura nephritis。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "上消化道出血",
+    "clean_zh_name": "上消化道出血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "出血部位/临床事件，病因差异大，药理挖掘需按病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "上睑下垂",
+    "clean_zh_name": "上睑下垂",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Ptosis",
+    "triage_class": "A_promote_to_medium",
+    "reason": "中文 anchor 明确，标准英文病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "下肢动脉硬化闭塞症",
+    "clean_zh_name": "下肢动脉硬化闭塞症",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Lower extremity arteriosclerosis obliterans",
+    "triage_class": "C_manual_high_value",
+    "reason": "外周动脉疾病高价值血管病，英文表述需人工确认与库内 anchor 一致。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "下肢慢性溃疡",
+    "clean_zh_name": "下肢慢性溃疡",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "慢性溃疡为表现/结局，需按糖尿病足、静脉性溃疡、动脉性溃疡等拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "下肢深静脉血栓形成",
+    "clean_zh_name": "下肢深静脉血栓形成",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Deep vein thrombosis",
+    "triage_class": "C_manual_high_value",
+    "reason": "血栓性疾病高价值，建议确认是否限定 lower extremity DVT。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "不射精",
+    "clean_zh_name": "不射精",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/功能障碍表现，病因复杂，不宜直接合并。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "不育症",
+    "clean_zh_name": "不育症",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Infertility",
+    "triage_class": "B_reject_broad",
+    "reason": "过于宽泛，需区分 male/female infertility 或具体病因。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "中心性浆液性脉络膜视网膜病变",
+    "clean_zh_name": "中心性浆液性脉络膜视网膜病变",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Central serous chorioretinopathy",
+    "triage_class": "A_promote_to_medium",
+    "reason": "眼科标准疾病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "中毒",
+    "clean_zh_name": "中毒",
+    "current_suggested_en_name": "Poisoning",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "过于宽泛，需按具体毒物/中毒类型拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "中耳胆脂瘤",
+    "clean_zh_name": "中耳胆脂瘤",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Middle ear cholesteatoma",
+    "triage_class": "A_promote_to_medium",
+    "reason": "耳科标准疾病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "中间葡萄膜炎",
+    "clean_zh_name": "中间葡萄膜炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Intermediate uveitis",
+    "triage_class": "A_promote_to_medium",
+    "reason": "眼科标准疾病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乙状窦血栓性静脉炎",
+    "clean_zh_name": "乙状窦血栓性静脉炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Sigmoid sinus thrombophlebitis",
+    "triage_class": "C_manual_high_value",
+    "reason": "颅内/耳源性血栓感染相关高价值病种，需人工确认术语。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳头溢血",
+    "clean_zh_name": "乳头溢血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/体征，需按导管内乳头状瘤、乳腺癌等病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳房异常发育症",
+    "clean_zh_name": "乳房异常发育症",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "发育异常大类，需具体化。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳房结核",
+    "clean_zh_name": "乳房结核",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Breast tuberculosis",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染病种，高价值但少见，建议人工确认英文。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳腺增生症",
+    "clean_zh_name": "乳腺增生症",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "临床概念较宽，需确认是否作为正式西医 disease anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳腺炎",
+    "clean_zh_name": "乳腺炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "过宽泛，需区分 lactational/non-lactational/mastitis subtype。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳腺癌",
+    "clean_zh_name": "乳腺癌",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Breast cancer",
+    "triage_class": "C_manual_high_value",
+    "reason": "肿瘤高价值病种，英文明确但需确认是否与现有 breast carcinoma anchor 合并。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳腺纤维瘤",
+    "clean_zh_name": "乳腺纤维瘤",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "命名可能不规范，需确认是否指 fibroadenoma。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳腺纤维腺瘤",
+    "clean_zh_name": "乳腺纤维腺瘤",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Breast fibroadenoma",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准良性肿瘤名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后便秘",
+    "clean_zh_name": "产后便秘",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/状态，不建议作为药理病名 anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后出血",
+    "clean_zh_name": "产后出血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Postpartum hemorrhage",
+    "triage_class": "C_manual_high_value",
+    "reason": "产科急症/出血高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后多汗",
+    "clean_zh_name": "产后多汗",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/状态，不建议作为药理病名 anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后尿潴留",
+    "clean_zh_name": "产后尿潴留",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "产后并发症，需确认是否作为独立疾病 anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后尿频",
+    "clean_zh_name": "产后尿频",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状，需按感染/膀胱功能等病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后抑郁症",
+    "clean_zh_name": "产后抑郁症",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "过于宽泛、症状类或当前缺少可靠英文名，暂不合并。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后腹痛",
+    "clean_zh_name": "产后腹痛",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状，病因差异大。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产后身痛",
+    "clean_zh_name": "产后身痛",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/综合表现，非标准现代病名。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "产褥感染",
+    "clean_zh_name": "产褥感染",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Puerperal infection",
+    "triage_class": "C_manual_high_value",
+    "reason": "产科感染高价值，需确认是否用 puerperal sepsis。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "人工流产术后出血",
+    "clean_zh_name": "人工流产术后出血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "事件/并发症，需按病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "代偿性月经",
+    "clean_zh_name": "代偿性月经",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "术语需人工确认，当前不宜合并。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "代指",
+    "clean_zh_name": "代指",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "残缺/非病名。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "传染性单核细胞增多症",
+    "clean_zh_name": "传染性单核细胞增多症",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Infectious mononucleosis",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染病种高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "伤寒",
+    "clean_zh_name": "伤寒",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Typhoid fever",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染病种高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "体位性低血压",
+    "clean_zh_name": "体位性低血压",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Orthostatic hypotension",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准英文病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "便血",
+    "clean_zh_name": "便血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状，需按病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "儿童反复呼吸道感染",
+    "clean_zh_name": "儿童反复呼吸道感染",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Recurrent respiratory tract infections in children",
+    "triage_class": "C_manual_high_value",
+    "reason": "儿科高频病种，高价值，需确认是否作为 syndrome anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "儿童急性扁桃体炎",
+    "clean_zh_name": "儿童急性扁桃体炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Acute tonsillitis in children",
+    "triage_class": "C_manual_high_value",
+    "reason": "儿科感染高频病，英文明确但需确认是否并入 acute tonsillitis。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "儿童抽动障碍",
+    "clean_zh_name": "儿童抽动障碍",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Tic disorder in children",
+    "triage_class": "C_manual_high_value",
+    "reason": "儿科神经行为高频病，需确认与 Tourette/tic disorder anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "儿童腹痛",
+    "clean_zh_name": "儿童腹痛",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状，需按病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "先兆流产",
+    "clean_zh_name": "先兆流产",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "妊娠状态/风险诊断，需谨慎确认英文和纳入边界。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "先天性耳前瘘管",
+    "clean_zh_name": "先天性耳前瘘管",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Congenital preauricular fistula",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准耳科病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "先天性聋",
+    "clean_zh_name": "先天性聋",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Congenital hearing loss",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准英文病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "先天性青光眼",
+    "clean_zh_name": "先天性青光眼",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Congenital glaucoma",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准眼科病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "内伤发热",
+    "clean_zh_name": "内伤发热",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "非现代西医标准病名，不能进入 M1 英文 PubMed mapping。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "内痔",
+    "clean_zh_name": "内痔",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "可有英文名 internal hemorrhoids，但药理挖掘价值和 anchor 需人工确认。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "前列腺癌",
+    "clean_zh_name": "前列腺癌",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Prostate cancer",
+    "triage_class": "C_manual_high_value",
+    "reason": "肿瘤高价值病种，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "前庭大腺炎",
+    "clean_zh_name": "前庭大腺炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "可映射 Bartholin gland abscess/infection，但需确认是否炎症或囊肿。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "前庭神经炎",
+    "clean_zh_name": "前庭神经炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Vestibular neuritis",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准英文病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "前置胎盘",
+    "clean_zh_name": "前置胎盘",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Placenta previa",
+    "triage_class": "C_manual_high_value",
+    "reason": "产科出血风险高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "前置胎盘出血",
+    "clean_zh_name": "前置胎盘出血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Placenta previa bleeding",
+    "triage_class": "C_manual_high_value",
+    "reason": "产科出血高价值，需确认是否并入 placenta previa。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "功能失调性子宫出血",
+    "clean_zh_name": "功能失调性子宫出血",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Dysfunctional uterine bleeding",
+    "triage_class": "A_promote_to_medium",
+    "reason": "常用英文检索名明确，但需注意现代分类可能归入 AUB。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "包皮龟头炎",
+    "clean_zh_name": "包皮龟头炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "较宽泛，需确认 balanoposthitis/具体感染病因。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "化脓性中耳乳突炎并发迷路炎",
+    "clean_zh_name": "化脓性中耳乳突炎并发迷路炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Suppurative otitis media and mastoiditis with labyrinthitis",
+    "triage_class": "D_cleanup_needed",
+    "reason": "复合并发症名，需拆分或人工确认 anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "化脓性腮腺炎",
+    "clean_zh_name": "化脓性腮腺炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Suppurative parotitis",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染病种，英文明确但建议人工确认。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "化脓性骨髓炎",
+    "clean_zh_name": "化脓性骨髓炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Suppurative osteomyelitis",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染/骨病高价值，英文需人工确认与 osteomyelitis 合并关系。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "化脓性髋关节炎",
+    "clean_zh_name": "化脓性髋关节炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Suppurative arthritis of the hip",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染/关节病高价值，需人工确认术语。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "单纯性甲状腺肿",
+    "clean_zh_name": "单纯性甲状腺肿",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Simple goiter",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准英文病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "单纯疱疹病毒性角膜炎",
+    "clean_zh_name": "单纯疱疹病毒性角膜炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Herpes simplex keratitis",
+    "triage_class": "C_manual_high_value",
+    "reason": "眼科感染高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "单纯糠疹",
+    "clean_zh_name": "单纯糠疹",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "术语需人工确认，可能 pityriasis alba。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "卵巢恶性肿瘤",
+    "clean_zh_name": "卵巢恶性肿瘤",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Malignant ovarian tumor",
+    "triage_class": "C_manual_high_value",
+    "reason": "肿瘤高价值，需确认是否并入 ovarian cancer。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "原发性皮肤 T 细胞淋巴瘤",
+    "clean_zh_name": "原发性皮肤T细胞淋巴瘤",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Primary cutaneous T-cell lymphoma",
+    "triage_class": "C_manual_high_value",
+    "reason": "肿瘤/血液病高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "原发性视网膜色素变性",
+    "clean_zh_name": "原发性视网膜色素变性",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Primary retinitis pigmentosa",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准眼科遗传病名较明确，需确认是否用 retinitis pigmentosa。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "原发性闭角型青光眼",
+    "clean_zh_name": "原发性闭角型青光眼",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Primary angle-closure glaucoma",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准眼科病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "反流性咳嗽",
+    "clean_zh_name": "反流性咳嗽",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/综合征，建议并入 GERD-related cough/UACS 等明确 anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "口底部蜂窝组织炎",
+    "clean_zh_name": "口底部蜂窝组织炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Cellulitis of the floor of the mouth",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染/急症高价值，需确认是否指 Ludwig angina。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "口腔念珠菌病",
+    "clean_zh_name": "口腔念珠菌病",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Oral candidiasis",
+    "triage_class": "C_manual_high_value",
+    "reason": "感染病种高价值，英文明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "口腔扁平苔藓",
+    "clean_zh_name": "口腔扁平苔藓",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Oral lichen planus",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准口腔黏膜病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "口腔溃疡",
+    "clean_zh_name": "口腔溃疡",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状/体征，需按复发性阿弗他溃疡等拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "口臭",
+    "clean_zh_name": "口臭",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "",
+    "triage_class": "B_reject_broad",
+    "reason": "症状，需按口腔/消化/代谢病因拆分。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "后葡萄膜炎",
+    "clean_zh_name": "后葡萄膜炎",
+    "current_suggested_en_name": "",
+    "recommended_en_name": "Posterior uveitis",
+    "triage_class": "A_promote_to_medium",
+    "reason": "标准眼科病名明确。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  }
+]

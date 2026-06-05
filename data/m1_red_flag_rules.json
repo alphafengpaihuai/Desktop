@@ -73,7 +73,7 @@
   },
   "acute_abdomen_red_flag": {
     "trigger_terms": ["腹膜刺激征", "板状腹", "反跳痛", "持续剧烈腹痛", "休克"],
-    "risk_direction": [{"disease_name": "Appendicitis", "mapping_status": "not_in_m1"}, {"disease_name": "Bowel Obstruction", "mapping_status": "not_in_m1"}, {"disease_name": "Acute Pancreatitis", "mapping_status": "in_m1"}],
+    "risk_direction": [{"disease_name": "Appendicitis", "mapping_status": "in_m1"}, {"disease_name": "Bowel Obstruction", "mapping_status": "not_in_m1"}, {"disease_name": "Acute Pancreatitis", "mapping_status": "in_m1"}],
     "severity": "urgent",
     "action": "urgent_review",
     "block_m2_auto_flow": true,
@@ -82,7 +82,7 @@
   },
   "active_gi_bleeding_red_flag": {
     "trigger_terms": ["呕血", "黑便", "便血", "低血压", "心动过速", "晕厥"],
-    "risk_direction": [{"disease_name": "Upper Gastrointestinal Bleeding", "mapping_status": "not_in_m1"}],
+    "risk_direction": [{"disease_name": "Upper Gastrointestinal Bleeding", "mapping_status": "in_m1"}],
     "severity": "emergency",
     "action": "urgent_review",
     "block_m2_auto_flow": true,

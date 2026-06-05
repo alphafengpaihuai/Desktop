@@ -1,0 +1,120 @@
+[
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "component": "celastrol",
+    "mapped_herb": "雷公藤",
+    "matched_pmids": [
+      "37196541"
+    ],
+    "matched_titles": [
+      "Celastrol as an emerging anticancer agent: Current status, challenges and therapeutic strategies."
+    ],
+    "matched_abstract_snippets": [
+      "Celastrol is a pentacyclic triterpenoid extracted from the traditional Chinese medicine Tripterygium wilfordii Hook F., which has multiple pharmacological activities. In particular, modern pharmacological studies have demonstrated that celastrol exhibits significant broad-spectrum anticancer activit"
+    ],
+    "matched_targets": [
+      "STAT3",
+      "EGFR"
+    ],
+    "matched_outcomes": [
+      "inhibit",
+      "reduce",
+      "suppress"
+    ],
+    "same_pmid_has_component_and_target": true,
+    "same_pmid_has_component_and_outcome": true,
+    "same_component_hits_multiple_targets": true,
+    "evidence_context": "review",
+    "chain_status": "partial",
+    "why_not_candidate": "同一 PMID 出现 celastrol、靶点词和作用词，但标题是 broad anticancer review，不是乳腺癌专病实验或临床研究；不能把综述中的广谱抗癌描述直接作为乳腺癌单病种草药证据链。",
+    "recommendation": "manual_review"
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "component": "glycyrrhetinic acid",
+    "mapped_herb": "甘草",
+    "matched_pmids": [
+      "37011418"
+    ],
+    "matched_titles": [
+      "Glycyrrhetinic acid suppresses breast cancer metastasis by inhibiting M2-like macrophage polarization via activating JNK1/2 signaling."
+    ],
+    "matched_abstract_snippets": [
+      "Breast cancer metastasis is leading cause of cancer death among women worldwide. Tumor-associated macrophages (TAMs) have been considered as potential targets for treating breast cancer metastasis because they promote tumor growth and development. Glycyrrhetinic acid (GA) is one of the most importan"
+    ],
+    "matched_targets": [
+      "IL-10"
+    ],
+    "matched_outcomes": [
+      "inhibit",
+      "suppress"
+    ],
+    "same_pmid_has_component_and_target": true,
+    "same_pmid_has_component_and_outcome": true,
+    "same_component_hits_multiple_targets": false,
+    "evidence_context": "cell",
+    "chain_status": "closed",
+    "why_not_candidate": "单篇 PMID 内可形成 disease-component-target/outcome 闭链，但当前只命中 1 个 miner 靶点，未满足 miner 对同一 herb/component 至少 2 个靶点的入选门槛；且属于癌症机制/模型证据，不可升为 high。",
+    "recommendation": "candidate_low"
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "component": "saikosaponin A",
+    "mapped_herb": "柴胡",
+    "matched_pmids": [
+      "31214035"
+    ],
+    "matched_titles": [
+      "Saikosaponin A Inhibits Breast Cancer by Regulating Th1/Th2 Balance."
+    ],
+    "matched_abstract_snippets": [
+      "Saikosaponin A (SSa) is isolated from the dried root of Radix Bupleuri , an herb widely used in traditional Chinese medicine, exerting antitumor activities. The T helper cell type 1(Th1)/Th2 balance is associated with antitumor immunity in breast cancer. The present study aimed to investigate the ef"
+    ],
+    "matched_targets": [
+      "IL-10"
+    ],
+    "matched_outcomes": [
+      "inhibit"
+    ],
+    "same_pmid_has_component_and_target": true,
+    "same_pmid_has_component_and_outcome": true,
+    "same_component_hits_multiple_targets": false,
+    "evidence_context": "animal",
+    "chain_status": "closed",
+    "why_not_candidate": "同一 PMID 内可形成 Breast cancer + saikosaponin A + immune target/outcome 的闭链，但只命中 1 个 miner 靶点；证据更像机制/动物模型，不能作为 high，也不满足当前候选入选门槛。",
+    "recommendation": "candidate_low"
+  },
+  {
+    "disease": "乳腺癌",
+    "en_name": "Breast cancer",
+    "component": "bruceine D",
+    "mapped_herb": "鸦胆子",
+    "matched_pmids": [
+      "38043386"
+    ],
+    "matched_titles": [
+      "Bruceine D suppresses CAF-promoted TNBC metastasis under TNF-α stimulation by inhibiting Notch1-Jagged1/NF-κB(p65) signaling."
+    ],
+    "matched_abstract_snippets": [
+      "Triple-negative breast cancer (TNBC) has a poor prognosis because of its high degree of malignancy and the lack of effective treatment options. Cancer-associated fibroblasts (CAFs) comprise the most abundant stromal cells in the tumor microenvironment (TME), leading to functional"
+    ],
+    "matched_targets": [
+      "IL6",
+      "TNF"
+    ],
+    "matched_outcomes": [
+      "inhibit",
+      "suppress"
+    ],
+    "same_pmid_has_component_and_target": true,
+    "same_pmid_has_component_and_outcome": true,
+    "same_component_hits_multiple_targets": true,
+    "evidence_context": "cell",
+    "chain_status": "closed",
+    "why_not_candidate": "同一 PMID 在日志中同时出现在 IL6/TNF 相关 target-herb 查询里，且题名有 TNF-α stimulation 和 suppress/inhibiting；但标题使用 TNBC 而非完整 Breast cancer，当前 miner 的 title_matches_disease 过滤未将 TNBC 视作 Breast cancer 同义词，因此没有进入候选。癌症细胞/机制实验最多 low_medium，不能 high。",
+    "recommendation": "candidate_low_medium"
+  }
+]

@@ -58,13 +58,18 @@ class M3ClinicalReviewEngine:
     def review(self, herbs: List[str], patient: Dict) -> Dict:
         """审核处方安全性"""
         warnings = []
+        safety_issues = []
 
         # 1. 十八反十九畏
         oppo, fear, alias_prompt = self._check_eighteen_nineteen(herbs)
         for h1, h2 in oppo:
-            warnings.append(f"⚠ 十八反：{h1} 与 {h2} 相反，标注风险")
+            msg = f"⚠ 十八反：{h1} 与 {h2} 相反，标注风险"
+            warnings.append(msg)
+            safety_issues.append({"type": "eighteen_opposites", "severity": "BLOCKED", "message": msg})
         for h1, h2 in fear:
-            warnings.append(f"⚠ 十九畏：{h1} 与 {h2} 相畏，标注风险")
+            msg = f"⚠ 十九畏：{h1} 与 {h2} 相畏，标注风险"
+            warnings.append(msg)
+            safety_issues.append({"type": "nineteen_fears", "severity": "BLOCKED", "message": msg})
 
         # 2. 毒性药物（从知识库读取）
         toxicity = []
@@ -79,20 +84,43 @@ class M3ClinicalReviewEngine:
                     "note": tox.get("note", ""),
                     "monitoring": tox.get("monitoring", ["需监测肝肾功能"]),
                 })
+                safety_issues.append({
+                    "type": "toxicity",
+                    "severity": "WARNING",
+                    "herb": h,
+                    "message": tox.get("note", f"{h} 为风险药物，需人工复核"),
+                })
 
         # 3. 剂量调整 + 特殊人群（合并为一个方法）
         dose_notes, pop_notes = self._check_population_dosage(herbs, patient)
+        for note in pop_notes:
+            safety_issues.append({"type": "special_population", "severity": "WARNING", "message": note})
+        for note in dose_notes:
+            if note.get("dosage_ratio") == "禁用":
+                safety_issues.append({
+                    "type": "contraindication",
+                    "severity": "BLOCKED",
+                    "herb": note.get("herb", ""),
+                    "message": note.get("note", ""),
+                })
+
+        blocked = any(issue.get("severity") == "BLOCKED" for issue in safety_issues)
+        dosage_review_status = "pending_dose_review" if herbs else "not_applicable"
 
         return {
-            "review_decision": "APPROVED",
+            "review_decision": "BLOCKED" if blocked else "APPROVED",
+            "review_passed": not blocked,
             "eighteen_opposites": [{"herb_a": h1, "herb_b": h2} for h1, h2 in oppo],
             "nineteen_fears": [{"herb_a": h1, "herb_b": h2} for h1, h2 in fear],
             "toxicity_warnings": toxicity,
             "dose_adjustments": dose_notes,
+            "dosage_review_status": dosage_review_status,
             "special_population": pop_notes,
+            "safety_issues": safety_issues,
             "alias_warnings": alias_prompt,
             "warnings": warnings,
             "m2_return_needed": bool(oppo or fear),
+            "formal_prescription_allowed": False,
         }
 
     # ══════════════════════════════════════════════════════
@@ -296,11 +324,11 @@ class M3ClinicalReviewEngine:
             elif age <= 1:
                 ratio = 0.25
             elif age <= 3:
-                ratio = 0.25 + (age - 1) * 0.04  # 1-3岁 0.25~0.33
+                ratio = 0.25 + (age - 1) * 0.04
             elif age <= 7:
-                ratio = 0.33 + (age - 3) * 0.0425  # 3-7岁 0.33~0.50
+                ratio = 0.33 + (age - 3) * 0.0425
             elif age <= 14:
-                ratio = 0.50 + (age - 7) * 0.024  # 7-14岁 0.50~0.67
+                ratio = 0.50 + (age - 7) * 0.024
             else:
                 ratio = 0.67
             ratio = min(max(ratio, 0.2), 1.0)
@@ -312,18 +340,34 @@ class M3ClinicalReviewEngine:
                 })
             pop_notes.append(f"儿童({age}岁)，剂量按{'体重' if weight > 0 else '年龄'}折算为成人量的{ratio:.0%}")
 
-        # 老年人
-        elif age >= 65:
+        # 中老年（≥60岁，含60-64岁之前被忽略的人群）
+        elif age >= 60:
+            # 60-64 按 3/4 折算，65-74 按 2/3，75+ 按 1/2
+            if age < 65:
+                _ratio_text = "3/4"
+            elif age < 75:
+                _ratio_text = "2/3"
+            else:
+                _ratio_text = "1/2"
+            # 逐个药物检查毒性，有毒性药的逐个标注
+            _has_toxic = False
             for h in herbs:
                 info = self.herb_kb.get(h, {})
                 if info.get("toxicity"):
                     dose_notes.append({
-                        "herb": h, "age_group": "老年人", "age": age,
-                        "dosage_ratio": "建议按成人量的2/3-1/2",
+                        "herb": h, "age_group": "中老年", "age": age,
+                        "dosage_ratio": f"建议按成人量的{_ratio_text}",
                         "note": f"毒性药 {h} 应减量，注意肝肾功能",
                     })
-                    break
-            pop_notes.append(f"老年人({age}岁)，肝肾功能减退者酌减，注意多药联用风险")
+                    _has_toxic = True
+            # 如果没毒性药，也给出通用剂量提示
+            if not _has_toxic and len(herbs) > 0:
+                dose_notes.append({
+                    "herb": herbs[0], "age_group": "中老年", "age": age,
+                    "dosage_ratio": f"建议按成人量的{_ratio_text}",
+                    "note": f"中老年({age}岁)肝肾功能减退者酌减",
+                })
+            pop_notes.append(f"中老年({age}岁)，肝肾功能减退者酌减，建议按成人量的{_ratio_text}；注意多药联用风险")
 
         # 孕妇
         if pregnancy:

@@ -1,0 +1,169 @@
+[
+  {
+    "zh_name": "下肢深静脉血栓形成",
+    "en_name": "Lower extremity deep vein thrombosis",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "35168306",
+      "36564248",
+      "37129518",
+      "27791958",
+      "34659512"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "乳房结核",
+    "en_name": "Breast tuberculosis",
+    "pubmed_hit_count": 2,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": false,
+    "blocked_stage": "no_target_or_outcome",
+    "example_pmids_or_titles": [
+      "30797285",
+      "36751149"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "乳腺癌",
+    "en_name": "Breast cancer",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "35705809",
+      "32679107",
+      "31215501",
+      "28791816",
+      "32703721"
+    ],
+    "suspected_fix": "add_component_synonym"
+  },
+  {
+    "zh_name": "产后出血",
+    "en_name": "Postpartum hemorrhage",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "38233317",
+      "26045324",
+      "36997396",
+      "31830299",
+      "36513430"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "传染性单核细胞增多症",
+    "en_name": "Infectious mononucleosis",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "38509369",
+      "38642164",
+      "40715093",
+      "32603431",
+      "39703509"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "伤寒",
+    "en_name": "Typhoid fever",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "30030897",
+      "33640781",
+      "39408592",
+      "38497655",
+      "35308424"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "前置胎盘",
+    "en_name": "Placenta previa",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "29409879",
+      "36374543",
+      "23127895",
+      "31322233",
+      "34927512"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "化脓性腮腺炎",
+    "en_name": "Suppurative parotitis",
+    "pubmed_hit_count": 6,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": false,
+    "blocked_stage": "no_target_or_outcome",
+    "example_pmids_or_titles": [
+      "15770580",
+      "42117127",
+      "12875591",
+      "3599388",
+      "7495443"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "化脓性髋关节炎",
+    "en_name": "Septic arthritis of the hip",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": false,
+    "blocked_stage": "no_target_or_outcome",
+    "example_pmids_or_titles": [
+      "37192073",
+      "30520802",
+      "39334397",
+      "35669032",
+      "32301824"
+    ],
+    "suspected_fix": "keep_empty"
+  },
+  {
+    "zh_name": "单纯疱疹病毒性角膜炎",
+    "en_name": "Herpes simplex keratitis",
+    "pubmed_hit_count": 10,
+    "has_tcm_or_herb_term": false,
+    "has_active_component_term": false,
+    "has_target_or_outcome_term": true,
+    "blocked_stage": "no_herb_term",
+    "example_pmids_or_titles": [
+      "38908077",
+      "40394801",
+      "36573068",
+      "37765049",
+      "35033543"
+    ],
+    "suspected_fix": "keep_empty"
+  }
+]

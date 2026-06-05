@@ -1,0 +1,462 @@
+[
+  {
+    "zh_name": "Hunt综合征",
+    "clean_zh_name": "Hunt综合征",
+    "current_en_name": "",
+    "suggested_en_name": "Ramsay Hunt syndrome",
+    "mapping_confidence": "medium",
+    "source": "manual_needed",
+    "reason": "Hunt 不可用；需确认是否指 Ramsay Hunt syndrome。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "IgA血管炎性肾炎",
+    "clean_zh_name": "IgA血管炎性肾炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "上消化道出血",
+    "clean_zh_name": "上消化道出血",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "下肢动脉硬化闭塞症",
+    "clean_zh_name": "下肢动脉硬化闭塞症",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "下肢慢性溃疡",
+    "clean_zh_name": "下肢慢性溃疡",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "不射精",
+    "clean_zh_name": "不射精",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "不育症",
+    "clean_zh_name": "不育症",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "中毒",
+    "clean_zh_name": "中毒",
+    "current_en_name": "",
+    "suggested_en_name": "Poisoning",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "病名过于宽泛，建议按具体中毒类型拆分后再用于 PubMed mining。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "乙状窦血栓性静脉炎",
+    "clean_zh_name": "乙状窦血栓性静脉炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "乳头溢血",
+    "clean_zh_name": "乳头溢血",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "乳房异常发育症",
+    "clean_zh_name": "乳房异常发育症",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "乳腺增生症",
+    "clean_zh_name": "乳腺增生症",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "乳腺炎",
+    "clean_zh_name": "乳腺炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "乳腺纤维瘤",
+    "clean_zh_name": "乳腺纤维瘤",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后便秘",
+    "clean_zh_name": "产后便秘",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后多汗",
+    "clean_zh_name": "产后多汗",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后尿潴留",
+    "clean_zh_name": "产后尿潴留",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后尿频",
+    "clean_zh_name": "产后尿频",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后抑郁症",
+    "clean_zh_name": "产后抑郁症",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后腹痛",
+    "clean_zh_name": "产后腹痛",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产后身痛",
+    "clean_zh_name": "产后身痛",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "产褥感染",
+    "clean_zh_name": "产褥感染",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "人工流产术后出血",
+    "clean_zh_name": "人工流产术后出血",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "代偿性月经",
+    "clean_zh_name": "代偿性月经",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "代指",
+    "clean_zh_name": "代指",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "便血",
+    "clean_zh_name": "便血",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "儿童反复呼吸道感染",
+    "clean_zh_name": "儿童反复呼吸道感染",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "儿童急性扁桃体炎",
+    "clean_zh_name": "儿童急性扁桃体炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "儿童抽动障碍",
+    "clean_zh_name": "儿童抽动障碍",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "儿童腹痛",
+    "clean_zh_name": "儿童腹痛",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "先兆流产",
+    "clean_zh_name": "先兆流产",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "内伤发热",
+    "clean_zh_name": "内伤发热",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "内痔",
+    "clean_zh_name": "内痔",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "前庭大腺炎",
+    "clean_zh_name": "前庭大腺炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "前置胎盘出血",
+    "clean_zh_name": "前置胎盘出血",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "包皮龟头炎",
+    "clean_zh_name": "包皮龟头炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "化脓性中耳乳突炎并发迷路炎",
+    "clean_zh_name": "化脓性中耳乳突炎并发迷路炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "化脓性骨髓炎",
+    "clean_zh_name": "化脓性骨髓炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "单纯糠疹",
+    "clean_zh_name": "单纯糠疹",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "卵巢恶性肿瘤",
+    "clean_zh_name": "卵巢恶性肿瘤",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "原发性皮肤 T 细胞淋巴瘤",
+    "clean_zh_name": "原发性皮肤T细胞淋巴瘤",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "反流性咳嗽",
+    "clean_zh_name": "反流性咳嗽",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "口底部蜂窝组织炎",
+    "clean_zh_name": "口底部蜂窝组织炎",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "口腔念珠菌病",
+    "clean_zh_name": "口腔念珠菌病",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "口腔溃疡",
+    "clean_zh_name": "口腔溃疡",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  },
+  {
+    "zh_name": "口臭",
+    "clean_zh_name": "口臭",
+    "current_en_name": "",
+    "suggested_en_name": "",
+    "mapping_confidence": "low",
+    "source": "manual_needed",
+    "reason": "当前 resolver 无可靠非中文英文名；需人工审核。",
+    "status": "pending_review"
+  }
+]

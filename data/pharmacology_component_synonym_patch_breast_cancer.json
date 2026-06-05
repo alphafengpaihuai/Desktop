@@ -1,0 +1,34 @@
+[
+  {
+    "component": "celastrol",
+    "mapped_herb": "雷公藤",
+    "source": "breast_cancer_failed_query_audit",
+    "status": "reviewed_candidate",
+    "scope": "miner_recognition_only",
+    "note": "Only improves component-herb recognition. Does not imply clinical efficacy."
+  },
+  {
+    "component": "glycyrrhetinic acid",
+    "mapped_herb": "甘草",
+    "source": "breast_cancer_failed_query_audit",
+    "status": "reviewed_candidate",
+    "scope": "miner_recognition_only",
+    "note": "Only improves component-herb recognition. Does not imply clinical efficacy."
+  },
+  {
+    "component": "saikosaponin A",
+    "mapped_herb": "柴胡",
+    "source": "breast_cancer_failed_query_audit",
+    "status": "reviewed_candidate",
+    "scope": "miner_recognition_only",
+    "note": "Only improves component-herb recognition. Does not imply clinical efficacy."
+  },
+  {
+    "component": "bruceine D",
+    "mapped_herb": "鸦胆子",
+    "source": "breast_cancer_failed_query_audit",
+    "status": "reviewed_candidate",
+    "scope": "miner_recognition_only",
+    "note": "Only improves component-herb recognition. Does not imply clinical efficacy."
+  }
+]

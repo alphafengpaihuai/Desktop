@@ -27,7 +27,7 @@
 
       count.textContent = window.patientSearchQuery ? `${items.length} / ${allPatients.length}` : items.length;
 
-      const isNewActive = activeClinicSelection && activeClinicSelection.type === 'new';
+      const isNewActive = window.activeClinicSelection && window.activeClinicSelection.type === 'new';
       const newCls = isNewActive
         ? 'border-medical-green shadow-md'
         : 'border-slate-300 text-slate-600 hover:border-medical-green hover:text-medical-green-dark hover:shadow-sm';
@@ -59,9 +59,9 @@
         // 如果有患者，遍历渲染
         items.forEach(p => {
 
-        const isActive = activeClinicSelection &&
-          activeClinicSelection.type === 'patient' &&
-          activeClinicSelection.id === p.id;
+        const isActive = window.activeClinicSelection &&
+          window.activeClinicSelection.type === 'patient' &&
+          window.activeClinicSelection.id === p.id;
 
         const hasHighRisk = typeof p.memo === 'string' && p.memo.includes('高危');
 
@@ -254,7 +254,9 @@
           let fileType = fileExtension.substring(1); // 去掉点号
 
           // 确保连接正常（如果断开则自动重连）
-          const connected = await ensureWsConnected();
+          const connected = typeof window.ensureWsConnected === 'function'
+            ? await window.ensureWsConnected()
+            : false;
           if (!connected) {
             showConnectionStatusBar('错误：无法连接到服务器，请稍后重试', 'red');
             event.target.value = '';
@@ -335,7 +337,9 @@
           const base64Content = e.target.result.split(',')[1]; // 移除data:type;base64,前缀
 
           // 确保连接正常（如果断开则自动重连）
-          const connected = await ensureWsConnected();
+          const connected = typeof window.ensureWsConnected === 'function'
+            ? await window.ensureWsConnected()
+            : false;
           if (!connected) {
             appendMessage('system', '错误：无法连接到服务器，请稍后重试');
             if (statusEl) {
@@ -498,7 +502,7 @@
 
     /** 医知快答：开启新对话 = 清空 common 聊天记录（仅传 patient_id=common） */
     async function clearCorpusChatAndStartNew() {
-      if (activeMode !== 'corpus' || currentPatientId !== 'common') {
+      if (activeMode !== 'corpus' || window.currentPatientId !== 'common') {
         appendMessage('system', '仅可在医知快答模式下使用「开启新对话」');
         return;
       }
@@ -616,7 +620,9 @@
       }
 
       // 确保连接正常（如果断开则自动重连）
-      const connected = await ensureWsConnected();
+      const connected = typeof window.ensureWsConnected === 'function'
+        ? await window.ensureWsConnected()
+        : false;
       if (!connected) {
         showConnectionStatusBar('错误：无法连接到服务器，请稍后重试', 'red');
         return;
@@ -631,7 +637,9 @@
         reader.onload = async function(e) {
           // 再次检查连接状态（文件读取可能需要时间）
           if (!ws || ws.readyState !== WebSocket.OPEN) {
-            const reconnected = await ensureWsConnected();
+            const reconnected = typeof window.ensureWsConnected === 'function'
+              ? await window.ensureWsConnected()
+              : false;
             if (!reconnected) {
               appendMessage('system', '图像上传失败：连接已断开，无法上传');
               return;
@@ -646,8 +654,8 @@
 
           // 记录发送消息时的患者ID（用于跟踪等待回复的消息属于哪个患者）
           // 医知快答模式使用 common 作为患者ID
-          const sentPatientId = activeMode === 'clinic' && activeClinicSelection.type === 'patient'
-            ? activeClinicSelection.id
+          const sentPatientId = activeMode === 'clinic' && window.activeClinicSelection.type === 'patient'
+            ? window.activeClinicSelection.id
             : (activeMode === 'corpus' ? 'common' : null);
           pendingPatientId = sentPatientId;
 
@@ -761,7 +769,7 @@
 
     async function selectClinicPatient(id) {
 
-      activeClinicSelection = { type: 'patient', id };
+      window.activeClinicSelection = { type: 'patient', id };
 
       // 保存当前选中的患者ID
       saveLastSelectedPatient(id);
@@ -872,7 +880,7 @@
     function selectNewClinicPatient() {
     console.log('[DEBUG] selectNewClinicPatient called');
     console.log('[DEBUG] activeMode:', window.activeMode);
-    console.log('[DEBUG] activeClinicSelection before:', window.activeClinicSelection);
+    console.log('[DEBUG] window.activeClinicSelection before:', window.activeClinicSelection);
 
     window.activeMode = 'clinic';
     window.activeClinicSelection = { type: 'new' };
@@ -894,7 +902,7 @@
         updateClinicDetailUI();
     }
 
-    console.log('[DEBUG] activeClinicSelection after:', window.activeClinicSelection);
+    console.log('[DEBUG] window.activeClinicSelection after:', window.activeClinicSelection);
     console.log('[DEBUG] form hidden:', document.getElementById('clinic-form-section')?.classList.contains('hidden'));
 }
 
@@ -992,7 +1000,7 @@ window.selectNewClinicPatient = selectNewClinicPatient;function calculateSimilar
       allPatients = allPatients.filter(p => p.id !== id);
 
       // 如果删除的是当前选中的患者，同步更新聊天窗口：跳转到下一患者或清空
-      if (activeClinicSelection.type === 'patient' && activeClinicSelection.id === id) {
+      if (window.activeClinicSelection.type === 'patient' && window.activeClinicSelection.id === id) {
         // 删除该病人的消息缓存
         if (patientMessagesCache[id]) {
           delete patientMessagesCache[id];
@@ -1000,21 +1008,21 @@ window.selectNewClinicPatient = selectNewClinicPatient;function calculateSimilar
         }
         // 清空当前聊天列表并重绘（避免仍显示已删患者的记录）
         messages.length = 0;
-        currentPatientId = null;
+        window.currentPatientId = null;
         renderMessages();
 
         if (clinicSessions.length > 0) {
           // 自动跳转到下一个患者并加载其聊天记录
-          activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
-          const patient = clinicSessions.find(p => p.id === activeClinicSelection.id);
-          await switchPatientMessages(activeClinicSelection.id, patient);
+          window.activeClinicSelection = { type: 'patient', id: clinicSessions[0].id };
+          const patient = clinicSessions.find(p => p.id === window.activeClinicSelection.id);
+          await switchPatientMessages(window.activeClinicSelection.id, patient);
           updatePatientInfoBar(patient);
-          saveLastSelectedPatient(activeClinicSelection.id);
+          saveLastSelectedPatient(window.activeClinicSelection.id);
           startClinicChatlogRefreshTimer();
         } else {
           // 没有患者：清空选中、侧栏参考文献并停止患者聊天刷新
           stopClinicChatlogRefreshTimer();
-          activeClinicSelection = { type: 'new' };
+          window.activeClinicSelection = { type: 'new' };
           saveLastSelectedPatient(null);
           updatePatientInfoBar(null);
           sidebarReferences = [];

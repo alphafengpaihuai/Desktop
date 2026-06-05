@@ -1,0 +1,182 @@
+[
+  {
+    "zh_name": "IgA血管炎性肾炎",
+    "recommended_en_name": "IgA vasculitis nephritis",
+    "aliases": ["Henoch-Schonlein purpura nephritis", "Henoch-Schönlein purpura nephritis", "HSP nephritis"],
+    "mapping_confidence": "medium",
+    "reason": "中文 anchor 明确指 IgA 血管炎肾脏受累；英文常见写法存在 IgA vasculitis nephritis 与 Henoch-Schonlein purpura nephritis 两套，需确认项目采用哪一个主名。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "下肢动脉硬化闭塞症",
+    "recommended_en_name": "Lower extremity arteriosclerosis obliterans",
+    "aliases": ["Lower extremity atherosclerotic occlusive disease", "Peripheral arterial disease of lower extremity", "Lower limb arteriosclerosis obliterans"],
+    "mapping_confidence": "medium",
+    "reason": "中文 anchor 明确为下肢动脉粥样硬化闭塞性疾病；PubMed 也常使用 peripheral arterial disease，建议人工确认是否并入 PAD anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "下肢深静脉血栓形成",
+    "recommended_en_name": "Lower extremity deep vein thrombosis",
+    "aliases": ["Deep vein thrombosis", "Lower limb deep vein thrombosis", "DVT"],
+    "mapping_confidence": "high",
+    "reason": "标准血栓性疾病名明确；为避免 Deep vein thrombosis 过宽，推荐主名保留下肢限定。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "乙状窦血栓性静脉炎",
+    "recommended_en_name": "Sigmoid sinus thrombophlebitis",
+    "aliases": ["Lateral sinus thrombophlebitis", "Otogenic sigmoid sinus thrombophlebitis", "Sigmoid sinus thrombosis"],
+    "mapping_confidence": "medium",
+    "reason": "中文 anchor 明确，但英文可落在 thrombophlebitis 或 thrombosis，且常与耳源性感染相关；建议人工确认主名。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "乳房结核",
+    "recommended_en_name": "Breast tuberculosis",
+    "aliases": ["Tuberculosis of the breast", "Mammary tuberculosis"],
+    "mapping_confidence": "high",
+    "reason": "感染性疾病名明确，英文名称标准且不宽泛。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "乳腺癌",
+    "recommended_en_name": "Breast cancer",
+    "aliases": ["Breast carcinoma", "Mammary carcinoma"],
+    "mapping_confidence": "high",
+    "reason": "肿瘤病名明确，PubMed 常用检索名；如主库已有 Breast carcinoma，可作为同义映射处理。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "产后出血",
+    "recommended_en_name": "Postpartum hemorrhage",
+    "aliases": ["Postpartum haemorrhage", "PPH"],
+    "mapping_confidence": "high",
+    "reason": "产科急症标准病名明确，英文检索名稳定。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "产褥感染",
+    "recommended_en_name": "Puerperal infection",
+    "aliases": ["Puerperal sepsis", "Postpartum infection"],
+    "mapping_confidence": "medium",
+    "reason": "中文 anchor 明确，但英文主名可为 puerperal infection 或 puerperal sepsis，需确认是否偏感染总称还是脓毒症。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "传染性单核细胞增多症",
+    "recommended_en_name": "Infectious mononucleosis",
+    "aliases": ["Mononucleosis", "EBV infectious mononucleosis", "Glandular fever"],
+    "mapping_confidence": "high",
+    "reason": "感染病名明确，PubMed 常用英文名稳定。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "伤寒",
+    "recommended_en_name": "Typhoid fever",
+    "aliases": ["Enteric fever", "Salmonella Typhi infection"],
+    "mapping_confidence": "high",
+    "reason": "感染病名明确，英文检索名稳定；Enteric fever 可作为别名但范围稍宽。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "儿童反复呼吸道感染",
+    "recommended_en_name": "Recurrent respiratory tract infections in children",
+    "aliases": ["Recurrent respiratory infections in children", "Pediatric recurrent respiratory tract infections", "Recurrent respiratory tract infection"],
+    "mapping_confidence": "medium",
+    "reason": "儿科高频 syndrome anchor，中文明确但不是单一疾病实体；建议人工确认是否作为 M1 disease anchor 使用。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "儿童急性扁桃体炎",
+    "recommended_en_name": "Acute tonsillitis in children",
+    "aliases": ["Pediatric acute tonsillitis", "Acute tonsillitis"],
+    "mapping_confidence": "medium",
+    "reason": "儿科感染病名明确，但疾病本体可并入 Acute tonsillitis；是否保留儿童限定需人工确认。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "儿童抽动障碍",
+    "recommended_en_name": "Tic disorder in children",
+    "aliases": ["Pediatric tic disorder", "Tic disorder", "Tourette syndrome"],
+    "mapping_confidence": "medium",
+    "reason": "中文 anchor 明确为儿童抽动障碍，但需确认是否包括 Tourette syndrome 或仅泛指 tic disorder。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "前列腺癌",
+    "recommended_en_name": "Prostate cancer",
+    "aliases": ["Prostatic cancer", "Prostate carcinoma", "Prostatic carcinoma"],
+    "mapping_confidence": "high",
+    "reason": "肿瘤病名明确，PubMed 常用检索名稳定。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "前置胎盘",
+    "recommended_en_name": "Placenta previa",
+    "aliases": ["Placenta praevia"],
+    "mapping_confidence": "high",
+    "reason": "产科标准病名明确，英文检索名稳定。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "前置胎盘出血",
+    "recommended_en_name": "Placenta previa",
+    "aliases": ["Bleeding placenta previa", "Placenta previa bleeding", "Antepartum hemorrhage due to placenta previa"],
+    "mapping_confidence": "medium",
+    "reason": "更适合作为 Placenta previa 的出血表现/别名，而不是重复建立独立主 anchor。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "化脓性腮腺炎",
+    "recommended_en_name": "Suppurative parotitis",
+    "aliases": ["Acute suppurative parotitis", "Bacterial parotitis"],
+    "mapping_confidence": "high",
+    "reason": "感染病名明确，英文名称标准且不宽泛。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "化脓性骨髓炎",
+    "recommended_en_name": "Suppurative osteomyelitis",
+    "aliases": ["Pyogenic osteomyelitis", "Bacterial osteomyelitis", "Osteomyelitis"],
+    "mapping_confidence": "medium",
+    "reason": "感染/骨病 anchor 明确，但英文主名可用 pyogenic osteomyelitis；建议确认是否并入 osteomyelitis。",
+    "can_merge_now": false,
+    "need_manual_confirm": true
+  },
+  {
+    "zh_name": "化脓性髋关节炎",
+    "recommended_en_name": "Septic arthritis of the hip",
+    "aliases": ["Suppurative arthritis of the hip", "Pyogenic arthritis of the hip", "Hip septic arthritis"],
+    "mapping_confidence": "high",
+    "reason": "感染性髋关节炎病名明确；PubMed 更常用 septic arthritis of the hip。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  },
+  {
+    "zh_name": "单纯疱疹病毒性角膜炎",
+    "recommended_en_name": "Herpes simplex keratitis",
+    "aliases": ["Herpes simplex virus keratitis", "HSV keratitis"],
+    "mapping_confidence": "high",
+    "reason": "眼科感染病名明确，PubMed 常用英文名稳定。",
+    "can_merge_now": true,
+    "need_manual_confirm": false
+  }
+]
