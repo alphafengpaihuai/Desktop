@@ -3,6 +3,9 @@ M2 辨证选方引擎 v1 — 中医辅助诊疗系统「守一」
 ================================================
 基于 M2_SOURCE_PROMPT.md 实现。
 核心原则：提示词驱动，LLM 深度参与，代码仅执行确定性规则。
+
+# 真实 prompt 以本文件代码中的硬编码提示词为准
+# 已删除 prompts/m2/M2_CODE_REVERSE_PROMPT.md（该文件与代码脱节）
 """
 import os
 import json
@@ -62,8 +65,180 @@ class M2SyndromeSelector:
             pass
 
     # ══════════════════════════════════════════════════════
-    #  主入口
+    #  统一 M2 disease key resolver
     # ══════════════════════════════════════════════════════
+
+    _DISEASE_NAME_MAP = {
+        "多发性抽动症": "抽动障碍",
+        "Tourette综合征": "抽动障碍",
+        "慢性荨麻疹": "荨麻疹",
+        "胆碱能性荨麻疹": "荨麻疹",
+        "过敏性荨麻疹": "荨麻疹",
+        "皮肤瘙痒症": "皮肤瘙痒症",
+        "老年性皮肤瘙痒症": "皮肤瘙痒症",
+        "上气道咳嗽综合征": "急性上呼吸道感染",
+        "支原体肺炎": "支原体肺炎",
+        "肺炎": "肺炎",
+        "社区获得性肺炎": "肺炎",
+        "重症肺炎": "肺炎",
+        "支气管肺炎": "肺炎",
+        "咳嗽变异性哮喘": "喉源性咳嗽",
+        "支气管炎": "急性支气管炎",
+        "急性支气管炎": "急性支气管炎",
+        "上呼吸道感染": "急性上呼吸道感染",
+        "小儿抽动": "抽动障碍",
+        "儿童抽动障碍": "抽动障碍",
+        "儿童抽动症": "抽动障碍",
+        "感冒": "急性上呼吸道感染",
+        "过敏性鼻炎": "变应性鼻炎",
+        "鼻炎": "慢性鼻炎",
+        "扁桃体炎": "儿童急性扁桃体炎",
+        "急性扁桃体炎": "急性化脓性扁桃体炎",
+        "急性咽炎": "急性咽炎",
+        "感染性发热": "感染性发热",
+        "偏头痛": "头痛",
+        "紧张型头痛": "头痛",
+        "丛集性头痛": "头痛",
+        "冠心病": "冠状动脉粥样硬化性心脏病",
+        "急性上呼吸道感染": "急性上呼吸道感染",
+        "新生儿黄疸": "新生儿黄疸",
+        "反复呼吸道感染": "小儿反复呼吸道感染",
+        "哮喘": "喉源性咳嗽",
+        "腹泻": "腹泻",
+        "消化不良": "小儿消化不良",
+        "急性胃肠炎": "痢疾 (Dysentery)",
+        "急性肠胃炎": "痢疾 (Dysentery)",
+        "胃肠炎": "痢疾 (Dysentery)",
+        "子宫腺肌病": "子宫腺肌症",
+        "子宫腺肌症": "子宫腺肌症",
+        "子宫内膜异位": "子宫内膜异位症",
+        "子宫肌瘤": "子宫肌瘤",
+        "月经过多": "月经过多",
+        "月经后期": "月经后期",
+        "月经先期": "月经先期",
+        "痛经": "痛经",
+        "眩晕": "眩晕",
+        "不寐": "失眠",
+        "失眠": "失眠",
+        "头痛": "头痛",
+        "颈椎病": "颈椎病",
+        "脑供血不足": "短暂性脑缺血发作",
+        "后循环缺血": "短暂性脑缺血发作",
+        "耳石症": "眩晕",
+        "食道反流": "反流性食管炎",
+        "食管反流": "反流性食管炎",
+        "食道返流": "反流性食管炎",
+        "食管返流": "反流性食管炎",
+        "反流性食管炎": "反流性食管炎",
+        "胃食管反流病": "反流性食管炎",
+        "鼻涕倒流": "慢性鼻窦炎",
+        "鼻后滴漏": "慢性鼻窦炎",
+        "鼻窦炎": "慢性鼻窦炎",
+        "慢性鼻窦炎": "慢性鼻窦炎",
+        "急性鼻窦炎": "慢性鼻窦炎",
+    }
+
+    _M2_FALLBACK = {
+        "咳嗽": "支原体肺炎",
+        "咳嗽病": "急性支气管炎",
+        "发热": "急性上呼吸道感染",
+        "急性扁桃体炎": "急性化脓性扁桃体炎",
+        "急性咽炎": "急性咽炎",
+        "感染性发热": "感染性发热",
+        "肾结石": "尿石症",
+        "尿石症": "尿石症",
+        "腹痛": "小儿消化不良",
+        "呕吐": "小儿消化不良",
+        "腹泻病": "腹泻",
+        "尿频": "非淋菌性尿道炎",
+        "尿道炎": "非淋菌性尿道炎",
+        "慢性尿道炎": "非淋菌性尿道炎",
+        "尿路感染": "尿路感染",
+        "热淋": "非淋菌性尿道炎",
+        "淋证": "非淋菌性尿道炎",
+        "前列腺炎": "慢性前列腺炎",
+        "阳痿": "阳痿",
+        "早泄": "早泄",
+        "遗精": "非淋菌性尿道炎",
+        "喉癌术后": "喉癌",
+        "胰腺癌": "胰腺癌",
+        "结肠癌": "结肠癌",
+    }
+
+    _HIGH_RISK_DISEASES = {
+        "喉癌", "肺癌", "肝癌", "胃癌", "胰腺癌", "结肠癌", "食管癌",
+        "恶性淋巴瘤", "白血病", "恶性黑色素瘤", "骨肉瘤",
+        "急性心肌梗死", "脑出血", "脑梗死急性期",
+        "感染性心内膜炎", "肺栓塞",
+    }
+
+    def _is_high_risk_disease(self, disease_name: str) -> bool:
+        """判断是否为高风险疾病（需人工复核）"""
+        if not disease_name:
+            return False
+        resolved = self.resolve_m2_disease_key(disease_name)
+        if resolved in self._HIGH_RISK_DISEASES:
+            return True
+        # 也检查子串匹配
+        for hr in self._HIGH_RISK_DISEASES:
+            if hr in resolved or resolved in hr:
+                return True
+        # 检查原始疾病名是否含癌/瘤/恶性/梗死/出血
+        _risk_keywords = ["癌", "恶性", "梗死", "出血", "栓塞"]
+        for kw in _risk_keywords:
+            if kw in disease_name:
+                return True
+        return False
+
+    def resolve_m2_disease_key(self, disease_name: str) -> str:
+        """统一 M2 disease key 解析器。
+
+        解析优先级：
+        1. 精确匹配 KB
+        2. DISEASE_NAME_MAP
+        3. m2_fallback
+        4. 子串匹配（disease in kb_key 或 kb_key in disease）
+        5. 去除英文括号后的匹配
+        6. 返回原始名称（由调用方处理 no_candidate）
+        """
+        if not disease_name or not isinstance(disease_name, str):
+            return disease_name
+
+        name = disease_name.strip()
+        if not name:
+            return name
+
+        # 1. 精确匹配 KB
+        if name in self.kb:
+            return name
+
+        # 2. DISEASE_NAME_MAP
+        mapped = self._DISEASE_NAME_MAP.get(name, "")
+        if mapped and mapped in self.kb:
+            return mapped
+
+        # 3. m2_fallback
+        fb = self._M2_FALLBACK.get(name, "")
+        if fb and fb in self.kb:
+            return fb
+
+        # 4. 子串匹配
+        for kb_key in self.kb:
+            if name in kb_key or kb_key in name:
+                return kb_key
+
+        # 5. 去除末尾英文括号再匹配
+        clean = re.sub(r'\s*\([^)]*\)\s*$', '', name).strip()
+        if clean and clean != name:
+            # 递归但不无限递归（只做一次）
+            if clean in self.kb:
+                return clean
+            for kb_key in self.kb:
+                if clean in kb_key or kb_key in clean:
+                    return kb_key
+
+        # 6. 找不到，返回原始名，调用方处理 no_candidate
+        return name
 
     def process(
         self,
@@ -164,7 +339,7 @@ class M2SyndromeSelector:
             "syndrome_trace": m2_1.get("syndrome_trace", {}),
             "evidence_trace": m2_1.get("evidence_trace", []),
             "input_trace": m2_1.get("input_trace", {}),
-            "needs_manual_review": False,
+            "needs_manual_review": self._is_high_risk_disease(primary_disease),
             "formal_prescription_allowed": False,
         }
         return self._strip_forbidden_prescription_fields(result)
@@ -196,6 +371,26 @@ class M2SyndromeSelector:
             return [self._strip_forbidden_prescription_fields(item) for item in value]
         return value
 
+    def _strip_internal_trace_fields(self, value):
+        """移除内部 trace 字段，仅保留生产展示所需的字段。
+        内部字段仍可在完整 JSON 响应中供调试/审计使用，
+        但生产展示层应调用此方法过滤后再渲染。
+        """
+        internal_fields = {
+            "candidate_scores", "evidence_trace", "input_trace",
+            "matched_symptoms", "matched_pathology", "matched_tongue_pulse",
+        }
+        if isinstance(value, dict):
+            cleaned = {}
+            for key, item in value.items():
+                if key in internal_fields:
+                    continue
+                cleaned[key] = self._strip_internal_trace_fields(item)
+            return cleaned
+        if isinstance(value, list):
+            return [self._strip_internal_trace_fields(item) for item in value]
+        return value
+
     def run_m2_1_syndrome_reasoning(
         self,
         primary_disease: str,
@@ -214,19 +409,22 @@ class M2SyndromeSelector:
     ) -> Dict:
         """M2-1 独立入口：只做辨证 trace，不输出方剂、处方、剂量。"""
         symptoms = symptoms or []
+        # 解析 M2 disease key
+        resolved_disease = self.resolve_m2_disease_key(primary_disease)
         input_trace = {
             "m1_primary_disease_received": primary_disease,
+            "resolved_m2_key": resolved_disease,
             "symptoms_received": symptoms,
             "knowledge_source": "data/m2_formula_knowledge.json",
             "stage": "M2_1",
         }
-        syndromes = self._load_syndromes(primary_disease)
+        syndromes = self._load_syndromes(resolved_disease)
         if not syndromes:
             return self._strip_forbidden_prescription_fields(self._build_no_candidate(
-                primary_disease=primary_disease,
-                reason=f"'{primary_disease}' 不在知识库或下无证型数据",
-                missing_key=primary_disease,
-                searched_terms=[primary_disease],
+                primary_disease=resolved_disease,
+                reason=f"'{primary_disease}' 经解析为 '{resolved_disease}'，但知识库无证型数据",
+                missing_key=resolved_disease,
+                searched_terms=[primary_disease, resolved_disease],
                 input_trace=input_trace,
             ))
 
@@ -245,15 +443,23 @@ class M2SyndromeSelector:
             "weight": weight,
         }
         parsed = None
+        scorer_result = self._syndrome_scorer(primary_disease, syndromes, patient_info)
         if self._llm_available():
             llm_result = self._call_llm(self._build_prompt(primary_disease, syndromes, patient_info))
             parsed = self._parse_llm_result(llm_result, syndromes) if llm_result else None
         if not parsed:
-            parsed = self._fallback_parse(syndromes, primary_disease, symptoms)
+            parsed = scorer_result
+        elif scorer_result:
+            # LLM 决定了证型选择，但评分器提供结构化 candidate_scores 和匹配详情
+            parsed["candidate_scores"] = scorer_result.get("candidate_scores", [])
+            parsed["matched_symptoms"] = scorer_result.get("matched_symptoms", [])
+            parsed["matched_tongue_pulse"] = scorer_result.get("matched_tongue_pulse", "")
+            parsed["matched_pathology"] = scorer_result.get("matched_pathology", "")
+            parsed["confidence"] = scorer_result.get("confidence", 0.5)
         if not parsed:
             return self._strip_forbidden_prescription_fields(self._build_no_candidate(
                 primary_disease=primary_disease,
-                reason="LLM 与代码兜底均无法得出辨证结果",
+                reason="LLM 与代码评分均无法得出辨证结果",
                 missing_key=primary_disease,
                 searched_terms=[primary_disease],
                 input_trace=input_trace,
@@ -264,18 +470,29 @@ class M2SyndromeSelector:
         syndrome_data = syndromes.get(selected_key, {})
         name_match = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
         syndrome_display = name_match.group(1) if name_match else selected_key
-        reason = selected.get("reason") or parsed.get("reasoning") or selected.get("trigger") or "知识库证型匹配"
+        reason = selected.get("reason") or parsed.get("reasoning") or "代码证型评分匹配"
+        # 从评分器提取详细 trace
+        candidate_scores = parsed.get("candidate_scores", [])
+        matched_symptoms = parsed.get("matched_symptoms", [])
+        matched_tongue_pulse = parsed.get("matched_tongue_pulse", "")
+        matched_pathology = parsed.get("matched_pathology", "")
+        missing_info = parsed.get("missing_info", "")
+        confidence = parsed.get("confidence", 0.5) if parsed.get("confidence") else 0.5
         result = {
             "stage": "M2_1",
             "status": "PASS",
             "primary_disease": primary_disease,
             "selected_syndrome_key": selected_key,
-            "differentiation_framework": parsed.get("differentiation_framework", "脏腑"),
+            "differentiation_framework": parsed.get("differentiation_framework", "脏腑辨证"),
             "syndrome_trace": {
                 "syndrome_name": syndrome_display,
-                "evidence": [s for s in symptoms if isinstance(s, str) and s.strip()],
+                "confidence": confidence,
+                "matched_symptoms": matched_symptoms[:6],
+                "matched_pathology": matched_pathology,
+                "matched_tongue_pulse": matched_tongue_pulse,
+                "missing_info": missing_info,
+                "candidate_scores": candidate_scores,
                 "reasoning_summary": reason,
-                "confidence": 0.7 if syndrome_display else 0.0,
             },
             "evidence_trace": [
                 {"source": "patient_symptom", "text": s}
@@ -283,6 +500,7 @@ class M2SyndromeSelector:
             ],
             "input_trace": input_trace,
             "formal_prescription_allowed": False,
+            "needs_manual_review": self._is_high_risk_disease(primary_disease),
         }
         return self._strip_forbidden_prescription_fields(result)
 
@@ -295,19 +513,21 @@ class M2SyndromeSelector:
         """M2-2 独立入口：只查方剂候选，不输出正式处方。"""
         symptoms = symptoms or []
         syndrome_trace = syndrome_trace or {}
+        resolved_disease = self.resolve_m2_disease_key(primary_disease)
         input_trace = {
             "m1_primary_disease_received": primary_disease,
+            "resolved_m2_key": resolved_disease,
             "symptoms_received": symptoms,
             "knowledge_source": "data/m2_formula_knowledge.json",
             "stage": "M2_2",
         }
-        syndromes = self._load_syndromes(primary_disease)
+        syndromes = self._load_syndromes(resolved_disease)
         if not syndromes:
             return self._strip_forbidden_prescription_fields(self._build_no_candidate(
-                primary_disease=primary_disease,
-                reason=f"'{primary_disease}' 不在知识库或下无证型数据",
-                missing_key=primary_disease,
-                searched_terms=[primary_disease],
+                primary_disease=resolved_disease,
+                reason=f"M2-2 '{primary_disease}' -> '{resolved_disease}' 无证型数据",
+                missing_key=resolved_disease,
+                searched_terms=[primary_disease, resolved_disease],
                 input_trace=input_trace,
             ))
 
@@ -364,6 +584,228 @@ class M2SyndromeSelector:
             "formal_prescription_allowed": False,
         }
         return self._strip_forbidden_prescription_fields(result)
+
+    def run_m2_3_modification_candidates(
+        self,
+        primary_disease: str,
+        formula_herbs: Optional[List[str]] = None,
+        symptoms: Optional[List[str]] = None,
+        syndrome_name: str = "",
+        case_references: Optional[List[Dict]] = None,
+    ) -> Dict:
+        """M2-3 独立入口：基于证据源查询加减候选，不输出正式处方。"""
+        symptoms = symptoms or []
+        formula_herbs = formula_herbs or []
+        case_references = case_references or []
+        resolved_disease = self.resolve_m2_disease_key(primary_disease)
+        input_trace = {
+            "m1_primary_disease_received": primary_disease,
+            "resolved_m2_key": resolved_disease,
+            "symptoms_received": symptoms,
+            "knowledge_source": "data/m2_formula_knowledge.json, data/m3_herb_knowledge.json, data/m2_case_cache.json",
+            "stage": "M2_3",
+        }
+
+        # ── 策略1：知识库内显式加减规则（临床加减） ──
+        explicit_additions = self._load_explicit_modifications(resolved_disease, syndrome_name)
+        # ── 策略2：循证病案库查询 ──
+        case_modifications = self._load_case_modifications(resolved_disease, syndrome_name)
+        # ── 策略3：症状-药物映射（herb_kb） ──
+        herb_kb_modifications = self._load_herb_kb_modifications(resolved_disease, symptoms)
+
+        modifications = []
+        seen_herbs = set(formula_herbs)
+
+        # 合并所有候选，去重
+        for src_list, src_label in [
+            (explicit_additions, "显式加减规则"),
+            (case_modifications, "名医病案"),
+            (herb_kb_modifications, "药物知识库"),
+        ]:
+            for item in src_list:
+                herb = item.get("herb_name") or item.get("herb", "")
+                if not herb or herb in seen_herbs:
+                    continue
+                seen_herbs.add(herb)
+                evidence = item.get("evidence_sources") or item.get("source") or src_label
+                if isinstance(evidence, str):
+                    evidence = [evidence]
+                modifications.append({
+                    "herb_name": herb,
+                    "target_disease": primary_disease,
+                    "target_symptom": item.get("target_symptom") or item.get("matched_symptom") or "；".join(symptoms[:3]),
+                    "western_pathology": item.get("western_pathology") or item.get("western_pathology_target") or "symptom_targeted_support",
+                    "evidence_sources": evidence,
+                    "matched_reason": item.get("reason") or item.get("matched_reason") or src_label,
+                    "must_enter_m3": True,
+                    "stage": "M2_3",
+                })
+
+        if not modifications:
+            return self._build_m2_3_no_candidate(
+                primary_disease=primary_disease,
+                syndrome_name=syndrome_name,
+                symptoms=symptoms,
+                input_trace=input_trace,
+            )
+
+        result = {
+            "stage": "M2_3",
+            "status": "PASS",
+            "primary_disease": primary_disease,
+            "candidate_only": True,
+            "need_m2_3": True,
+            "must_enter_m3": True,
+            "no_candidate": False,
+            "modification_candidates": modifications[:6],
+            "searched_terms": [primary_disease, syndrome_name] + (symptoms or [])[:3],
+            "input_trace": input_trace,
+            "formal_prescription_allowed": False,
+        }
+        return self._strip_forbidden_prescription_fields(result)
+
+    def _build_m2_3_no_candidate(self, primary_disease: str, syndrome_name: str,
+                                 symptoms: List[str], input_trace: Dict) -> Dict:
+        return {
+            "primary_disease": primary_disease,
+            "status": "NO_CANDIDATE",
+            "stage": "M2_3",
+            "modification_candidates": [],
+            "no_candidate": True,
+            "reason": "药物库无可追溯证据",
+            "searched_terms": [primary_disease, syndrome_name] + (symptoms or [])[:3],
+            "input_trace": input_trace,
+            "needs_manual_review": self._is_high_risk_disease(primary_disease),
+        }
+
+    def _load_explicit_modifications(self, disease_name: str, syndrome_name: str) -> List[Dict]:
+        """从知识库加载显式加减规则（临床加减）"""
+        disease_data = self.kb.get(disease_name, {})
+        if not disease_data:
+            return []
+        # 证型级加减
+        syndrome_key = syndrome_name
+        if syndrome_key not in disease_data.get("syndromes", {}):
+            # 尝试按 trigger 匹配
+            for key, data in disease_data.get("syndromes", {}).items():
+                if syndrome_name and (syndrome_name == key or syndrome_name in str(data.get("trigger", ""))):
+                    syndrome_key = key
+                    break
+        syndrome_data = disease_data.get("syndromes", {}).get(syndrome_key, {})
+        modifications = syndrome_data.get("临床加减", [])
+        if not modifications:
+            # 尝试 full_decoction 提取
+            full = syndrome_data.get("full_decoction", "")
+            if full:
+                modifications = self._parse_modifications_from_decoction(full)
+        result = []
+        for mod in (modifications or []):
+            if isinstance(mod, str):
+                result.append({
+                    "herb_name": mod,
+                    "reason": "知识库临床加减",
+                    "source": f"data/m2_formula_knowledge.json/{disease_name}/syndromes/{syndrome_key}/临床加减",
+                })
+            elif isinstance(mod, dict):
+                result.append({
+                    "herb_name": mod.get("herb", mod.get("herb_name", "")),
+                    "reason": mod.get("reason", "知识库临床加减"),
+                    "target_symptom": mod.get("target_symptom", ""),
+                    "western_pathology": mod.get("western_pathology", ""),
+                    "source": f"data/m2_formula_knowledge.json/{disease_name}/syndromes/{syndrome_key}/临床加减",
+                })
+        return result
+
+    def _parse_modifications_from_decoction(self, full_decoction: str) -> List[Dict]:
+        """从 full_decoction 的加减注释解析加减药物"""
+        import re
+        modifications = []
+        # 匹配 "甚加XX"、"加XX"
+        pattern = re.compile(r"(甚加|加)([^\d，。、；,\s]{2,4})")
+        for m in pattern.finditer(full_decoction):
+            herb = m.group(2).strip()
+            if herb:
+                modifications.append({
+                    "herb": herb,
+                    "reason": "知识库 full_decoction 加减提示",
+                    "source": "data/m2_formula_knowledge.json/full_decoction",
+                })
+        return modifications
+
+    def _load_case_modifications(self, disease_name: str, syndrome_name: str) -> List[Dict]:
+        """从病案缓存加载加减数据"""
+        modifications = []
+        # 先查 m2_case_cache.json
+        cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "m2_case_cache.json")
+        if os.path.exists(cache_path):
+            try:
+                with open(cache_path, "r", encoding="utf-8") as f:
+                    cache_data = json.load(f)
+                exact_key = f"{disease_name}|{syndrome_name}"
+                entry = cache_data.get(exact_key)
+                if not entry:
+                    for ck, cv in cache_data.items():
+                        ck_disease = ck.split("|")[0].strip().lower()
+                        if ck_disease == disease_name.strip().lower():
+                            entry = cv
+                            break
+                if entry:
+                    for cm in (entry.get("modifications", []) or []):
+                        ch = cm.get("herb", "").strip()
+                        if ch:
+                            modifications.append({
+                                "herb_name": ch,
+                                "reason": cm.get("reason", "名医病案加减")[:30],
+                                "evidence_sources": [entry.get("source", "m2_case_cache.json")],
+                                "target_symptom": cm.get("reason", "")[:20],
+                            })
+            except Exception:
+                pass
+        if modifications:
+            return modifications
+        # 再查 m2_case_reference.json
+        ref_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "m2_case_reference.json")
+        if os.path.exists(ref_path):
+            try:
+                with open(ref_path, "r", encoding="utf-8") as f:
+                    ref_data = json.load(f)
+                for key, entry in ref_data.items():
+                    if disease_name.lower() in key.lower():
+                        for cm in (entry.get("modifications", []) or []):
+                            ch = cm.get("herb", "").strip()
+                            if ch:
+                                modifications.append({
+                                    "herb_name": ch,
+                                    "reason": cm.get("reason", "知识库内置病案加减")[:30],
+                                    "evidence_sources": [entry.get("source", "m2_case_reference.json")],
+                                    "target_symptom": cm.get("reason", "")[:20],
+                                })
+            except Exception:
+                pass
+        return modifications[:6]
+
+    def _load_herb_kb_modifications(self, disease_name: str, symptoms: List[str]) -> List[Dict]:
+        """从 herb_kb 加载症状-药物映射加减候选"""
+        if not self.herb_kb or not isinstance(self.herb_kb, dict):
+            return []
+        modifications = []
+        for symptom in symptoms:
+            if not symptom or not isinstance(symptom, str):
+                continue
+            for hname, hinfo in self.herb_kb.items():
+                if not isinstance(hinfo, dict):
+                    continue
+                indications = hinfo.get("indications") or hinfo.get("主治") or ""
+                if isinstance(indications, str) and any(symptom in indications for symptom in [symptom]):
+                    modifications.append({
+                        "herb_name": hname,
+                        "reason": f"herb_kb 主治包含'{symptom}'",
+                        "evidence_sources": [f"data/m3_herb_knowledge.json/{hname}"],
+                        "target_symptom": symptom,
+                        "western_pathology": hinfo.get("现代药理", "symptom_targeted_support"),
+                    })
+                    break
+        return modifications
 
     def _build_no_candidate(self, primary_disease: str, reason: str, missing_key: str,
                             searched_terms: List[str], input_trace: Optional[Dict] = None) -> Dict:
@@ -748,7 +1190,8 @@ class M2SyndromeSelector:
             from m1_engine import M1DiagnosisEngine
             engine = M1DiagnosisEngine()
             return engine._call_llm(prompt, temperature=0.1, max_tokens=500)
-        except Exception:
+        except Exception as _e:
+            print(f"[LLM_ERR] M2 _call_llm failed: {_e}")
             return None
 
     def _fallback_full(self, primary_disease, syndromes, symptoms) -> Dict:
@@ -787,48 +1230,455 @@ class M2SyndromeSelector:
             "missing_info": [],
         }
 
-    def _fallback_parse(self, syndromes: Dict, primary_disease: str, symptoms: List[str]) -> Optional[Dict]:
-        """代码兜底：取第一个匹配 trigger 关键词的证型"""
+    def _syndrome_scorer(self, primary_disease: str, syndromes: Dict,
+                         patient_info: Dict) -> Optional[Dict]:
+        """结构化证型评分器：遍历所有证型，按多维度打分，输出最高置信度证型。
+
+        评分维度（总分100）：
+        - 症状关键词匹配 (40pt)
+        - 舌象匹配 (20pt)
+        - 脉象匹配 (15pt)
+        - 病理产物匹配 (痰/湿/瘀/热/寒) (15pt)
+        - 寒热虚实匹配 (10pt)
+        """
         if not syndromes:
             return None
 
-        symptoms_lower = [s.lower() for s in (symptoms or [])]
-        disease_lower = primary_disease.lower() if primary_disease else ""
+        import re
 
-        best_score = 0
-        best_syndrome = None
+        symptoms = patient_info.get("symptoms", []) or []
+        tongue = patient_info.get("tongue", "") or ""
+        pulse = patient_info.get("pulse", "") or ""
+        cold_heat = patient_info.get("cold_heat", []) or []
+        stool_urine = patient_info.get("stool_urine", []) or []
+        appetite = patient_info.get("appetite", []) or []
+
+        # 构建患者所有文本特征（用于匹配）
+        _all_patient_text = " ".join(
+            [s for s in symptoms if isinstance(s, str)] +
+            [tongue, pulse] +
+            [c for c in cold_heat if isinstance(c, str)] +
+            [s for s in stool_urine if isinstance(s, str)] +
+            [a for a in appetite if isinstance(a, str)]
+        ).lower()
+
+        # 专用病理产物/病机关键词列表
+        _pathology_heat_keywords = ["热", "黄", "数", "渴", "烦躁", "便秘", "尿黄", "苔黄"]
+        _pathology_cold_keywords = ["寒", "白", "淡", "迟", "紧", "清稀", "不渴", "畏寒", "肢冷", "苔白"]
+        _pathology_phlegm_keywords = ["痰", "腻", "滑", "咳", "浊", "黏", "胸"]
+        _pathology_dampness_keywords = ["湿", "苔腻", "厚", "濡", "水肿", "困重", "纳呆", "便溏"]
+        _pathology_blood_stasis_keywords = ["瘀", "紫", "暗", "涩", "刺痛", "肿块", "舌有瘀点", "舌下", "癥"]
+        _pathology_qi_stagnation_keywords = ["胀", "闷", "痛", "叹气", "抑郁", "善太息", "脉弦"]
+
+        # 提取患者舌象关键词
+        _patient_tongue_keywords = set()
+        for kw in re.findall(r'[舌苔薄白黄腻厚燥滑润干红绛紫暗淡青]*', tongue):
+            if kw:
+                _patient_tongue_keywords.add(kw)
+        # 从舌质/苔标准的描述中提取（捕获舌和苔两部分）
+        _tongue_patterns = re.findall(r'(舌[^，。；,]*?)(?=[，。；,])', tongue)
+        if not _tongue_patterns:
+            _tongue_patterns = re.findall(r'(舌[^，。；,;]*)', tongue)
+        # 也捕获苔质部分
+        _moss_patterns = re.findall(r'(苔[^，。；,;]*)', tongue)
+        _patient_tongue_full = (" ".join(_tongue_patterns) + " " + " ".join(_moss_patterns)).lower().strip()
+        if not _patient_tongue_full or _patient_tongue_full == " ":
+            _patient_tongue_full = tongue.lower()
+
+        # 提取患者脉象关键词
+        _pulse_patterns = re.findall(r'(脉[^，。；,;]*)', pulse)
+        _patient_pulse_full = " ".join(_pulse_patterns).lower()
+        if not _patient_pulse_full:
+            _patient_pulse_full = pulse.lower()
+
+        # 对每个证型评分
+        candidate_scores = []
         for name, data in syndromes.items():
             trigger = str(data.get("trigger", "")).lower()
-            score = 0
-            for s in symptoms_lower:
-                if s and s in trigger:
-                    score += 1
-            if disease_lower and disease_lower in trigger:
-                score += 2
-            if score > best_score:
-                best_score = score
-                best_syndrome = name
+            display_name_match = re.search(r'<(.+?)>', trigger)
+            display_name = display_name_match.group(1) if display_name_match else name
 
-        if not best_syndrome:
-            best_syndrome = list(syndromes.keys())[0]
+            score = 0.0
+            matched_symptoms_list = []
+            matched_pathology_list = []
+            matched_tongue_pulse_items = []
+            total_possible = 0
 
-        data = syndromes[best_syndrome]
-        formulas = data.get("formulas", [])
-        if formulas:
-            formula = formulas[0]
-            herbs = formula.get("herbs", [])
-            if isinstance(herbs, str):
-                herbs = [h.strip() for h in herbs.replace("、", ",").split(",") if h.strip()]
-            formula_name = formula.get("name_cn", formula.get("name", ""))
-        else:
-            formula_name = data.get("formula_name", "")
-            herbs = data.get("herbs", [])
+            # ── 维度1：症状关键词匹配 (0-40pt) ──
+            symptom_score = 0.0
+            syndrome_symptoms = data.get("symptoms", [])
+            if isinstance(syndrome_symptoms, list) and len(syndrome_symptoms) > 0:
+                matched_count = 0
+                # Track which patient symptoms matched via structured symptoms
+                struct_matched_set = set()
+                for ps in symptoms:
+                    if isinstance(ps, str) and ps.strip():
+                        ps_lower = ps.lower()
+                        matched_any = False
+                        for ss in syndrome_symptoms:
+                            if isinstance(ss, str):
+                                ss_lower = ss.lower()
+                                # 支持子串和反向匹配
+                                if ss_lower in ps_lower or ps_lower in ss_lower:
+                                    matched_count += 1
+                                    matched_any = True
+                                    break
+                                # 关键字符匹配（如"痰白清稀" vs "痰白而稀"）
+                                ps_chars = set(ps_lower.replace(' ', ''))
+                                ss_chars = set(ss_lower.replace(' ', ''))
+                                overlap = ps_chars & ss_chars
+                                min_len = min(len(ps_chars), len(ss_chars))
+                                if min_len > 0 and len(overlap) / min_len >= 0.5:
+                                    matched_count += 1
+                                    matched_any = True
+                                    break
+                        if matched_any:
+                            if ps not in matched_symptoms_list:
+                                matched_symptoms_list.append(ps)
+                            struct_matched_set.add(ps)
+                # trigger 文本 fallback：对未匹配到的患者症状再尝试匹配 trigger
+                trigger_text_no_bracket = re.sub(r'<.*?>', '', trigger)
+                for ps in symptoms:
+                    if isinstance(ps, str) and ps.strip() and ps not in struct_matched_set:
+                        ps_lower = ps.lower()
+                        if ps_lower in trigger_text_no_bracket:
+                            matched_count += 1
+                            if ps not in matched_symptoms_list:
+                                matched_symptoms_list.append(ps)
+                        else:
+                            # 双字及以上关键字符匹配（如"怕冷"与"恶寒"无直接子串，取双字片段匹配）
+                            for i in range(len(ps_lower) - 1):
+                                bigram = ps_lower[i:i+2]
+                                if bigram in trigger_text_no_bracket:
+                                    matched_count += 1
+                                    if ps not in matched_symptoms_list:
+                                        matched_symptoms_list.append(ps)
+                                    break
+                if matched_count > 0:
+                    symptom_score = min(40.0, matched_count * 12.0)
+                else:
+                    symptom_score = 1.0
+            else:
+                symptom_keywords = set()
+                for s in symptoms:
+                    if isinstance(s, str) and s.strip():
+                        for part in re.findall(r'[^\s，,]+', s.strip()):
+                            if len(part) >= 2:
+                                symptom_keywords.add(part.lower())
+                trigger_text_no_bracket = re.sub(r'<.*?>', '', trigger)
+                matched_count = 0
+                for kw in symptom_keywords:
+                    if kw in trigger_text_no_bracket:
+                        matched_count += 1
+                        if kw not in matched_symptoms_list:
+                            matched_symptoms_list.append(kw)
+                if symptom_keywords:
+                    symptom_score = min(40.0, (matched_count / max(len(symptom_keywords), 1)) * 40.0)
+
+            # ── 维度2：舌象匹配 (0-20pt) ──
+            tongue_score = 0.0
+            if _patient_tongue_full:
+                tongue_hits = 0
+                # 使用证型的结构化 tongue 字段优先
+                syndrome_tongue = data.get("tongue", "")
+                syndrome_pulse = data.get("pulse", "")
+                if syndrome_tongue:
+                    # 结构化舌象匹配
+                    if "红" in syndrome_tongue and "红" in _patient_tongue_full and "不红" not in syndrome_tongue:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("舌红")
+                    if "淡" in syndrome_tongue and "淡" in _patient_tongue_full:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("舌淡")
+                    if "暗" in syndrome_tongue and "暗" in _patient_tongue_full:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("舌暗")
+                    if "紫" in syndrome_tongue and "紫" in _patient_tongue_full:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("舌紫")
+                    if "胖" in syndrome_tongue and "胖" in _patient_tongue_full:
+                        tongue_hits += 1
+                    if "齿痕" in syndrome_tongue and "齿痕" in _patient_tongue_full:
+                        tongue_hits += 1
+                    if "腻" in syndrome_tongue and "腻" in _patient_tongue_full:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("苔腻")
+                    if "黄" in syndrome_tongue and "黄" in _patient_tongue_full and "不黄" not in syndrome_tongue:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("苔黄")
+                    if "白" in syndrome_tongue and "白" in _patient_tongue_full and "不白" not in syndrome_tongue:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("苔白")
+                    if "薄" in syndrome_tongue and "薄" in _patient_tongue_full:
+                        tongue_hits += 1
+                        matched_tongue_pulse_items.append("苔薄")
+                    if "燥" in syndrome_tongue and ("燥" in _patient_tongue_full or "干" in _patient_tongue_full):
+                        tongue_hits += 1
+                else:
+                    # Fallback: trigger 文本舌象匹配（原有逻辑）
+                    tongue_checks = [
+                        ("舌红", "舌红" in trigger or "舌质红" in trigger),
+                        ("舌淡", "舌淡" in trigger or "舌质淡" in trigger),
+                        ("舌紫", "舌紫" in trigger or "舌暗红" in trigger or "舌有瘀点" in trigger),
+                        ("苔黄", "苔黄" in trigger),
+                        ("苔白", "苔白" in trigger),
+                        ("苔腻", "苔腻" in trigger),
+                        ("苔薄", "苔薄" in trigger),
+                        ("苔厚", "苔厚" in trigger),
+                        ("胖大", "胖大" in trigger or "齿痕" in trigger),
+                        ("瘀斑", "瘀斑" in trigger or "瘀点" in trigger),
+                    ]
+                    for label, present in tongue_checks:
+                        if label in _patient_tongue_full:
+                            if present:
+                                tongue_hits += 1
+                                matched_tongue_pulse_items.append(label)
+                tongue_score = min(20.0, tongue_hits * 3.0)
+                if not matched_tongue_pulse_items and "舌" in _patient_tongue_full:
+                    tongue_score = 2.0
+                    # 患者有舌象但无匹配 — 给一个基础分
+                    tongue_score = 2.0
+
+            # ── 维度3：脉象匹配 (0-15pt) ──
+            pulse_score = 0.0
+            if _patient_pulse_full:
+                pulse_hits = 0
+                pulse_checks = [
+                    ("脉浮", "脉浮" in trigger),
+                    ("脉沉", "脉沉" in trigger),
+                    ("脉数", "脉数" in trigger),
+                    ("脉迟", "脉迟" in trigger),
+                    ("脉滑", "脉滑" in trigger),
+                    ("脉涩", "脉涩" in trigger),
+                    ("脉弦", "脉弦" in trigger),
+                    ("脉细", "脉细" in trigger),
+                    ("脉弱", "脉弱" in trigger),
+                    ("脉濡", "脉濡" in trigger),
+                    ("脉缓", "脉缓" in trigger),
+                    ("脉紧", "脉紧" in trigger),
+                    ("脉有力", "脉有力" in trigger or "脉实" in trigger),
+                    ("脉无力", "脉无力" in trigger or "脉虚" in trigger),
+                ]
+                for label, present in pulse_checks:
+                    if label in _patient_pulse_full:
+                        if present:
+                            pulse_hits += 1
+                            if label not in matched_tongue_pulse_items:
+                                matched_tongue_pulse_items.append(label)
+                pulse_score = min(15.0, pulse_hits * 2.5)
+                if not pulse_hits and "脉" in _patient_pulse_full:
+                    pulse_score = 1.0
+
+            # ── 维度4：病理产物匹配 (0-15pt) ──
+            pathology_score = 0.0
+            pathology_hits = 0
+
+            # 否定前缀检测函数
+            _negation_prefixes = ["无明显", "无明确", "无", "未", "没有", "否认", "不伴"]
+            def _is_negated(kw: str, text: str) -> bool:
+                for np_ in sorted(_negation_prefixes, key=len, reverse=True):
+                    if np_ + kw in text:
+                        return True
+                return False
+
+            # 判断患者整体偏寒还是偏热（用于互斥逻辑），考虑否定前缀
+            def _heat_kw_match(kw: str, text: str) -> bool:
+                return kw in text and not _is_negated(kw, text)
+            def _cold_kw_match(kw: str, text: str) -> bool:
+                return kw in text and not _is_negated(kw, text)
+
+            _patient_heat_count = sum(1 for kw in _pathology_heat_keywords if _heat_kw_match(kw, _all_patient_text))
+            _patient_cold_count = sum(1 for kw in _pathology_cold_keywords if _cold_kw_match(kw, _all_patient_text))
+            _patient_is_heat = _patient_heat_count > _patient_cold_count
+            _patient_is_cold = _patient_cold_count > _patient_heat_count
+
+            # 热 — 只在患者偏热时匹配
+            if _patient_heat_count > 0 and not _patient_is_cold:
+                if any(kw in trigger for kw in ["热", "黄", "数"]):
+                    pathology_hits += 1
+                    matched_pathology_list.append("热")
+                elif "不" not in trigger[:20]:
+                    # 不明确否定热的情况下也尝试匹配
+                    if "热" in trigger:
+                        pathology_hits += 1
+                        matched_pathology_list.append("热")
+            # 寒 — 只在患者偏寒时匹配
+            if _patient_cold_count > 0 and not _patient_is_heat:
+                if any(kw in trigger for kw in ["寒", "白", "淡"]):
+                    pathology_hits += 1
+                    matched_pathology_list.append("寒")
+            # 痰
+            if any(kw in _all_patient_text for kw in _pathology_phlegm_keywords):
+                if "痰" in trigger:
+                    pathology_hits += 1
+                    matched_pathology_list.append("痰")
+            # 湿
+            if any(kw in _all_patient_text for kw in _pathology_dampness_keywords):
+                if any(kw in trigger for kw in ["湿", "腻", "濡"]):
+                    pathology_hits += 1
+                    matched_pathology_list.append("湿")
+            # 瘀
+            if any(kw in _all_patient_text for kw in _pathology_blood_stasis_keywords):
+                if any(kw in trigger for kw in ["瘀", "紫", "暗", "涩"]):
+                    pathology_hits += 1
+                    matched_pathology_list.append("瘀")
+            # 气滞
+            if any(kw in _all_patient_text for kw in _pathology_qi_stagnation_keywords):
+                # 气滞触发词需要更精确匹配（有弦/胀/闷/叹气等明确词才算）
+                qi_hit = False
+                for qi_kw in ["胀", "痛（走窜）", "叹气", "抑郁", "善太息"]:
+                    if qi_kw in _all_patient_text:
+                        qi_hit = True
+                        break
+                if not qi_hit:
+                    # "闷" 需要结合上下文，只对有"胸闷""胸胁胀满"等匹配
+                    if "胸闷" in _all_patient_text or "胸胁" in _all_patient_text:
+                        qi_hit = "闷" in trigger
+                    elif "脉弦" in _patient_pulse_full:
+                        qi_hit = True
+                    else:
+                        qi_hit = "弦" in trigger
+                if qi_hit:
+                    pathology_hits += 1
+                    matched_pathology_list.append("气滞")
+            pathology_score = min(15.0, pathology_hits * 3.0)
+
+            # ── 维度5：寒热虚实匹配 (0-10pt) ──
+            cold_heat_score = 0.0
+            has_cold_coldheat = False
+            has_hot_coldheat = False
+            for ch in cold_heat:
+                chl = ch.lower() if isinstance(ch, str) else ""
+                if "热" in chl or "烧" in chl:
+                    has_hot_coldheat = True
+                    if "热" in trigger:
+                        cold_heat_score += 3.0
+                if "寒" in chl or "冷" in chl or "恶" in chl:
+                    has_cold_coldheat = True
+                    if "寒" in trigger:
+                        cold_heat_score += 3.0
+                if "虚" in chl and "虚" in trigger:
+                    cold_heat_score += 2.0
+                if ("实" in chl or "盛" in chl) and ("实" in trigger or "盛" in trigger):
+                    cold_heat_score += 2.0
+            cold_heat_score = min(10.0, cold_heat_score)
+
+            # 寒热互斥惩罚：患者明确偏寒时降低纯热证得分
+            if (_patient_is_cold or has_cold_coldheat) and ("热" in trigger and "寒" not in trigger and "风热" not in trigger):
+                cold_heat_score = max(0, cold_heat_score - 5.0)
+            # 患者明确偏热时降低纯寒证得分
+            if (_patient_is_heat or has_hot_coldheat) and ("寒" in trigger and "热" not in trigger and "风寒" not in trigger):
+                cold_heat_score = max(0, cold_heat_score - 5.0)
+
+            # 特异性词惩罚（使用否定感知匹配）
+            heat_specific = ["口干", "口苦", "黄痰", "黄涕", "舌红", "烦躁", "灼痛"]
+            cold_specific = ["怕冷", "恶寒", "清稀", "苔白", "舌淡", "不渴", "肢冷"]
+            _matched_cold_specific = [cs for cs in cold_specific
+                                      if cs in _all_patient_text and not _is_negated(cs, _all_patient_text)]
+            _matched_heat_specific = [hs for hs in heat_specific
+                                      if hs in _all_patient_text and not _is_negated(hs, _all_patient_text)]
+            # 热特异性词 → 纯寒证或无明显热象的证型扣分
+            if _matched_heat_specific:
+                if "热" not in trigger and "风热" not in trigger:
+                    cold_heat_score = max(0, cold_heat_score - 2.0)
+            # 寒特异性词 → 纯热证扣分；若有 2+ 项寒特异词，也扣热性证型（包括风热）
+            if _matched_cold_specific:
+                # 使用证型显示名判断寒热属性，避免触发词中的对比描述干扰
+                is_cold_syndrome = "寒" in display_name and "风热" not in display_name
+                if not is_cold_syndrome:
+                    cold_heat_score = max(0, cold_heat_score - 2.0)
+                # 患者有 2+ 项典型寒象 → 热性证型（包括风热）额外扣分
+                if len(_matched_cold_specific) >= 2 and not is_cold_syndrome:
+                    cold_heat_score = max(0, cold_heat_score - 3.0)
+
+            # ── 总分（寒热匹配计入） ──
+            total_score = symptom_score + tongue_score + pulse_score + pathology_score + cold_heat_score
+
+            # 证型全名匹配导致的额外总分调整（证型名含"风热"但患者偏寒，或含"风寒"但患者偏热）
+            if has_cold_coldheat and "风热" in display_name:
+                total_score = max(0, total_score - 3.0)
+            if has_hot_coldheat and "风寒" in display_name:
+                total_score = max(0, total_score - 3.0)
+
+            # 虚实证型偏好：当患者有明确实热症状（黄痰、苔黄腻等），虚证证型降分
+            _patient_has_heat_phlegm = any(kw in _all_patient_text for kw in ["黄痰", "黄稠", "铁锈色", "黄腻"])
+            if _patient_has_heat_phlegm and "虚" in trigger:
+                total_score -= 5.0
+            # 当患者有明确气虚证候（气短、神疲）且证型含"虚"，加分
+            _patient_has_qi_xu = any(kw in _all_patient_text for kw in ["气短", "神疲", "乏力", "自汗"])
+            if _patient_has_qi_xu and "虚" in trigger:
+                total_score += 3.0
+            # 热象证型偏好：当患者同时有热象+黄痰，提升含"痰""热"证型
+            if _patient_has_heat_phlegm and "痰" in trigger and "热" in trigger:
+                total_score += 3.0
+            confidence = round(min(1.0, total_score / 60.0), 2)  # 60分以上 = 高置信度
+
+            # 当所有维度得分为0时，给最低分避免排序混乱
+            if total_score == 0 and len(syndromes) > 0:
+                total_score = 0.1
+
+            candidate_scores.append({
+                "syndrome_name": display_name,
+                "score": round(total_score, 1),
+                "confidence": confidence,
+                "matched_symptoms": matched_symptoms_list[:6],
+                "matched_pathology": "、".join(set(matched_pathology_list)) if matched_pathology_list else "",
+                "matched_tongue_pulse": "，".join(matched_tongue_pulse_items[:6]) if matched_tongue_pulse_items else "",
+                "symptom_match": round(symptom_score, 1),
+                "tongue_match": round(tongue_score, 1),
+                "pulse_match": round(pulse_score, 1),
+                "pathology_match": round(pathology_score, 1),
+                "cold_heat_match": round(cold_heat_score, 1),
+            })
+
+        # 按得分降序排列
+        candidate_scores.sort(key=lambda x: x["score"], reverse=True)
+
+        if not candidate_scores:
+            return None
+
+        best = candidate_scores[0]
+        best_syndrome_name = best["syndrome_name"]
+
+        # 找到最佳证型对应的原始 key
+        best_key = None
+        for name, data in syndromes.items():
+            dn = re.search(r'<(.+?)>', str(data.get("trigger", "")))
+            display_n = dn.group(1) if dn else name
+            if display_n == best_syndrome_name or name == best_syndrome_name:
+                best_key = name
+                break
+        if not best_key:
+            best_key = list(syndromes.keys())[0]
+
+        # 构建缺失信息
+        missing = []
+        if not tongue.strip():
+            missing.append("舌象")
+        if not pulse.strip():
+            missing.append("脉象")
+        if not symptoms:
+            missing.append("症状")
+
+        matched_pathology_str = best.get("matched_pathology", "")
+        matched_tongue_pulse_str = best.get("matched_tongue_pulse", "")
+        matched_symptoms_str = best.get("matched_symptoms", [])
 
         return {
-            "selected_syndrome": {"name": best_syndrome, "trigger": data.get("trigger", "")},
-            "differentiation_framework": data.get("framework", "脏腑辨证"),
-            "formula": {"name": formula_name, "herbs": herbs},
-            "reasoning": "代码兜底匹配",
+            "selected_syndrome": {
+                "name": best_key,
+                "reason": f"证型评分器: {best_syndrome_name} (总分{best['score']}，置信度{best['confidence']})",
+            },
+            "differentiation_framework": "脏腑辨证",
+            "candidate_scores": candidate_scores,
+            "matched_symptoms": matched_symptoms_str,
+            "matched_tongue_pulse": matched_tongue_pulse_str,
+            "matched_pathology": matched_pathology_str,
+            "missing_info": "；".join(missing) if missing else "",
+            "confidence": best["confidence"],
+            "reasoning": f"证型评分器最佳匹配: {best_syndrome_name} (症状={best['symptom_match']}, "
+                         f"舌象={best['tongue_match']}, 脉象={best['pulse_match']}, "
+                         f"病理={best['pathology_match']}, 寒热={best['cold_heat_match']})",
         }
 
 # ══════════════════════════════════════════════════════
