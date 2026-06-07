@@ -461,50 +461,106 @@ class M2SyndromeSelector:
             "age": age,
             "weight": weight,
         }
-        parsed = None
-        scorer_result = self._syndrome_scorer(primary_disease, syndromes, patient_info)
-        if self._llm_available():
-            llm_result = self._call_llm(self._build_prompt(primary_disease, syndromes, patient_info))
-            parsed = self._parse_llm_result(llm_result, syndromes) if llm_result else None
-        if not parsed:
-            parsed = scorer_result
-        elif scorer_result:
-            # LLM 决定了证型选择，但评分器提供结构化 candidate_scores 和匹配详情
-            parsed["candidate_scores"] = scorer_result.get("candidate_scores", [])
-            parsed["matched_symptoms"] = scorer_result.get("matched_symptoms", [])
-            parsed["matched_tongue_pulse"] = scorer_result.get("matched_tongue_pulse", "")
-            parsed["matched_pathology"] = scorer_result.get("matched_pathology", "")
-            parsed["confidence"] = scorer_result.get("confidence", 0.5)
-        if not parsed:
-            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
-                primary_disease=primary_disease,
-                reason="LLM 与代码评分均无法得出辨证结果",
-                missing_key=primary_disease,
-                searched_terms=[primary_disease],
-                input_trace=input_trace,
-            ))
+        # ── Track 1: 症状证素辨证轨 (Section 5.3) ──
+        traditional_tcm_result = self._syndrome_scorer(primary_disease, syndromes, patient_info)
 
-        selected = parsed.get("selected_syndrome", {})
-        selected_key = selected.get("name", "")
-        syndrome_data = syndromes.get(selected_key, {})
-        name_match = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
-        syndrome_display = name_match.group(1) if name_match else selected_key
-        reason = selected.get("reason") or parsed.get("reasoning") or "代码证型评分匹配"
-        # 从评分器提取详细 trace
-        candidate_scores = parsed.get("candidate_scores", [])
-        matched_symptoms = parsed.get("matched_symptoms", [])
-        matched_tongue_pulse = parsed.get("matched_tongue_pulse", "")
-        matched_pathology = parsed.get("matched_pathology", "")
-        missing_info = parsed.get("missing_info", "")
-        confidence = parsed.get("confidence", 0.5) if parsed.get("confidence") else 0.5
+        # ── Track 2: 病名病理辨证轨 (Section 5.2) ──
+        disease_type, framework = self._classify_disease_type(primary_disease, patient_info)
+        pathology_based_result = self._run_pathology_track(
+            resolved_disease, syndromes, patient_info, disease_type, framework,
+        )
+
+        parsed = None
+        if self._llm_available():
+            llm_result = self._call_llm(self._build_prompt(primary_disease, syndromes, patient_info, disease_type, framework))
+            parsed = self._parse_llm_result(llm_result, syndromes) if llm_result else None
+
+        # ── Merge dual tracks (Section 6) ──
+        merged = self._merge_dual_tracks(
+            primary_disease, syndromes, patient_info,
+            pathology_based_result, traditional_tcm_result,
+        )
+        # 双轨一致/相近时取合并结果，否则 fallback 原有逻辑
+        if merged.get("status") == "CONSISTENT" or merged.get("status") == "NEAR":
+            selected_key = merged.get("selected_syndrome_key", "")
+            reason = merged.get("reasoning_summary", "双轨辨证合并")
+            syndrome_display = merged.get("syndrome_name", selected_key)
+            confidence = merged.get("confidence", 0.5)
+            matched_pathology = merged.get("matched_pathology", "")
+            matched_symptoms = merged.get("matched_symptoms", [])
+            matched_tongue_pulse = merged.get("matched_tongue_pulse", "")
+            missing_info = merged.get("missing_info", "")
+            need_human_review = False
+        elif merged.get("status") == "CONFLICT":
+            # 冲突时: 改用原有单轨逻辑（scorer + LLM fallback），但标记 need_human_review
+            parsed = parsed or traditional_tcm_result
+            if not parsed:
+                return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                    primary_disease=primary_disease,
+                    reason="双轨冲突且无兜底",
+                    missing_key=primary_disease,
+                    searched_terms=[primary_disease],
+                    input_trace=input_trace,
+                ))
+            selected_key = parsed.get("selected_syndrome", {}).get("name", "")
+            syndrome_data = syndromes.get(selected_key, {})
+            nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+            syndrome_display = nm.group(1) if nm else selected_key
+            reason = parsed.get("selected_syndrome", {}).get("reason", "") or parsed.get("reasoning", "") or "单轨兜底"
+            confidence = parsed.get("confidence", 0.5)
+            matched_pathology = parsed.get("matched_pathology", "") or merged.get("matched_pathology", "")
+            matched_symptoms = parsed.get("matched_symptoms", []) or []
+            matched_tongue_pulse = parsed.get("matched_tongue_pulse", "") or ""
+            missing_info = parsed.get("missing_info", "") or ""
+            need_human_review = True
+        else:
+            # 无双轨数据时的原有 fallback
+            if not parsed:
+                parsed = traditional_tcm_result
+            if not parsed:
+                return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                    primary_disease=primary_disease,
+                    reason="LLM 与代码评分均无法得出辨证结果",
+                    missing_key=primary_disease,
+                    searched_terms=[primary_disease],
+                    input_trace=input_trace,
+                ))
+            selected = parsed.get("selected_syndrome", {})
+            selected_key = selected.get("name", "")
+            syndrome_data = syndromes.get(selected_key, {})
+            nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+            syndrome_display = nm.group(1) if nm else selected_key
+            reason = selected.get("reason") or parsed.get("reasoning") or "代码证型评分匹配"
+            if traditional_tcm_result:
+                parsed.setdefault("candidate_scores", traditional_tcm_result.get("candidate_scores", []))
+                parsed.setdefault("matched_symptoms", traditional_tcm_result.get("matched_symptoms", []))
+                parsed.setdefault("matched_tongue_pulse", traditional_tcm_result.get("matched_tongue_pulse", ""))
+                parsed.setdefault("matched_pathology", traditional_tcm_result.get("matched_pathology", ""))
+                parsed.setdefault("confidence", traditional_tcm_result.get("confidence", 0.5))
+            candidate_scores = parsed.get("candidate_scores", [])
+            matched_symptoms = parsed.get("matched_symptoms", []) or []
+            matched_tongue_pulse = parsed.get("matched_tongue_pulse", "") or ""
+            matched_pathology = parsed.get("matched_pathology", "") or ""
+            missing_info = parsed.get("missing_info", "") or ""
+            confidence = parsed.get("confidence", 0.5) if parsed.get("confidence") else 0.5
+            need_human_review = False
+
         result = {
             "stage": "M2_1",
             "status": "PASS",
             "primary_disease": primary_disease,
             "disease_key": resolved_disease,
+            "disease_type": disease_type,
+            "differentiation_framework": framework,
             "inferred_pathology_stage": matched_pathology,
             "selected_syndrome_key": selected_key,
-            "differentiation_framework": parsed.get("differentiation_framework", "脏腑辨证"),
+            "pathology_based_result": self._clean_track_result(pathology_based_result),
+            "traditional_tcm_result": self._clean_track_result(traditional_tcm_result),
+            "syndrome_comparison": {
+                "status": merged.get("status", "SINGLE_TRACK"),
+                "differential_syndrome": merged.get("differential_syndrome", ""),
+                "conflict_reason": merged.get("conflict_reason", ""),
+            },
             "syndrome_trace": {
                 "syndrome_name": syndrome_display,
                 "confidence": confidence,
@@ -512,7 +568,7 @@ class M2SyndromeSelector:
                 "matched_pathology": matched_pathology,
                 "matched_tongue_pulse": matched_tongue_pulse,
                 "missing_info": missing_info,
-                "candidate_scores": candidate_scores,
+                "candidate_scores": traditional_tcm_result.get("candidate_scores", []) if traditional_tcm_result else [],
                 "reasoning_summary": reason,
             },
             "evidence_trace": [
@@ -522,7 +578,8 @@ class M2SyndromeSelector:
             "input_trace": input_trace,
             "reverse_audit": {},
             "formal_prescription_allowed": False,
-            "needs_manual_review": self._is_high_risk_disease(primary_disease),
+            "needs_manual_review": self._is_high_risk_disease(primary_disease) or need_human_review,
+            "need_human_review": need_human_review,
         }
         return self._strip_forbidden_prescription_fields(result)
 
@@ -932,12 +989,361 @@ class M2SyndromeSelector:
         return normalized
 
     # ══════════════════════════════════════════════════════
+    #  双轨辨证 — 病名病理辨证轨 (Spec Section 5)
+    # ══════════════════════════════════════════════════════
+
+    _ACUTE_INFECTION_KEYWORDS = [
+        "肺炎", "感染", "扁桃", "上呼吸道", "支气管", "发热", "鼻窦",
+        "咽炎", "喉炎", "气管炎", "会厌炎", "中耳炎", "腮腺炎",
+        "脑膜炎", "阑尾炎", "胆囊炎", "尿路感染", "肠炎",
+    ]
+    _CHRONIC_KEYWORDS = [
+        "慢性", "虚劳", "肿瘤", "癌", "术后", "综合征", "功能",
+        "退行", "增生", "肥大", "硬化", "纤维化",
+    ]
+
+    def _classify_disease_type(self, primary_disease: str,
+                                patient_info: Dict) -> tuple:
+        """Spec 5.1: 先判疾病性质和辨证框架
+
+        Returns:
+            (disease_type, framework):
+                disease_type: "外感/急性感染" | "内伤/慢病" | "性质不清"
+                framework: "卫气营血辨证" | "脏腑辨证" | "混合辨证"
+        """
+        disease_lower = primary_disease.lower()
+
+        # 急性/感染性
+        if any(kw in disease_lower for kw in self._ACUTE_INFECTION_KEYWORDS):
+            disease_type = "外感/急性感染"
+            framework = "卫气营血辨证"
+        # 慢性/内伤
+        elif any(kw in disease_lower for kw in self._CHRONIC_KEYWORDS):
+            disease_type = "内伤/慢病"
+            framework = "脏腑辨证"
+        else:
+            # 通过症状和病程辅助判断
+            symptoms = patient_info.get("symptoms", []) or []
+            combined = " ".join(s.lower() for s in symptoms if isinstance(s, str))
+            acute_hints = ["发热", "恶寒", "恶风", "起病急", "突发", "2天", "3天",
+                           "1周", "近日", "新发"]
+            chronic_hints = ["反复", "多年", "长期", "日久", "间断", "时发",
+                             "遇劳", "遇寒", "晨起", "每年"]
+            acute_score = sum(1 for h in acute_hints if h in combined)
+            chronic_score = sum(1 for h in chronic_hints if h in combined)
+            labs = patient_info.get("labs", []) or []
+            if any("白细" in str(l) or "CRP" in str(l) or "中性" in str(l) for l in labs):
+                acute_score += 2
+            if acute_score > chronic_score:
+                disease_type = "外感/急性感染"
+                framework = "卫气营血辨证"
+            elif chronic_score > acute_score:
+                disease_type = "内伤/慢病"
+                framework = "脏腑辨证"
+            else:
+                disease_type = "性质不清"
+                framework = "卫气营血辨证与脏腑辨证兼看"
+
+        return disease_type, framework
+
+    def _run_pathology_track(self, disease_key: str, syndromes: Dict,
+                              patient_info: Dict,
+                              disease_type: str, framework: str) -> Optional[Dict]:
+        """Spec 5.2: 病名病理辨证轨
+
+        根据西医病名、病程、病理阶段、检查证据、主症和舌脉，
+        判断当前病理状态，并映射为中医病机特征。
+
+        Returns:
+            dict with pathology-based track result, or None if insufficient data.
+        """
+        symptoms = patient_info.get("symptoms", []) or []
+        tongue = patient_info.get("tongue", "") or ""
+        pulse = patient_info.get("pulse", "") or ""
+        labs = patient_info.get("labs", []) or []
+        imaging = patient_info.get("imaging", []) or []
+        combined = " ".join(s.lower() for s in symptoms if isinstance(s, str))
+
+        # 从实验室/检查证据提取病理阶段线索
+        pathology_hints = []
+        if any("白细" in str(l) or "中性" in str(l) or "CRP" in str(l) for l in labs):
+            pathology_hints.append("急性炎症期")
+        if any("淋" in str(l) for l in labs):
+            pathology_hints.append("免疫反应期")
+        if any("影像" in str(x) or "影" in str(x) or "浸润" in str(x) for x in imaging):
+            pathology_hints.append("器质性改变期")
+        if any("肿" in str(x) or "占位" in str(x) or "结节" in str(x) for x in imaging):
+            pathology_hints.append("占位性病变期")
+
+        # 从症状提取病理倾向关键词
+        _pathology_to_disease_kw = {
+            "风": ["恶风", "鼻塞", "流涕", "咽痒", "咳嗽", "突发", "起病急", "瘙痒"],
+            "寒": ["恶寒", "怕冷", "清稀", "不渴", "苔白", "痰白"],
+            "热": ["发热", "黄痰", "口干", "咽痛", "舌红", "苔黄", "烦躁"],
+            "湿": ["苔腻", "困重", "纳呆", "便溏", "水肿", "头重"],
+            "痰": ["咳嗽", "痰多", "苔腻", "脉滑", "喉中痰鸣", "咳痰"],
+            "瘀": ["刺痛", "固定痛", "舌暗", "瘀斑", "舌下", "青紫"],
+            "虚": ["乏力", "气短", "自汗", "盗汗", "畏寒", "五心烦热"],
+            "气滞": ["胀痛", "走窜", "叹气", "抑郁", "脉弦", "胸闷"],
+        }
+
+        inferred_pathology_stage = ""
+        if pathology_hints:
+            inferred_pathology_stage = "；".join(pathology_hints)
+        elif disease_type == "外感/急性感染":
+            if "发热" in combined and "恶寒" in combined:
+                inferred_pathology_stage = "表证期"
+            elif "发热" in combined and ("黄痰" in combined or "黄涕" in combined):
+                inferred_pathology_stage = "里热期"
+            else:
+                inferred_pathology_stage = "表证期"
+        elif disease_type == "内伤/慢病":
+            if "乏力" in combined or "气短" in combined:
+                inferred_pathology_stage = "正气不足期"
+            elif "刺痛" in combined or "固定" in combined:
+                inferred_pathology_stage = "瘀血内阻期"
+            else:
+                inferred_pathology_stage = "功能失调期"
+
+        # 匹配病理关键词到证型
+        matched_pathology_keywords = []
+        for patho_type, kws in _pathology_to_disease_kw.items():
+            if any(kw in combined for kw in kws):
+                matched_pathology_keywords.append(patho_type)
+
+        # 从证型池中筛选与当前病理倾向匹配的证型
+        evidence_for = []
+        evidence_against = []
+        candidate_syndrome = ""
+        best_match_score = -1
+
+        for name, data in syndromes.items():
+            trigger = str(data.get("trigger", "")).lower()
+            syndrome_pathology = str(data.get("pathology", "")).lower()
+            syndrome_text = trigger + " " + syndrome_pathology
+
+            score = 0
+            matched_items = []
+            for pk in matched_pathology_keywords:
+                if pk in syndrome_text:
+                    score += 2
+                    matched_items.append(pk)
+            # 框架匹配加分
+            if framework == "卫气营血辨证" and any(kw in syndrome_text for kw in ["卫", "气分", "营", "血分", "热"]):
+                score += 1
+            if framework == "脏腑辨证" and any(kw in syndrome_text for kw in ["脾", "肺", "肾", "肝", "心", "胃", "肠"]):
+                score += 1
+
+            if score > 0:
+                evidence_for.append({
+                    "syndrome": name,
+                    "matched_pathology_factors": matched_items,
+                    "score": score,
+                })
+                if score > best_match_score:
+                    best_match_score = score
+                    candidate_syndrome = name
+
+        # evidence_against: 证型中的症状与患者否定症状冲突
+        negatives = patient_info.get("negative_findings", []) or []
+        neg_combined = " ".join(n.lower() for n in negatives if isinstance(n, str))
+        if neg_combined:
+            for name, data in syndromes.items():
+                trigger = str(data.get("trigger", "")).lower()
+                for neg in ["不热", "不渴", "不红", "不痛", "无汗", "无"]:
+                    if neg in trigger and neg not in neg_combined:
+                        continue
+                    if neg in trigger and neg in neg_combined:
+                        evidence_against.append({
+                            "syndrome": name,
+                            "reason": f"患者{neg}与证型{neg}不一致",
+                        })
+
+        if not candidate_syndrome and not evidence_for:
+            # 无病理匹配, 尝试最顶层证型
+            syndrome_list = list(syndromes.keys())
+            if syndrome_list:
+                candidate_syndrome = syndrome_list[0]
+                evidence_for.append({
+                    "syndrome": candidate_syndrome,
+                    "matched_pathology_factors": ["无明确病理匹配，取首候选"],
+                    "score": 0,
+                })
+
+        confidence = min(0.9, 0.3 + best_match_score * 0.15) if best_match_score > 0 else 0.2
+
+        return {
+            "track": "pathology_based",
+            "disease_type": disease_type,
+            "framework": framework,
+            "inferred_pathology_stage": inferred_pathology_stage,
+            "tcm_pathogenesis": "、".join(matched_pathology_keywords),
+            "candidate_syndrome": candidate_syndrome,
+            "evidence_for": evidence_for[:5],
+            "evidence_against": evidence_against[:3],
+            "confidence": round(confidence, 2),
+        }
+
+    def _clean_track_result(self, track_result: Optional[Dict]) -> Optional[Dict]:
+        """清理轨结果：只保留外部可见字段，移除 scorer 的内部字段"""
+        if not track_result:
+            return None
+        if track_result.get("track") == "pathology_based":
+            return {
+                "track": track_result["track"],
+                "disease_type": track_result["disease_type"],
+                "framework": track_result["framework"],
+                "inferred_pathology_stage": track_result["inferred_pathology_stage"],
+                "tcm_pathogenesis": track_result["tcm_pathogenesis"],
+                "candidate_syndrome": track_result["candidate_syndrome"],
+                "evidence_for": track_result["evidence_for"],
+                "evidence_against": track_result["evidence_against"],
+                "confidence": track_result["confidence"],
+            }
+        # traditional_tcm track (scorer output)
+        return {
+            "track": "traditional_tcm",
+            "bagang": {},
+            "tcm_factors": track_result.get("matched_pathology", "").split("、") if track_result.get("matched_pathology") else [],
+            "candidate_syndrome": track_result.get("selected_syndrome", {}).get("name", ""),
+            "evidence_for": track_result.get("matched_symptoms", [])[:5],
+            "evidence_against": [],
+            "confidence": track_result.get("confidence", 0.0),
+        }
+
+    def _merge_dual_tracks(self, primary_disease: str, syndromes: Dict,
+                            patient_info: Dict,
+                            pathology_track: Optional[Dict],
+                            tcm_track: Optional[Dict]) -> Dict:
+        """Spec 6: 双轨校对与节点选择
+
+        比较病理轨与症状证素轨结果：
+
+        - 两轨一致: 直接选共同证型
+        - 两轨相近: 选更能解释病理阶段者
+        - 两轨冲突: 标记 need_human_review
+
+        Returns:
+            dict with merge results
+        """
+        if not pathology_track or not tcm_track:
+            return {"status": "SINGLE_TRACK"}
+
+        patho_syndrome = pathology_track.get("candidate_syndrome", "")
+        tcm_syndrome = tcm_track.get("selected_syndrome", {}).get("name", "")
+
+        if not patho_syndrome and not tcm_syndrome:
+            return {"status": "SINGLE_TRACK"}
+
+        # 归一化证型名
+        def normalize_syndrome_name(name, syndromes_dict):
+            for key in syndromes_dict:
+                trigger = str(syndromes_dict[key].get("trigger", ""))
+                if name == key or name in trigger or key in name:
+                    return key
+            return name
+
+        patho_key = normalize_syndrome_name(patho_syndrome, syndromes)
+        tcm_key = normalize_syndrome_name(tcm_syndrome, syndromes)
+
+        if patho_key == tcm_key or (patho_key and tcm_key and patho_key in tcm_key):
+            # 一致：取共同证型
+            syndrome_data = syndromes.get(patho_key, {})
+            nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+            display = nm.group(1) if nm else patho_key
+
+            matched_pathology = pathology_track.get("inferred_pathology_stage", "")
+            conf = max(
+                pathology_track.get("confidence", 0),
+                tcm_track.get("confidence", 0),
+            )
+
+            return {
+                "status": "CONSISTENT",
+                "selected_syndrome_key": patho_key,
+                "syndrome_name": display,
+                "confidence": conf,
+                "matched_pathology": matched_pathology,
+                "matched_symptoms": tcm_track.get("matched_symptoms", []) or [],
+                "matched_tongue_pulse": tcm_track.get("matched_tongue_pulse", "") or "",
+                "missing_info": tcm_track.get("missing_info", "") or "",
+                "reasoning_summary": f"双轨一致：病理轨→{patho_syndrome}，症状轨→{tcm_syndrome}",
+            }
+
+        # 相近：计算证型文本相似度
+        patho_data = syndromes.get(patho_key, {})
+        tcm_data = syndromes.get(tcm_key, {})
+        patho_text = (str(patho_data.get("trigger", "")) + " " +
+                      str(patho_data.get("pathology", ""))).lower()
+        tcm_text = (str(tcm_data.get("trigger", "")) + " " +
+                    str(tcm_data.get("pathology", ""))).lower()
+
+        # 简单文本重叠作为相近判断
+        overlap = set(patho_text) & set(tcm_text)
+        patho_chars = set(patho_text)
+        tcm_chars = set(tcm_text)
+        jaccard = len(overlap) / max(len(patho_chars | tcm_chars), 1)
+
+        if jaccard > 0.3:
+            # 相近：选置信度更高的
+            patho_conf = pathology_track.get("confidence", 0)
+            tcm_conf = tcm_track.get("confidence", 0)
+
+            if patho_conf >= tcm_conf:
+                winner_key = patho_key
+                winner_syndrome = patho_syndrome
+                loser_syndrome = tcm_syndrome
+                reason = f"双轨相近，病理轨置信度更高({patho_conf}≥{tcm_conf})"
+                matched_pathology = pathology_track.get("inferred_pathology_stage", "")
+            else:
+                winner_key = tcm_key
+                winner_syndrome = tcm_syndrome
+                loser_syndrome = patho_syndrome
+                reason = f"双轨相近，症状轨置信度更高({tcm_conf}>{patho_conf})"
+                matched_pathology = pathology_track.get("inferred_pathology_stage", "")
+
+            syndrome_data = syndromes.get(winner_key, {})
+            nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+            display = nm.group(1) if nm else winner_key
+
+            return {
+                "status": "NEAR",
+                "selected_syndrome_key": winner_key,
+                "syndrome_name": display,
+                "confidence": max(patho_conf, tcm_conf),
+                "matched_pathology": matched_pathology,
+                "matched_symptoms": tcm_track.get("matched_symptoms", []) or [],
+                "matched_tongue_pulse": tcm_track.get("matched_tongue_pulse", "") or "",
+                "missing_info": tcm_track.get("missing_info", "") or "",
+                "reasoning_summary": reason,
+                "differential_syndrome": loser_syndrome,
+            }
+
+        # 冲突
+        return {
+            "status": "CONFLICT",
+            "selected_syndrome_key": tcm_key or patho_key,
+            "syndrome_name": tcm_syndrome or patho_syndrome,
+            "confidence": max(
+                pathology_track.get("confidence", 0),
+                tcm_track.get("confidence", 0),
+            ),
+            "matched_pathology": pathology_track.get("inferred_pathology_stage", ""),
+            "matched_symptoms": [],
+            "matched_tongue_pulse": "",
+            "missing_info": "双轨冲突，需人工复核",
+            "reasoning_summary": f"双轨冲突：病理轨→{patho_syndrome}，症状轨→{tcm_syndrome}",
+            "conflict_reason": f"两轨选择证型不一致且文本相似度低(jaccard={jaccard:.2f})",
+            "differential_syndrome": patho_syndrome if patho_syndrome != tcm_syndrome else "",
+        }
+
+    # ══════════════════════════════════════════════════════
     #  Prompt 构建
     # ══════════════════════════════════════════════════════
 
-    def _build_prompt(self, primary_disease, syndromes, patient_info) -> str:
+    def _build_prompt(self, primary_disease, syndromes, patient_info,
+                       disease_type: str = "", framework: str = "") -> str:
         """按 M2 提示词 8.1 节构建 prompt"""
-
         syndrome_candidates = ""
         for name, data in syndromes.items():
             trigger = data.get("trigger", "无描述")
@@ -946,6 +1352,15 @@ class M2SyndromeSelector:
         herb_ref = self._build_herb_reference()
 
         s = patient_info.get("symptoms", []) or []
+
+        # 辨证框架上下文
+        framework_context = ""
+        if disease_type:
+            framework_context = f"""
+## 疾病性质与辨证框架（由病理轨判定）
+疾病性质：{disease_type}
+推荐辨证框架：{framework}
+"""
         return f"""你是一位中医辨证专家。请根据以下患者信息和候选证型，完成辨证。
 
 ## 患者信息
@@ -956,7 +1371,7 @@ class M2SyndromeSelector:
 寒热：{'；'.join(patient_info.get('cold_heat', []) or [])}
 二便：{'；'.join(patient_info.get('stool_urine', []) or [])}
 年龄：{patient_info.get('age', '')}
-
+{framework_context}
 ## 辨证框架规则
 - 急性起病、发热恶寒、感染性表现 -> 卫气营血辨证
 - 慢性反复、功能失调、体质调理 -> 脏腑辨证

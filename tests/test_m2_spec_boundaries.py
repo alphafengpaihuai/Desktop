@@ -334,6 +334,144 @@ class TestM2SpecBoundaries(unittest.TestCase):
         self.assertIn("reverse_audit", result,
                       "M2-3 no_candidate 需包含 reverse_audit")
 
+    # ══════════════════════════════════════════════════════════
+    # 病理轨（Spec Section 5-6）新增边界测试
+    # ══════════════════════════════════════════════════════════
+
+    def test_m2_1_output_contains_pathology_based_result(self):
+        """M2-1 输出包含病理轨结果字段 pathology_based_result"""
+        result = self.m2.run_m2_1_syndrome_reasoning(
+            "肺炎",
+            symptoms=["发热", "咳嗽", "黄痰"],
+            tongue="舌红苔黄",
+            pulse="脉滑数",
+        )
+        self.assertIn("pathology_based_result", result,
+                      "M2-1 应包含 pathology_based_result")
+        self.assertIn("traditional_tcm_result", result,
+                      "M2-1 应包含 traditional_tcm_result")
+        self.assertIn("syndrome_comparison", result,
+                      "M2-1 应包含 syndrome_comparison")
+
+    def test_m2_1_pathology_based_result_has_spec_fields(self):
+        """pathology_based_result 包含 spec 5.2 要求的字段"""
+        result = self.m2.run_m2_1_syndrome_reasoning(
+            "肺炎",
+            symptoms=["发热", "咳嗽"],
+            tongue="舌红",
+            pulse="脉数",
+        )
+        pbr = result.get("pathology_based_result", {})
+        if pbr:
+            self.assertEqual(pbr.get("track"), "pathology_based")
+            self.assertIn("disease_type", pbr)
+            self.assertIn("framework", pbr)
+            self.assertIn("inferred_pathology_stage", pbr)
+            self.assertIn("tcm_pathogenesis", pbr)
+            self.assertIn("candidate_syndrome", pbr)
+            self.assertIn("evidence_for", pbr)
+            self.assertIn("evidence_against", pbr)
+            self.assertIn("confidence", pbr)
+
+    def test_m2_1_traditional_tcm_result_has_spec_fields(self):
+        """traditional_tcm_result 包含 spec 5.3 要求的字段"""
+        result = self.m2.run_m2_1_syndrome_reasoning(
+            "肺炎",
+            symptoms=["发热", "咳嗽", "黄痰"],
+            tongue="舌红苔黄",
+        )
+        ttr = result.get("traditional_tcm_result", {})
+        if ttr:
+            self.assertEqual(ttr.get("track"), "traditional_tcm")
+            self.assertIn("candidate_syndrome", ttr)
+            self.assertIn("tcm_factors", ttr)
+            self.assertIn("evidence_for", ttr)
+            self.assertIn("confidence", ttr)
+
+    def test_m2_1_syndrome_comparison_has_status(self):
+        """syndrome_comparison 包含状态字段"""
+        result = self.m2.run_m2_1_syndrome_reasoning(
+            "肺炎",
+            symptoms=["发热", "咳嗽"],
+        )
+        sc = result.get("syndrome_comparison", {})
+        self.assertIn("status", sc)
+
+    def test_m2_1_acute_disease_classified_correctly(self):
+        """外感病 disease_type 应为外感/急性感染"""
+        disease_type, framework = self.m2._classify_disease_type(
+            "肺炎", {"symptoms": ["发热", "咳嗽"]}
+        )
+        self.assertIn("外感", disease_type)
+        self.assertIn("卫气营血", framework)
+
+    def test_m2_1_chronic_disease_classified_correctly(self):
+        """慢病 disease_type 应为内伤/慢病"""
+        disease_type, framework = self.m2._classify_disease_type(
+            "慢性胃炎", {"symptoms": ["胃脘不适", "纳差"]}
+        )
+        self.assertIn("内伤", disease_type)
+        self.assertIn("脏腑", framework)
+
+    def test_m2_1_pathology_track_returns_expected_structure(self):
+        """_run_pathology_track 返回结构化病理轨结果"""
+        syndromes = {"test_syndrome": {"trigger": "<test>发热咳嗽", "pathology": "热、痰"}}
+        result = self.m2._run_pathology_track(
+            "肺炎", syndromes,
+            {"symptoms": ["发热", "咳嗽", "黄痰"], "tongue": "舌红", "pulse": "脉数"},
+            "外感/急性感染", "卫气营血辨证",
+        )
+        self.assertIsNotNone(result)
+        self.assertEqual(result.get("track"), "pathology_based")
+        self.assertIn("inferred_pathology_stage", result)
+        self.assertIn("candidate_syndrome", result)
+        self.assertIn("evidence_for", result)
+        self.assertIn("evidence_against", result)
+
+    def test_m2_1_dual_track_merge_consistent(self):
+        """双轨一致时返回 CONSISTENT"""
+        syndromes = {"风热犯肺": {"trigger": "<风热犯肺>发热咳嗽黄痰", "pathology": "热、痰"}}
+        pathology = {
+            "track": "pathology_based", "disease_type": "外感", "framework": "卫气营血",
+            "inferred_pathology_stage": "表证期", "tcm_pathogenesis": "热",
+            "candidate_syndrome": "风热犯肺", "evidence_for": [], "evidence_against": [], "confidence": 0.6,
+        }
+        tcm = {
+            "selected_syndrome": {"name": "风热犯肺", "reason": "症状匹配"},
+            "matched_symptoms": ["发热"], "matched_tongue_pulse": "舌红",
+            "matched_pathology": "热", "confidence": 0.7, "missing_info": "",
+        }
+        merged = self.m2._merge_dual_tracks(
+            "肺炎", syndromes, {"symptoms": ["发热"]},
+            pathology, tcm,
+        )
+        self.assertEqual(merged.get("status"), "CONSISTENT")
+        self.assertIn("selected_syndrome_key", merged)
+        self.assertGreater(merged.get("confidence", 0), 0)
+
+    def test_m2_1_dual_track_conflict_triggers_needs_review(self):
+        """双轨冲突时标记 need_human_review"""
+        syndromes = {
+            "风寒束表": {"trigger": "<风寒束表>恶寒发热无汗头痛", "pathology": "寒"},
+            "肝火犯肺": {"trigger": "<肝火犯肺>咳嗽胸痛烦躁易怒便秘", "pathology": "热、气滞"},
+        }
+        # 病理轨选风寒（寒），症状轨选肝火犯肺（热）→ 冲突
+        pathology = {
+            "track": "pathology_based", "disease_type": "外感", "framework": "卫气营血",
+            "inferred_pathology_stage": "表寒期", "tcm_pathogenesis": "寒",
+            "candidate_syndrome": "风寒束表", "evidence_for": [], "evidence_against": [], "confidence": 0.6,
+        }
+        tcm = {
+            "selected_syndrome": {"name": "肝火犯肺", "reason": "咳嗽胸痛"},
+            "matched_symptoms": ["咳嗽", "胸痛"], "matched_tongue_pulse": "",
+            "matched_pathology": "热", "confidence": 0.7, "missing_info": "",
+        }
+        merged = self.m2._merge_dual_tracks(
+            "肺炎", syndromes, {"symptoms": ["咳嗽"]},
+            pathology, tcm,
+        )
+        self.assertEqual(merged.get("status"), "CONFLICT")
+
 
 if __name__ == "__main__":
     unittest.main()
