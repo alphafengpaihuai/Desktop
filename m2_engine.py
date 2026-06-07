@@ -503,6 +503,22 @@ class M2SyndromeSelector:
             primary_disease, syndromes, patient_info,
             pathology_based_result, traditional_tcm_result,
         )
+
+        # ── 寒热冲突裁决：若证素检测到寒热互斥，由病理阶段/炎症证据裁决 ──
+        cold_heat_resolution = None
+        if self._is_cold_heat_conflict(factor_contradiction_result):
+            cold_heat_resolution = self.resolve_cold_heat_conflict_by_pathology(
+                disease_key=resolved_disease,
+                symptoms=symptoms,
+                negative_findings=patient_info.get("signs", []),
+                tongue=tongue or "",
+                pulse=pulse or "",
+                labs=labs or [],
+                imaging=imaging or [],
+                pathology=pathology_based_result,
+                factor_contradiction_result=factor_contradiction_result,
+            )
+
         # 双轨一致/相近时取合并结果，否则 fallback 原有逻辑
         if merged.get("status") == "CONSISTENT" or merged.get("status") == "NEAR":
             selected_key = merged.get("selected_syndrome_key", "")
@@ -513,30 +529,100 @@ class M2SyndromeSelector:
             matched_symptoms = merged.get("matched_symptoms", [])
             matched_tongue_pulse = merged.get("matched_tongue_pulse", "")
             missing_info = merged.get("missing_info", "")
+
+            # 寒热冲突：若裁决为热证方向但选了寒证，或反之，需调整
             need_human_review = bool(factor_contradiction_result and
                                      factor_contradiction_result.get("need_human_review", False))
+            if cold_heat_resolution and need_human_review:
+                main_dir = cold_heat_resolution.get("main_direction", "unknown")
+                is_cold_syndrome = any(kw in syndrome_display for kw in ["风寒", "寒", "凉"])
+                is_heat_syndrome = any(kw in syndrome_display for kw in ["热", "火", "温"])
+                if main_dir == "heat" and is_cold_syndrome and not is_heat_syndrome:
+                    # 裁决为热但选了寒 → 降权，标记为冲突
+                    need_human_review = True
+                    reason += f"；寒热冲突裁决→{main_dir}, 但当前选{selected_key}"
+                elif main_dir == "cold" and is_heat_syndrome and not is_cold_syndrome:
+                    need_human_review = True
+                    reason += f"；寒热冲突裁决→{main_dir}, 但当前选{selected_key}"
+                elif main_dir in ("mixed", "unknown"):
+                    pass  # 混合方向不调整
+                else:
+                    # 裁决方向与所选证型方向一致，清除 need_human_review
+                    need_human_review = False
+                    reason += f"；寒热冲突已裁决→{main_dir}, 当前选型方向一致"
         elif merged.get("status") == "CONFLICT":
-            # 冲突时: 改用原有单轨逻辑（scorer + LLM fallback），但标记 need_human_review
-            parsed = parsed or traditional_tcm_result
-            if not parsed:
-                return self._strip_forbidden_prescription_fields(self._build_no_candidate(
-                    primary_disease=primary_disease,
-                    reason="双轨冲突且无兜底",
-                    missing_key=primary_disease,
-                    searched_terms=[primary_disease],
-                    input_trace=input_trace,
-                ))
-            selected_key = parsed.get("selected_syndrome", {}).get("name", "")
-            syndrome_data = syndromes.get(selected_key, {})
-            nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
-            syndrome_display = nm.group(1) if nm else selected_key
-            reason = parsed.get("selected_syndrome", {}).get("reason", "") or parsed.get("reasoning", "") or "单轨兜底"
-            confidence = parsed.get("confidence", 0.5)
-            matched_pathology = parsed.get("matched_pathology", "") or merged.get("matched_pathology", "")
-            matched_symptoms = parsed.get("matched_symptoms", []) or []
-            matched_tongue_pulse = parsed.get("matched_tongue_pulse", "") or ""
-            missing_info = parsed.get("missing_info", "") or ""
-            need_human_review = True
+            # 冲突时: 寒热冲突优先用 pathology resolver 裁决
+            if cold_heat_resolution:
+                main_dir = cold_heat_resolution.get("main_direction", "unknown")
+                # 用裁决方向筛选证型池
+                candidate_pool = []
+                for name, data in syndromes.items():
+                    trigger = str(data.get("trigger", "")).lower()
+                    if main_dir == "heat" and any(kw in trigger for kw in ["热", "火", "温", "痰热", "湿热"]):
+                        candidate_pool.append((name, data))
+                    elif main_dir == "cold" and any(kw in trigger for kw in ["寒", "风寒", "凉"]):
+                        candidate_pool.append((name, data))
+                    elif main_dir == "mixed":
+                        candidate_pool.append((name, data))
+
+                if candidate_pool and main_dir != "unknown":
+                    # 从候选池取 scorer 或 pathology 的最高分
+                    best_key = selected_key = candidate_pool[0][0]
+                    nm_search = re.search(r'<(.+?)>', str(candidate_pool[0][1].get("trigger", "")))
+                    syndrome_display = nm_search.group(1) if nm_search else best_key
+                    syndrome_data = syndromes.get(best_key, {})
+                    matched_pathology = pathology_based_result.get("inferred_pathology_stage", "") if pathology_based_result else ""
+                    matched_symptoms = []
+                    matched_tongue_pulse = ""
+                    missing_info = ""
+                    reason = f"寒热冲突裁决→{main_dir}，选{best_key}"
+                    confidence = 0.6
+                    need_human_review = cold_heat_resolution.get("need_human_review", False)
+                    parsed = traditional_tcm_result
+                else:
+                    # 裁决方向无候选 → 原有逻辑但降低置信度
+                    parsed = parsed or traditional_tcm_result
+                    if not parsed:
+                        return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                            primary_disease=primary_disease,
+                            reason=f"寒热冲突裁决→{main_dir}但证型池无匹配节点",
+                            missing_key=primary_disease,
+                            searched_terms=[primary_disease, main_dir],
+                            input_trace=input_trace,
+                        ))
+                    selected_key = parsed.get("selected_syndrome", {}).get("name", "")
+                    syndrome_data = syndromes.get(selected_key, {})
+                    nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+                    syndrome_display = nm.group(1) if nm else selected_key
+                    reason = f"寒热冲突裁决后无候选，单轨兜底: {parsed.get('selected_syndrome', {}).get('reason', '')}"
+                    confidence = 0.3  # 降低置信度
+                    matched_pathology = parsed.get("matched_pathology", "") or ""
+                    matched_symptoms = parsed.get("matched_symptoms", []) or []
+                    matched_tongue_pulse = parsed.get("matched_tongue_pulse", "") or ""
+                    missing_info = parsed.get("missing_info", "") or ""
+                    need_human_review = True
+            else:
+                # 非寒热冲突，用原有单轨逻辑
+                parsed = parsed or traditional_tcm_result
+                if not parsed:
+                    return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                        primary_disease=primary_disease,
+                        reason="双轨冲突且无兜底",
+                        missing_key=primary_disease,
+                        searched_terms=[primary_disease],
+                        input_trace=input_trace,
+                    ))
+                selected_key = parsed.get("selected_syndrome", {}).get("name", "")
+                syndrome_data = syndromes.get(selected_key, {})
+                nm = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
+                syndrome_display = nm.group(1) if nm else selected_key
+                reason = parsed.get("selected_syndrome", {}).get("reason", "") or parsed.get("reasoning", "") or "单轨兜底"
+                confidence = parsed.get("confidence", 0.5)
+                matched_pathology = parsed.get("matched_pathology", "") or merged.get("matched_pathology", "")
+                matched_symptoms = parsed.get("matched_symptoms", []) or []
+                matched_tongue_pulse = parsed.get("matched_tongue_pulse", "") or ""
+                missing_info = parsed.get("missing_info", "") or ""
+                need_human_review = True
         else:
             # 无双轨数据时的原有 fallback
             if not parsed:
@@ -1395,9 +1481,273 @@ class M2SyndromeSelector:
             "differential_syndrome": patho_syndrome if patho_syndrome != tcm_syndrome else "",
         }
 
-    # ══════════════════════════════════════════════════════
-    #  Prompt 构建
-    # ══════════════════════════════════════════════════════
+    @staticmethod
+    def _has_inflammation_evidence(symptoms: List[str], tongue: str, pulse: str,
+                                    labs: List[str], imaging: List[str]) -> dict:
+        """评估炎症/热证证据的强度和类型
+
+        Returns:
+            {
+                "has_inflammation": bool,
+                "severity": "none" | "mild" | "moderate" | "severe",
+                "evidence": [str],
+                "evidence_type": ["fever"|"sputum"|"tongue"|"lab"|"imaging"|"throat"]
+            }
+        """
+        combined = " ".join(s.lower() for s in symptoms if isinstance(s, str))
+        evidence = []
+        evidence_type = []
+
+        # 发热
+        if any(kw in combined for kw in ["发热", "高热", "低热", "身热", "发烧"]):
+            evidence.append("发热")
+            evidence_type.append("fever")
+
+        # 黄痰/脓痰
+        if any(kw in combined for kw in ["黄痰", "黄绿痰", "黄稠痰", "黄黏痰", "脓痰", "铁锈色"]):
+            evidence.append("黄痰/脓痰")
+            evidence_type.append("sputum")
+
+        # 咽痛
+        if any(kw in combined for kw in ["咽痛", "喉痛", "吞咽痛"]):
+            evidence.append("咽痛")
+            evidence_type.append("throat")
+
+        # 舌象热证
+        tongue_lower = tongue.lower() if tongue else ""
+        if any(kw in tongue_lower for kw in ["苔黄", "黄苔", "黄腻", "舌红", "绛"]):
+            evidence.append(tongue)
+            evidence_type.append("tongue")
+
+        # 脉象热证
+        pulse_lower = pulse.lower() if pulse else ""
+        if any(kw in pulse_lower for kw in ["数", "滑数", "洪", "实"]):
+            evidence.append(pulse)
+            evidence_type.append("pulse")
+
+        # 实验室
+        lab_text = " ".join(l.lower() for l in labs if isinstance(l, str))
+        if any(kw in lab_text for kw in ["白细", "中性", "crp", "pct", "降钙"]):
+            for l in labs:
+                if any(kw in str(l).lower() for kw in ["白细", "中性", "crp", "pct", "降钙"]):
+                    evidence.append(str(l))
+            evidence_type.append("lab")
+
+        # 影像
+        imaging_text = " ".join(x.lower() for x in imaging if isinstance(x, str))
+        if any(kw in imaging_text for kw in ["浸润", "渗出", "炎症", "感染", "实变"]):
+            for x in imaging:
+                if any(kw in str(x).lower() for kw in ["浸润", "渗出", "炎症", "感染", "实变"]):
+                    evidence.append(str(x))
+            evidence_type.append("imaging")
+
+        severity = "none"
+        if evidence:
+            # Count distinct evidence types
+            type_count = len(set(evidence_type))
+            if type_count >= 3 or len(evidence) >= 4:
+                severity = "severe"
+            elif type_count >= 2 or len(evidence) >= 2:
+                severity = "moderate"
+            else:
+                severity = "mild"
+
+        return {
+            "has_inflammation": len(evidence) > 0,
+            "severity": severity,
+            "evidence": evidence,
+            "evidence_type": list(set(evidence_type)),
+        }
+
+    @staticmethod
+    def _is_cold_heat_conflict(factor_contradiction_result: Optional[Dict]) -> bool:
+        """判断 factor_contradiction_result 是否包含寒热冲突"""
+        if not factor_contradiction_result:
+            return False
+        strong_against = factor_contradiction_result.get("strong_against", [])
+        for item in strong_against:
+            if isinstance(item, dict):
+                fa = item.get("factor_a", "")
+                fb = item.get("factor_b", "")
+                if ("寒" in {fa, fb} and "热" in {fa, fb}) or \
+                   ("寒" in {fa, fb} and "温" in {fa, fb}):
+                    return True
+        return False
+
+    def resolve_cold_heat_conflict_by_pathology(
+        self,
+        disease_key: str,
+        symptoms: List[str],
+        negative_findings: Optional[List[str]],
+        tongue: str,
+        pulse: str,
+        labs: Optional[List[str]],
+        imaging: Optional[List[str]],
+        pathology: Optional[Dict],
+        factor_contradiction_result: Optional[Dict],
+    ) -> Dict:
+        """寒热冲突时，由病理阶段和客观炎症证据裁决主证方向
+
+        规则:
+        1. 初期/表证期，无明显炎症 → 风寒/寒证方向
+        2. 炎症反应明显 → 热证/痰热/湿热方向
+        3. 恢复期/久病/术后/肿瘤 → 按病理阶段判断，虚可为主
+        4. 证据不足 → 返回 LOW_CONFIDENCE
+
+        Returns:
+            {
+                "conflict_type": "cold_heat",
+                "resolved_by": "pathology_stage",
+                "main_direction": "cold" | "heat" | "mixed" | "unknown",
+                "reasoning": str,
+                "evidence_for_main": [str],
+                "evidence_against": [str],
+                "need_human_review": False
+            }
+        """
+        symptoms = symptoms or []
+        negative_findings = negative_findings or []
+        labs = labs or []
+        imaging = imaging or []
+        combined = " ".join(s.lower() for s in symptoms if isinstance(s, str))
+
+        # ── 炎症证据评估 ──
+        inflame = self._has_inflammation_evidence(symptoms, tongue, pulse, labs, imaging)
+
+        # ── 病理阶段线索 ──
+        inferred_stage = ""
+        if pathology:
+            inferred_stage = pathology.get("inferred_pathology_stage", "")
+
+        # 从症状推断病程
+        is_early_stage = any(kw in combined for kw in ["起病", "初起", "新发", "1天", "2天", "3天", "突发"])
+        is_chronic = any(kw in combined for kw in ["反复", "多年", "日久", "反复发作", "长期", "术后", "久病"])
+        is_recovery = any(kw in combined for kw in ["恢复期", "后期", "好转", "减轻", "余邪未清"])
+        is_consumptive = any(kw in combined for kw in ["乏力", "消瘦", "纳差", "术后", "肿瘤", "癌", "放化疗"])
+
+        # 寒象证据
+        has_cold_signs = any(kw in combined for kw in ["怕冷", "恶寒", "畏寒", "寒战", "喜温", "喜暖"])
+        has_cold_sputum = any(kw in combined for kw in ["痰白清稀", "白痰", "清稀", "泡沫痰"])
+        has_cold_tongue = "舌淡" in (tongue.lower() if tongue else "") or "苔白" in (tongue.lower() if tongue else "")
+
+        # 热象证据（排除否定症状）
+        _neg_prefixes = ["无", "未", "不伴", "否认", "没有"]
+        def _pos_match(kw: str, text: str) -> bool:
+            if kw not in text:
+                return False
+            for np_ in sorted(_neg_prefixes, key=len, reverse=True):
+                if np_ + kw in text:
+                    return False
+            return True
+
+        has_heat_signs = any(_pos_match(kw, combined) for kw in ["发热", "口苦", "口干", "口渴", "烦躁"])
+        has_heat_sputum = any(kw in combined for kw in ["黄痰", "黄绿痰", "黄稠痰", "脓痰", "黄黏痰"])
+        has_heat_tongue = any(kw in (tongue.lower() if tongue else "") for kw in ["苔黄", "黄苔", "黄腻", "舌红", "绛"])
+        has_heat_pulse = any(kw in (pulse.lower() if pulse else "") for kw in ["数", "滑数", "洪"])
+
+        # ── 规则 1: 初期/表证期 + 无明显炎症 → 风寒/寒证方向 ──
+        if (is_early_stage or "表证期" in inferred_stage) and not inflame["has_inflammation"]:
+            if has_cold_signs or has_cold_sputum or has_cold_tongue:
+                return {
+                    "conflict_type": "cold_heat",
+                    "resolved_by": "pathology_stage",
+                    "main_direction": "cold",
+                    "severity": inflame["severity"],
+                    "reasoning": f"初起/表证期({inferred_stage})，无炎症证据，寒象为主",
+                    "evidence_for_main": (["怕冷/恶寒"] if has_cold_signs else []) + (["痰白清稀"] if has_cold_sputum else []) + (["舌淡苔白"] if has_cold_tongue else []),
+                    "evidence_against": inflame["evidence"],
+                    "need_human_review": False,
+                }
+
+        # ── 规则 2: 炎症反应明显 → 热证/痰热/湿热方向 ──
+        if inflame["has_inflammation"] and inflame["severity"] in ("moderate", "severe"):
+            evidence_for = list(inflame["evidence"])
+            evidence_against = []
+            if has_cold_signs:
+                evidence_against.append("寒象（兼夹）")
+            return {
+                "conflict_type": "cold_heat",
+                "resolved_by": "pathology_stage",
+                "main_direction": "heat",
+                "severity": inflame["severity"],
+                "reasoning": f"炎症证据明确(severity={inflame['severity']})，主证取热，寒象为兼夹",
+                "evidence_for_main": evidence_for,
+                "evidence_against": evidence_against,
+                "need_human_review": False,
+            }
+
+        # ── 规则 3: 恢复期/久病/术后/肿瘤/消耗状态 ──
+        if is_recovery or is_consumptive or (inferred_stage and "正气不足" in inferred_stage):
+            # 恢复期不得单纯寒热互斥
+            has_deficiency = any(kw in combined for kw in ["乏力", "气短", "自汗", "盗汗", "纳差"])
+            main_direction = "mixed"
+            if has_deficiency and not inflame["has_inflammation"]:
+                main_direction = "cold"  # 虚多倾向虚寒/气虚
+            elif inflame["has_inflammation"]:
+                main_direction = "heat"  # 有炎症仍以热为主
+            evidence_against_list = inflame["evidence"] if inflame["has_inflammation"] else ["无明显炎症反应"]
+            return {
+                "conflict_type": "cold_heat",
+                "resolved_by": "pathology_stage",
+                "main_direction": main_direction,
+                "severity": inflame["severity"],
+                "reasoning": f"恢复期/消耗状态，按病理阶段判断，不得简单寒热互斥",
+                "evidence_for_main": ["乏力/虚象"] if has_deficiency else [],
+                "evidence_against": evidence_against_list,
+                "need_human_review": False,
+            }
+
+        # ── 规则 4: 轻度炎症但证据不足 ──
+        if inflame["severity"] == "mild":
+            if has_cold_signs and not has_heat_signs:
+                # 轻度炎症但寒象为主
+                return {
+                    "conflict_type": "cold_heat",
+                    "resolved_by": "low_confidence",
+                    "main_direction": "cold",
+                    "severity": "mild",
+                    "reasoning": "轻度炎症，寒象为主，倾向寒证方向（低置信度）",
+                    "evidence_for_main": ["怕冷/恶寒"] if has_cold_signs else [],
+                    "evidence_against": inflame["evidence"],
+                    "need_human_review": False,
+                }
+            # 既有寒象又有热象但炎症轻 → 混合
+            return {
+                "conflict_type": "cold_heat",
+                "resolved_by": "low_confidence",
+                "main_direction": "mixed",
+                "severity": "mild",
+                "reasoning": "寒热夹杂，炎症证据不足，需人工复核确认主证方向",
+                "evidence_for_main": (["怕冷/恶寒"] if has_cold_signs else []) +
+                                     (["黄痰"] if has_heat_sputum else []),
+                "evidence_against": [],
+                "need_human_review": True,
+            }
+
+        # ── 完全无炎症证据 ──
+        if not inflame["has_inflammation"] and not has_cold_signs and not has_heat_signs:
+            return {
+                "conflict_type": "cold_heat",
+                "resolved_by": "insufficient_evidence",
+                "main_direction": "unknown",
+                "severity": "none",
+                "reasoning": "寒热证据均不清晰，无法裁决",
+                "evidence_for_main": [],
+                "evidence_against": [],
+                "need_human_review": False,
+            }
+
+        # 默认兜底：混合
+        return {
+            "conflict_type": "cold_heat",
+            "resolved_by": "default",
+            "main_direction": "mixed",
+            "severity": inflame["severity"],
+            "reasoning": "寒热证据并存，无明确病理阶段倾向",
+            "evidence_for_main": [],
+            "evidence_against": [],
+            "need_human_review": True,
+        }
 
     def _build_prompt(self, primary_disease, syndromes, patient_info,
                        disease_type: str = "", framework: str = "") -> str:
