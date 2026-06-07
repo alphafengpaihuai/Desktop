@@ -1,23 +1,19 @@
 """
 m2_pathology_syndrome_bridge.py
 ===============================
-守一 CDSS — M2-0 病理锚点桥接层
-M1 西医病理轴 → M2 中医辨证约束
+[DEPRECATED] 守一 CDSS — M2-0 病理锚点桥接层
 
-核心职责：
+此文件已被 m2_pattern_match_engine.py (V4) 自述为取代对象，
+且 m2_pattern_match_engine.py 本身也未接入主链路。
+当前活跃 M2 引擎为 M2SyndromeSelector (m2_engine.py)。
+
+核心职责（历史）：
   1. 读取 M1 输出的西医诊断和病理轴
-  2. 通过本地 JSON 规则库（data/m2_pathology_to_syndrome_rules.json）
-     将病理轴映射到允许的中医病机候选
-  3. 输出辨证约束：允许的主证、不允许的主证、兼证范围
-  4. 若证据不足，输出 missing_evidence 和 hidden_symptom_questions
-  5. 若病理轴与症状矛盾，标记 needs_manual_review=true
-  6. 禁止 M2 直接从 disease_name 跳 syndrome
+  2. 通过本地 JSON 规则库将病理轴映射到允许的中医病机候选
+  3. 输出辨证约束
 
-最高约束：
-  - 不改 M1、M3
-  - 不删除原有方剂/案例/药理库
-  - 所有映射来自本地 JSON 规则库
-  - 不允许 LLM 自由发挥病机
+DEPRECATED since 2026-06 — 不会再有功能更新。
+保留供 reports/trace_audit.py 和 tests 使用。
 """
 
 import json

@@ -1,7 +1,13 @@
 """
 m2_multi_axis_matrix_builder.py
 ================================
-守一 CDSS — M2-0 症状多轴触发矩阵生成器
+[DEPRECATED] 守一 CDSS — M2-0 症状多轴触发矩阵生成器
+
+此文件为已废弃的 M2-0 病理锚点桥接层的辅助工具。
+活跃 M2 引擎 M2SyndromeSelector (m2_engine.py) 不使用此矩阵。
+
+DEPRECATED since 2026-06 — 不会再有功能更新。
+"""
 
 问题：
   规则库中每个 pathology_axis 只写了自己的 possible_tcm_pathogenesis，

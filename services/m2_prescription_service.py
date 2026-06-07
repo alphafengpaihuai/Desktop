@@ -1,18 +1,19 @@
 """
 m2_prescription_service.py
 ==========================
-守一 CDSS — M2 处方生成层（V3）
+[DEPRECATED] 守一 CDSS — M2 处方生成层（V3）
 
-规则（2025.07 版）:
-  1. 基础方完整保留，不随意删改（除非严重禁忌证）
-  2. 加味严格控制在 3-5 味，必须有 RAG 证据（知识库/药理卡/案例库）
-  3. 所有加味输出证据来源，M3 审方核查
+此文件已被 M2SyndromeSelector (m2_engine.py) 取代。
+M2SyndromeSelector 已提供所有 M2-1/M2-2/M2-3 功能，
+且本服务读取桌面 xlsx 路径、生成 final_prescription 等行为
+与 M2 Skill v1.0 spec 冲突。
 
-搜索规则（V3）:
-  1. 案例搜索：先匹配病名（tcmMedicineDiagnose / wcmMedicineDiagnose）
-     再匹配证型（tcmSyndromeTypeDiagnose）
-     不匹配症状（症状只做展示不做搜索依据）
-  2. 知识库：从 5月5日 口服方剂知识库读取
+保留原因：
+  - full_pipeline.py (legacy) 仍引用本服务
+  - test_m3_default_keep.py 引用 HerbCandidate
+  - 供历史审计参考
+
+DEPRECATED since 2026-06 — 不会再有功能更新。
 """
 
 import json

@@ -1,16 +1,18 @@
 """
 m2_pattern_match_engine.py
 ==========================
-守一 CDSS — M2 证型校对引擎（V4）
+[DEPRECATED] 守一 CDSS — M2 证型校对引擎（V4）
 
-废弃:
+本文件自述已废弃以下旧模块：
   - m2_pathology_syndrome_bridge.py（旧 M2-0）
   - m2_pathology_to_syndrome_rules.json（轴→证型映射）
   - m2_symptom_multi_axis_matrix.json（症状→轴矩阵）
   - AXIS_SEMANTIC_MAP / _resolve_symptom_axes 等
 
-新的 M2 不再匹配 pathology axes。
-改为匹配本地 pattern_db（从口服方剂知识库自动构建）。
+但本文件本身也未接入主链路。活跃 M2 引擎为 M2SyndromeSelector。
+
+DEPRECATED since 2026-06 — 不会再有功能更新。
+"""
 
 核心规则:
   1. 西医病名只用于限定证型范围，不能直接决定证型。

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-守一 CDSS — M1→M2→M3→M4 全流程脚本
+[DEPRECATED] 守一 CDSS — M1→M2→M3→M4 全流程脚本
 
-层级规则（2025.07）:
-  1. 主方（基础方）完整保留，不砍药（药理学禁忌除外）
-  2. 兼证加味 3-5 味，来自口服方剂知识库的兼证病名
-  3. 去重：加味药已在主方中，自动排除
-  4. 必须标注加味来源：知识库病名+方剂名
+此文件已被 M2SyndromeSelector (m2_engine.py) 的 process() + full_pipeline()
+取代。本文件通过 env guard (ALLOW_LEGACY_FULL_PIPELINE_PRESCRIPTION) 阻塞，
+默认不执行正式处方生成。
+
+DEPRECATED since 2026-06 — 不会再有功能更新。
 """
 
 import os, json, re, sys

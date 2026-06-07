@@ -4,6 +4,10 @@
 =======================
 守一 CDSS — M1→M2-0→M2-1→M2-2→M3→M4 全流程追踪审计
 
+注意：本审计工具引用了已废弃的服务（m2_pathology_syndrome_bridge、
+m2_prescription_service 等）。如需审计活跃 M2 引擎，请直接调用
+M2SyndromeSelector (m2_engine.py) 的 run_m2_1/run_m2_2/run_m2_3 方法。
+
 在每个环节输出：
   1. [OK/FAIL] 状态标记
   2. 数据流方向

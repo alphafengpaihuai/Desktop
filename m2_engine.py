@@ -316,6 +316,9 @@ class M2SyndromeSelector:
         result = {
             "primary_disease": primary_disease,
             "status": "PASS",
+            "stage": "M2",
+            "disease_key": m2_1.get("input_trace", {}).get("resolved_m2_key", ""),
+            "inferred_pathology_stage": m2_1.get("syndrome_trace", {}).get("matched_pathology", ""),
             "syndrome_differentiation": {
                 "selected_syndrome": {
                     "name": m2_1.get("syndrome_trace", {}).get("syndrome_name", ""),
@@ -323,6 +326,13 @@ class M2SyndromeSelector:
                 },
                 "differentiation_framework": m2_1.get("differentiation_framework", "脏腑"),
             },
+            "selected_syndrome": m2_1.get("selected_syndrome_key", ""),
+            "bound_formula": {
+                "formula_name": formula.get("name", ""),
+                "herbs": formula.get("herbs", []),
+                "source": formula.get("source", ""),
+            },
+            "base_herbs": formula.get("herbs", []),
             "formula": formula,
             "formula_candidates": m2_2.get("formula_candidates", []),
             "candidate_only": True,
@@ -335,12 +345,21 @@ class M2SyndromeSelector:
                 primary_disease,
                 symptoms or [],
             ),
+            "added_herbs": [],
+            "removed_herbs": [],
+            "final_herbs": formula.get("herbs", []),
+            "draft_dosage": "[M3核定]",
+            "modification_reason": [],
             "case_references": cases,
             "syndrome_trace": m2_1.get("syndrome_trace", {}),
             "evidence_trace": m2_1.get("evidence_trace", []),
             "input_trace": m2_1.get("input_trace", {}),
+            "reverse_audit": {},
             "needs_manual_review": self._is_high_risk_disease(primary_disease),
             "formal_prescription_allowed": False,
+            "prescription_draft": True,
+            "missing_key": "",
+            "need_human_review": False,
         }
         return self._strip_forbidden_prescription_fields(result)
 
@@ -482,6 +501,8 @@ class M2SyndromeSelector:
             "stage": "M2_1",
             "status": "PASS",
             "primary_disease": primary_disease,
+            "disease_key": resolved_disease,
+            "inferred_pathology_stage": matched_pathology,
             "selected_syndrome_key": selected_key,
             "differentiation_framework": parsed.get("differentiation_framework", "脏腑辨证"),
             "syndrome_trace": {
@@ -499,6 +520,7 @@ class M2SyndromeSelector:
                 for s in symptoms if isinstance(s, str) and s.strip()
             ],
             "input_trace": input_trace,
+            "reverse_audit": {},
             "formal_prescription_allowed": False,
             "needs_manual_review": self._is_high_risk_disease(primary_disease),
         }
@@ -568,6 +590,7 @@ class M2SyndromeSelector:
             "stage": "M2_2",
             "status": "PASS",
             "primary_disease": primary_disease,
+            "disease_key": resolved_disease,
             "candidate_only": True,
             "need_m2_3": True,
             "must_enter_m3": True,
@@ -579,6 +602,7 @@ class M2SyndromeSelector:
                 "herbs": herbs,
                 "source": "data/m2_formula_knowledge.json",
             }],
+            "reverse_audit": {},
             "searched_terms": [primary_disease, syndrome_name, selected_key],
             "input_trace": input_trace,
             "formal_prescription_allowed": False,
@@ -653,11 +677,13 @@ class M2SyndromeSelector:
             "stage": "M2_3",
             "status": "PASS",
             "primary_disease": primary_disease,
+            "disease_key": resolved_disease,
             "candidate_only": True,
             "need_m2_3": True,
             "must_enter_m3": True,
             "no_candidate": False,
             "modification_candidates": modifications[:6],
+            "reverse_audit": {},
             "searched_terms": [primary_disease, syndrome_name] + (symptoms or [])[:3],
             "input_trace": input_trace,
             "formal_prescription_allowed": False,
@@ -670,11 +696,17 @@ class M2SyndromeSelector:
             "primary_disease": primary_disease,
             "status": "NO_CANDIDATE",
             "stage": "M2_3",
+            "disease_key": primary_disease,
             "modification_candidates": [],
+            "candidate_only": True,
+            "need_m2_3": True,
+            "must_enter_m3": True,
             "no_candidate": True,
+            "formal_prescription_allowed": False,
             "reason": "药物库无可追溯证据",
             "searched_terms": [primary_disease, syndrome_name] + (symptoms or [])[:3],
             "input_trace": input_trace,
+            "reverse_audit": {},
             "needs_manual_review": self._is_high_risk_disease(primary_disease),
         }
 
@@ -812,6 +844,7 @@ class M2SyndromeSelector:
         return {
             "primary_disease": primary_disease,
             "status": "NO_CANDIDATE",
+            "disease_key": missing_key or primary_disease,
             "formula_candidates": [],
             "modification_candidates": [],
             "candidate_only": True,
@@ -819,6 +852,9 @@ class M2SyndromeSelector:
             "must_enter_m3": True,
             "no_candidate": True,
             "reason": reason,
+            "reverse_audit": {},
+            "prescription_draft": False,
+            "need_human_review": True,
             "searched_terms": searched_terms,
             "missing_key": missing_key,
             "syndrome_trace": {
@@ -838,10 +874,14 @@ class M2SyndromeSelector:
         syndrome_name = selected.get("name", "")
         reason = selected.get("reason", "") or selected.get("trigger", "") or "知识库证型匹配"
         result["status"] = result.get("status", "PASS")
+        result["disease_key"] = result.get("disease_key", primary_disease)
         result["candidate_only"] = True
         result["need_m2_3"] = True
         result["must_enter_m3"] = True
         result["no_candidate"] = False
+        result["reverse_audit"] = {}
+        result["prescription_draft"] = True
+        result["formal_prescription_allowed"] = False
         result["formula_candidates"] = [{
             "disease_name": primary_disease,
             "syndrome_name": syndrome_name,
