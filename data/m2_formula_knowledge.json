@@ -64094,6 +64094,330 @@
           "槟榔",
           "甘草"
         ]
+      },
+      "风寒束表": {
+        "syndrome_name": "风寒束表",
+        "trigger": "<风寒束表>\n<风寒束表> 痢疾初起 ，恶寒发热，无汗头痛，身楚纳呆；痢下白冻，腹痛里急；舌淡苔白腻，脉浮紧或濡缓。",
+        "diagnostic_points": "<风寒束表> 痢疾初起 ，恶寒发热，无汗头痛，身楚纳呆；痢下白冻，腹痛里急；舌淡苔白腻，脉浮紧或濡缓。",
+        "pathology": "热、风、寒、风寒",
+        "symptoms": [
+          "<风寒束表> 痢疾初起",
+          "恶寒发热",
+          "无汗头痛",
+          "身楚纳呆",
+          "痢下白冻",
+          "腹痛里急"
+        ],
+        "tongue": "舌淡苔白腻",
+        "pulse": "脉浮紧或濡缓",
+        "formula_name": "人参败毒散",
+        "herbs": [
+          "羌活",
+          "独活",
+          "柴胡",
+          "川芎",
+          "人参",
+          "茯苓",
+          "枳壳",
+          "桔梗",
+          "生甘草",
+          "薄荷"
+        ],
+        "full_decoction": "羌活9g、独活9g、柴胡6g、川芎6g、人参9g、茯苓12g、枳壳6g、桔梗10g、生甘草6g、薄荷3g(后下)、生姜3片。\n...",
+        "clinical_modifications": [],
+        "source": "oral_formula_master_table"
+      },
+      "湿热滞肠": {
+        "syndrome_name": "湿热滞肠",
+        "trigger": "<湿热滞肠>\n<湿热滞肠>下痢赤白黏冻，腹痛里急，肛门灼热，小便短赤，舌红苔黄腻，脉濡数或滑数。表证已减，痢尤未止",
+        "diagnostic_points": "<湿热滞肠>下痢赤白黏冻，腹痛里急，肛门灼热，小便短赤，舌红苔黄腻，脉濡数或滑数。表证已减，痢尤未止",
+        "pathology": "热、湿、湿热",
+        "symptoms": [
+          "<湿热滞肠>下痢赤白黏冻",
+          "腹痛里急",
+          "肛门灼热",
+          "小便短赤",
+          "表证已减",
+          "痢尤未止"
+        ],
+        "tongue": "舌红苔黄腻",
+        "pulse": "脉濡数或滑数",
+        "formula_name": "香连丸",
+        "herbs": [
+          "木香"
+        ],
+        "full_decoction": "黄连、木香。 (注：此为中成药，应按说明书或医嘱使用，此处为您提供汤剂参考剂量：黄连6g、木香6g(后下))。\n疗程：...",
+        "clinical_modifications": [],
+        "source": "oral_formula_master_table"
+      },
+      "表里同病": {
+        "syndrome_name": "表里同病",
+        "trigger": "<表里同病>\n痢疾（腹痛、里急后重、下痢赤白脓血）伴身热汗出、脉数急促，表邪未解而里热炽盛。身热汗出，脉象急促，表邪未解而里热已盛",
+        "diagnostic_points": "痢疾（腹痛、里急后重、下痢赤白脓血）伴身热汗出、脉数急促，表邪未解而里热炽盛。身热汗出，脉象急促，表邪未解而里热已盛",
+        "pathology": "热",
+        "symptoms": [
+          "痢疾（腹痛、里急后重、下痢赤白脓血）伴身热汗出、",
+          "表邪未解而里热炽盛",
+          "身热汗出",
+          "表邪未解而里热已盛"
+        ],
+        "tongue": "",
+        "pulse": "脉数急促",
+        "formula_name": "葛根芩连汤",
+        "herbs": [
+          "葛根",
+          "黄芩",
+          "黄连",
+          "炙甘草"
+        ],
+        "full_decoction": "葛根15g、黄芩9g、黄连6g、炙甘草6g。\n疗程：3–5天为1疗程。\n疗效预估：用药1-2天后，对于伴有发热、口渴、喘而汗出...",
+        "clinical_modifications": [],
+        "source": "oral_formula_master_table"
+      },
+      "食滞痢": {
+        "syndrome_name": "食滞痢",
+        "trigger": "<食滞痢>\n<食滞痢>见痢下不爽，腹痛拒按，苔黄腻，脉滑",
+        "diagnostic_points": "<食滞痢>见痢下不爽，腹痛拒按，苔黄腻，脉滑",
+        "pathology": "",
+        "symptoms": [
+          "<食滞痢>见痢下不爽",
+          "腹痛拒按",
+          "苔黄腻"
+        ],
+        "tongue": "",
+        "pulse": "脉滑",
+        "formula_name": "枳实导滞丸",
+        "herbs": [
+          "生大黄",
+          "枳实",
+          "黄芩",
+          "黄连",
+          "炒神曲",
+          "茯苓",
+          "炒白术",
+          "焦山楂",
+          "泽泻"
+        ],
+        "full_decoction": "生大黄9g(后下)、枳实10g、黄芩9g、黄连6g、炒神曲12g、茯苓12g、炒白术10g、焦山楂12g、泽泻9g。\n疗程：3...",
+        "clinical_modifications": [],
+        "source": "oral_formula_master_table"
+      },
+      "疫毒痢": {
+        "syndrome_name": "疫毒痢",
+        "trigger": "<疫毒痢>\n起病急骤，壮热口渴，头痛烦躁，恶心呕吐，大便频频，痢下鲜紫脓血，腹痛剧烈，里急后重明显，甚神昏惊厥，或痉厥抽搐，或面色苍白，汗冷肢厥，舌质红绛，舌苔黄燥，脉滑数或微欲绝。",
+        "diagnostic_points": "起病急骤，壮热口渴，头痛烦躁，恶心呕吐，大便频频，痢下鲜紫脓血，腹痛剧烈，里急后重明显，甚神昏惊厥，或痉厥抽搐，或面色苍白，汗冷肢厥，舌质红绛，舌苔黄燥，脉滑数或微欲绝。",
+        "pathology": "热",
+        "symptoms": [
+          "起病急骤",
+          "壮热口渴",
+          "头痛烦躁",
+          "恶心呕吐",
+          "大便频频",
+          "痢下鲜紫脓血",
+          "腹痛剧烈",
+          "里急后重明显",
+          "甚神昏惊厥",
+          "或痉厥抽搐",
+          "或面色苍白",
+          "汗冷肢厥"
+        ],
+        "tongue": "舌质红绛",
+        "pulse": "脉滑数或微欲绝",
+        "formula_name": "白头翁汤",
+        "herbs": [
+          "白头翁"
+        ],
+        "full_decoction": "白头翁12g 黄连6g 黄柏10g 秦皮10g 金银花12g 生地黄20g 赤芍10g 丹皮10g 木香6g 槟榔10g；",
+        "clinical_modifications": [
+          {
+            "herb": "",
+            "reason": "热极动风，痉厥抽搐",
+            "matched_symptom": "热极动风，痉厥抽搐",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "生大黄",
+            "reason": "见热毒秽浊壅塞肠道，腹中满痛拒按，大便滞涩，臭秽难闻，或表现为高热神昏，四肢厥冷，大便不通",
+            "matched_symptom": "见热毒秽浊壅塞肠道，腹中满痛拒按，大便滞涩，臭秽难闻，或表现为高热神昏，四肢厥冷，大便不通",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "用水牛角",
+            "reason": "神昏谵语，高热，甚则痉厥，舌质红，苔黄糙，脉细数",
+            "matched_symptom": "神昏谵语，高热，甚则痉厥，舌质红，苔黄糙，脉细数",
+            "source": "oral_formula_master_table"
+          }
+        ],
+        "source": "oral_formula_master_table"
+      },
+      "暴痢致脱": {
+        "syndrome_name": "暴痢致脱",
+        "trigger": "<暴痢致脱>\n下痢无度、肢冷神疲、面色苍白，舌淡白苔滑，脉微细欲绝",
+        "diagnostic_points": "下痢无度、肢冷神疲、面色苍白，舌淡白苔滑，脉微细欲绝",
+        "pathology": "",
+        "symptoms": [
+          "下痢无度、肢冷神疲、面色苍白"
+        ],
+        "tongue": "舌淡白苔滑",
+        "pulse": "脉微细欲绝",
+        "formula_name": "参附汤",
+        "herbs": [
+          "制附片"
+        ],
+        "full_decoction": "【参附汤】人参15g、制附片10g(先煎60分钟) 或 【独参汤】人参15-30g。\n疗程：急煎顿服，根据病...",
+        "clinical_modifications": [],
+        "source": "oral_formula_master_table"
+      },
+      "虚寒痢": {
+        "syndrome_name": "虚寒痢",
+        "trigger": "<虚寒痢>\n腹部隐痛，缠绵不已，喜按喜温，痢下赤白清稀，无腥臭，或为白冻，甚则滑脱不禁，肛门坠胀，便后更甚，形寒畏冷，四肢不温，食少神疲，腰膝酸软，舌淡苔薄白，脉沉细弱。",
+        "diagnostic_points": "腹部隐痛，缠绵不已，喜按喜温，痢下赤白清稀，无腥臭，或为白冻，甚则滑脱不禁，肛门坠胀，便后更甚，形寒畏冷，四肢不温，食少神疲，腰膝酸软，舌淡苔薄白，脉沉细弱。",
+        "pathology": "寒",
+        "symptoms": [
+          "腹部隐痛",
+          "缠绵不已",
+          "喜按喜温",
+          "痢下赤白清稀",
+          "无腥臭",
+          "或为白冻",
+          "甚则滑脱不禁",
+          "肛门坠胀",
+          "便后更甚",
+          "形寒畏冷",
+          "四肢不温",
+          "食少神疲",
+          "腰膝酸软"
+        ],
+        "tongue": "舌淡苔薄白",
+        "pulse": "脉沉细弱",
+        "formula_name": "桃花汤",
+        "herbs": [
+          "赤石脂",
+          "炮干姜",
+          "人参",
+          "炒白术",
+          "当归",
+          "白芍",
+          "肉豆蔻",
+          "诃子"
+        ],
+        "full_decoction": "赤石脂15g(先煎)、炮干姜6g、人参9g、炒白术10g、当归10g、白芍10g、肉豆蔻6g(煨)、诃子9g、肉桂...",
+        "clinical_modifications": [
+          {
+            "herb": "枳壳",
+            "reason": "积滞未尽，应少佐消导积滞之品",
+            "matched_symptom": "积滞未尽，应少佐消导积滞之品",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "黄芪",
+            "reason": "痢久脾虚气陷，导致少气脱肛",
+            "matched_symptom": "痢久脾虚气陷，导致少气脱肛",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "制附片",
+            "reason": "脾肾阳虚重，手足不温",
+            "matched_symptom": "脾肾阳虚重，手足不温",
+            "source": "oral_formula_master_table"
+          }
+        ],
+        "source": "oral_formula_master_table"
+      },
+      "寒湿痢": {
+        "syndrome_name": "寒湿痢",
+        "trigger": "<寒湿痢>\n腹痛拘急，痢下赤白黏冻，白多赤少，或为纯白冻，里急后重，口淡乏味，脘胀腹满，头身困重，舌质或淡，舌苔白腻，脉濡缓。",
+        "diagnostic_points": "腹痛拘急，痢下赤白黏冻，白多赤少，或为纯白冻，里急后重，口淡乏味，脘胀腹满，头身困重，舌质或淡，舌苔白腻，脉濡缓。",
+        "pathology": "",
+        "symptoms": [
+          "腹痛拘急",
+          "痢下赤白黏冻",
+          "白多赤少",
+          "或为纯白冻",
+          "里急后重",
+          "口淡乏味",
+          "脘胀腹满",
+          "头身困重"
+        ],
+        "tongue": "舌质或淡",
+        "pulse": "脉濡缓",
+        "formula_name": "不换金正气散",
+        "herbs": [
+          "苍术",
+          "厚朴",
+          "陈皮",
+          "藿香",
+          "清半夏",
+          "炙甘草"
+        ],
+        "full_decoction": "苍术12g、厚朴9g、陈皮12g、藿香9g(后下)、清半夏9g、炙甘草6g、生姜3片、大枣2枚(擘)。\n疗程：3–5天为1疗...",
+        "clinical_modifications": [
+          {
+            "herb": "白芍",
+            "reason": "痢下白中兼赤",
+            "matched_symptom": "痢下白中兼赤",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "白术",
+            "reason": "脾虚纳呆",
+            "matched_symptom": "脾虚纳呆",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "槟榔",
+            "reason": "寒湿气滞明显",
+            "matched_symptom": "寒湿气滞明显",
+            "source": "oral_formula_master_table"
+          }
+        ],
+        "source": "oral_formula_master_table"
+      },
+      "阴虚痢": {
+        "syndrome_name": "阴虚痢",
+        "trigger": "<阴虚痢>\n痢下赤白，日久不愈，脓血黏稠，或下鲜血，脐下灼痛，虚坐努责，食少，心烦口干，至夜转剧，舌红绛少津，苔少或花剥，脉细数。",
+        "diagnostic_points": "痢下赤白，日久不愈，脓血黏稠，或下鲜血，脐下灼痛，虚坐努责，食少，心烦口干，至夜转剧，舌红绛少津，苔少或花剥，脉细数。",
+        "pathology": "虚",
+        "symptoms": [
+          "痢下赤白",
+          "日久不愈",
+          "脓血黏稠",
+          "或下鲜血",
+          "脐下灼痛",
+          "虚坐努责",
+          "食少",
+          "心烦口干",
+          "至夜转剧",
+          "苔少或花剥"
+        ],
+        "tongue": "舌红绛少津",
+        "pulse": "脉细数",
+        "formula_name": "黄连阿胶汤",
+        "herbs": [
+          "黄连",
+          "黄芩",
+          "白芍",
+          "当归",
+          "炮姜",
+          "阿胶",
+          "炙甘草"
+        ],
+        "full_decoction": "黄连6g、黄芩9g、白芍12g、当归15g、炮姜3g、阿胶6g(烊化)、鸡子黄一枚(待药温后搅入)、炙甘草6g。\n...",
+        "clinical_modifications": [
+          {
+            "herb": "石斛",
+            "reason": "口干口渴明显",
+            "matched_symptom": "口干口渴明显",
+            "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "黄柏",
+            "reason": "阴虚火旺，湿热内盛，下痢鲜血黏稠",
+            "matched_symptom": "阴虚火旺，湿热内盛，下痢鲜血黏稠",
+            "source": "oral_formula_master_table"
+          }
+        ],
+        "source": "oral_formula_master_table"
       }
     }
   },

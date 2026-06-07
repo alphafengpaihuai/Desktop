@@ -13,6 +13,8 @@ import re
 import time
 from typing import Dict, List, Optional
 
+from services.m2_symptom_factor_loader import SymptomFactorLoader
+
 
 class M2SyndromeSelector:
     """M2 辨证选方模块
@@ -36,6 +38,9 @@ class M2SyndromeSelector:
                 self.herb_kb = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             pass
+
+        # ── 症状证素加载器 ──
+        self.symptom_factor_loader = SymptomFactorLoader()
 
         # ── 病案参考库（内置） ──
         self.case_reference: Dict[str, dict] = {}
@@ -461,6 +466,24 @@ class M2SyndromeSelector:
             "age": age,
             "weight": weight,
         }
+
+        # ── 症状证素库映射（M2-1 强制步骤） ──
+        symptom_factor_evidence = self.symptom_factor_loader.match_symptoms_to_factors(
+            symptoms=symptoms,
+            tongue=tongue,
+            pulse=pulse,
+            negative_findings=patient_info.get("signs", []),
+        )
+        factor_contradiction_result = self.symptom_factor_loader.evaluate_factor_contradictions(
+            symptom_factor_evidence.get("tcm_factor_evidence", {}),
+            symptoms=symptoms,
+            tongue=tongue,
+            pulse=pulse,
+        )
+        # 将证素证据注入 patient_info，供后续双轨使用
+        patient_info["symptom_factor_evidence"] = symptom_factor_evidence
+        patient_info["factor_contradiction_result"] = factor_contradiction_result
+
         # ── Track 1: 症状证素辨证轨 (Section 5.3) ──
         traditional_tcm_result = self._syndrome_scorer(primary_disease, syndromes, patient_info)
 
@@ -490,7 +513,8 @@ class M2SyndromeSelector:
             matched_symptoms = merged.get("matched_symptoms", [])
             matched_tongue_pulse = merged.get("matched_tongue_pulse", "")
             missing_info = merged.get("missing_info", "")
-            need_human_review = False
+            need_human_review = bool(factor_contradiction_result and
+                                     factor_contradiction_result.get("need_human_review", False))
         elif merged.get("status") == "CONFLICT":
             # 冲突时: 改用原有单轨逻辑（scorer + LLM fallback），但标记 need_human_review
             parsed = parsed or traditional_tcm_result
@@ -543,7 +567,8 @@ class M2SyndromeSelector:
             matched_pathology = parsed.get("matched_pathology", "") or ""
             missing_info = parsed.get("missing_info", "") or ""
             confidence = parsed.get("confidence", 0.5) if parsed.get("confidence") else 0.5
-            need_human_review = False
+            need_human_review = bool(factor_contradiction_result and
+                                     factor_contradiction_result.get("need_human_review", False))
 
         result = {
             "stage": "M2_1",
@@ -580,6 +605,12 @@ class M2SyndromeSelector:
             "formal_prescription_allowed": False,
             "needs_manual_review": self._is_high_risk_disease(primary_disease) or need_human_review,
             "need_human_review": need_human_review,
+            "internal_trace": {
+                "symptom_factor_kb_used": True,
+                "symptom_factor_evidence": symptom_factor_evidence.get("tcm_factor_evidence", {}),
+                "factor_contradiction_result": factor_contradiction_result,
+                "symptom_kb_source": "症状证素表.xlsx",
+            },
         }
         return self._strip_forbidden_prescription_fields(result)
 
@@ -1076,8 +1107,10 @@ class M2SyndromeSelector:
             pathology_hints.append("占位性病变期")
 
         # 从症状提取病理倾向关键词
+        # NOTE: 咳嗽、苔腻、苔黄这些非特异性症状不作为核心病理匹配指标，
+        # 避免 风→咳嗽 导致所有咳嗽病例都获得"风"打分
         _pathology_to_disease_kw = {
-            "风": ["恶风", "鼻塞", "流涕", "咽痒", "咳嗽", "突发", "起病急", "瘙痒"],
+            "风": ["恶风", "鼻塞", "流涕", "咽痒", "突发", "起病急", "瘙痒"],
             "寒": ["恶寒", "怕冷", "清稀", "不渴", "苔白", "痰白"],
             "热": ["发热", "黄痰", "口干", "咽痛", "舌红", "苔黄", "烦躁"],
             "湿": ["苔腻", "困重", "纳呆", "便溏", "水肿", "头重"],
@@ -1134,6 +1167,18 @@ class M2SyndromeSelector:
             if framework == "脏腑辨证" and any(kw in syndrome_text for kw in ["脾", "肺", "肾", "肝", "心", "胃", "肠"]):
                 score += 1
 
+            # 病理阶段匹配加分/扣分
+            if inferred_pathology_stage == "里热期":
+                # 里热期 → 表证证型（风热/风寒）降分，里热证（痰热壅肺等）加分
+                if "邪犯肺卫" in trigger or "表" in trigger:
+                    score -= 2
+                elif "痰热" in trigger or "热壅" in trigger or "气分" in trigger or "营" in trigger:
+                    score += 1
+            elif inferred_pathology_stage == "表证期":
+                # 表证期 → 表证证型加分
+                if "邪犯肺卫" in trigger:
+                    score += 1
+
             if score > 0:
                 evidence_for.append({
                     "syndrome": name,
@@ -1169,6 +1214,19 @@ class M2SyndromeSelector:
                     "matched_pathology_factors": ["无明确病理匹配，取首候选"],
                     "score": 0,
                 })
+
+        # ── 痰热证据后处理：黄痰/黄绿痰 + 苔腻/苔黄腻 + 口苦/口干 三项齐备 → 强制推荐痰热壅肺 ──
+        _has_yellow_sputum = any(kw in combined for kw in ["黄痰", "黄绿痰", "黄稠痰", "黄黏痰", "铁锈色", "咳黄"])
+        _has_heat_tongue = any(kw in combined for kw in ["苔黄", "黄苔", "黄腻", "舌红"])
+        _has_bitter_or_dry = any(kw in combined for kw in ["口苦", "口干", "口燥", "渴"])
+        _has_greasy_tongue = any(kw in combined for kw in ["苔腻", "黄腻", "厚腻"])
+        if _has_yellow_sputum and _has_heat_tongue and (_has_bitter_or_dry or _has_greasy_tongue):
+            for ev in evidence_for:
+                if "痰热" in ev["syndrome"] or "热壅" in ev["syndrome"] or "痰" in ev["syndrome"] and "热" in ev["syndrome"]:
+                    ev["score"] += 3
+                    if ev["score"] > best_match_score:
+                        best_match_score = ev["score"]
+                        candidate_syndrome = ev["syndrome"]
 
         confidence = min(0.9, 0.3 + best_match_score * 0.15) if best_match_score > 0 else 0.2
 
@@ -1718,10 +1776,10 @@ class M2SyndromeSelector:
         ).lower()
 
         # 专用病理产物/病机关键词列表
-        _pathology_heat_keywords = ["热", "黄", "数", "渴", "烦躁", "便秘", "尿黄", "苔黄"]
+        _pathology_heat_keywords = ["热", "黄", "数", "渴", "烦躁", "便秘", "尿黄", "苔黄", "口苦"]
         _pathology_cold_keywords = ["寒", "白", "淡", "迟", "紧", "清稀", "不渴", "畏寒", "肢冷", "苔白"]
-        _pathology_phlegm_keywords = ["痰", "腻", "滑", "咳", "浊", "黏", "胸"]
-        _pathology_dampness_keywords = ["湿", "苔腻", "厚", "濡", "水肿", "困重", "纳呆", "便溏"]
+        _pathology_phlegm_keywords = ["痰", "腻", "滑", "咳", "浊", "黏", "胸", "黄绿痰", "黄稠痰", "黄黏痰"]
+        _pathology_dampness_keywords = ["湿", "苔腻", "黄腻", "厚", "濡", "水肿", "困重", "纳呆", "便溏"]
         _pathology_blood_stasis_keywords = ["瘀", "紫", "暗", "涩", "刺痛", "肿块", "舌有瘀点", "舌下", "癥"]
         _pathology_qi_stagnation_keywords = ["胀", "闷", "痛", "叹气", "抑郁", "善太息", "脉弦"]
 
@@ -2021,9 +2079,11 @@ class M2SyndromeSelector:
             # 寒热互斥惩罚：患者明确偏寒时降低纯热证得分
             if (_patient_is_cold or has_cold_coldheat) and ("热" in trigger and "寒" not in trigger and "风热" not in trigger):
                 cold_heat_score = max(0, cold_heat_score - 5.0)
-            # 患者明确偏热时降低纯寒证得分
-            if (_patient_is_heat or has_hot_coldheat) and ("寒" in trigger and "热" not in trigger and "风寒" not in trigger):
-                cold_heat_score = max(0, cold_heat_score - 5.0)
+            # 患者明确偏热时降低纯寒证得分（用 display_name 判断寒热属性，避免 trigger 中病理标记干扰）
+            if (_patient_is_heat or has_hot_coldheat):
+                is_plain_cold = ("寒" in display_name and "风热" not in display_name and "热" not in display_name)
+                if is_plain_cold:
+                    cold_heat_score = max(0, cold_heat_score - 5.0)
 
             # 特异性词惩罚（使用否定感知匹配）
             heat_specific = ["口干", "口苦", "黄痰", "黄涕", "舌红", "烦躁", "灼痛"]
@@ -2032,9 +2092,10 @@ class M2SyndromeSelector:
                                       if cs in _all_patient_text and not _is_negated(cs, _all_patient_text)]
             _matched_heat_specific = [hs for hs in heat_specific
                                       if hs in _all_patient_text and not _is_negated(hs, _all_patient_text)]
-            # 热特异性词 → 纯寒证或无明显热象的证型扣分
+            # 热特异性词 → 纯寒证或风热证之外降分（用 display_name 判断）
             if _matched_heat_specific:
-                if "热" not in trigger and "风热" not in trigger:
+                has_heat_in_display = "热" in display_name or "风热" in display_name
+                if not has_heat_in_display:
                     cold_heat_score = max(0, cold_heat_score - 2.0)
             # 寒特异性词 → 纯热证扣分；若有 2+ 项寒特异词，也扣热性证型（包括风热）
             if _matched_cold_specific:
@@ -2049,6 +2110,43 @@ class M2SyndromeSelector:
             # ── 总分（寒热匹配计入） ──
             total_score = symptom_score + tongue_score + pulse_score + pathology_score + cold_heat_score
 
+            # ── 症状证素库注入（M2-1 强制步骤） ──
+            symptom_factor_evidence = patient_info.get("symptom_factor_evidence", {})
+            factor_contradiction = patient_info.get("factor_contradiction_result", {})
+            if symptom_factor_evidence:
+                tcm_factors = symptom_factor_evidence.get("tcm_factor_evidence", {})
+                present_factors = list(tcm_factors.keys())
+                # 证素证据辅助评分：如果当前证型的 display_name 包含患者匹配的证素，加分
+                for factor in present_factors:
+                    if factor in trigger or factor in display_name:
+                        total_score += 1.0
+                # 反证规则：强反对的证素出现在当前证型中 → 降分
+                for against in factor_contradiction.get("strong_against", []):
+                    if isinstance(against, dict):
+                        af = against.get("factor_a", "")
+                        bf = against.get("factor_b", "")
+                        if af in display_name or bf in display_name or af in trigger or bf in trigger:
+                            total_score -= 3.0
+                    elif isinstance(against, str):
+                        # plain string "factor" from penalty
+                        if against in display_name or against in trigger:
+                            total_score -= 5.0
+                # 强支持的证素 → 当前证型含该证素则加分
+                for support in factor_contradiction.get("strong_support", []):
+                    if support in display_name or support in trigger:
+                        total_score += 3.0
+                # 若 symptom_factor_evidence 中有黄痰/黄绿痰+苔黄+口干等热象证据，
+                # 且当前证型名为"风寒" → 强降分
+                _has_yellow_phlegm_factor = "痰" in tcm_factors and "热" in tcm_factors
+                _has_cold_syndrome = "风寒" in display_name
+                # 需使用否定感知，防止"无明显口干"误判
+                def _pos_match(kw, text):
+                    return kw in text and not _is_negated(kw, text)
+                _patient_has_yellow = any(_pos_match(kw, _all_patient_text) for kw in ["黄痰", "黄绿痰", "黄稠", "咽痛", "苔黄"])
+                _patient_has_dry = any(_pos_match(kw, _all_patient_text) for kw in ["口干", "口苦", "口渴"])
+                if _has_cold_syndrome and (_patient_has_yellow or _patient_has_dry):
+                    total_score -= 5.0
+
             # 证型全名匹配导致的额外总分调整（证型名含"风热"但患者偏寒，或含"风寒"但患者偏热）
             if has_cold_coldheat and "风热" in display_name:
                 total_score = max(0, total_score - 3.0)
@@ -2056,7 +2154,7 @@ class M2SyndromeSelector:
                 total_score = max(0, total_score - 3.0)
 
             # 虚实证型偏好：当患者有明确实热症状（黄痰、苔黄腻等），虚证证型降分
-            _patient_has_heat_phlegm = any(kw in _all_patient_text for kw in ["黄痰", "黄稠", "铁锈色", "黄腻"])
+            _patient_has_heat_phlegm = any(kw in _all_patient_text for kw in ["黄痰", "黄稠", "铁锈色", "黄腻", "黄绿痰", "黄黏痰", "黄稠痰"])
             if _patient_has_heat_phlegm and "虚" in trigger:
                 total_score -= 5.0
             # 当患者有明确气虚证候（气短、神疲）且证型含"虚"，加分
@@ -2066,6 +2164,30 @@ class M2SyndromeSelector:
             # 热象证型偏好：当患者同时有热象+黄痰，提升含"痰""热"证型
             if _patient_has_heat_phlegm and "痰" in trigger and "热" in trigger:
                 total_score += 3.0
+
+            # ── 痰热综合证据加分：多个热痰相关指标同时出现时更强支持痰热壅肺 ──
+            _patient_has_bitter = any(kw in _all_patient_text for kw in ["口苦", "口干口苦"])
+            _patient_has_dry_mouth = any(kw in _all_patient_text for kw in ["口干", "口燥", "渴"])
+            _patient_has_yellow_tongue = any(kw in _all_patient_text for kw in ["苔黄", "黄苔", "舌红", "舌质红"])
+            _patient_has_greasy_tongue = any(kw in _all_patient_text for kw in ["苔腻", "黄腻", "厚腻"])
+
+            # 复合热痰证据计数：黄痰 + 苔黄腻 + 口干/口苦
+            _heat_phlegm_composite_score = sum([
+                _patient_has_heat_phlegm,
+                _patient_has_yellow_tongue and _patient_has_greasy_tongue,
+                _patient_has_bitter or _patient_has_dry_mouth,
+            ])
+            if _heat_phlegm_composite_score >= 2:
+                # 有2项以上痰热证据 → 痰热证型额外加分，推动"痰+热"类证型占优
+                if any(kw in trigger for kw in ["痰热", "热痰", "痰+热"]) or ("痰" in trigger and "热" in trigger):
+                    total_score += 5.0
+                # (反证规则) 同时有2项以上痰热证据 → 风热表证降分
+                if "风热" in display_name:
+                    total_score -= 8.0
+            # 特别规则：黄痰/黄绿痰 + 苔黄腻/舌红 + 口苦/口干 三项齐备 → 强反证
+            if _patient_has_heat_phlegm and (_patient_has_bitter or _patient_has_dry_mouth) and _patient_has_greasy_tongue:
+                if "风热" in display_name:
+                    total_score -= 8.0
             confidence = round(min(1.0, total_score / 60.0), 2)  # 60分以上 = 高置信度
 
             # 当所有维度得分为0时，给最低分避免排序混乱
