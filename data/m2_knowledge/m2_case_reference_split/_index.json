@@ -1,0 +1,10 @@
+{
+  "total": 88385,
+  "shards": [
+    "m2_case_reference_1of4.json",
+    "m2_case_reference_2of4.json",
+    "m2_case_reference_3of4.json",
+    "m2_case_reference_4of4.json"
+  ],
+  "shard_size": 22096
+}

@@ -1,0 +1,24 @@
+# Knowledge Backup — Manifest
+
+| 文件名 | 原始路径 | 项目内路径 | 文件类型 | sheet/字段摘要 | 可能用途 | 接入优先级 | 是否已转换 | 缺口说明 |
+|---|---|---|---|---|---|---|---|---|
+| 症状证素表.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/症状证素表.xlsx | Excel | 1 sheet「症状证素_二次终校」；54 证素列（脾、湿、气虚、热、阴虚…）；568 行，每行一个症状在每个证素下的分配 | 症状→证素映射 | P0 | ✅ → data/m2_knowledge/m2_symptom_factor_map.json (3541 entries) | 无 |
+| 口服方剂知识库_最终版_原始版面_仅总表.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/口服方剂知识库_最终版_原始版面_仅总表.xlsx | Excel | 1 sheet「总表」；9 列（科目、病名【诊断】、中医证型、基础方剂、汤剂方案、HF方案）；641 病名，11108 行 | 病名→证型池 + 方剂库 | P0 | ✅ → data/m2_knowledge/m2_disease_syndrome_pool.json (640 diseases) + m2_formula_base_map.json (642 formulas) | 无 |
+| 口服方剂知识库.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/口服方剂知识库.xlsx | Excel | 同上（副本） | 同上（备选） | P0 | ❌ 未重复转换 | 仅总表版已覆盖 |
+| SymMap v2.0, SMHB file.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/SymMap v2.0, SMHB file.xlsx | Excel | 1 sheet；19 列（Herb_id, Chinese_name, Pinyin, Properties, Meridians, Class, UsePart, Alias）；703 行 herbs | 药物性味归经标签库 | P1 | ✅ → data/m2_knowledge/m2_herb_tag_map.json (703 herbs) | 无 |
+| diseases_final.json | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/diseases_final.json | JSON | 240 疾病；每项含 disease_name, aliases, axes[] (axis/role/weight/典型表现), phase_axes, must_not_be_primary_when | 西医病理轴→证型先验 | P1 | ✅ → data/m2_knowledge/m2_disease_axes_pool.json (240 entries) | 无 |
+| disease_cards_merged_600_source_checked_pending.json | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/disease_cards_merged_600_source_checked_pending.json | JSON | 600 疾病卡片；每项含 disease_name, aliases, typical_symptoms, course_and_stage, rule_in/out_features, red_flags, pathology_axes | 疾病→症状/阶段/诊断标准 | P1 | ✅ → data/m2_knowledge/m2_disease_symptom_map.json (600 entries) | 无 |
+| gpt_pharmacology_cards.json | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/gpt_pharmacology_cards.json | JSON | Dict keyed by 疾病名；含 disease_pathway, key_targets, evidence_based_herbs, evidence_confidence | 循证中药药理库 | P1 | ✅ → data/m2_knowledge/m2_pharmacology_map.json (603 entries) | 无 |
+| SymMap v2.0, SMDE file.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/SymMap v2.0, SMDE file.xlsx | Excel | 1 sheet；Disease_id, Disease_Name, UMLS_id, ICD10CM_id, MeSH_id | 疾病 ID 映射库 | P2 | ❌ 未转换 | 后续用于疾病名称标准化 |
+| SymMap v2.0, SMTT file.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/SymMap v2.0, SMTT file.xlsx | Excel | 1 sheet；Gene_id, Gene_symbol, Protein, UniProt_id | 靶点基因库 | P2 | ❌ 未转换 | 仅高级药理分析需要 |
+| merck_msd_verified_pending_disease_cards_batch_001_60.json | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/merck_msd_verified_pending_disease_cards_batch_001_60.json | JSON | 60 条默沙东疾病卡片 | 诊断标准验证 | P2 | ❌ 未转换 | 可并入 m2_disease_symptom_map |
+| diseases_raw_data.txt | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/diseases_raw_data.txt | TXT | 文本版 diseases_final | 检索辅助 | P2 | ❌ 未转换 | JSON 版已覆盖 |
+| gpt_pharmacology_cards.txt | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/gpt_pharmacology_cards.txt | TXT | JSON 的文本副本 | 同 JSON | P2 | ❌ 未转换 | JSON 版已覆盖 |
+| gpt_pharmacology_cards_report.json | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/gpt_pharmacology_cards_report.json | JSON | 元数据报告 | 审计 | P2 | ❌ 未转换 | 非结构化数据 |
+| 比如说.txt | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/比如说.txt | JSON-L | 40651 行临床问答数据 | 名医病案库候选源 | P2 | ❌ 未转换 | 需确认数据质量后转换 |
+| PIPELINE_TRACE_MAP.md | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/PIPELINE_TRACE_MAP.md | Markdown | 链路说明文档 | 参考 | P2 | ❌ 未转换 | 文档 |
+| disease_cards_merged_600_source_checked_pending.txt | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/disease_cards_merged_600_source_checked_pending.txt | TXT | JSON 文本副本 | 同 JSON | P2 | ❌ 未转换 | JSON 版已覆盖 |
+| 古今名医方论  插入逻辑链 完成.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/古今名医方论  插入逻辑链 完成.xlsx | Excel | 1 sheet；10890 行；7 列（用药、诊断、症状、逻辑链、来源、作者、原文） | 方剂增强 → 病理逻辑链支撑 | P1 | ✅ → data/m2_knowledge/m2_formula_enhancement.json (10890 entries) | 无 |
+| 名医案例库_逻辑链tag.xlsx | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/名医案例库_逻辑链tag.xlsx | Excel | 1 sheet；88386 行；9 列（病名、性别、年龄、证型、方名、组成、逻辑链、病案原文、症状） | 名医病案推理参考 | P1 | ✅ → data/m2_knowledge/m2_case_reference.json (88385 entries) | 无 |
+| 600  疾病诊断标准.txt | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/600  疾病诊断标准.txt | JSON | 600 疾病 JSON 数组；每项含 disease_name, aliases, diagnostic_criteria, typical/atypical_symptoms, rule_in/out_features, red_flags, source_quality, evidence_level 等 20+ 字段 | M1/M2 诊断标准库 | P0 | ✅ → data/m2_knowledge/m2_disease_diagnostic_criteria.json (600 entries) | 无 |
+| 600 药物成分功效.txt | ~/Desktop/知识库备份/ | data/raw/knowledge_backup/600 药物成分功效.txt | JSON | 472 herb records；每项含 herb_name, pinyin, properties, meridians, functions, clinical_application, pharmacology, key_components, toxicity | 药物成分功效药理库 | P1 | ✅ → data/m2_knowledge/m2_herb_pharmacology_map.json (472 herbs) | 无 |

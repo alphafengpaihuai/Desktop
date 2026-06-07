@@ -1,0 +1,19 @@
+{
+  "created_at": "2026-05-26T17:22:46",
+  "manifest_source_used": "disease_cards_merged_600_source_checked_pending.json",
+  "input_disease_count": 600,
+  "output_card_count": 600,
+  "cards_with_nonempty_evidence_based_herbs": 7,
+  "total_evidence_based_herb_items": 10,
+  "strictness_policy": [
+    "无直接、可解释、现代药理证据者 evidence_based_herbs=[]。",
+    "白名单条目标记 pending_manual_review，不直接升级 confirmed。",
+    "不生成剂量、不生成处方、不替代临床决策。"
+  ],
+  "seed_hit_count": 7,
+  "output_files": {
+    "json": "/mnt/data/gpt_pharmacology_cards.json",
+    "txt": "/mnt/data/gpt_pharmacology_cards.txt",
+    "report": "/mnt/data/gpt_pharmacology_cards_report.json"
+  }
+}
