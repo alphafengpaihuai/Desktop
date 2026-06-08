@@ -27,6 +27,7 @@ from m2_engine import M2SyndromeSelector
 from m3_engine import M3ClinicalReviewEngine
 from m4_engine import M4RoutingEngine
 from force_link_modules import full_link
+from full_pipeline import compute_final_status
 from services.m1_m2_bridge import (
     build_m2_process_kwargs,
     extract_labs_imaging_from_texts,
@@ -979,6 +980,7 @@ async def handle_selection_answers(ws, pid: str, data: dict):
     formula_name = ""
     herbs = []
     dosage_str = ""
+    m2_r = None
     m3_r = None
     try:
         # M2 输入：使用更丰富的症状列表
@@ -1802,6 +1804,8 @@ async def handle_selection_answers(ws, pid: str, data: dict):
     # ══════════════════════════════════════════════════════════════
     _legacy_dev_mode = os.getenv("ALLOW_LEGACY_BRIDGE_PRESCRIPTION_PATH", "false").lower() == "true"
 
+    final_status = compute_final_status(m2_r, m3_r)
+
     # 构建 candidate_summary（两种模式共用）
     candidate_summary = "\n".join([
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
@@ -1859,6 +1863,7 @@ async def handle_selection_answers(ws, pid: str, data: dict):
             "trace_closure_required": True,
             "formal_prescription_allowed": False,
             "blocked_reason": ["legacy_bridge_prescription_path_blocked"],
+            "final_status": final_status,
             "status": "ok",
         }
         print("[WS_SEND_DIAGNOSIS_RESULT_DEFAULT]", result)
@@ -1993,6 +1998,7 @@ async def handle_selection_answers(ws, pid: str, data: dict):
         "not_for_clinical_use": True,
         "formal_prescription_allowed": False,
         "candidate_only": True,
+        "final_status": final_status,
         "status": "ok",
     }
     print("[WS_SEND_DIAGNOSIS_RESULT_GUARDED]", {"legacy_dev_mode": True, "patient_id": pid})

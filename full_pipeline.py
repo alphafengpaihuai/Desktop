@@ -14,6 +14,81 @@ import pandas as pd
 from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass, field
 
+
+def _extract_m2_posterior_band(m2_result: Optional[Dict]) -> str:
+    if not m2_result:
+        return ""
+    band = m2_result.get("posterior_band")
+    if not band:
+        node = m2_result.get("selected_syndrome_node") or {}
+        trace = m2_result.get("syndrome_trace") or {}
+        band = node.get("posterior_band") or trace.get("posterior_band") or trace.get("confidence_band")
+    return str(band or "").strip().upper()
+
+
+def _extract_formula_intervention_match(m2_result: Optional[Dict]) -> str:
+    fic = (m2_result or {}).get("formula_intervention_check") or {}
+    return str(fic.get("formula_causal_match") or "").strip().upper()
+
+
+def _extract_m3_status(m3_result: Optional[Dict]) -> str:
+    if not m3_result:
+        return ""
+    return str(
+        m3_result.get("review_decision")
+        or m3_result.get("status")
+        or ""
+    ).strip().upper()
+
+
+def compute_final_status(
+    m2_result: Optional[Dict] = None,
+    m3_result: Optional[Dict] = None,
+    *,
+    m2_error: bool = False,
+    m3_error: bool = False,
+) -> str:
+    """聚合 M2/M3 输出为全流程 final_status（PASS / REVIEW / BLOCKED / ERROR）。"""
+    if m2_error or m3_error:
+        return "ERROR"
+    if isinstance(m2_result, dict) and m2_result.get("error"):
+        return "ERROR"
+    if isinstance(m3_result, dict) and m3_result.get("error"):
+        return "ERROR"
+
+    m2_no_candidate = bool((m2_result or {}).get("no_candidate")) or (
+        (m2_result or {}).get("status") == "NO_CANDIDATE"
+    )
+    if m2_no_candidate:
+        return "BLOCKED"
+
+    m3_status = _extract_m3_status(m3_result)
+    if m3_status == "BLOCKED":
+        return "BLOCKED"
+
+    if bool((m2_result or {}).get("need_human_review")):
+        return "REVIEW"
+
+    if _extract_m2_posterior_band(m2_result) == "LOW":
+        return "REVIEW"
+
+    fic_match = _extract_formula_intervention_match(m2_result)
+    if fic_match in ("QUESTION", "FAIL"):
+        return "REVIEW"
+
+    if m3_status == "NEED_REVIEW":
+        return "REVIEW"
+
+    if (
+        m3_status == "APPROVED"
+        and not (m2_result or {}).get("need_human_review")
+        and _extract_m2_posterior_band(m2_result) != "LOW"
+        and fic_match == "PASS"
+    ):
+        return "PASS"
+
+    return "REVIEW"
+
 os.environ['DEEPSEEK_API_KEY'] = 'sk-09562b1e562d480dacb33a1fe1fd8642'
 os.environ['GEMINI_API_KEY'] = 'AIzaSyDhHln47rXY_jqCgQbd8lZRf5HjdMfrj9o'
 
