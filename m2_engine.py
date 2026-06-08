@@ -1,27 +1,31 @@
 """
-M2 辨证选方引擎 v1 — 中医辅助诊疗系统「守一」
+M2 辨证选方引擎 — 中医辅助诊疗系统「守一」
 ================================================
-基于 M2_SOURCE_PROMPT.md 实现。
-核心原则：提示词驱动，LLM 深度参与，代码仅执行确定性规则。
+权威规格：docs/prompt_review/M2_skill_code_synced_for_review.md（Skill，source of truth）。
 
-# 真实 prompt 以本文件代码中的硬编码提示词为准
-# 已删除 prompts/m2/M2_CODE_REVERSE_PROMPT.md（该文件与代码脱节）
+核心原则：code-first 固定链路。证型/方剂/加减全部来自知识库，代码执行确定性规则；
+LLM 仅为可选增强且离线隔离（M2_DISABLE_LLM / 无 DEEPSEEK_API_KEY 时完全跳过）。
+
+固定链路（Skill §1）：
+  resolve_m2_disease_key → _load_syndromes → SymptomFactorLoader
+  → 双轨(Track1 _syndrome_scorer / Track2 _run_pathology_track) → _merge_dual_tracks
+  → resolve_cold_heat_conflict_by_pathology → run_m2_1 / run_m2_2 / run_m2_3
 """
 import os
 import json
 import re
-import time
 from typing import Dict, List, Optional
 
 from services.m2_symptom_factor_loader import SymptomFactorLoader
 
 
 class M2SyndromeSelector:
-    """M2 辨证选方模块
+    """M2 辨证选方模块（code-first 固定双轨链路）
 
     输入：M1 的 primary_disease + 患者临床信息
-    流程：LLM 单次调用 → 选证型 → 读绑定方剂 → 检索病案参考 → 药物加减控制
-    输出：证型 + 方剂 + herbs + 病案参考 + 加减建议
+    流程：disease_key 解析 → 锁定当前病证型池 → 症状证素证据 → 双轨辨证合并
+          → 寒热冲突病理裁决 → M2-1 辨证 / M2-2 候选方 / M2-3 加减候选
+    输出：selected_syndrome_node + 节点绑定方剂 + 节点内加减候选（candidate_only，须进 M3）
     """
 
     def __init__(self, kb_path: str = "data/m2_formula_knowledge.json",
@@ -1042,44 +1046,6 @@ class M2SyndromeSelector:
             "needs_manual_review": True,
         }
 
-    def _with_candidate_contract(self, result: Dict, primary_disease: str,
-                                 symptoms: List[str], input_trace: Dict) -> Dict:
-        selected = result.get("syndrome_differentiation", {}).get("selected_syndrome", {})
-        syndrome_name = selected.get("name", "")
-        reason = selected.get("reason", "") or selected.get("trigger", "") or "知识库证型匹配"
-        result["status"] = result.get("status", "PASS")
-        result["disease_key"] = result.get("disease_key", primary_disease)
-        result["candidate_only"] = True
-        result["need_m2_3"] = True
-        result["must_enter_m3"] = True
-        result["no_candidate"] = False
-        result["reverse_audit"] = {}
-        result["prescription_draft"] = True
-        result["formal_prescription_allowed"] = False
-        result["formula_candidates"] = [{
-            "disease_name": primary_disease,
-            "syndrome_name": syndrome_name,
-            "formula_name": result.get("formula", {}).get("name", ""),
-            "source": result.get("formula", {}).get("source", "data/m2_formula_knowledge.json"),
-        }] if result.get("formula", {}).get("name") else []
-        result["syndrome_trace"] = {
-            "syndrome_name": syndrome_name,
-            "evidence": [s for s in symptoms if isinstance(s, str) and s.strip()],
-            "reasoning_summary": reason,
-            "confidence": 0.7 if syndrome_name else 0.0,
-        }
-        result["evidence_trace"] = [
-            {"source": "patient_symptom", "text": s}
-            for s in symptoms if isinstance(s, str) and s.strip()
-        ]
-        result["input_trace"] = input_trace
-        result["modification_candidates"] = self._normalize_modification_candidates(
-            result.get("modifications", []),
-            primary_disease,
-            symptoms,
-        )
-        return result
-
     def _normalize_modification_candidates(self, modifications: List[Dict],
                                            disease_name: str,
                                            symptoms: List[str]) -> List[Dict]:
@@ -1879,92 +1845,6 @@ class M2SyndromeSelector:
 
         return matched[:3]
 
-    def _fetch_reference_case_from_llm(self, disease_name: str, syndrome_name: str,
-                                        patient_info: dict) -> Optional[dict]:
-        """当病案库中无匹配时，让 LLM 查询循证医学网站获取病案参考
-
-        规则：
-        - 只能查默沙东、PubMed 等循证来源
-        - 禁止编造病案
-        - 结果缓存到 case_cache
-        - 药物加减控制在 3 味左右
-        """
-        cache_key = f"{disease_name}|{syndrome_name}"
-
-        if cache_key in self.case_cache:
-            return self.case_cache[cache_key]
-
-        if not self._llm_available():
-            return None
-
-        symptom_text = ";".join(patient_info.get("symptoms", []) or [])[:200]
-
-        prompt_lines = [
-            '你是一个中医医学知识助手。你的任务是查找疾病 "' + disease_name + '" 合并证型 "' + syndrome_name + '" 的真实中医病案参考。',
-            '## 规则（严格遵循）',
-            '1. 你只能基于默沙东诊疗手册（MSD Manuals）、PubMed、中国知网（CNKI）、万方、维普等循证医学来源中的真实文献病案进行回答。',
-            '2. 严禁编造病案。如果找不到可靠信息，请如实说明。',
-            '3. 输出必须是严格的 JSON 格式，不得输出 Markdown。',
-            '## 患者当前情况（供参考）',
-            '症状：' + symptom_text,
-            '## 输出格式',
-            '{',
-            '  "disease_name": "西医病名",',
-            '  "syndrome_name": "证型名称",',
-            '  "formula_name": "方剂名称",',
-            '  "herbs": ["药1", "药2", "药3"],',
-            '  "modifications": [{"herb": "加味药名", "reason": "加减理由"}],',
-            '  "source": "参考来源描述",',
-            '  "key_points": "该病案的关键辨证要点"',
-            '}',
-            '如果确实找不到可靠信息，输出：{"disease_name": "", "syndrome_name": "", "formula_name": "", "herbs": [], "modifications": [], "source": "", "key_points": ""}',
-        ]
-        prompt = "\n".join(prompt_lines)
-
-        try:
-            from m1_engine import M1DiagnosisEngine
-            engine = M1DiagnosisEngine()
-            raw = engine._call_llm(prompt, temperature=0.1, max_tokens=600)
-        except Exception:
-            return None
-
-        if not raw:
-            return None
-
-        try:
-            m = re.search(r'\{.*\}', raw, re.DOTALL)
-            if m:
-                result = json.loads(m.group())
-            else:
-                return None
-        except (json.JSONDecodeError, AttributeError):
-            return None
-
-        if not result.get("herbs"):
-            return None
-
-        # 缓存
-        self.case_cache[cache_key] = result
-        try:
-            with open(self.case_cache_path, 'w', encoding='utf-8') as f:
-                json.dump(self.case_cache, f, ensure_ascii=False, indent=2)
-        except Exception:
-            pass
-
-        self.case_used_log.append({
-            "disease": disease_name,
-            "syndrome": syndrome_name,
-            "source": result.get("source", "llm_fetched"),
-            "fetched_at": time.strftime('%Y-%m-%d %H:%M:%S'),
-        })
-        try:
-            with open(self.case_used_log_path, 'w', encoding='utf-8') as f:
-                json.dump(self.case_used_log[-100:], f, ensure_ascii=False, indent=2)
-        except Exception:
-            pass
-
-        return result
-
     def _generate_modifications(self, disease_name: str, syndrome_name: str,
                                  base_herbs: list, cases: list,
                                  patient_info: dict) -> list:
@@ -2041,6 +1921,9 @@ class M2SyndromeSelector:
         return disease_data.get("syndromes", {})
 
     def _llm_available(self) -> bool:
+        # M2_DISABLE_LLM 环境变量可使 M2 跳过所有 LLM 调用（测试隔离用）
+        if os.environ.get("M2_DISABLE_LLM", "").strip() in ("1", "true", "yes"):
+            return False
         try:
             from m1_engine import M1DiagnosisEngine
             engine = M1DiagnosisEngine()
@@ -2049,6 +1932,8 @@ class M2SyndromeSelector:
             return False
 
     def _call_llm(self, prompt: str) -> Optional[str]:
+        if not self._llm_available():
+            return None
         try:
             from m1_engine import M1DiagnosisEngine
             engine = M1DiagnosisEngine()
@@ -2057,41 +1942,65 @@ class M2SyndromeSelector:
             print(f"[LLM_ERR] M2 _call_llm failed: {_e}")
             return None
 
-    def _fallback_full(self, primary_disease, syndromes, symptoms) -> Dict:
-        """完整兜底：代码匹配 + 病案检索"""
-        fallback = self._fallback_parse(syndromes, primary_disease, symptoms)
-        if not fallback:
-            return {
-                "primary_disease": primary_disease,
-                "error": "LLM + 代码兜底均无法得出辨证结果",
-                "needs_manual_review": True,
-            }
+    def _fallback_parse(self, syndromes: Dict, primary_disease: str,
+                        symptoms: List[str]) -> Optional[Dict]:
+        """代码兜底：LLM 解析失败时使用 _syndrome_scorer 选择证型。
 
-        selected_name = fallback["selected_syndrome"]["name"]
-        syndrome_data = syndromes.get(selected_name, {})
+        规则：
+        - 只在当前 disease_key 的 syndromes 内选择；
+        - 不调用 LLM；
+        - 不跨病名选证型；
+        - 不自造证型/方剂/药物；
+        - 若 scorer confidence >= 0.5，返回 scorer 结果；
+        - 若候选只有 1 个且 confidence < 0.5，返回 None；
+        - 若 contradiction_result 有 need_human_review，保留标记。
 
-        # 病案检索
-        cases = self._search_cases(primary_disease, selected_name)
+        Returns:
+            scorer 结果 dict，或 None（无法选出可靠证型时）
+        """
+        if not syndromes:
+            return None
 
-        return {
-            "primary_disease": primary_disease,
-            "syndrome_differentiation": {
-                "selected_syndrome": {
-                    "name": selected_name,
-                    "reason": fallback.get("reasoning", "代码兜底匹配"),
-                },
-                "differentiation_framework": fallback.get("differentiation_framework", "脏腑"),
-            },
-            "formula": {
-                "name": syndrome_data.get("formula_name", fallback.get("formula", {}).get("name", "")),
-                "herbs": syndrome_data.get("herbs", fallback.get("formula", {}).get("herbs", [])),
-                "source": "data/m2_formula_knowledge.json （代码兜底）",
-            },
-            "modifications": [],
-            "case_references": cases,
-            "needs_manual_review": True,
-            "missing_info": [],
+        # 构造最小 patient_info
+        patient_info = {
+            "symptoms": symptoms or [],
+            "signs": [],
+            "tongue": "",
+            "pulse": "",
+            "cold_heat": [],
+            "stool_urine": [],
+            "sleep": [],
+            "appetite": [],
+            "labs": [],
+            "imaging": [],
+            "age": "",
+            "weight": "",
         }
+
+        scorer_result = self._syndrome_scorer(primary_disease, syndromes, patient_info)
+        if not scorer_result:
+            return None
+
+        confidence = scorer_result.get("confidence", 0.0)
+        selected = scorer_result.get("selected_syndrome", {})
+        candidate_scores = scorer_result.get("candidate_scores", [])
+
+        if not selected.get("name"):
+            return None
+
+        # 若 confidence >= 0.5，直接返回
+        if confidence >= 0.5:
+            return scorer_result
+
+        # 若候选只有 1 个且 confidence < 0.5，不可靠，返回 None
+        if len(candidate_scores) <= 1:
+            return None
+
+        # 多个候选但 confidence < 0.5：返回 scorer 但标记需人工复核
+        scorer_result["needs_manual_review"] = True
+        if "need_human_review" not in scorer_result:
+            scorer_result["need_human_review"] = True
+        return scorer_result
 
     def _syndrome_scorer(self, primary_disease: str, syndromes: Dict,
                          patient_info: Dict) -> Optional[Dict]:

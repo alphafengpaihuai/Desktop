@@ -472,6 +472,54 @@ class TestM2SpecBoundaries(unittest.TestCase):
         )
         self.assertEqual(merged.get("status"), "CONFLICT")
 
+    # ═══════════════════════════════════════════════════════
+    #  _fallback_parse 测试
+    # ═══════════════════════════════════════════════════════
+
+    def test_fallback_parse_returns_scorer_result_when_high_confidence(self):
+        """_fallback_parse 在 scorer confidence >= 0.5 时返回 scorer 结果"""
+        syndromes = {
+            "邪犯肺卫（风热）": {"trigger": "发热，咳嗽，痰黄，口干", "formula_name": "桑菊饮"},
+            "痰热壅肺": {"trigger": "咳嗽，咳痰黄稠，高热，胸痛", "formula_name": "麻杏石甘汤"},
+        }
+        symptoms = ["发热", "咳嗽", "痰黄", "口干"]
+        result = self.m2._fallback_parse(syndromes, "肺炎", symptoms)
+        self.assertIsNotNone(result)
+        self.assertIn("selected_syndrome", result)
+        self.assertIn("name", result["selected_syndrome"])
+        self.assertIn("reason", result["selected_syndrome"])
+
+    def test_fallback_parse_returns_none_when_empty_syndromes(self):
+        """空证型池时返回 None"""
+        result = self.m2._fallback_parse({}, "肺炎", ["咳嗽"])
+        self.assertIsNone(result)
+
+    def test_fallback_parse_does_not_cross_disease_key(self):
+        """_fallback_parse 不跨病名选证型"""
+        # 模拟一个只有 "肺炎" 证型池的场景
+        syndromes = {
+            "邪犯肺卫（风寒）": {"trigger": "恶寒，发热，无汗，痰白清稀", "formula_name": "三拗汤"},
+        }
+        symptoms = ["恶寒", "发热", "无汗", "痰白清稀"]
+        result = self.m2._fallback_parse(syndromes, "肺炎", symptoms)
+        self.assertIsNotNone(result)
+        name = result["selected_syndrome"]["name"]
+        self.assertIn(name, syndromes)  # 必须在证型池内
+        # 验证不会跨病名（如不应返回"痢疾"的证型）
+        self.assertEqual(name, "邪犯肺卫（风寒）")
+
+    def test_fallback_parse_no_llm_call(self):
+        """_fallback_parse 不调用 LLM"""
+        syndromes = {
+            "邪犯肺卫（风热）": {"trigger": "发热，咳嗽，痰黄", "formula_name": "桑菊饮"},
+        }
+        # 即使 DEEPSEEK_API_KEY 有值，fallback_parse 也不应调用 LLM
+        result = self.m2._fallback_parse(syndromes, "肺炎", ["发热", "咳嗽"])
+        self.assertIsNotNone(result)
+        # 验证结果来自 scorer，而非 LLM
+        reason = result["selected_syndrome"].get("reason", "")
+        self.assertIn("证型评分器", reason)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -4,8 +4,7 @@
 
 M2 完成辨证选方后，自动触发病案检索：
 
-1. **必选**：基于辨出的 `disease_name + syndrome_name` 检索病案参考库
-2. **可选**：当内置病案库无匹配时，LLM 查询循证医学网站获取病案参考
+1. **必选**：基于辨出的 `disease_name + syndrome_name` 检索病案参考库（本地知识库，code-first，不调用 LLM）
 
 ## 病案检索流程
 
@@ -18,12 +17,7 @@ M2 process() 完成辨证选方
   |     |     +-- 病名匹配：disease
   |     |     +-- 部分匹配：disease 子串
   |     |     +-- 最多 3 条
-  |     |
-  |     +-- 若库中无匹配：
-  |           +-- _fetch_reference_case_from_llm()
-  |                 +-- 查循证医学网站（默沙东、PubMed、CNKI等）
-  |                 +-- 结果缓存到 case_cache.json
-  |                 +-- 记录到 case_used_log.json
+  |     |     +-- 库中无匹配时返回空（不再 LLM 查网，已与固定链路对齐）
   |
   +-- Step 7: 药物加减控制
   |     +-- _generate_modifications()
@@ -74,7 +68,7 @@ M2 新增两个输出字段：
 1. 加减药物 **必须** 来自参考病案的 modifications 字段
 2. 加减药物 **不能** 与 base_herbs 重复
 3. **总计 <= 3 味**
-4. 无病案参考或 LLM 不可用时，modifications 为空数组
+4. 无病案参考时，modifications 为空数组
 5. 禁止模型自由创造加减药物
 
 ## 后续所有修改遵循的规则
@@ -82,5 +76,4 @@ M2 新增两个输出字段：
 1. **先按病名匹配，再按证型匹配**：检索病案时，病名权重最高
 2. **选择 1-3 个病案**：用于参考辨证和用药方案
 3. **药物加减控制在 3 味左右**：不能超过 3 味
-4. **循证来源优先**：LLM 查询时只能查默沙东、PubMed、CNKI 等
-5. **缓存优先**：已查过的病案不再重复查询
+4. **本地知识库优先**：病案来源为 `data/m2_case_reference.json` / `data/m2_case_cache.json`（code-first，不调用 LLM）
