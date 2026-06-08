@@ -1,0 +1,246 @@
+{
+  "metadata": {
+    "source_file": "症状证素表_互斥设计版.xlsx",
+    "actual_file": "症状证素表.xlsx",
+    "notes": "Sheet '症状反证规则' not found. Built from clinical TCM rules."
+  },
+  "strong_support_rules": [
+    {
+      "name": "痰热壅肺证据组合",
+      "symptom_pattern": {
+        "must_include": [
+          "黄痰",
+          "黄绿痰",
+          "黄稠痰"
+        ],
+        "must_include_tongue": [
+          "苔黄",
+          "黄腻"
+        ],
+        "must_include_other": [
+          "口干",
+          "口苦"
+        ]
+      },
+      "condition": "pattern_2_of_3",
+      "strong_support_factors": [
+        "热",
+        "痰",
+        "肺",
+        "湿"
+      ],
+      "penalty_syndromes": [
+        "风寒",
+        "风热",
+        "寒饮",
+        "阳虚",
+        "气虚"
+      ],
+      "logical": "黄痰/黄绿痰/黄稠痰 + 舌红苔黄腻/苔黄腻 + 口苦/口干 → 强支持痰热壅肺，不得选表证"
+    },
+    {
+      "name": "寒饮证据组合",
+      "symptom_pattern": {
+        "must_include": [
+          "痰白清稀",
+          "白痰"
+        ],
+        "must_include_tongue": [
+          "苔白",
+          "舌淡"
+        ],
+        "must_include_other": [
+          "怕冷",
+          "畏寒"
+        ]
+      },
+      "condition": "pattern_2_of_3",
+      "strong_support_factors": [
+        "寒",
+        "痰",
+        "肺",
+        "饮"
+      ],
+      "penalty_syndromes": [
+        "热",
+        "阴虚",
+        "风热"
+      ],
+      "logical": "痰白清稀 + 苔白/舌淡 + 怕冷 → 强支持寒饮"
+    },
+    {
+      "name": "湿热证据组合",
+      "symptom_pattern": {
+        "must_include": [
+          "苔黄腻",
+          "苔黄"
+        ],
+        "must_include_tongue": [],
+        "must_include_other": [
+          "口干口苦",
+          "口苦",
+          "大便黏滞",
+          "大便不爽"
+        ]
+      },
+      "condition": "pattern_2_of_3",
+      "strong_support_factors": [
+        "热",
+        "湿",
+        "脾"
+      ],
+      "penalty_syndromes": [
+        "寒",
+        "阴虚"
+      ],
+      "logical": "苔黄腻 + 口苦/大便黏滞 → 强支持湿热"
+    },
+    {
+      "name": "阴虚证据组合",
+      "symptom_pattern": {
+        "must_include": [
+          "盗汗",
+          "五心烦热"
+        ],
+        "must_include_tongue": [
+          "舌红",
+          "少苔",
+          "无苔"
+        ],
+        "must_include_other": [
+          "口干",
+          "咽干"
+        ]
+      },
+      "condition": "pattern_2_of_3",
+      "strong_support_factors": [
+        "阴虚",
+        "热",
+        "津亏"
+      ],
+      "penalty_syndromes": [
+        "阳虚",
+        "寒",
+        "痰"
+      ],
+      "logical": "盗汗 + 舌红少苔 + 口干 → 强支持阴虚"
+    }
+  ],
+  "single_symptom_rules": [
+    {
+      "symptom": "黄痰",
+      "strong_factors": [
+        "热",
+        "痰"
+      ],
+      "against_factors": [
+        "寒"
+      ]
+    },
+    {
+      "symptom": "黄绿痰",
+      "strong_factors": [
+        "热",
+        "痰",
+        "肺"
+      ],
+      "against_factors": [
+        "寒"
+      ]
+    },
+    {
+      "symptom": "黄稠痰",
+      "strong_factors": [
+        "热",
+        "痰"
+      ],
+      "against_factors": [
+        "寒"
+      ]
+    },
+    {
+      "symptom": "痰白清稀",
+      "strong_factors": [
+        "寒",
+        "痰"
+      ],
+      "against_factors": [
+        "热"
+      ]
+    },
+    {
+      "symptom": "舌红苔黄腻",
+      "strong_factors": [
+        "热",
+        "痰",
+        "湿"
+      ],
+      "against_factors": [
+        "寒"
+      ]
+    },
+    {
+      "symptom": "口苦",
+      "strong_factors": [
+        "热"
+      ],
+      "against_factors": []
+    },
+    {
+      "symptom": "口干",
+      "strong_factors": [
+        "热",
+        "津亏"
+      ],
+      "against_factors": []
+    },
+    {
+      "symptom": "苔白",
+      "strong_factors": [
+        "寒"
+      ],
+      "against_factors": [
+        "热"
+      ]
+    },
+    {
+      "symptom": "舌淡",
+      "strong_factors": [
+        "寒",
+        "气虚",
+        "血虚"
+      ],
+      "against_factors": [
+        "热"
+      ]
+    },
+    {
+      "symptom": "怕冷",
+      "strong_factors": [
+        "寒",
+        "阳虚"
+      ],
+      "against_factors": [
+        "热"
+      ]
+    },
+    {
+      "symptom": "恶寒",
+      "strong_factors": [
+        "表",
+        "寒"
+      ],
+      "against_factors": []
+    },
+    {
+      "symptom": "发热",
+      "strong_factors": [
+        "热",
+        "表"
+      ],
+      "against_factors": [
+        "寒"
+      ]
+    }
+  ]
+}

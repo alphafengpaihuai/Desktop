@@ -1,0 +1,207 @@
+{
+  "metadata": {
+    "source_file": "症状证素表_互斥设计版.xlsx",
+    "actual_file": "症状证素表.xlsx",
+    "hard_mutual_exclusion_pairs": "证素互斥矩阵（临床规则）",
+    "notes": "Sheet '证素互斥矩阵' not found in source Excel. Built from clinical TCM rules."
+  },
+  "hard_conflicts": [
+    {
+      "factor_a": "寒",
+      "factor_b": "热",
+      "reason": "寒热互斥"
+    },
+    {
+      "factor_a": "虚",
+      "factor_b": "实",
+      "reason": "虚实互斥"
+    },
+    {
+      "factor_a": "燥",
+      "factor_b": "湿",
+      "reason": "燥湿互斥"
+    },
+    {
+      "factor_a": "血热",
+      "factor_b": "血寒",
+      "reason": "血寒热互斥"
+    },
+    {
+      "factor_a": "阳虚",
+      "factor_b": "阴虚",
+      "reason": "阴阳互斥"
+    },
+    {
+      "factor_a": "亡阳",
+      "factor_b": "亡阴",
+      "reason": "亡阳亡阴互斥"
+    },
+    {
+      "factor_a": "阳亢",
+      "factor_b": "气陷",
+      "reason": "升降互斥"
+    },
+    {
+      "factor_a": "表",
+      "factor_b": "里",
+      "reason": "表里互斥，同病不可兼夹"
+    },
+    {
+      "factor_a": "寒",
+      "factor_b": "血热",
+      "reason": "寒热互斥"
+    },
+    {
+      "factor_a": "血寒",
+      "factor_b": "热",
+      "reason": "寒热互斥"
+    }
+  ],
+  "soft_conflicts": [
+    {
+      "factor_a": "气滞",
+      "factor_b": "气陷",
+      "reason": "气机升降失常，可兼夹但需明确主次"
+    },
+    {
+      "factor_a": "饮",
+      "factor_b": "燥",
+      "reason": "饮为水湿停聚，燥为津液不足，性质相左"
+    },
+    {
+      "factor_a": "表",
+      "factor_b": "血瘀",
+      "reason": "表证以卫分为主，血瘀在血分，非同层面"
+    },
+    {
+      "factor_a": "阳亢",
+      "factor_b": "气虚",
+      "reason": "阳亢多伴阴虚或火旺，与单纯气虚不同路径"
+    }
+  ],
+  "allow_mixed": [
+    {
+      "factors": [
+        "寒",
+        "痰"
+      ],
+      "reason": "寒痰常相兼"
+    },
+    {
+      "factors": [
+        "热",
+        "痰"
+      ],
+      "reason": "热痰常相兼"
+    },
+    {
+      "factors": [
+        "湿",
+        "热"
+      ],
+      "reason": "湿热常相兼"
+    },
+    {
+      "factors": [
+        "寒",
+        "湿"
+      ],
+      "reason": "寒湿常相兼"
+    },
+    {
+      "factors": [
+        "虚",
+        "寒"
+      ],
+      "reason": "虚寒常相兼"
+    },
+    {
+      "factors": [
+        "虚",
+        "热"
+      ],
+      "reason": "虚热/阴虚火旺常相兼"
+    },
+    {
+      "factors": [
+        "阴虚",
+        "热"
+      ],
+      "reason": "阴虚则热"
+    },
+    {
+      "factors": [
+        "阳虚",
+        "寒"
+      ],
+      "reason": "阳虚则寒"
+    },
+    {
+      "factors": [
+        "气滞",
+        "血瘀"
+      ],
+      "reason": "气滞血瘀常相兼"
+    },
+    {
+      "factors": [
+        "气虚",
+        "血虚"
+      ],
+      "reason": "气血两虚常相兼"
+    },
+    {
+      "factors": [
+        "痰",
+        "湿"
+      ],
+      "reason": "痰湿常相兼"
+    },
+    {
+      "factors": [
+        "风",
+        "热"
+      ],
+      "reason": "风热常相兼"
+    },
+    {
+      "factors": [
+        "风",
+        "寒"
+      ],
+      "reason": "风寒常相兼"
+    },
+    {
+      "factors": [
+        "痰",
+        "热",
+        "肺"
+      ],
+      "reason": "痰热壅肺"
+    },
+    {
+      "factors": [
+        "寒",
+        "痰",
+        "肺"
+      ],
+      "reason": "寒痰阻肺"
+    },
+    {
+      "factors": [
+        "湿",
+        "热",
+        "脾"
+      ],
+      "reason": "湿热蕴脾"
+    },
+    {
+      "factors": [
+        "寒",
+        "湿",
+        "脾"
+      ],
+      "reason": "寒湿困脾"
+    }
+  ]
+}
