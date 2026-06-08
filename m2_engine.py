@@ -76,6 +76,19 @@ _M2_WEAK_EVIDENCE_KEYWORDS = [
     "纳差", "纳呆", "食少", "消瘦",
 ]
 
+# 慢性气阴两虚证型：急性一周病程不得仅凭口干/咽痛推定
+_M2_CHRONIC_YIN_DEFICIENCY_KEYS = frozenset({"气阴两虚", "阴虚咳嗽"})
+_M2_CHRONIC_YIN_EVIDENCE = (
+    "干咳少痰", "少苔", "脉细数", "久咳", "咽干", "自汗", "盗汗",
+    "手足心热", "日久", "缠绵", "干咳无痰", "痰少而黏",
+)
+_M2_ACUTE_COURSE_MARKERS = (
+    "咳嗽一周", "一周", "3天", "十天", "急性", "咳嗽频", "夜间咳嗽", "晚上咳嗽",
+)
+_M2_STRONG_HEAT_VIOLATIONS = frozenset({
+    "苔黄腻", "黄痰", "黄绿痰", "黄稠痰", "高热", "舌红绛", "壮热",
+})
+
 
 class M2SyndromeSelector:
     """M2 辨证选方模块（code-first 固定双轨链路）
@@ -307,6 +320,77 @@ class M2SyndromeSelector:
         # 6. 找不到，返回原始名，调用方处理 no_candidate
         return name
 
+    @staticmethod
+    def _clinical_text_for_conflict(
+        symptoms: Optional[List[str]] = None,
+        signs: Optional[List[str]] = None,
+        labs: Optional[List[str]] = None,
+        imaging: Optional[List[str]] = None,
+        negative_findings: Optional[List[str]] = None,
+        primary_disease: str = "",
+    ) -> str:
+        return " ".join(
+            str(p).strip()
+            for p in (
+                primary_disease,
+                " ".join(symptoms or []),
+                " ".join(signs or []),
+                " ".join(labs or []),
+                " ".join(imaging or []),
+                " ".join(negative_findings or []),
+            )
+            if p and str(p).strip()
+        )
+
+    @staticmethod
+    def _is_rhinitis_disease_key(disease_key: str) -> bool:
+        if not disease_key:
+            return False
+        return any(k in disease_key for k in ("鼻炎", "过敏性鼻炎", "变应性鼻炎"))
+
+    def _count_bronchitis_conflict_signals(self, text: str, primary_disease: str = "") -> int:
+        count = 0
+        if not text:
+            return 0
+        if "支气管炎" in text or "急性支气管炎" in (primary_disease or ""):
+            count += 1
+        if "咳嗽" in text and any(k in text for k in ("一周", "3天", "十天", "夜间", "晚上", "频繁")):
+            count += 1
+        if any(k in text for k in ("双肺呼吸音粗", "呼吸音粗", "呼粗", "啰音", "肺部体征")):
+            count += 1
+        if "输液" in text and any(k in text for k in ("无效", "无明显缓解", "未缓解", "无缓解")):
+            count += 1
+        if ("咽痛" in text or "咽痒" in text) and "咳嗽" in text:
+            count += 1
+        return count
+
+    def _check_disease_key_conflict(
+        self,
+        primary_disease: str,
+        resolved_disease_key: str,
+        symptoms: Optional[List[str]] = None,
+        signs: Optional[List[str]] = None,
+        labs: Optional[List[str]] = None,
+        imaging: Optional[List[str]] = None,
+        negative_findings: Optional[List[str]] = None,
+    ) -> Dict:
+        if not self._is_rhinitis_disease_key(resolved_disease_key):
+            return {"disease_key_conflict": False}
+        text = self._clinical_text_for_conflict(symptoms, signs, labs, imaging, negative_findings, primary_disease)
+        signal_count = self._count_bronchitis_conflict_signals(text, primary_disease)
+        if signal_count < 2:
+            return {"disease_key_conflict": False}
+        fallback_key = self.resolve_m2_disease_key("急性支气管炎")
+        if not self._load_syndromes(fallback_key):
+            fallback_key = self.resolve_m2_disease_key("支气管炎")
+        return {
+            "disease_key_conflict": True,
+            "need_human_review": True,
+            "conflict_reason": f"鼻炎入口与支气管炎强信号冲突（signals={signal_count}）",
+            "fallback_disease_key": fallback_key,
+            "blocked_rhinitis_key": resolved_disease_key,
+        }
+
     def process(
         self,
         primary_disease: str,
@@ -325,8 +409,49 @@ class M2SyndromeSelector:
         weight: str = "",
     ) -> Dict:
         """兼容入口：内部串联 M2-1 辨证 trace 与 M2-2 候选方合同。"""
-        m2_1 = self.run_m2_1_syndrome_reasoning(
+        resolved_key = self.resolve_m2_disease_key(primary_disease)
+        conflict = self._check_disease_key_conflict(
             primary_disease=primary_disease,
+            resolved_disease_key=resolved_key,
+            symptoms=symptoms,
+            signs=signs,
+            labs=labs,
+            imaging=imaging,
+            negative_findings=negative_findings,
+        )
+        effective_primary = primary_disease
+        conflict_meta = {}
+        if conflict.get("disease_key_conflict"):
+            fallback_key = conflict.get("fallback_disease_key", "")
+            if fallback_key and self._load_syndromes(fallback_key):
+                effective_primary = fallback_key
+                conflict_meta = {
+                    "disease_key_conflict": True,
+                    "need_human_review": True,
+                    "conflict_reason": conflict.get("conflict_reason", ""),
+                    "blocked_rhinitis_key": conflict.get("blocked_rhinitis_key", ""),
+                    "rerouted_to": fallback_key,
+                }
+                print(f"[M2_DISEASE_KEY_CONFLICT] {resolved_key} -> {fallback_key}")
+            else:
+                blocked = self._strip_forbidden_prescription_fields({
+                    "primary_disease": primary_disease,
+                    "status": "NO_CANDIDATE",
+                    "stage": "M2",
+                    "disease_key": resolved_key,
+                    "disease_key_conflict": True,
+                    "need_human_review": True,
+                    "no_candidate": True,
+                    "candidate_only": True,
+                    "must_enter_m3": True,
+                    "formal_prescription_allowed": False,
+                    "conflict_reason": conflict.get("conflict_reason", ""),
+                    "blocked_rhinitis_key": conflict.get("blocked_rhinitis_key", ""),
+                })
+                return blocked
+
+        m2_1 = self.run_m2_1_syndrome_reasoning(
+            primary_disease=effective_primary,
             symptoms=symptoms,
             signs=signs,
             tongue=tongue,
@@ -341,11 +466,30 @@ class M2SyndromeSelector:
             age=age,
             weight=weight,
         )
+        if conflict_meta:
+            m2_1.update(conflict_meta)
+            m2_1["need_human_review"] = True
+            syndrome_name = (m2_1.get("syndrome_trace") or {}).get("syndrome_name", "")
+            formula_name = (m2_1.get("bound_formula") or {}).get("formula_name", "")
+            if syndrome_name == "肺脾气虚" or formula_name == "补中益气汤":
+                return self._strip_forbidden_prescription_fields({
+                    "primary_disease": primary_disease,
+                    "status": "NO_CANDIDATE",
+                    "stage": "M2",
+                    "disease_key": resolved_key,
+                    **conflict_meta,
+                    "no_candidate": True,
+                    "candidate_only": True,
+                    "must_enter_m3": True,
+                    "formal_prescription_allowed": False,
+                    "blocked_syndrome": syndrome_name,
+                    "blocked_formula": formula_name,
+                })
         if m2_1.get("status") == "NO_CANDIDATE":
             return m2_1
 
         m2_2 = self.run_m2_2_formula_candidates(
-            primary_disease=primary_disease,
+            primary_disease=effective_primary,
             syndrome_trace=m2_1.get("syndrome_trace", {}),
             symptoms=symptoms or [],
         )
@@ -360,31 +504,53 @@ class M2SyndromeSelector:
             "herbs": first_candidate.get("herbs", []),
             "source": first_candidate.get("source", "data/m2_formula_knowledge.json"),
         }
+        syndrome_display = (
+            m2_1.get("syndrome_trace", {}).get("syndrome_name", "")
+            or m2_1.get("selected_syndrome_key", "")
+        )
+        combined_symptoms = list(symptoms or []) + list(signs or [])
+        if tongue:
+            combined_symptoms.append(tongue)
+        m2_3 = self.run_m2_3_modification_candidates(
+            primary_disease=effective_primary if conflict_meta else primary_disease,
+            formula_herbs=formula.get("herbs", []),
+            symptoms=combined_symptoms,
+            syndrome_name=syndrome_display,
+        )
+        modifications = m2_3.get("modification_candidates") or []
         cases = self._search_cases(primary_disease, m2_1.get("selected_syndrome_key", ""))
-        patient_info = {
-            "symptoms": symptoms or [],
-            "signs": signs or [],
-            "tongue": tongue,
-            "pulse": pulse,
-            "cold_heat": cold_heat or [],
-            "stool_urine": stool_urine or [],
-            "sleep": sleep or [],
-            "appetite": appetite or [],
-            "labs": labs or [],
-            "imaging": imaging or [],
-            "negative_findings": negative_findings or [],
-            "age": age,
-            "weight": weight,
-        }
-        modifications = self._generate_modifications(
-            primary_disease,
-            m2_1.get("selected_syndrome_key", ""),
-            formula.get("herbs", []),
-            cases,
-            patient_info,
+        if not modifications and self._llm_available():
+            patient_info = {
+                "symptoms": symptoms or [],
+                "signs": signs or [],
+                "tongue": tongue,
+                "pulse": pulse,
+                "cold_heat": cold_heat or [],
+                "stool_urine": stool_urine or [],
+                "sleep": sleep or [],
+                "appetite": appetite or [],
+                "labs": labs or [],
+                "imaging": imaging or [],
+                "negative_findings": negative_findings or [],
+                "age": age,
+                "weight": weight,
+            }
+            modifications = self._generate_modifications(
+                primary_disease,
+                m2_1.get("selected_syndrome_key", ""),
+                formula.get("herbs", []),
+                cases,
+                patient_info,
+            )
+        _selected_node = m2_1.get("selected_syndrome_node") or {}
+        _posterior_band = (
+            _selected_node.get("posterior_band")
+            or (m2_1.get("syndrome_trace") or {}).get("posterior_band")
+            or _selected_node.get("confidence_band")
+            or (m2_1.get("syndrome_trace") or {}).get("confidence_band")
         )
         result = {
-            "primary_disease": primary_disease,
+            "primary_disease": effective_primary if conflict_meta else primary_disease,
             "status": "PASS",
             "stage": "M2",
             "disease_key": m2_1.get("input_trace", {}).get("resolved_m2_key", ""),
@@ -424,13 +590,22 @@ class M2SyndromeSelector:
             "syndrome_trace": m2_1.get("syndrome_trace", {}),
             "evidence_trace": m2_1.get("evidence_trace", []),
             "input_trace": m2_1.get("input_trace", {}),
+            "selected_syndrome_node": _selected_node,
+            "posterior_band": _posterior_band,
+            "formula_intervention_check": m2_1.get("formula_intervention_check", {}),
             "reverse_audit": {},
             "needs_manual_review": self._is_high_risk_disease(primary_disease),
             "formal_prescription_allowed": False,
             "prescription_draft": True,
             "missing_key": "",
-            "need_human_review": False,
+            "need_human_review": bool(
+                m2_1.get("need_human_review")
+                or (conflict_meta.get("need_human_review") if conflict_meta else False)
+            ),
         }
+        if conflict_meta:
+            result.update(conflict_meta)
+            result["need_human_review"] = True
         return self._strip_forbidden_prescription_fields(result)
 
     def _strip_forbidden_prescription_fields(self, value):
@@ -860,6 +1035,7 @@ class M2SyndromeSelector:
                 "syndrome_name": syndrome_display,
                 "confidence": confidence,
                 "confidence_band": confidence_band,
+                "posterior_band": (_cand_by_key.get(selected_key, {}).get("posterior_band") or confidence_band),
                 "matched_symptoms": matched_symptoms[:6],
                 "matched_pathology": matched_pathology,
                 "matched_tongue_pulse": matched_tongue_pulse,
@@ -987,6 +1163,14 @@ class M2SyndromeSelector:
                 searched_terms=[primary_disease, syndrome_name, selected_key],
                 input_trace=input_trace,
             ))
+        if not herbs:
+            return self._strip_forbidden_prescription_fields(self._build_no_candidate(
+                primary_disease=primary_disease,
+                reason=f"证型 '{selected_key}' 绑定方剂 '{formula_name}' 药味为空，不得作为可放行候选",
+                missing_key=selected_key,
+                searched_terms=[primary_disease, syndrome_name, selected_key, formula_name],
+                input_trace=input_trace,
+            ))
 
         name_match = re.search(r'<(.+?)>', str(syndrome_data.get("trigger", "")))
         display = syndrome_name or (name_match.group(1) if name_match else selected_key)
@@ -1034,10 +1218,15 @@ class M2SyndromeSelector:
             "stage": "M2_3",
         }
 
-        # ── 策略1：知识库内显式加减规则（临床加减） ──
-        explicit_additions = self._load_explicit_modifications(resolved_disease, syndrome_name)
-        # ── 策略2：循证病案库查询 ──
-        case_modifications = self._load_case_modifications(resolved_disease, syndrome_name)
+        # ── 策略1：知识库内显式加减规则（clinical_modifications） ──
+        patient_text = " ".join(symptoms or [])
+        explicit_additions = self._load_explicit_modifications(
+            resolved_disease, syndrome_name, symptoms=symptoms, patient_text=patient_text,
+        )
+        # ── 策略2：循证病案库查询（节点规则已命中时不整方替换） ──
+        case_modifications = []
+        if not explicit_additions:
+            case_modifications = self._load_case_modifications(resolved_disease, syndrome_name)
         # ── 策略3：症状-药物映射（herb_kb） ──
         herb_kb_modifications = self._load_herb_kb_modifications(resolved_disease, symptoms)
 
@@ -1065,6 +1254,8 @@ class M2SyndromeSelector:
                     "western_pathology": item.get("western_pathology") or item.get("western_pathology_target") or "symptom_targeted_support",
                     "evidence_sources": evidence,
                     "matched_reason": item.get("reason") or item.get("matched_reason") or src_label,
+                    "matched_rule": item.get("matched_rule") or item.get("reason") or src_label,
+                    "source": item.get("source") or ("node_clinical_modifications" if src_label == "显式加减规则" else src_label),
                     "must_enter_m3": True,
                     "stage": "M2_3",
                 })
@@ -1114,42 +1305,84 @@ class M2SyndromeSelector:
             "needs_manual_review": self._is_high_risk_disease(primary_disease),
         }
 
-    def _load_explicit_modifications(self, disease_name: str, syndrome_name: str) -> List[Dict]:
-        """从知识库加载显式加减规则（临床加减）"""
+    def _load_explicit_modifications(
+        self,
+        disease_name: str,
+        syndrome_name: str,
+        symptoms: Optional[List[str]] = None,
+        patient_text: str = "",
+    ) -> List[Dict]:
+        """从知识库加载显式加减规则（clinical_modifications / 临床加减）。"""
         disease_data = self.kb.get(disease_name, {})
         if not disease_data:
             return []
-        # 证型级加减
         syndrome_key = syndrome_name
         if syndrome_key not in disease_data.get("syndromes", {}):
-            # 尝试按 trigger 匹配
             for key, data in disease_data.get("syndromes", {}).items():
                 if syndrome_name and (syndrome_name == key or syndrome_name in str(data.get("trigger", ""))):
                     syndrome_key = key
                     break
         syndrome_data = disease_data.get("syndromes", {}).get(syndrome_key, {})
-        modifications = syndrome_data.get("临床加减", [])
+        modifications = syndrome_data.get("clinical_modifications") or syndrome_data.get("临床加减") or []
         if not modifications:
-            # 尝试 full_decoction 提取
             full = syndrome_data.get("full_decoction", "")
             if full:
                 modifications = self._parse_modifications_from_decoction(full)
+
+        match_text = (patient_text or " ".join(symptoms or [])).lower()
+        _mod_symptom_aliases = {
+            "咽痛": ("咽痛", "咽痒", "咽喉", "咽喉肿痛", "声音嘶哑"),
+            "咽痒": ("咽痒", "咽痛", "咽喉"),
+            "口干": ("口干", "口燥", "口苦"),
+            "口苦": ("口苦", "口干", "郁热"),
+            "鼻塞": ("鼻塞", "鼻音", "流涕", "喷嚏"),
+            "苔白腻": ("苔白腻", "苔腻", "痰多", "胸闷"),
+            "痰多": ("痰多", "苔腻", "苔白腻", "咳嗽"),
+            "舌暗红": ("舌暗红", "舌红", "舌质红"),
+        }
         result = []
         for mod in (modifications or []):
             if isinstance(mod, str):
+                herb = mod.strip()
+                if not herb:
+                    continue
                 result.append({
-                    "herb_name": mod,
+                    "herb_name": herb,
                     "reason": "知识库临床加减",
-                    "source": f"data/m2_formula_knowledge.json/{disease_name}/syndromes/{syndrome_key}/临床加减",
+                    "target_symptom": "",
+                    "matched_rule": herb,
+                    "source": "node_clinical_modifications",
                 })
-            elif isinstance(mod, dict):
-                result.append({
-                    "herb_name": mod.get("herb", mod.get("herb_name", "")),
-                    "reason": mod.get("reason", "知识库临床加减"),
-                    "target_symptom": mod.get("target_symptom", ""),
-                    "western_pathology": mod.get("western_pathology", ""),
-                    "source": f"data/m2_formula_knowledge.json/{disease_name}/syndromes/{syndrome_key}/临床加减",
-                })
+                continue
+            if not isinstance(mod, dict):
+                continue
+            herb = (mod.get("herb") or mod.get("herb_name") or "").strip()
+            if not herb:
+                continue
+            reason = mod.get("reason", "")
+            target = mod.get("target_symptom") or mod.get("matched_symptom") or reason
+            rule_text = " ".join(filter(None, [target, reason, herb])).lower()
+            if match_text and rule_text:
+                tokens = [t for t in re.split(r"[，,、；;\s]+", rule_text) if len(t) >= 2]
+                direct_hit = any(t in match_text for t in tokens)
+                alias_hit = False
+                if not direct_hit:
+                    for token in tokens:
+                        for alias_group in _mod_symptom_aliases.values():
+                            if token in alias_group:
+                                alias_hit = any(a in match_text for a in alias_group)
+                                break
+                        if alias_hit:
+                            break
+                if tokens and not direct_hit and not alias_hit:
+                    continue
+            result.append({
+                "herb_name": herb,
+                "reason": reason or "知识库临床加减",
+                "target_symptom": target,
+                "matched_rule": target or reason,
+                "source": "node_clinical_modifications",
+            })
         return result
 
     def _parse_modifications_from_decoction(self, full_decoction: str) -> List[Dict]:
@@ -1280,7 +1513,7 @@ class M2SyndromeSelector:
         for item in modifications or []:
             if not isinstance(item, dict):
                 continue
-            herb = item.get("herb", "")
+            herb = item.get("herb") or item.get("herb_name") or ""
             if not herb:
                 continue
             evidence = item.get("source") or item.get("evidence_sources") or "case_reference_or_herb_kb"
@@ -1288,12 +1521,15 @@ class M2SyndromeSelector:
                 evidence = [evidence]
             normalized.append({
                 "herb": herb,
+                "herb_name": herb,
                 "action": item.get("action", "candidate_add"),
-                "reason": item.get("reason", ""),
+                "reason": item.get("reason") or item.get("matched_reason", ""),
                 "target_disease": item.get("target_disease", disease_name),
                 "target_symptom": item.get("target_symptom", item.get("matched_symptom", symptom_text)),
                 "western_pathology": item.get("western_pathology", item.get("western_pathology_target", "symptom_targeted_support")),
                 "evidence_sources": evidence,
+                "matched_rule": item.get("matched_rule", ""),
+                "source": item.get("source", ""),
             })
         return normalized
 
@@ -2941,6 +3177,22 @@ class M2SyndromeSelector:
         explained = max(0, total - unexplained)
         return round(explained / total, 4)
 
+    @staticmethod
+    def _has_acute_respiratory_course(text: str) -> bool:
+        return any(m in text for m in _M2_ACUTE_COURSE_MARKERS)
+
+    @staticmethod
+    def _has_chronic_yin_deficiency_evidence(text: str) -> bool:
+        return sum(1 for m in _M2_CHRONIC_YIN_EVIDENCE if m in text) >= 2
+
+    @staticmethod
+    def _wind_cold_with_constraint_heat(text: str) -> bool:
+        """风寒为主、夹轻度郁热（口干口苦/咽痛/舌暗红），苔仍偏白腻。"""
+        has_cold_base = any(k in text for k in ("咽痒", "鼻塞", "苔白", "咳嗽", "痰白", "一周"))
+        has_mild_heat = any(k in text for k in ("口干", "口苦", "咽痛", "舌暗红"))
+        has_strong_heat = any(k in text for k in _M2_STRONG_HEAT_VIOLATIONS)
+        return has_cold_base and has_mild_heat and not has_strong_heat
+
     def _run_counterfactual_check(self, key: str, data: Dict, disp: str,
                                   causal_chain: Dict, patient_findings: Dict,
                                   cold_heat_resolution: Optional[Dict]) -> Dict:
@@ -2952,6 +3204,18 @@ class M2SyndromeSelector:
         """
         direction = causal_chain.get("direction", "neutral")
         text = patient_findings["text"]
+
+        # 急性病程不得高置信推慢性气阴两虚
+        if key in _M2_CHRONIC_YIN_DEFICIENCY_KEYS or disp in _M2_CHRONIC_YIN_DEFICIENCY_KEYS:
+            if self._has_acute_respiratory_course(text) and not self._has_chronic_yin_deficiency_evidence(text):
+                return {
+                    "syndrome_name": disp,
+                    "if_syndrome_true_expected": list(_M2_CHRONIC_YIN_EVIDENCE)[:6],
+                    "if_syndrome_true_unexpected": ["急性咳嗽一周"],
+                    "missing_expected_findings": list(_M2_CHRONIC_YIN_EVIDENCE)[:4],
+                    "violated_expectations": ["急性病程缺乏气阴两虚关键证据"],
+                    "counterfactual_result": "FAIL",
+                }
 
         expected = list(causal_chain.get("predicted_manifestations", []))[:8]
         observed = set(causal_chain.get("observed_support", []))
@@ -2981,8 +3245,16 @@ class M2SyndromeSelector:
 
         result = "PASS"
         if violated or dir_conflict:
-            # 出现定义性反向证据 / 寒热裁决冲突 → 反事实失败
-            result = "FAIL"
+            # 风寒夹郁热：轻度热象（口干口苦）不单独否决风寒袭肺
+            if (direction == "cold" and violated and not dir_conflict
+                    and self._wind_cold_with_constraint_heat(text)):
+                strong_violations = [v for v in violated if v in _M2_STRONG_HEAT_VIOLATIONS]
+                if not strong_violations:
+                    result = "QUESTION"
+                else:
+                    result = "FAIL"
+            else:
+                result = "FAIL"
         elif direction in ("heat", "cold") and not dir_support:
             # 声称寒/热方向，但患者无该方向的任何定义性证据 → 核心病机未被支持
             result = "QUESTION"
@@ -3180,6 +3452,20 @@ class M2SyndromeSelector:
             if src.strip():
                 w *= 1.1
                 rs.append("来源可考×1.1")
+
+            # 6) 急性支气管炎：一周咳嗽 + 咽痒/苔白腻 → 提升表证/风寒/痰湿节点
+            ptext = patient_findings.get("text", "")
+            acute_signals = self._count_bronchitis_conflict_signals(ptext, disease_key)
+            if acute_signals >= 2:
+                if k == "风寒袭肺" or "风寒" in disp:
+                    w *= 2.2
+                    rs.append("急性支气管炎风寒表证×2.2")
+                elif k in ("痰湿咳嗽", "痰热咳嗽") and ("苔白腻" in ptext or "苔腻" in ptext):
+                    w *= 1.5
+                    rs.append("急性支气管炎痰湿/郁热×1.5")
+                if k in _M2_CHRONIC_YIN_DEFICIENCY_KEYS or disp in _M2_CHRONIC_YIN_DEFICIENCY_KEYS:
+                    w *= 0.15
+                    rs.append("急性病程降权气阴两虚×0.15")
 
             weights[k] = max(w, 1e-6)
             reasons[k] = rs

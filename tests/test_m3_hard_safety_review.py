@@ -187,6 +187,40 @@ class TestM3HardSafetyReview(unittest.TestCase):
 
     # ── formal_prescription_allowed 恒为 false ──
 
+    def test_m3_rejects_empty_formula_herbs(self):
+        """绑定方名但 herbs=[] 不得 APPROVED"""
+        herbs = []
+        patient = {"age": "37", "gender": "女"}
+        result = self.m3.review(herbs, patient, formula_name="麦门冬汤", diagnosis="急性支气管炎")
+        self.assertEqual(result["review_decision"], "NEED_REVIEW")
+        self.assertFalse(result["review_passed"])
+        empty_issues = [i for i in result["safety_issues"] if i["type"] == "empty_formula_herbs"]
+        self.assertGreater(len(empty_issues), 0)
+
+    def test_m3_rejects_incomplete_candidate_formula(self):
+        """单味药/不完整候选方不得 APPROVED"""
+        herbs = ["人参"]
+        patient = {"age": "37", "gender": "女"}
+        result = self.m3.review(herbs, patient, formula_name="补中益气汤", diagnosis="变应性鼻炎")
+        self.assertNotEqual(result["review_decision"], "APPROVED")
+        self.assertFalse(result["review_passed"])
+        self.assertTrue(result["require_manual_review"])
+        incomplete = [i for i in result["safety_issues"] if i["type"] == "incomplete_candidate_formula"]
+        self.assertGreater(len(incomplete), 0)
+
+    def test_m3_rejects_when_m2_conflict_and_incomplete(self):
+        """M2 disease_key_conflict + 不完整方 → NEED_REVIEW"""
+        herbs = ["人参"]
+        patient = {
+            "age": "37",
+            "gender": "女",
+            "disease_key_conflict": True,
+            "m2_need_human_review": True,
+        }
+        result = self.m3.review(herbs, patient, formula_name="补中益气汤")
+        self.assertEqual(result["review_decision"], "NEED_REVIEW")
+        self.assertFalse(result["review_passed"])
+
     def test_formal_prescription_allowed_always_false(self):
         """M3 review 始终返回 formal_prescription_allowed=false"""
         test_cases = [

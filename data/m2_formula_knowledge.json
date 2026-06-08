@@ -539,6 +539,12 @@
             "reason": "鼻塞、流涕、喷嚏等鼻部症状明显",
             "matched_symptom": "鼻塞、流涕、喷嚏等鼻部症状明显",
             "source": "oral_formula_master_table"
+          },
+          {
+            "herb": "瓜蒌皮",
+            "reason": "痰多、苔腻、胸闷痰浊",
+            "matched_symptom": "痰多、苔腻、胸闷痰浊",
+            "source": "oral_formula_master_table"
           }
         ],
         "source": "oral_formula_master_table"

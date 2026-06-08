@@ -5,6 +5,9 @@ M3 临床药学审核引擎 v3
 1. 十八反十九畏检查 → LLM 清洗炮制别名 + 代码精确匹配
 2. 剂量按年龄/体重调整 + 特殊人群处理 → 代码执行
 3. 毒性药物标注警告 → 代码执行（数据源：m3_herb_knowledge.json）
+
+# 真实逻辑以本文件代码为准
+# 已删除 prompts/m3/M3_SOURCE_PROMPT.md（该文件与代码脱节）
 """
 import json
 import re
@@ -55,10 +58,64 @@ class M3ClinicalReviewEngine:
     #  主入口
     # ══════════════════════════════════════════════════════
 
-    def review(self, herbs: List[str], patient: Dict) -> Dict:
-        """审核处方安全性"""
+    def review(self, herbs: List[str], patient: Dict, formula_name: str = "", dosage_str: str = "", diagnosis: str = "") -> Dict:
+        """审核处方安全性
+
+        Args:
+            herbs: 药物列表
+            patient: 患者信息（age/gender/weight/pregnancy/lactation）
+            formula_name: 方剂名称（来自 M2/热象重写）
+            dosage_str: 剂量字符串（供日志/审计）
+            diagnosis: 西医诊断名（供日志/审计）
+        """
         warnings = []
         safety_issues = []
+
+        if formula_name or dosage_str or diagnosis:
+            print(f"[M3_REVIEW] formula={formula_name} diagnosis={diagnosis} herbs={len(herbs)}味")
+
+        herb_names = [str(h).strip() for h in (herbs or []) if str(h).strip()]
+        need_review = False
+
+        # 0. 候选方完整性 / M2 冲突复核
+        if not herb_names and (formula_name or diagnosis):
+            msg = "绑定方剂存在但药味为空（herbs=[]），不得 APPROVED"
+            warnings.append("⚠ " + msg)
+            safety_issues.append({
+                "type": "empty_formula_herbs",
+                "severity": "NEED_REVIEW",
+                "message": msg,
+                "formula_name": formula_name or "",
+            })
+            need_review = True
+        if len(herb_names) > 0 and len(herb_names) < 3:
+            msg = f"候选方药味过少（{len(herb_names)}味），结构不完整，需人工复核"
+            warnings.append("⚠ " + msg)
+            safety_issues.append({
+                "type": "incomplete_candidate_formula",
+                "severity": "NEED_REVIEW",
+                "message": msg,
+                "herb_count": len(herb_names),
+            })
+            need_review = True
+        if patient.get("disease_key_conflict"):
+            msg = "M2 disease_key 与症状主轴冲突，需人工复核"
+            warnings.append("⚠ " + msg)
+            safety_issues.append({
+                "type": "disease_key_conflict",
+                "severity": "NEED_REVIEW",
+                "message": msg,
+            })
+            need_review = True
+        if patient.get("m2_need_human_review") and len(herb_names) < 3:
+            msg = "M2 已标记 need_human_review 且候选方不完整，不得直接通过"
+            warnings.append("⚠ " + msg)
+            safety_issues.append({
+                "type": "m2_human_review_gate",
+                "severity": "NEED_REVIEW",
+                "message": msg,
+            })
+            need_review = True
 
         # 1. 十八反十九畏
         oppo, fear, alias_prompt = self._check_eighteen_nineteen(herbs)
@@ -70,6 +127,9 @@ class M3ClinicalReviewEngine:
             msg = f"⚠ 十九畏：{h1} 与 {h2} 相畏，标注风险"
             warnings.append(msg)
             safety_issues.append({"type": "nineteen_fears", "severity": "BLOCKED", "message": msg})
+
+        pregnancy = patient.get("pregnancy", False)
+        lactation = patient.get("lactation", False)
 
         # 2. 毒性药物（从知识库读取）
         toxicity = []
@@ -105,11 +165,77 @@ class M3ClinicalReviewEngine:
                 })
 
         blocked = any(issue.get("severity") == "BLOCKED" for issue in safety_issues)
+        need_review = need_review or any(issue.get("severity") == "NEED_REVIEW" for issue in safety_issues)
+
+        # 4. 高风险肿瘤病例识别（术后/转移/水肿/恶病质）
+        _high_risk_tumor_signals = {
+            "diagnosis_keywords": ["癌", "瘤", "恶性肿瘤", "肉瘤", "白血病", "淋巴瘤"],
+            "risk_factors": ["术后", "转移", "多发转移", "肝转移", "骨转移", "肺转移",
+                             "水肿", "纳差", "消瘦", "恶病质", "腹水", "低蛋白"],
+            "blood_activating_herbs": {"桃仁", "红花", "三棱", "莪术", "水蛭", "王不留行",
+                                       "虻虫", "土鳖虫", "穿山甲", "乳香", "没药",
+                                       "血竭", "苏木", "刘寄奴", "姜黄", "郁金"},
+        }
+        _is_high_risk = False
+        _high_risk_reasons = []
+        if diagnosis:
+            _diag_lower = diagnosis.lower()
+            for _kw in _high_risk_tumor_signals["diagnosis_keywords"]:
+                if _kw in _diag_lower:
+                    _is_high_risk = True
+                    _high_risk_reasons.append("诊断含【" + _kw + "】关键词")
+                    break
+        # 检查症状描述中的危险信号
+        _patient_text = ""
+        if isinstance(patient, dict):
+            for _v in patient.values():
+                if isinstance(_v, str):
+                    _patient_text += _v + " "
+        for _rf in _high_risk_tumor_signals["risk_factors"]:
+            if _rf in _patient_text:
+                _is_high_risk = True
+                _high_risk_reasons.append("患者含【" + _rf + "】风险因素")
+                break
+        # 检查活血破血药
+        _blood_herbs_found = [h for h in herbs if h in _high_risk_tumor_signals["blood_activating_herbs"]]
+        if _blood_herbs_found:
+            _blood_msg = f"含活血破血药：{'、'.join(_blood_herbs_found)}，肿瘤患者需人工审核出血风险"
+            safety_issues.append({
+                "type": "blood_activating_herbs",
+                "severity": "WARNING",
+                "herbs": _blood_herbs_found,
+                "message": _blood_msg,
+            })
+            warnings.append("⚠ " + _blood_msg)
+            if _is_high_risk:
+                _high_risk_reasons.append("高风险肿瘤+活血破血药需人工审核")
+
+        if _is_high_risk or _blood_herbs_found:
+            # 高风险病例强制 manual review
+            safety_issues.append({
+                "type": "high_risk_tumor",
+                "severity": "WARNING",
+                "message": "高危肿瘤病例（" + "；".join(_high_risk_reasons) + "），需人工复核",
+            })
+
         dosage_review_status = "pending_dose_review" if herbs else "not_applicable"
 
+        if blocked:
+            review_decision = "BLOCKED"
+        elif need_review:
+            review_decision = "NEED_REVIEW"
+        else:
+            review_decision = "APPROVED"
+
         return {
-            "review_decision": "BLOCKED" if blocked else "APPROVED",
-            "review_passed": not blocked,
+            "review_decision": review_decision,
+            "review_passed": review_decision == "APPROVED",
+            "high_risk_case": _is_high_risk or bool(_blood_herbs_found),
+            "require_manual_review": (
+                _is_high_risk or bool(_blood_herbs_found) or bool(pregnancy) or need_review
+            ),
+            "blood_activating_herbs": _blood_herbs_found,
+            "high_risk_reasons": _high_risk_reasons,
             "eighteen_opposites": [{"herb_a": h1, "herb_b": h2} for h1, h2 in oppo],
             "nineteen_fears": [{"herb_a": h1, "herb_b": h2} for h1, h2 in fear],
             "toxicity_warnings": toxicity,
@@ -371,16 +497,48 @@ class M3ClinicalReviewEngine:
 
         # 孕妇
         if pregnancy:
+            # 妊娠禁忌/慎用药物列表
+            _pregnancy_contra = {
+                "益母草": "孕妇禁用（兴奋子宫平滑肌，有流产风险）",
+                "牛膝": "孕妇禁用（兴奋子宫）",
+                "川牛膝": "孕妇禁用（兴奋子宫）",
+                "全蝎": "孕妇禁用",
+                "蜈蚣": "孕妇禁用",
+                "大黄": "孕妇禁用（刺激肠道，引起盆腔充血）",
+                "附子": "孕妇禁用",
+                "红花": "孕妇禁用（活血通经，兴奋子宫）",
+                "桃仁": "孕妇慎用（活血祛瘀）",
+                "三棱": "孕妇禁用（破血行气）",
+                "莪术": "孕妇禁用（破血行气）",
+                "水蛭": "孕妇禁用（破血通经）",
+                "虻虫": "孕妇禁用（破血逐瘀）",
+                "天麻": "孕妇慎用（动物实验有致畸报道）",
+                "杜仲": "孕期慎用但传统认为安胎，大剂量有降压作用",
+            }
             for h in herbs:
                 info = self.herb_kb.get(h, {})
                 tox = info.get("toxicity", {})
                 if tox:
+                    # 毒性药标记禁用
                     dose_notes.append({
                         "herb": h, "age_group": "孕妇",
                         "dosage_ratio": "禁用",
                         "note": f"孕妇禁用毒性药 {h}",
                     })
-            pop_notes.append("孕妇，严格避免致畸/致流产药物")
+                # 妊娠禁忌/慎用药物检查
+                if h in _pregnancy_contra:
+                    note = _pregnancy_contra[h]
+                    if "禁用" in note or "慎用" in note:
+                        dose_notes.append({
+                            "herb": h, "age_group": "孕妇",
+                            "dosage_ratio": "禁用" if "禁用" in note else "慎用",
+                            "note": f"孕妇{h}：{_pregnancy_contra[h]}",
+                        })
+            # 只要有妊娠，就标记需人工审核
+            if any(dn.get("age_group") == "孕妇" for dn in dose_notes):
+                pop_notes.append("孕妇，有妊娠禁忌药，需人工审核")
+            else:
+                pop_notes.append("孕妇，严格避免致畸/致流产药物")
 
         # 哺乳期
         if lactation:
@@ -410,5 +568,6 @@ class M3ClinicalReviewEngine:
         try:
             from m1_engine import M1DiagnosisEngine
             return M1DiagnosisEngine()._call_llm(prompt, temperature=0.1, max_tokens=500)
-        except Exception:
+        except Exception as _e:
+            print(f"[LLM_ERR] M3 _call_llm failed: {_e}")
             return None
