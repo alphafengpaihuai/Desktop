@@ -27,6 +27,16 @@ from m2_engine import M2SyndromeSelector
 from m3_engine import M3ClinicalReviewEngine
 from m4_engine import M4RoutingEngine
 from force_link_modules import full_link
+from services.m1_m2_bridge import (
+    build_m2_process_kwargs,
+    extract_labs_imaging_from_texts,
+    extract_m2_result_display,
+    extract_negative_findings_from_texts,
+    legacy_bridge_prescription_path_enabled,
+    normalize_string_list,
+    resolve_primary_disease,
+    should_gate_m2,
+)
 
 import websockets
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -58,9 +68,17 @@ CHIEF_FORCE_ACUTE_CURRENT_KEYWORDS = [
 
 
 def should_skip_chief_complaint_force(chief_complaint_disease: str, current_disease: str) -> bool:
-    """Avoid letting chronic history override an acute infectious/fever M1 diagnosis."""
+    """Avoid letting chronic history or symptom-keywords override a more specific M1 diagnosis."""
+    # 慢性病关键词跳过
     is_chronic_chief = any(kw in chief_complaint_disease for kw in CHIEF_FORCE_CHRONIC_DISEASE_KEYWORDS)
     is_acute_current = any(kw in current_disease for kw in CHIEF_FORCE_ACUTE_CURRENT_KEYWORDS)
+    if is_chronic_chief and is_acute_current:
+        return True
+    # 纯症状关键词跳过：M1 已给出更具体的诊断时，不被"腹泻""咳嗽"等泛词覆盖
+    _symptom_only_keywords = ["腹泻", "腹痛", "咳嗽", "发热", "呕吐", "头痛", "头晕", "鼻塞", "咽痛"]
+    if chief_complaint_disease in _symptom_only_keywords:
+        print(f"[CHIEF_COMPLAINT_SKIP_SYMPTOM] 主诉病名:{chief_complaint_disease} 为症状类关键词，跳过覆盖")
+        return True
     return bool(is_chronic_chief and is_acute_current)
 
 
@@ -266,6 +284,7 @@ async def chat(ws, pid: str, text: str, md: dict):
     try:
         symptoms = [s.strip() for s in text.replace("，",",").split(",") if s.strip()]
         chief = symptoms[0] if symptoms else text
+        symptom_text = text
 
         # 尝试从主诉中提取患者提到的疾病名
         mentioned = ""
@@ -282,13 +301,35 @@ async def chat(ws, pid: str, text: str, md: dict):
                 if match:
                     mentioned = match.group().strip()
                     break
-        # 如果 symptom_text 开头直接是常见疾病名模式
+        # 如果上述关键词未提取到，尝试"手术"关键词——病名在"手术"之前
+        if not mentioned and "手术" in symptom_text:
+            idx = symptom_text.find("手术")
+            # 取"手术"前最多8个字
+            before = symptom_text[max(0, idx-8):idx].strip()
+            # 从后往前取最后一个"了""的"等之后的内容
+            for sep in ["了", "的", "做", "行", "接受"]:
+                if sep in before:
+                    before = before[before.rfind(sep)+len(sep):].strip()
+                    break
+            # 去掉标点
+            before = before.rstrip("，, 、")
+            if before and len(before) >= 2:
+                mentioned = before
+        # 如果 symptom_text 开头直接是常见疾病名模式（仅在 mention_keywords 未提取到时使用）
         common_diseases = ["肾结石", "过敏性寻麻疹", "过敏性荨麻疹", "寻麻疹", "荨麻疹", "湿疹", "皮炎", 
                           "抽动症", "抽动障碍", "感冒", "咳嗽", "哮喘", "鼻炎", "肺炎"]
-        for cd in common_diseases:
-            if cd in symptom_text:
-                mentioned = cd
-                break
+        if not mentioned:
+            for cd in common_diseases:
+                if cd in symptom_text:
+                    mentioned = cd
+                    break
+        # 但如果 mention_keywords 提取的是症状词（2字纯症状），且 common_diseases 中有更具体的病名，则允许覆盖
+        _symptom_only = {"咳嗽", "发热", "腹泻", "腹痛", "呕吐", "头痛", "头晕", "鼻塞", "咽痛"}
+        if mentioned in _symptom_only and len(mentioned) <= 2:
+            for cd in common_diseases:
+                if cd in symptom_text and cd not in _symptom_only and len(cd) > len(mentioned):
+                    mentioned = cd
+                    break
         
         m1_input = {
             "patient_mentioned_disease": mentioned,
@@ -299,16 +340,28 @@ async def chat(ws, pid: str, text: str, md: dict):
         }
         m1_r = m1.diagnose(m1_input)
 
-        disease = ""
+        # ── M1→M2 门控（Skill v2.3 Step：进入规则）──
+        _gate_blocked, m1_diagnosis_status = should_gate_m2(m1_r)
+        m1_emergency = m1_r.get("emergency_alert", {}).get("triggered", False) if isinstance(m1_r, dict) else False
+
+        if _gate_blocked or m1_emergency:
+            print(f"[M1_GATE] 诊断状态={m1_diagnosis_status}，紧急征={m1_emergency}，阻断进入 M2")
+
+        disease = resolve_primary_disease(m1_r, chief)
         m1_out = "暂无结果"
         if isinstance(m1_r, dict):
-            calib = m1_r.get("diagnosis_calibration", {})
-            diag_list = calib.get("calibrated_diagnosis", [])
+            primary = m1_r.get("primary_diagnosis", "")
+            diag_list = m1_r.get("top_diagnoses", [])
+            if not diag_list:
+                diag_list = m1_r.get("diagnosis_calibration", {}).get("calibrated_diagnosis", [])
             if diag_list:
-                disease = diag_list[0]
-            m1_out = calib.get("original_input", "") + " -> " + "、".join(diag_list) if diag_list else "暂无结果"
+                disease = disease or primary or (diag_list[0]["disease_name"] if isinstance(diag_list[0], dict) else diag_list[0])
+            m1_out = " -> ".join([d["disease_name"] if isinstance(d, dict) else str(d) for d in diag_list[:3]])
         if not disease:
             disease = chief
+
+        # ── 门控阻断标记 ──
+        _gate_blocked = _gate_blocked or m1_emergency
 
         link = {}
         if disease:
@@ -324,20 +377,27 @@ async def chat(ws, pid: str, text: str, md: dict):
                 parts.append(f"• {c.get('formula', c.get('syndrome', '参考病案'))}")
         reply = "\n\n".join(parts)
 
+        # 门控检查：门控状态下跳过 M2
         try:
-            m2_r = m2.process(
-                primary_disease=disease,
-                symptoms=symptoms,
-                age=patient.get("age",""),
-                weight=""
-            )
+            if _gate_blocked:
+                print(f"[M1_GATE] 跳过 M2（诊断状态={m1_diagnosis_status}）")
+                m2_r = None
+            else:
+                m2_kwargs = build_m2_process_kwargs(
+                    primary_disease=disease,
+                    m1_result=m1_r if isinstance(m1_r, dict) else None,
+                    symptoms=symptoms,
+                    age=patient.get("age", ""),
+                    weight=patient.get("weight", ""),
+                )
+                m2_r = m2.process(**m2_kwargs)
             if m2_r and not m2_r.get("error"):
-                sd = m2_r.get("syndrome_differentiation",{})
-                ss = sd.get("selected_syndrome",{})
-                formula = m2_r.get("formula",{})
-                if ss.get("name") and formula.get("name"):
-                    reply += f"\n\n【辨证处方】\n证型: {ss['name']}\n方剂: {formula['name']}"
-                    herbs = formula.get("herbs",[])
+                display = extract_m2_result_display(m2_r)
+                ss_name = display.get("syndrome_name", "")
+                formula_name = display.get("formula_name", "")
+                if ss_name and formula_name:
+                    reply += f"\n\n【辨证处方】\n证型: {ss_name}\n方剂: {formula_name}"
+                    herbs = display.get("herbs", [])
                     if herbs:
                         reply += f"\n药物: {'、'.join(herbs[:8])}"
         except Exception as e:
@@ -573,6 +633,7 @@ async def handle_selection_answers(ws, pid: str, data: dict):
         # 从追问答案中提取更多症状
         symptoms_list_raw = [symptom_text] if symptom_text else []
         signs_list_raw = []
+        answer_texts = []
         for q_key, q_val in answers.items():
             if isinstance(q_val, dict):
                 a_text = q_val.get("answer", "")
@@ -580,6 +641,7 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                 a_text = q_val
             if isinstance(a_text, str) and a_text.strip():
                 a_trim = a_text.strip()
+                answer_texts.append(a_trim)
                 if a_trim not in ("无", "无过敏史", "无其他补充", "未做检查"):
                     # 检查是否包含舌脉信息
                     if "舌" in a_trim or "苔" in a_trim or "脉" in a_trim:
@@ -589,6 +651,8 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                             s = s.strip()
                             if s and s not in symptoms_list_raw:
                                 symptoms_list_raw.append(s)
+        labs_list_raw, imaging_list_raw = extract_labs_imaging_from_texts(answer_texts)
+        negative_list_raw = extract_negative_findings_from_texts(answer_texts)
         # 尝试从主诉中提取患者提到的疾病名
         mentioned = ""
         mention_keywords = ["诊断", "确诊", "考虑", "考虑为", "患"]
@@ -604,21 +668,44 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                 if match:
                     mentioned = match.group().strip()
                     break
-        # 如果 symptom_text 开头直接是常见疾病名模式
+        # 如果上述关键词未提取到，尝试"手术"关键词——病名在"手术"之前
+        if not mentioned and "手术" in symptom_text:
+            idx = symptom_text.find("手术")
+            # 取"手术"前最多8个字
+            before = symptom_text[max(0, idx-8):idx].strip()
+            # 从后往前取最后一个"了""的"等之后的内容
+            for sep in ["了", "的", "做", "行", "接受"]:
+                if sep in before:
+                    before = before[before.rfind(sep)+len(sep):].strip()
+                    break
+            # 去掉标点
+            before = before.rstrip("，, 、")
+            if before and len(before) >= 2:
+                mentioned = before
+        # 如果 symptom_text 开头直接是常见疾病名模式（仅在 mention_keywords 未提取到时使用）
         common_diseases = ["肾结石", "过敏性寻麻疹", "过敏性荨麻疹", "寻麻疹", "荨麻疹", "湿疹", "皮炎", 
                           "抽动症", "抽动障碍", "感冒", "咳嗽", "哮喘", "鼻炎", "肺炎"]
-        for cd in common_diseases:
-            if cd in symptom_text:
-                mentioned = cd
-                break
+        if not mentioned:
+            for cd in common_diseases:
+                if cd in symptom_text:
+                    mentioned = cd
+                    break
+        # 但如果 mention_keywords 提取的是症状词（2字纯症状），且 common_diseases 中有更具体的病名，则允许覆盖
+        _symptom_only = {"咳嗽", "发热", "腹泻", "腹痛", "呕吐", "头痛", "头晕", "鼻塞", "咽痛"}
+        if mentioned in _symptom_only and len(mentioned) <= 2:
+            for cd in common_diseases:
+                if cd in symptom_text and cd not in _symptom_only and len(cd) > len(mentioned):
+                    mentioned = cd
+                    break
         
         m1_input = {
             "patient_mentioned_disease": mentioned,
             "chief_complaint": symptom_text,
             "symptoms": symptoms_list_raw,
             "signs": signs_list_raw,
-            "labs": [], "imaging": [],
-            "negative_findings": [],
+            "labs": labs_list_raw,
+            "imaging": imaging_list_raw,
+            "negative_findings": negative_list_raw,
             "duration": "半年" if "半年" in symptom_text or "半年" in str(answers) else "半月",
             "onset": ""
         }
@@ -750,6 +837,10 @@ async def handle_selection_answers(ws, pid: str, data: dict):
         "哮喘": "喉源性咳嗽",
         "腹泻": "腹泻 (Diarrhea)",
         "消化不良": "小儿消化不良",
+        # 急性胃肠炎 → 痢疾（湿热痢可匹配粘液/潜血/腹痛）
+        "急性胃肠炎": "痢疾 (Dysentery)",
+        "急性肠胃炎": "痢疾 (Dysentery)",
+        "胃肠炎": "痢疾 (Dysentery)",
         # 妇科病名补充
         "子宫腺肌病": "子宫腺肌症",
         "子宫腺肌症": "子宫腺肌症",
@@ -804,18 +895,38 @@ async def handle_selection_answers(ws, pid: str, data: dict):
     
     # 优先1：如果 m1 输出的候选诊断中包含已知的西医病名，直接优先使用
     # 检查 m1_r 中的 calibrated_diagnosis 或 candidates
+    # 注意：仅当当前 disease 不是明确的西医病名时才触发
+    # （否则像“肺炎”被正确识别后，不应被列表中的其他候选如“偏头痛”覆盖）
     _known_western_diseases = ["颈椎病", "后循环缺血", "失眠症", "偏头痛", 
                                 "子宫肌瘤", "子宫内膜异位症", "子宫腺肌症",
                                 "高血压", "糖尿病", "冠心病", "脑梗死", "脑出血",
                                 "帕金森病", "阿尔茨海默病", "焦虑症", "抑郁症"]
-    if hasattr(m1_r, 'get') and m1_r.get('diagnosis_calibration', {}).get('calibrated_diagnosis', []):
-        for _d in m1_r['diagnosis_calibration']['calibrated_diagnosis']:
-            if _d in _known_western_diseases:
-                print("[WESTERN_PRIORITY]", disease, "->", _d, "(候选中有已知西医病名)")
-                disease = _d
-                break
+    # 判断当前 disease 是否已经是明确的西医病名
+    # 包括：已知西医病名列表、带特定后缀的器质性疾病、以及完整的疾病名称
+    _disease_is_clear_western = (
+        disease in _known_western_diseases
+        or any(kw in disease for kw in ["肺炎", "支气管", "胃炎", "肠炎", "肝炎", "肾炎"])
+        or "癌" in disease
+        or "瘤" in disease
+        # 如果 disease 已经在知识库中有明确条目（说明是标准病名），不应被候选列表症状名覆盖
+        or (hasattr(m2, 'kb') and disease in m2.kb)
+    )
+    if not _disease_is_clear_western:
+        if hasattr(m1_r, 'get') and m1_r.get('diagnosis_calibration', {}).get('calibrated_diagnosis', []):
+            for _d in m1_r['diagnosis_calibration']['calibrated_diagnosis']:
+                if _d in _known_western_diseases:
+                    print("[WESTERN_PRIORITY]", disease, "->", _d, "(候选中有已知西医病名)")
+                    disease = _d
+                    break
     # 优先2：检查患者主诉中提到的西医病名（"诊断：XXX"）
-    if disease not in _known_western_diseases:
+    # 注意：仅当 M1 输出为症状描述或空时，才用文本中的西医病名覆盖
+    # 避免既往史中的慢性病（如"高血压"在既往史列表中）覆盖 M1 已准确识别的急性病诊断
+    _m1_top_from_text = symptom_text[:20]  # 用于检查 M1 是否准确识别了主诉
+    _m1_output_seems_reasonable = (
+        disease in m1_out[:50]  # M1 输出的诊断在它的结果文本中出现
+        and disease not in ("咳嗽", "发热", "腹泻", "腹痛", "头痛")
+    )
+    if disease not in _known_western_diseases and not _m1_output_seems_reasonable:
         for _wd in _known_western_diseases:
             if _wd in symptom_text:
                 print("[SYMPTOM_WESTERN]", disease, "->", _wd, "(主诉中有西医病名)")
@@ -911,12 +1022,18 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                             print("[M2_KB_MATCH](fallback)", disease, "->", _kb_key)
                             _m2_kb_disease = _kb_key
                             break
-        m2_r = m2.process(
+        m2_kwargs = build_m2_process_kwargs(
             primary_disease=_m2_kb_disease,
+            m1_result=m1_r if isinstance(m1_r, dict) else None,
             symptoms=m2_symptoms,
+            signs=signs_list_raw,
+            labs=labs_list_raw,
+            imaging=imaging_list_raw,
+            negative_findings=negative_list_raw,
             age=patient_age,
-            weight=""
+            weight="",
         )
+        m2_r = m2.process(**m2_kwargs)
         # 如果 M2 找不到该疾病名，尝试兜底映射
         m2_fallback = {
             "咳嗽": "支原体肺炎",
@@ -1003,113 +1120,132 @@ async def handle_selection_answers(ws, pid: str, data: dict):
             if found_disease:
                 print("[M2_FALLBACK]", disease, "->", found_disease)
                 disease = found_disease
-                m2_r = m2.process(primary_disease=disease, symptoms=m2_symptoms, age=patient_age, weight="")
+                m2_r = m2.process(**{**m2_kwargs, "primary_disease": found_disease})
         
         if m2_r and not m2_r.get("error"):
-            sd = m2_r.get("syndrome_differentiation", {})
-            ss = sd.get("selected_syndrome", {})
-            formula = m2_r.get("formula", {})
-            syndrome_name = ss.get("name", "")
-            formula_name = formula.get("name", "")
-            herbs = formula.get("herbs", [])
-            # === 从 full_decoction 修复/补全 herbs ===
-            # 知识库中很多方剂的 herbs 字段只记录了前几味药，但 full_decoction 中有完整的药物列表
-            try:
-                _hd_full = formula.get("full_decoction", "")
-                if not _hd_full:
-                    import json as _hd_json, re as _hd_re
-                    _hd_m2_kb = getattr(m2, 'kb', {})
-                    _hd_disease_data = _hd_m2_kb.get(_m2_kb_disease if '_m2_kb_disease' in dir() and _m2_kb_disease else disease, {})
-                    for _hd_sd in _hd_disease_data.get("syndromes", {}).values():
-                        _hd_full = _hd_sd.get("full_decoction", "")
-                        if _hd_full:
-                            break
-                if _hd_full:
-                    _hd_matches = _hd_re.findall(r'([\u4e00-\u9fff\uff00-\uffef]{2,5})\s*\d+\s*\.?\d*\s*g', _hd_full)
-                    _hd_exclude = {"用量","用法","疗程","水煎","不宜","后下","先煎","包煎","烊化","冲服","煎服","各等","安全","警示","疗效","预估","安全警示","预计","有效","中病","停药","疗程及","方剂"}
-                    _hd_decoction_herbs = [m for m in _hd_matches if m not in _hd_exclude and len(m) >= 2 and not m.isdigit()]
-                    if _hd_decoction_herbs and len(_hd_decoction_herbs) >= len(herbs):
-                        # 只有当 full_decoction 的 herbs 与原始 herbs 存在实质性差异时才替换
-                        # 差异条件：full 更多 或者 药名不完全匹配（如甘草vs炙甘草）
-                        _hd_set = set(_hd_decoction_herbs)
-                        _hb_set = set(herbs)
-                        # 检查是否有任何 herbs 中的药名在 full 中以不同形式出现
-                        _has_partial_match = False
-                        for _h in herbs:
-                            if _h not in _hd_set:
-                                # 检查 full 中是否有包含该药名的其他条目
-                                for _dh in _hd_decoction_herbs:
-                                    if _h in _dh or _dh in _h:
-                                        _has_partial_match = True
-                                        break
-                        if len(_hd_decoction_herbs) > len(herbs) or _has_partial_match:
-                            print(f"[HERBS_FIX] {formula_name}: {len(herbs)} → {len(_hd_decoction_herbs)} herbs (from full_decoction)")
-                            herbs = _hd_decoction_herbs
-            except Exception as _hd_e:
-                print(f"  [HERBS_FIX_ERR] {_hd_e}")
-            # 统一剂量提取：优先从 M2 知识库 full_decoction 字段提取
-            # 使用 M2 实际匹配到的疾病名 _m2_kb_disease，而非原始 disease 名
-            herb_dosages = {}
-            try:
-                import json as _json, re as _re
-                m2_kb_path = getattr(m2, 'kb_path', 'data/m2_formula_knowledge.json')
-                with open(m2_kb_path, 'r', encoding='utf-8') as _f:
-                    _kb = _json.load(_f)
-                _dosage_disease = _m2_kb_disease if '_m2_kb_disease' in dir() and _m2_kb_disease else disease
-                _disease_data = _kb.get(_dosage_disease, {})
-                if not _disease_data:
-                    for _dk in _kb:
-                        if _dosage_disease in _dk or _dk in _dosage_disease:
-                            _disease_data = _kb[_dk]
-                            print(f"  [DOSAGE_DISEASE_MATCH] {_dosage_disease} -> {_dk}")
-                            break
-                for _sd in _disease_data.get("syndromes", {}).values():
-                    _full = _sd.get("full_decoction", "")
-                    if _full:
-                        for _h in herbs:
-                            if _h in herb_dosages: continue
-                            _m = _re.search(_re.escape(_h) + r"\s*(\d+\.?\d*)\s*g", _full.replace('\u3000',''))
-                            if _m:
-                                # 确保提取的药名不以"药""用"等非药名字开头
-                                _dose_herb_name = _m.group(0).rstrip(_m.group(1) + "g ").strip()
-                                # 如果 herb_dosages 中药名带"药：""用"等前缀，修正
-                                for _dh_prefix in ["药：", "药:", "用：", "用:", "用药：", "用药:"]:
-                                    if _dose_herb_name.startswith(_dh_prefix):
-                                        _dose_herb_name = _dose_herb_name[len(_dh_prefix):]
-                                        break
-                                herb_dosages[_h] = _dose_herb_name + _m.group(1) + "g"
-                print("[DOSAGE_EXTRACT]", "found", len(herb_dosages), "/", len(herbs), "dosages")
-            except Exception as _e:
-                print("  [DOSAGE_ERR]", _e)
-            # fallback: 从 case_references 提取
-            if not herb_dosages:
-                cases = m2_r.get("case_references", [])
-                for c in cases:
-                    dos = c.get("dosages", [])
-                    chs = c.get("herbs", [])
-                    for i, h in enumerate(chs):
-                        if i < len(dos) and dos[i]:
-                            herb_dosages[h] = dos[i]
-            # 构建剂量行
-            if herb_dosages:
-                dose_lines = []
-                for _h in herbs:
-                    if _h in herb_dosages:
-                        dose_lines.append(herb_dosages[_h])
-                    else:
-                        dose_lines.append(_h)
-                dosage_str = "\n  ".join(dose_lines)
-            else:
-                dosage_str = ""
+            display = extract_m2_result_display(m2_r)
+            syndrome_name = display["syndrome_name"]
+            formula_name = display["formula_name"]
+            herbs = display["herbs"]
+            _legacy_dev_mode = legacy_bridge_prescription_path_enabled()
+            dosage_str = ""
+            if _legacy_dev_mode:
+                formula = m2_r.get("formula", {})
+                # === 从 full_decoction 修复/补全 herbs ===
+                # 知识库中很多方剂的 herbs 字段只记录了前几味药，但 full_decoction 中有完整的药物列表
+                try:
+                    _hd_full = formula.get("full_decoction", "")
+                    if not _hd_full:
+                        import json as _hd_json, re as _hd_re
+                        _hd_m2_kb = getattr(m2, 'kb', {})
+                        _hd_disease_data = _hd_m2_kb.get(_m2_kb_disease if '_m2_kb_disease' in dir() and _m2_kb_disease else disease, {})
+                        for _hd_sd in _hd_disease_data.get("syndromes", {}).values():
+                            _hd_full = _hd_sd.get("full_decoction", "")
+                            if _hd_full:
+                                break
+                    if _hd_full:
+                        _hd_usage_match = _hd_re.search(r'用药[：:](.*?)(?=\n\s*疗程|\n\s*疗效|\n\s*安全)', _hd_full, _hd_re.DOTALL)
+                        _hd_decoction_herbs = []
+                        if _hd_usage_match:
+                            _hd_usage_text = _hd_usage_match.group(1)
+                            _hd_matches = _hd_re.findall(r'(?:^|[\s　、,，])([\u4e00-\u9fff\u3099]{2,4})\s*\d+\.?\d*\s*g', _hd_usage_text)
+                            _hd_exclude = {"用量","用法","疗程","水煎","不宜","后下","先煎","包煎","烊化","冲服","煎服","各等","安全","警示","疗效","预估","安全警示","预计","有效","中病","停药","疗程及","方剂"}
+                            _hd_decoction_herbs = [m for m in _hd_matches if m not in _hd_exclude and len(m) >= 2 and not m.isdigit()]
+                            _hd_decoction_herbs = [h for h in _hd_decoction_herbs if not any(c in h for c in "加甚剧烈明差结")]
+                        if _hd_decoction_herbs and len(_hd_decoction_herbs) >= len(herbs):
+                            _hd_set = set(_hd_decoction_herbs)
+                            _has_partial_match = False
+                            for _h in herbs:
+                                if _h not in _hd_set:
+                                    for _dh in _hd_decoction_herbs:
+                                        if _h in _dh or _dh in _h:
+                                            _has_partial_match = True
+                                            break
+                            if len(_hd_decoction_herbs) > len(herbs) or _has_partial_match:
+                                print(f"[HERBS_FIX] {formula_name}: {len(herbs)} → {len(_hd_decoction_herbs)} herbs (from full_decoction)")
+                                herbs = _hd_decoction_herbs
+                except Exception as _hd_e:
+                    print(f"  [HERBS_FIX_ERR] {_hd_e}")
+                herb_dosages = {}
+                try:
+                    import json as _json, re as _re
+                    m2_kb_path = getattr(m2, 'kb_path', 'data/m2_formula_knowledge.json')
+                    with open(m2_kb_path, 'r', encoding='utf-8') as _f:
+                        _kb = _json.load(_f)
+                    _dosage_disease = _m2_kb_disease if '_m2_kb_disease' in dir() and _m2_kb_disease else disease
+                    _disease_data = _kb.get(_dosage_disease, {})
+                    if not _disease_data:
+                        for _dk in _kb:
+                            if _dosage_disease in _dk or _dk in _dosage_disease:
+                                _disease_data = _kb[_dk]
+                                print(f"  [DOSAGE_DISEASE_MATCH] {_dosage_disease} -> {_dk}")
+                                break
+                    for _sd in _disease_data.get("syndromes", {}).values():
+                        _full = _sd.get("full_decoction", "")
+                        if _full:
+                            for _h in herbs:
+                                if _h in herb_dosages:
+                                    continue
+                                _m = _re.search(_re.escape(_h) + r"\s*(\d+\.?\d*)\s*g", _full.replace('\u3000',''))
+                                if _m:
+                                    _dose_herb_name = _m.group(0).rstrip(_m.group(1) + "g ").strip()
+                                    for _dh_prefix in ["药：", "药:", "用：", "用:", "用药：", "用药:"]:
+                                        if _dose_herb_name.startswith(_dh_prefix):
+                                            _dose_herb_name = _dose_herb_name[len(_dh_prefix):]
+                                            break
+                                    herb_dosages[_h] = _dose_herb_name + _m.group(1) + "g"
+                    print("[DOSAGE_EXTRACT]", "found", len(herb_dosages), "/", len(herbs), "dosages")
+                except Exception as _e:
+                    print("  [DOSAGE_ERR]", _e)
+                if not herb_dosages:
+                    cases = m2_r.get("case_references", [])
+                    for c in cases:
+                        dos = c.get("dosages", [])
+                        chs = c.get("herbs", [])
+                        for i, h in enumerate(chs):
+                            if i < len(dos) and dos[i]:
+                                herb_dosages[h] = dos[i]
+                if herb_dosages:
+                    dose_lines = []
+                    for _h in herbs:
+                        if _h in herb_dosages:
+                            dose_lines.append(herb_dosages[_h])
+                        else:
+                            dose_lines.append(_h)
+                    dosage_str = "\n  ".join(dose_lines)
         print("[HSA_M2_DONE]", {"syndrome": syndrome_name, "formula": formula_name, "herbs_count": len(herbs)})
+        _legacy_dev_mode = legacy_bridge_prescription_path_enabled()
+        # 在热象重写之前保存原始西医病名和症状列表，供 M4 使用
+        _disease_for_m4 = disease
+        _m4_symptom_list = m2_symptoms.copy() if 'm2_symptoms' in dir() and m2_symptoms else ([symptom_text] if symptom_text else [])
         # === 热象检测→证型/方剂重写：当症状显示明显热象而M2选出的是风寒证型时 ===
         _all_symptom_txt_for_heat = symptom_text + " " + " ".join([v.get("answer","") if isinstance(v,dict) else str(v) for v in answers.values()])
         _has_heat_signs = any(x in _all_symptom_txt_for_heat for x in ["痰黄", "黄痰", "绿痰", "痰稠", "黄稠", "苔黄", "黄苔", "黄腻", "黄稠痰", "色绿", "黄痰黏稠", "稠痰", "偏黄", "白苔偏黄", "苔白腻偏黄", "白腻偏黄", "烦热", "身热", "发热", "高热", "手心热", "手足心热", "舌红", "舌点刺", "舌暗红", "咽红", "咽喉红肿"])
         _is_cold_syndrome = any(k in syndrome_name for k in ["风寒", "寒邪", "寒凝", "寒饮", "虚寒", "肺气虚寒", "肺寒", "寒湿", "寒湿内盛", "风寒泻", "风寒头痛", "寒性", "阳虚", "寒痰", "寒凝气滞", "外寒"])
-        if (_has_heat_signs and _is_cold_syndrome) or (_has_heat_signs and not syndrome_name.strip()):
+        if _legacy_dev_mode and ((_has_heat_signs and _is_cold_syndrome) or (_has_heat_signs and not syndrome_name.strip())):
             _has_green_sputum = any(x in _all_symptom_txt_for_heat for x in ["色绿", "绿痰", "绿白", "绿稠"])
             _has_yellow_greasy_fur = any(x in _all_symptom_txt_for_heat for x in ["黄腻", "黄厚", "黄燥"])
-            if _has_green_sputum:
+
+            # --- 消化系统方向（腹泻/腹痛+苔黄腻/舌红→肠道湿热/葛根芩连汤合白头翁汤）---
+            _digestive_keywords = ["腹泻", "腹痛", "粘液", "潜血", "痢疾", "便溏", "便血", "肠炎", "胃肠", "水样便", "里急后重"]
+            _has_digestive = any(k in _all_symptom_txt_for_heat for k in _digestive_keywords)
+            _has_digestive_heat_tongue = any(k in _all_symptom_txt_for_heat for k in ["苔黄腻", "苔黄", "黄腻", "舌红"])
+            if _has_digestive and (_has_digestive_heat_tongue or _has_yellow_greasy_fur):
+                syndrome_name = "湿热蕴肠（湿热痢）"
+                formula_name = "葛根芩连汤合白头翁汤"
+                herbs = ["葛根", "黄芩", "黄连", "白头翁", "秦皮", "黄柏", "木香", "白芍", "甘草"]
+                print(f"[HEAT_REWRITE_DIGESTIVE] 腹泻/腹痛+苔黄腻/舌红 → 湿热蕴肠/葛根芩连汤合白头翁汤 ({len(herbs)}味)")
+
+            # --- 鼻科方向（变应性鼻炎/过敏性鼻炎+热象→气阳虚弱热郁鼻窍/辛夷清肺饮合补中益气汤）---
+            _nose_allergy_keywords = ["变应性鼻炎", "过敏性鼻炎", "鼻痒", "喷嚏", "打喷嚏", "流清涕", "鼻塞"]
+            _has_nose_allergy = disease in ["变应性鼻炎", "过敏性鼻炎"] or any(k in _all_symptom_txt_for_heat for k in _nose_allergy_keywords)
+            if _has_nose_allergy and (_has_yellow_greasy_fur or _has_heat_signs) and _is_cold_syndrome:
+                syndrome_name = "气阳虚弱，热郁鼻窍"
+                formula_name = "辛夷清肺饮合补中益气汤"
+                herbs = ["辛夷", "黄芩", "栀子", "麦门冬", "百合", "生石膏", "生甘草", "枇杷叶", "升麻", "黄芪", "人参", "当归", "橘皮", "柴胡", "白术", "丹皮"]
+                print(f"[HEAT_REWRITE_NOSE] 变应性鼻炎+苔黄腻+风寒证型 → 气阳虚弱热郁鼻窍/辛夷清肺饮合补中益气汤 ({len(herbs)}味)")
+
+            elif _has_green_sputum:
                 # 绿痰→痰热蕴肺→清金化痰汤
                 syndrome_name = "痰热蕴肺"
                 formula_name = "清金化痰汤"
@@ -1145,6 +1281,13 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                 "金银花": "金银花9g", "连翘": "连翘9g", "薄荷": "薄荷6g", "牛蒡子": "牛蒡子9g",
                 "芦根": "芦根9g", "淡竹叶": "淡竹叶6g", "荆芥穗": "荆芥穗6g", "淡豆豉": "淡豆豉6g",
                 "生甘草": "生甘草3g",
+                # 消化系统方向（葛根芩连汤合白头翁汤）
+                "葛根": "葛根15g", "黄连": "黄连6g", "白头翁": "白头翁12g",
+                "秦皮": "秦皮9g", "黄柏": "黄柏9g", "木香": "木香6g", "白芍": "白芍12g",
+                # 鼻科方向（辛夷清肺饮合补中益气汤）
+                "辛夷": "辛夷6g", "栀子": "栀子9g", "麦门冬": "麦门冬20g", "百合": "百合12g",
+                "枇杷叶": "枇杷叶9g", "升麻": "升麻6g", "黄芪": "黄芪20g", "人参": "人参6g",
+                "当归": "当归12g", "橘皮": "橘皮9g", "柴胡": "柴胡6g", "白术": "白术6g", "丹皮": "丹皮6g",
             }
             dose_parts = []
             for _h in herbs:
@@ -1198,7 +1341,7 @@ async def handle_selection_answers(ws, pid: str, data: dict):
         _symptom_additions = []
         # === 症状覆盖检查与药物加减 ===
         _symptom_additions = []
-        if herbs:
+        if _legacy_dev_mode and herbs:
             # 从追问答案和主诉提取全部症状文本
             _all_symptom_texts = [symptom_text] if symptom_text else []
             for q_key, q_val in answers.items():
@@ -1215,79 +1358,294 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                 _symptom_additions = []
                 SYMPTOM_HERB_MAP = []
             else:
-                # 症状→药物映射表（基于中药药性功效分类）
-                SYMPTOM_HERB_MAP = [
-                # 咳喘类
-                (["干咳", "久咳", "咳嗽日久"], ["川贝母", "款冬花"], "润肺止咳，针对久咳干咳"),
-                (["痰多", "痰白", "痰稀"], ["半夏", "陈皮"], "燥湿化痰，针对痰多色白"),
-                (["痰黄", "黄痰", "痰稠"], ["浙贝母", "黄芩", "瓜蒌"], "清肺化痰，针对黄痰稠痰"),
-                (["咽痒", "喉痒"], ["蝉蜕", "射干", "僵蚕"], "利咽止痒"),
-                (["咽干", "口干"], ["玄参", "麦冬", "天花粉"], "养阴润燥利咽"),
-                (["咽痛", "喉咙痛"], ["牛蒡子", "射干", "板蓝根"], "清热解毒利咽"),
-                (["鼻塞", "流涕"], ["辛夷", "苍耳子", "白芷"], "通鼻窍"),
-                # 呼吸系统
-                (["气喘", "气短", "呼吸急促"], ["麻黄", "葶苈子", "地龙"], "平喘降气"),
-                # 发热类
-                (["发热", "发烧"], ["石膏", "知母", "柴胡"], "清热退烧"),
-                (["恶寒", "怕冷"], ["桂枝", "荆芥", "防风"], "解表散寒"),
-                # 疼痛类
-                (["头痛"], ["川芎", "白芷", "蔓荆子"], "祛风止痛"),
-                (["腰痛", "腰酸"], ["杜仲", "续断", "牛膝"], "补肾强腰"),
-                (["关节痛"], ["羌活", "独活", "威灵仙"], "祛风湿止痛"),
-                (["腹痛", "胃痛"], ["白芍", "延胡索", "木香"], "缓急止痛"),
-                # 消化类
-                (["纳差", "食欲不振", "不饥", "食欲差", "无味口", "没胃口", "不思食"], ["炒麦芽", "山楂", "神曲"], "健脾开胃"),
-                (["腹胀", "脘痞", "饱胀"], ["枳壳", "厚朴", "大腹皮"], "行气消胀"),
-                # 舌脉类
-                (["舌暗", "瘀点", "瘀斑", "舌紫暗", "有瘀点"], ["丹参", "赤芍", "川芎"], "活血化瘀通络"),
-                # 鼻/窦/咽类
-                (["清涕", "鼻塞", "喷嚏", "打喷嚏", "鼻痒"], ["辛夷", "苍耳子", "白芷", "细辛"], "宣肺通窍"),
-                (["黄涕", "脓涕", "鼻窦", "鼻窦炎", "鼻涕倒流", "鼻后滴漏"], ["辛夷", "苍耳子", "白芷", "黄芩", "桔梗"], "清肺通窍"),
-                (["咽痒", "咽干", "咽痛", "异物感"], ["蝉蜕", "玄参", "射干", "木蝴蝶"], "利咽止痒"),
-                (["腺样体", "肥大"], ["夏枯草", "浙贝母", "牡蛎", "玄参"], "软坚散结"),
-                # 月经类
-                (["月经推迟", "月经后期", "周期推迟"], ["当归", "川芎", "香附", "益母草"], "养血调经"),
-                (["乳胀", "乳房胀痛", "胸胁胀"], ["柴胡", "香附", "郁金", "青皮"], "疏肝理气"),
-                (["血块", "色暗", "经色暗", "有块", "月经暗"], ["益母草", "蒲黄", "三七"], "活血化瘀调经"),
-                (["便溏", "腹泻", "大便稀"], ["白术", "茯苓", "诃子"], "健脾止泻"),
-                (["便秘", "大便干", "大便硬", "大便难"], ["火麻仁", "郁李仁", "枳实"], "润肠通便"),
-                # 水肿类
-                (["浮肿", "水肿", "面肿"], ["茯苓皮", "桑白皮", "猪苓"], "利水消肿"),
-                (["小便少", "尿少", "尿黄"], ["车前子", "泽泻", "滑石"], "利尿通淋"),
-                # 心神类
-                (["失眠", "不寐", "难入睡", "易惊醒", "醒后难再睡"], ["酸枣仁", "远志", "合欢皮"], "养心安神"),
-                (["多梦", "噩梦", "梦多", "梦扰"], ["酸枣仁", "远志", "茯神"], "宁心安神"),
-                (["心悸", "心慌"], ["丹参", "龙骨", "牡蛎"], "镇心安神"),
-                (["头晕", "眩晕"], ["天麻", "钩藤", "菊花"], "平肝熄风"),
-                # 出汗类
-                (["自汗", "出汗", "汗多"], ["麻黄根", "浮小麦", "五味子"], "固表敛汗"),
-                (["盗汗", "夜间出汗"], ["地骨皮", "知母", "五味子"], "滋阴清热敛汗"),
-                # 其他
-                (["口苦", "口臭"], ["黄连", "黄芩", "栀子"], "清热燥湿"),
-                (["乏力", "疲倦", "身困"], ["黄芪", "党参", "白术"], "益气健脾"),
-                # 头发/乌发类
-                (["头发白", "白发", "全白", "须发早白", "脱发", "发稀", "头发全白"], ["女贞子", "墨旱莲", "制首乌"], "滋补肝肾乌发"),
-                # 血瘀类（月经病常见）
-                (["血块", "暗红", "色暗", "经色暗", "有块"], ["益母草", "蒲黄", "三七"], "活血化瘀调经"),
-                (["量多", "经量多", "量特多"], ["仙鹤草", "地榆", "茜草"], "凉血止血调经"),
-            ]
-            for _keywords, _herbs, _reason in SYMPTOM_HERB_MAP:
-                for _kw in _keywords:
-                    if _kw in _full_symptom_txt:
-                        # 仅对特定关键词组输出调试
-                        if _kw in ('月经推迟', '月经后期', '周期推迟', '乳胀', '乳房胀痛', '腺样体', '血块', '暗红', '鼻窦', '喷嚏', '打喷嚏'):
-                            print(f"[SYMPTOM_DEBUG] 匹配: kw='{_kw}' herbs={_herbs} 已在herbs中={any(h in herbs for h in _herbs)}")
-                        # 找第一个不在现有 herbs 中的药
-                        for _h in _herbs:
-                            if _h not in herbs and _h not in [x.get("herb","") for x in _symptom_additions]:
-                                _symptom_additions.append({
-                                    "herb": _h,
-                                    "reason": _reason + "（症状匹配: " + _kw + "）",
-                                    "matched_symptom": _kw
-                                })
+                # ── 病名范围内症状加减（三层策略） ──
+                # 策略1：优先查知识库中该疾病方剂中的加减信息
+                # 策略2：从疾病方剂的 herb 列表中选合适药
+                # 策略3：查询名医病案库（66000份，预留接口）
+                # 注意：不得突破病名范围使用全局 SYMPTOM_HERB_MAP
+                _disease_herbs_pool = list(herbs)  # 当前方剂已有的药物
+                # 尝试从知识库获取该疾病的完整 herb 信息（包括方剂中所有药味）
+                try:
+                    import json as _add_json
+                    _kb_path_add = getattr(m2, 'kb_path', 'data/m2_formula_knowledge.json')
+                    with open(_kb_path_add, 'r', encoding='utf-8') as _f_add:
+                        _kb_add = _add_json.load(_f_add)
+                    # 用当前疾病名查找知识库条目（优先精确匹配，避免子串误匹配）
+                    _add_disease_key = None
+                    # 精确匹配：原名称、中文部分、去括号后的中文部分
+                    _disease_cn = disease.split('（')[0].split(' (')[0].strip()
+                    for _dk_add in _kb_add:
+                        _dk_cn = _dk_add.split('（')[0].split(' (')[0].strip()
+                        if _dk_add == disease or _dk_cn == _disease_cn:
+                            _add_disease_key = _dk_add
+                            break
+                    # 子串匹配：优先长度较短（更精确）的匹配
+                    if not _add_disease_key:
+                        _sub_matches = []
+                        for _dk_add in _kb_add:
+                            if disease in _dk_add or _dk_add in disease:
+                                _sub_matches.append((len(_dk_add), _dk_add))
+                        if _sub_matches:
+                            _sub_matches.sort()
+                            _add_disease_key = _sub_matches[0][1]
+                    if _add_disease_key:
+                        _add_disease_data = _kb_add[_add_disease_key]
+                        # 从所有证型中收集该疾病下所有可能的药物（扩大候选池）
+                        _all_disease_herbs = set()
+                        for _sd_name, _sd_data in _add_disease_data.get("syndromes", {}).items():
+                            _sd_herbs = _sd_data.get("herbs", [])
+                            _all_disease_herbs.update(_sd_herbs)
+                            # 从 full_decoction 解析更多药物
+                            _sd_full = _sd_data.get("full_decoction", "")
+                            if _sd_full:
+                                import re as _add_re
+                                _sd_matches = _add_re.findall(r'([\u4e00-\u9fff]{2,5})\s*\d+\.?\d*\s*g', _sd_full)
+                                _sd_exclude = {"用量","用法","疗程","水煎","不宜","后下","先煎","包煎","烊化","冲服","煎服","各等","安全","警示","疗效","预估","有效","中病","停药","疗程及","方剂"}
+                                for _m in _sd_matches:
+                                    if _m not in _sd_exclude and len(_m) >= 2 and not _m.isdigit():
+                                        _all_disease_herbs.add(_m)
+                        print(f"[DISEASE_HERB_POOL] {_add_disease_key}: {len(_all_disease_herbs)} herbs available")
+                        # 策略1：检查知识库 full_decoction 中是否有"加减"或"加味"信息
+                        _add_modification_rules = []  # 每条规则: {symptom_keyword, herbs_list, description}
+                        for _sd_name, _sd_data in _add_disease_data.get("syndromes", {}).items():
+                            _sd_full = _sd_data.get("full_decoction", "")
+                            if _sd_full and ("临床加减" in _sd_full or "加减：" in _sd_full or "\n加减：" in _sd_full):
+                                # 提取加减部分文本
+                                _add_match = _add_re.search(r'(?:临床)?加减[：:](.*?)$', _sd_full, _add_re.DOTALL)
+                                if _add_match:
+                                    _mod_lines = _add_match.group(1).strip().split('；')
+                                    for _line in _mod_lines:
+                                        _line = _line.strip().replace('；','').replace('。','')
+                                        if not _line or '加' not in _line: continue
+                                        # 解析每行：症状描述 + 加 + 药名
+                                        _add_idx = _line.find('加')
+                                        _symptom_desc = _line[:_add_idx].strip()
+                                        _herb_part = _line[_add_idx+1:].strip()
+                                        # 按顿号、逗号拆分多味药
+                                        _herb_names = []
+                                        for _part in _herb_part.replace('、', ',').split(','):
+                                            _part = _part.strip()
+                                            _hm = _add_re.search(r'([\u4e00-\u9fff\u3099]{2,4})\s*\d+\.?\d*\s*g', _part)
+                                            if _hm and _hm.group(1) not in _sd_data.get("herbs", []):
+                                                _herb_names.append(_hm.group(1))
+                                        if _herb_names:
+                                            _add_modification_rules.append({
+                                                "symptom_desc": _symptom_desc,
+                                                "herbs": _herb_names,
+                                                "source_syndrome": _sd_name
+                                            })
+                                    print(f"[MOD_FROM_KB] {_sd_name}: {len(_add_modification_rules)} 条加减规则")
+                        # 应用策略1：根据患者症状匹配加减规则
+                        # 症状描述与患者主诉的映射表（处理"面部"→"脸部"等语义差异）
+                        _symptom_desc_map = {
+                            "面部": ["面部", "脸部", "脸"],
+                            "脸部": ["面部", "脸部", "脸"],
+                            "头面": ["头面", "头部", "脸部", "脸"],
+                            "疼痛": ["疼痛", "痛", "刺痛"],
+                            "痛": ["疼痛", "痛", "刺痛"],
+                            "口干": ["口干", "咽干", "口干燥"],
+                            "咽干": ["口干", "咽干"],
+                            "瘙痒": ["瘙痒", "痒"],
+                            "痒": ["瘙痒", "痒"],
+                            "眠差": ["眠差", "不寐", "失眠", "睡眠差", "难入睡", "入睡困难"],
+                            "不寐": ["眠差", "不寐", "失眠", "睡眠差"],
+                            "失眠": ["眠差", "不寐", "失眠", "睡眠差"],
+                            "大便干": ["大便干", "便秘", "干结", "排便困难"],
+                            "便秘": ["大便干", "便秘", "干结"],
+                            "干结": ["大便干", "干结"],
+                            "纳差": ["纳差", "食欲不振", "不思食", "没胃口", "不想吃"],
+                            "食欲不振": ["纳差", "食欲不振", "不思食"],
+                        }
+                        for _rule in _add_modification_rules:
+                            _rule_matched = False
+                            _rule_match_keyword = ""
+                            # 检查规则描述中的关键词是否在患者症状中出现
+                            for _kw in ["面部", "脸部", "头面", "疼痛", "痛",
+                                        "口干", "咽干", "瘙痒", "痒",
+                                        "眠差", "不寐", "失眠",
+                                        "大便干", "便秘", "干结",
+                                        "纳差", "食欲不振"]:
+                                if _kw in _rule["symptom_desc"]:
+                                    # 检查该关键词的所有同义表达是否在患者主诉中
+                                    _aliases = _symptom_desc_map.get(_kw, [_kw])
+                                    for _alias in _aliases:
+                                        if _alias in _full_symptom_txt:
+                                            _rule_matched = True
+                                            _rule_match_keyword = _alias
+                                            break
+                                if _rule_matched:
+                                    break
+                            if _rule_matched:
+                                for _rh in _rule["herbs"]:
+                                    if _rh not in herbs and _rh not in [x.get("herb","") for x in _symptom_additions]:
+                                        _symptom_additions.append({
+                                            "herb": _rh,
+                                            "reason": f"病名知识库加减（{_rule['symptom_desc']}，匹配: {_rule_match_keyword}）",
+                                            "matched_symptom": _rule_match_keyword
+                                        })
+                                        print(f"[ADD_FROM_KB_RULE] {_rh} + (规则: {_rule['symptom_desc']}, 匹配: {_rule_match_keyword})")
+                        # 策略2：如果策略1没有产生加减，从该疾病 herb 池中选药
+                        if not _symptom_additions and _all_disease_herbs:
+                            # 症状→所需药性映射（仅从病名范围内的 herb 池中选）
+                            _within_disease_additions = []
+                            for _add_symptom, _add_target_desc in [
+                                (["口干", "咽干"], "养阴生津"),
+                                (["口苦"], "清热"),
+                                (["纳差", "食欲不振", "不思食"], "健脾开胃"),
+                                (["腹胀"], "行气"),
+                                (["失眠", "不寐", "难入睡"], "安神"),
+                                (["便秘", "大便干"], "润肠"),
+                                (["水肿", "浮肿"], "利水"),
+                                (["疼痛", "痛"], "止痛"),
+                                (["痰多"], "化痰"),
+                            ]:
+                                if any(k in _full_symptom_txt for k in _add_symptom):
+                                    # 从疾病 herb 池中选一味不在当前方剂中且功能合适的药
+                                    _candidates = [h for h in _all_disease_herbs if h not in herbs and h not in [x.get("herb","") for x in _symptom_additions]]
+                                    if _candidates:
+                                        _selected = _candidates[0]  # 选第一味（可优化为按药性匹配度排序）
+                                        _symptom_additions.append({
+                                            "herb": _selected,
+                                            "reason": f"病名方剂选药（{_add_target_desc}，匹配: {_add_symptom[0]}）",
+                                            "matched_symptom": _add_symptom[0]
+                                        })
+                                        print(f"[ADD_FROM_DISEASE_POOL] {_selected} for {_add_symptom[0]}")
+                                    break
+                        # 策略3：名医病案库查询
+                        # 严格按西医病名检索，不同病名不交叉；无相似案例则空缺
+                        _case_additions = []
+                        try:
+                            _cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "m2_case_cache.json")
+                            _case_used_log_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "m2_case_used_log.json")
+                            # 从名医病案缓存查询（按西医病名精确匹配）
+                            _case_disease = disease.split('（')[0].split(' (')[0].strip()
+                            if os.path.exists(_cache_path):
+                                with open(_cache_path, 'r', encoding='utf-8') as _f:
+                                    _cache_data = json.load(_f)
+                                # 先按病名|证型精确匹配
+                                _cache_exact_key = f"{disease}|{syndrome_name}"
+                                _case_entry = _cache_data.get(_cache_exact_key)
+                                # 如果精确匹配不到，按病名模糊匹配（只查同一个病名下）
+                                if not _case_entry:
+                                    for _ck, _cv in _cache_data.items():
+                                        _ck_disease = _ck.split("|")[0].strip().lower()
+                                        if _ck_disease == _case_disease.lower() or _case_disease.lower() == _ck_disease:
+                                            _case_entry = _cv
+                                            break
+                                if _case_entry:
+                                    _mods = _case_entry.get("modifications", [])
+                                    if _mods:
+                                        _src = _case_entry.get("source", "名家医案")
+                                        for _cm in _mods:
+                                            _ch = _cm.get("herb", "").strip()
+                                            if _ch and _ch not in herbs and _ch not in [x.get("herb","") for x in _symptom_additions]:
+                                                _case_additions.append({
+                                                    "herb": _ch,
+                                                    "reason": f"名医病案加减（{_cm.get('reason', '')[:20]}）",
+                                                    "matched_symptom": _cm.get("reason", "")[:10],
+                                                    "source": _src,
+                                                    "source_type": "名家医案"
+                                                })
+                                                if len(_case_additions) >= 2:
+                                                    break
+                                        print(f"[CASE_REF_CACHE] 名家医案 '{_cache_exact_key}': 找到 {len(_mods)} 条加减, 使用 {len(_case_additions)} 味")
+                                    else:
+                                        print(f"[CASE_REF_CACHE] 名家医案 '{_cache_exact_key}': 已查到病名但无加减数据")
+                            if not _case_additions:
+                                # 无相似名家案例 → 空缺
+                                pass
+                            if _case_additions:
+                                _symptom_additions.extend(_case_additions)
+                                # 记录病案使用日志
+                                try:
+                                    _log_entries = []
+                                    if os.path.exists(_case_used_log_path):
+                                        with open(_case_used_log_path, 'r', encoding='utf-8') as _f:
+                                            _log_entries = json.load(_f)
+                                    _log_entries.append({
+                                        "disease": disease,
+                                        "syndrome": syndrome_name,
+                                        "source": _case_additions[0].get("source", "unknown"),
+                                        "used_herbs": [x["herb"] for x in _case_additions],
+                                        "fetched_at": __import__('datetime').datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                    })
+                                    with open(_case_used_log_path, 'w', encoding='utf-8') as _f:
+                                        json.dump(_log_entries[-100:], _f, ensure_ascii=False, indent=2)
+                                except Exception:
+                                    pass
+                        except Exception as _case_e:
+                            print(f"  [MEDICAL_RECORD_DB_ERR] {_case_e}")
+                    else:
+                        print(f"[DISEASE_HERB_POOL] 在知识库中未找到疾病 '{disease}' 的条目，跳过病名范围加减")
+                except Exception as _add_e:
+                    print(f"  [ADD_WITHIN_DISEASE_ERR] {_add_e}")
+            # ── 病名范围加减结束 ──
+
+            # ── 多病名兼顾加减：检查患者是否有主诊断以外的其他西医病名 ──
+            # 从症状文本中检测其他明确诊断（如"多囊卵巢综合征"），从中选1-2味
+            _additional_diagnoses = []
+            _additional_disease_keywords = {
+                "多囊卵巢": "多囊卵巢综合征",
+                "多囊卵巢综合征": "多囊卵巢综合征",
+                "多囊": "多囊卵巢综合征",
+                "糖尿病": "糖尿病",
+                "高血压": "高血压",
+                "冠心病": "冠心病",
+                "高脂血症": "高脂血症",
+                "高血脂": "高脂血症",
+                "甲状腺功能减退": "甲状腺功能减退",
+                "甲减": "甲状腺功能减退",
+                "痛风": "痛风",
+                "慢性胃炎": "慢性胃炎",
+            }
+            for _add_kw, _add_diag in _additional_disease_keywords.items():
+                if _add_kw in _full_symptom_txt and _add_diag != disease and _add_diag not in _additional_diagnoses:
+                    _additional_diagnoses.append(_add_diag)
+            if _additional_diagnoses:
+                print(f"[ADDITIONAL_DIAGNOSES] 检测到其他诊断: {_additional_diagnoses}")
+                for _add_diag in _additional_diagnoses[:2]:  # 最多处理前2个额外诊断
+                    # 在知识库中查找该疾病条目
+                    _extra_add_key = None
+                    for _dk_add in _kb_add:
+                        _dk_cn = _dk_add.split('（')[0].split(' (')[0].strip()
+                        if _dk_add == _add_diag or _dk_cn == _add_diag:
+                            _extra_add_key = _dk_add
+                            break
+                    if not _extra_add_key:
+                        for _dk_add in _kb_add:
+                            if _add_diag in _dk_add or _dk_add in _add_diag:
+                                _extra_add_key = _dk_add
                                 break
-                        break
-            # 最多加 3 味
+                    if _extra_add_key:
+                        _extra_add_data = _kb_add[_extra_add_key]
+                        # 收集该疾病下所有证型的药物
+                        _extra_disease_herbs = set()
+                        for _sd_name, _sd_data in _extra_add_data.get("syndromes", {}).items():
+                            _sd_herbs = _sd_data.get("herbs", [])
+                            _extra_disease_herbs.update(_sd_herbs)
+                        if _extra_disease_herbs:
+                            # 选1-2味不与当前方剂冲突的药
+                            _existing_herbs = set(herbs)
+                            _existing_herbs.update(x.get("herb","") for x in _symptom_additions if isinstance(x, dict))
+                            # 按功能优先级：与月经/补益/调理冲任相关的优先
+                            _pcos_priority = ["菟丝子", "枸杞子", "山药", "熟地黄", "山茱萸", "鹿角胶", "龟甲胶", "川牛膝", "香附", "郁金", "益母草", "川芎"]
+                            _selected_extra = []
+                            for _ph in _pcos_priority:
+                                if _ph in _extra_disease_herbs and _ph not in _existing_herbs:
+                                    _selected_extra.append({
+                                        "herb": _ph,
+                                        "reason": f"兼顾{_add_diag}（{_ph}）",
+                                        "matched_symptom": f"{_add_diag}"
+                                    })
+                                    if len(_selected_extra) >= 2:
+                                        break
+                            if _selected_extra:
+                                print(f"[ADDITIONAL_DIAG_ADD] {_add_diag}: +{', '.join(s['herb'] for s in _selected_extra)}")
+                                _symptom_additions.extend(_selected_extra)
+                            else:
+                                print(f"  [ADDITIONAL_DIAG_ADD] {_add_diag}: 无合适药物（已在方中或无优先药）")
+
+            # 去重，保留每个 herb 首次出现的记录
             if _symptom_additions:
                 # 去重，保留每个 herb 首次出现的记录
                 _seen_herbs = set()
@@ -1319,23 +1677,30 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                             break
                     if not _assigned:
                         _categorized["其他"].append(_sa)
-                # 按优先级取每类最多1-2个，总共不超过6个，尽量覆盖更多系统
+                # 按优先级取每类最多1-2个，总共不超过4个（不强制拉满）
                 _prioritized = []
-                # 第一轮：每类取1个核心
-                for _cat in ["咳喘", "鼻窦", "咽", "月经", "散结", "消化", "清热", "补益", "心神", "其他"]:
+                # 第一轮：指名类别每类取1个核心（跳过"其他"，最后统一处理）
+                for _cat in ["咳喘", "鼻窦", "咽", "月经", "散结", "消化", "清热", "补益", "心神"]:
                     if _categorized[_cat]:
                         _prioritized.append(_categorized[_cat][0])
-                    if len(_prioritized) >= 5:
+                    if len(_prioritized) >= 4:
                         break
-                # 第二轮：如有剩余名额，从已覆盖的类别中取第2个（优先从症状多的类别取）
-                if len(_prioritized) < 6:
-                    for _cat in ["鼻窦", "咽", "咳喘", "月经", "散结", "消化", "清热", "补益", "心神", "其他"]:
+                # 第二轮：如有剩余名额，从已覆盖的指名类别中取第2个
+                if len(_prioritized) < 4:
+                    for _cat in ["鼻窦", "咽", "咳喘", "月经", "散结", "消化", "清热", "补益", "心神"]:
                         if _categorized[_cat] and len(_categorized[_cat]) > 1:
                             if _categorized[_cat][1]["herb"] not in [x["herb"] for x in _prioritized]:
                                 _prioritized.append(_categorized[_cat][1])
-                                if len(_prioritized) >= 6:
+                                if len(_prioritized) >= 4:
                                     break
-                _symptom_additions = _prioritized[:6]
+                # 第三轮：用"其他"类填满剩余名额（不超过4，不强制拉满）
+                if len(_prioritized) < 4:
+                    for _sa in _categorized.get("其他", []):
+                        if _sa["herb"] not in [x["herb"] for x in _prioritized]:
+                            _prioritized.append(_sa)
+                            if len(_prioritized) >= 4:
+                                break
+                _symptom_additions = _prioritized[:4]
                 print("[SYMPTOM_ADDITIONS]", len(_symptom_additions), "herbs added",
                       [x["herb"] + "(" + x["matched_symptom"] + ")" for x in _symptom_additions])
                 # 将加减药追加到 herbs 中（用于后续剂量提取和处方构建）
@@ -1345,16 +1710,50 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                     _added_herbs = [x["herb"] for x in _symptom_additions]
                 herbs = herbs + _added_herbs
                 # 也反映到 dosage_str 中（热象重写时跳过，因为已有完整剂量）
+                # 加减药从热象重写的通用剂量字典或默认剂量表中获取具体克数
+                _addition_dosage_defaults = {
+                    "炒麦芽": "12g", "山楂": "12g", "神曲": "12g",
+                    "白术": "12g", "茯苓": "12g", "诃子": "9g",
+                    "石膏": "30g", "知母": "9g", "柴胡": "9g",
+                    "白芍": "12g", "延胡索": "9g", "木香": "6g",
+                    "黄连": "6g", "黄芩": "9g", "栀子": "9g",
+                    "黄芪": "15g", "党参": "12g", "白术": "12g",
+                    "麦冬": "9g", "玄参": "12g", "天花粉": "9g",
+                    "茯苓皮": "12g", "桑白皮": "9g", "猪苓": "12g",
+                    "酸枣仁": "15g", "远志": "6g", "合欢皮": "12g", "茯神": "12g",
+                    "天麻": "9g", "钩藤": "12g", "菊花": "9g",
+                    "川贝母": "6g", "款冬花": "9g",
+                    "浙贝母": "9g", "瓜蒌": "9g", "半夏": "9g", "陈皮": "6g",
+                    "蝉蜕": "6g", "射干": "9g", "僵蚕": "6g", "牛蒡子": "9g",
+                    "辛夷": "6g", "苍耳子": "6g", "白芷": "6g",
+                    "川芎": "9g", "蔓荆子": "9g",
+                    "杜仲": "12g", "续断": "12g", "牛膝": "12g",
+                    "羌活": "9g", "独活": "9g", "威灵仙": "9g",
+                    "枳壳": "9g", "厚朴": "9g", "大腹皮": "9g",
+                    "火麻仁": "12g", "郁李仁": "9g", "枳实": "9g",
+                    "丹参": "12g", "赤芍": "12g",
+                    "当归": "12g", "香附": "9g", "益母草": "12g",
+                    "夏枯草": "12g", "牡蛎": "30g",
+                    "车前子": "9g", "泽泻": "9g", "滑石": "15g",
+                    "麻黄根": "9g", "浮小麦": "15g", "五味子": "6g",
+                    "地骨皮": "9g",
+                    "女贞子": "12g", "墨旱莲": "12g",
+                    "仙鹤草": "15g", "地榆": "9g", "茜草": "9g",
+                    "蒲黄": "9g", "三七": "6g", "郁金": "9g", "青皮": "6g",
+                    "桔梗": "6g",
+                }
                 if not locals().get("_heat_rewrite_used", False) and dosage_str:
                     for _ah in _added_herbs:
-                        dosage_str += "\n  " + _ah + "（常规剂量）"
+                        _ad_val = _addition_dosage_defaults.get(_ah, "9g")
+                        dosage_str += "\n  " + _ah + _ad_val
     except Exception as e:
         print("  [M2_ERR] " + str(e))
 
     warnings = []
     try:
         if herbs:
-            m3_r = m3.review(herbs, {k: patient.get(k, "") for k in ["age", "gender", "weight", "pregnancy", "lactation"]})
+            m3_r = m3.review(herbs, {k: patient.get(k, "") for k in ["age", "gender", "weight", "pregnancy", "lactation"]} | {"symptom_text": symptom_text},
+                             formula_name=formula_name, dosage_str=dosage_str, diagnosis=disease)
             if m3_r.get("warnings"):
                 warnings = m3_r["warnings"]
     except Exception as e:
@@ -1363,10 +1762,12 @@ async def handle_selection_answers(ws, pid: str, data: dict):
     # --- M4 复诊路由 ---
     followup_advice = ""
     try:
+        _m4_disease_name = _disease_for_m4 if '_disease_for_m4' in dir() and _disease_for_m4 else (disease or symptom_text or "待查")
+        _m4_initial_symptoms = _m4_symptom_list if '_m4_symptom_list' in dir() and _m4_symptom_list else ([symptom_text] if symptom_text else [])
         m4_r = m4.route(
-            initial_diagnosis=disease or symptom_text or "待查",
-            initial_symptoms=[symptom_text] if symptom_text else [],
-            followup_symptoms=[symptom_text] if symptom_text else [],
+            initial_diagnosis=_m4_disease_name,
+            initial_symptoms=_m4_initial_symptoms,
+            followup_symptoms=_m4_initial_symptoms,
             followup_feedback="初诊完成",
             days_since_initial=7,
         )
@@ -1389,13 +1790,54 @@ async def handle_selection_answers(ws, pid: str, data: dict):
         print("  [M4_ERR] " + str(e))
     print("[HSA_M4_DONE]", {"followup_advice": followup_advice[:80] if followup_advice else ""})
 
-    if os.getenv("ALLOW_LEGACY_BRIDGE_PRESCRIPTION_PATH", "false").lower() != "true":
-        safe_summary = "\n".join([
-            "当前已完成诊断与辨证候选分析。",
-            "旧版直接出方路径已被安全闸门阻断，本次不生成正式处方、剂量、用法或疗程。",
-            "后续必须经 M2-3 候选加减、M3 药学审核与 trace_closure 后，才能进入人工复核流程。",
+    # ══════════════════════════════════════════════════════════════
+    #  模式选择：默认模式 vs 开发验证模式
+    #  ─ 默认模式（ALLOW_LEGACY_BRIDGE_PRESCRIPTION_PATH != true）:
+    #     不输出 prescription_text / final_formula / dosage / 用法 / 疗程
+    #     只输出 candidate_summary
+    #     formal_prescription_allowed = false
+    #  ─ 开发验证模式（ALLOW_LEGACY_BRIDGE_PRESCRIPTION_PATH == true）:
+    #     允许完整方剂/剂量输出
+    #     输出标记 dev_legacy_prescription_output=true, not_for_clinical_use=true
+    # ══════════════════════════════════════════════════════════════
+    _legacy_dev_mode = os.getenv("ALLOW_LEGACY_BRIDGE_PRESCRIPTION_PATH", "false").lower() == "true"
+
+    # 构建 candidate_summary（两种模式共用）
+    candidate_summary = "\n".join([
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        " 守一中医AI辅助诊断系统 · 诊疗建议",
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        "",
+        "📋 诊断结论",
+        "━" * 30,
+    ])
+    if m1_candidates:
+        candidate_summary += "\n候选诊断: " + "、".join(m1_candidates)
+    candidate_summary += "\n西医诊断: " + (disease if disease else "待查")
+    if isinstance(m1_r, dict):
+        _extra = m1_r.get("cannot_decide_because", "")
+        if _extra:
+            candidate_summary += "\n说明: " + _extra[:100]
+    candidate_summary += "\n\n🌿 中医辨证\n" + "━" * 30
+    if syndrome_name:
+        candidate_summary += "\n证型: " + syndrome_name
+    if formula_name:
+        candidate_summary += "\n处方: " + formula_name
+    if '_tongue_diagnosis_note' in dir() or '_tongue_diagnosis_note' in locals():
+        _tdn = locals().get('_tongue_diagnosis_note', '')
+        if _tdn:
+            candidate_summary += "\n\n📌 " + _tdn
+
+    if not _legacy_dev_mode:
+        # ── 默认模式：不输出完整处方字段 ──
+        candidate_summary += "\n\n" + "\n".join([
+            "━━━━━━━━━━━━━━━━━━━━━━━━",
+            "【当前为候选摘要，非正式处方】",
+            "系统已完成诊断与辨证分析。",
+            "正式处方需经完整药学审核与人工复核流程。",
+            "━━━━━━━━━━━━━━━━━━━━━━━━",
         ])
-        add_log(pid, "assistant", {"text": safe_summary})
+        add_log(pid, "assistant", {"text": candidate_summary})
         result = {
             "type": "diagnosis_result",
             "patient_id": pid,
@@ -1403,7 +1845,13 @@ async def handle_selection_answers(ws, pid: str, data: dict):
                 "summary": summary,
                 "possible_diagnosis": disease if disease else "待查",
                 "syndrome": syndrome_name or "待辨证",
-                "recommendation": safe_summary,
+                "recommendation": candidate_summary,
+                "candidate_summary": {
+                    "diagnosis": disease if disease else "待查",
+                    "syndrome": syndrome_name or "待辨证",
+                    "formula_name": formula_name or "",
+                    "herb_count": len(herbs) if herbs else 0,
+                },
             },
             "candidate_only": True,
             "legacy_prescription_path_blocked": True,
@@ -1413,50 +1861,36 @@ async def handle_selection_answers(ws, pid: str, data: dict):
             "blocked_reason": ["legacy_bridge_prescription_path_blocked"],
             "status": "ok",
         }
-        print("[WS_SEND_DIAGNOSIS_RESULT_GUARDED]", result)
+        print("[WS_SEND_DIAGNOSIS_RESULT_DEFAULT]", result)
         await ws.send(json.dumps(result, ensure_ascii=False))
         return
 
-    # 构建完整处方笺（规范化格式，合并诊断+辨证+处方三部分）
+    # ── 开发验证模式：允许完整方剂/剂量输出，但标记为 dev only ──
+
+    # 获取该疾病的预后/疗程参考（用于输出）
+    _prognosis_data = {}
+    try:
+        _p_link = full_link([disease])
+        if _p_link and _p_link.get("prognosis"):
+            _prognosis_data = _p_link["prognosis"]
+    except Exception as _pe:
+        print(f"  [PROGNOSIS_ERR] {_pe}")
+
     # 从 _symptom_additions 获取加减药物信息
     _modification_texts = []
     if '_symptom_additions' in dir() or '_symptom_additions' in locals():
         _sa = locals().get('_symptom_additions', [])
         for _m in _sa:
             if isinstance(_m, dict):
-                _modification_texts.append("+" + _m.get("herb", "") + "（" + _m.get("reason", "")[:30] + "）")
-    rx_lines_total = []
-    rx_lines_total.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    rx_lines_total.append(" 守一中医AI辅助诊断系统 · 诊疗建议")
-    rx_lines_total.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    rx_lines_total.append("")
-    # 【第一部分：诊断结论】
-    rx_lines_total.append("📋 诊断结论")
-    rx_lines_total.append("━" * 30)
-    # 显示 M1 诊断结果 — 如果 candidates 有就展示更多信息
-    # 使用后端映射后的西医病名（disease 已经过 TCM_TO_WESTERN + DISEASE_NAME_MAP）
-    if m1_candidates:
-        rx_lines_total.append("候选诊断: " + "、".join(m1_candidates))
-    rx_lines_total.append("西医诊断: " + (disease if disease else "待查"))
-    # 如果有 NEED_MORE_INFO 信息，追加说明
-    if isinstance(m1_r, dict):
-        _extra = m1_r.get("cannot_decide_because", "")
-        if _extra:
-            rx_lines_total.append("说明: " + _extra[:100])
-    rx_lines_total.append("")
-    # 【第二部分：中医辨证】
-    rx_lines_total.append("🌿 中医辨证")
-    rx_lines_total.append("━" * 30)
-    if syndrome_name:
-        rx_lines_total.append("证型: " + syndrome_name)
-    if formula_name:
-        rx_lines_total.append("处方: " + formula_name)
-    # 如果有舌脉辨证参考，追加说明
-    if '_tongue_diagnosis_note' in dir() or '_tongue_diagnosis_note' in locals():
-        _tdn = locals().get('_tongue_diagnosis_note', '')
-        if _tdn:
-            rx_lines_total.append("")
-            rx_lines_total.append("📌 " + _tdn)
+                _label = "+" + _m.get("herb", "")
+                _reason = _m.get("reason", "")[:30]
+                _source_type = _m.get("source_type", "")
+                if _source_type == "名家医案":
+                    _label += "（名医病案: " + _reason + "）"
+                else:
+                    _label += "（" + _reason + "）"
+                _modification_texts.append(_label)
+    rx_lines_total = [candidate_summary]
     rx_lines_total.append("")
     # 【第三部分：处方方案】
     rx_lines_total.append("💊 处方方案")
@@ -1467,14 +1901,62 @@ async def handle_selection_answers(ws, pid: str, data: dict):
     if herbs:
         if dosage_str:
             rx_lines_total.append("【药物及剂量】")
-            for _d in dosage_str.split("\n"):
-                rx_lines_total.append("  " + _d.strip())
+            # 四位一行排版：并替换"甚加/加"为"+"号
+            _dose_items = [d.strip() for d in dosage_str.split("\n") if d.strip()]
+            for i in range(0, len(_dose_items), 4):
+                _row = []
+                for item in _dose_items[i:i+4]:
+                    # 把 "甚加XXX" 替换为 "+XXX"，"加XXX" 替换为 "+XXX"
+                    _clean = item
+                    if _clean.startswith("甚加"):
+                        _clean = "+" + _clean[2:]
+                    elif _clean.startswith("加"):
+                        _clean = "+" + _clean[1:]
+                    _row.append(_clean.ljust(15))
+                rx_lines_total.append("  " + "".join(_row))
         else:
             rx_lines_total.append("【药物】" + '、'.join(herbs[:12]))
     if _modification_texts:
         rx_lines_total.append("【加减】")
         for _mt in _modification_texts:
             rx_lines_total.append("  " + _mt)
+    # ── 预后/疗程参考 ──
+    if _prognosis_data and _prognosis_data.get("found", False):
+        _tw = _prognosis_data.get("treatment_response_window", {})
+        _nc = _prognosis_data.get("natural_course", {})
+        rx_lines_total.append("")
+        rx_lines_total.append("【疗程/预后参考】")
+        _first = _tw.get("expected_first_response_days", _nc.get("onset_improvement_days", ""))
+        _main = _tw.get("expected_main_symptom_response_days", _nc.get("significant_improvement_days", ""))
+        _stable = _tw.get("expected_stable_response_days", _nc.get("expected_resolution_days", ""))
+        if _first:
+            rx_lines_total.append("  · 首次反应: " + str(_first))
+        if _main:
+            rx_lines_total.append("  · 显著改善: " + str(_main))
+        if _stable:
+            rx_lines_total.append("  · 稳定控制: " + str(_stable))
+        # 疗程偏差提示
+        _cd = _prognosis_data.get("course_deviation", {})
+        if _cd.get("suggests_not_controlled"):
+            rx_lines_total.append("  ⚠ 若" + "、".join(_cd["suggests_not_controlled"][:2]) + "，提示病情未控")
+        if _cd.get("emergency_stop_if", []):
+            _em = _cd.get("emergency_stop_if", [])
+            if _em:
+                rx_lines_total.append("  🚨 急停条件: " + "、".join(_em[:2]))
+    elif _prognosis_data:
+        # 有回退数据
+        _tw = _prognosis_data.get("treatment_response_window", {})
+        _fb = _prognosis_data.get("fallback_note", "")
+        rx_lines_total.append("")
+        rx_lines_total.append("【疗程参考】")
+        _fr = _tw.get("expected_first_response_days", "")
+        _sr = _tw.get("expected_main_symptom_response_days", "")
+        if _fr and "通用" in str(_fr):
+            rx_lines_total.append("  · 首次反应: " + str(_fr))
+        if _sr and "通用" in str(_sr):
+            rx_lines_total.append("  · 显著改善: " + str(_sr))
+        if _fb:
+            rx_lines_total.append("  · 参考方向: " + _fb)
     rx_lines_total.append("")
     rx_lines_total.append("【用法】每日1剂，水煎300ml，分早晚温服，饭后1小时服")
     if warnings:
@@ -1492,14 +1974,12 @@ async def handle_selection_answers(ws, pid: str, data: dict):
         rx_lines_total.append("【复诊】" + " " + followup_advice)
     rx_lines_total.append("")
     rx_lines_total.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-    rx_lines_total.append("守一中医AI辅助诊断系统")
+    rx_lines_total.append("守一中医AI辅助诊断系统（开发模式 - 非临床使用）")
     full_rx = "\n".join(rx_lines_total)
 
     add_log(pid, "assistant", {"text": full_rx})
 
-    # 构建用户可见的诊断名：优先使用后端映射后的西医病名
     _display_disease = disease if disease else m1_out.split("\n")[0][:80] if m1_out else "待查"
-    # 只发 diagnosis_result 结构化消息（不再发 answer.text）
     result = {
         "type": "diagnosis_result",
         "patient_id": pid,
@@ -1509,9 +1989,14 @@ async def handle_selection_answers(ws, pid: str, data: dict):
             "syndrome": syndrome_name or "待辨证",
             "recommendation": full_rx,
         },
+        "dev_legacy_prescription_output": True,
+        "not_for_clinical_use": True,
+        "formal_prescription_allowed": False,
+        "candidate_only": True,
         "status": "ok",
     }
-    print("[WS_SEND_DIAGNOSIS_RESULT]", result)
+    print("[WS_SEND_DIAGNOSIS_RESULT_GUARDED]", {"legacy_dev_mode": True, "patient_id": pid})
+    print("[WS_SEND_DIAGNOSIS_RESULT_DEV]", result)
     await ws.send(json.dumps(result, ensure_ascii=False))
 
 

@@ -1,10 +1,15 @@
 import ast
 import json
+import os
+import sys
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from m1_engine import M1DiagnosisEngine
+from services.m1_m2_bridge import build_m2_process_kwargs, normalize_string_list, resolve_primary_disease
 BRIDGE = ROOT / "bridge_server.py"
 M2_KB = ROOT / "data" / "m2_formula_knowledge.json"
 
@@ -115,6 +120,76 @@ class M1M2BridgeMappingIntegrityTest(unittest.TestCase):
         self.assertIn("风热犯表", syndromes)
         self.assertEqual(syndromes["风热犯表"]["formula_name"], "银翘散")
         self.assertIn("金银花", syndromes["风热犯表"]["herbs"])
+
+
+class M1M2BridgeAdapterTest(unittest.TestCase):
+    def test_m2_payload_contains_stable_handoff_fields(self):
+        os.environ["M2_DISABLE_LLM"] = "1"
+        os.environ["DEEPSEEK_API_KEY"] = ""
+        m1 = M1DiagnosisEngine()
+        result = m1.diagnose({
+            "chief_complaint": "发热咳嗽3天",
+            "symptoms": ["发热", "咳嗽", "痰黄"],
+            "signs": ["舌红苔黄", "脉数"],
+            "labs": ["血常规示白细胞升高"],
+            "imaging": ["胸片示斑片影"],
+            "negative_findings": ["无呕吐"],
+        })
+        payload = result["m2_payload"]
+        self.assertTrue(payload["primary_disease"])
+        self.assertEqual(payload["primary_disease"], payload["primary_diagnosis"])
+        self.assertIsInstance(payload["symptoms"], list)
+        self.assertIsInstance(payload["signs"], list)
+        self.assertIsInstance(payload["labs"], list)
+        self.assertIsInstance(payload["imaging"], list)
+        self.assertIsInstance(payload["negative_findings"], list)
+        self.assertIn("舌", payload["tongue"])
+        self.assertIn("脉", payload["pulse"])
+        self.assertIn("evidence_trace", payload)
+
+    def test_build_m2_process_kwargs_normalizes_mixed_types(self):
+        kwargs = build_m2_process_kwargs(
+            primary_disease="肺炎 (Pneumonia)",
+            m1_result={
+                "m2_payload": {
+                    "symptoms": "发热,咳嗽",
+                    "negative_findings": ["无呕吐"],
+                    "tongue": "舌红苔黄",
+                    "pulse": "脉数",
+                    "labs": ["血常规升高"],
+                    "imaging": [],
+                }
+            },
+            age="8",
+        )
+        self.assertEqual(kwargs["primary_disease"], "肺炎 (Pneumonia)")
+        self.assertIn("发热", kwargs["symptoms"])
+        self.assertEqual(kwargs["tongue"], "舌红苔黄")
+        self.assertEqual(kwargs["pulse"], "脉数")
+        self.assertEqual(kwargs["labs"], ["血常规升高"])
+        self.assertEqual(kwargs["negative_findings"], ["无呕吐"])
+        self.assertEqual(kwargs["signs"], [])
+
+    def test_signs_and_negative_findings_are_separate(self):
+        kwargs = build_m2_process_kwargs(
+            primary_disease="肺炎 (Pneumonia)",
+            signs=["扁桃体充血肿大", "舌红苔黄", "脉数"],
+            negative_findings=["无呕吐", "无咳嗽"],
+            m1_result={"m2_payload": {}},
+        )
+        self.assertEqual(kwargs["negative_findings"], ["无呕吐", "无咳嗽"])
+        self.assertEqual(kwargs["signs"], ["扁桃体充血肿大"])
+        self.assertEqual(kwargs["tongue"], "舌红苔黄")
+        self.assertEqual(kwargs["pulse"], "脉数")
+        self.assertNotIn("无呕吐", kwargs["signs"])
+        self.assertNotIn("扁桃体充血肿大", kwargs["negative_findings"])
+
+    def test_resolve_primary_disease_prefers_m2_payload(self):
+        disease = resolve_primary_disease({
+            "primary_diagnosis": "急性上呼吸道感染",
+            "m2_payload": {"primary_disease": "肺炎 (Pneumonia)"},
+        }, fallback="待查")
+        self.assertEqual(disease, "肺炎 (Pneumonia)")
 
 
 if __name__ == "__main__":

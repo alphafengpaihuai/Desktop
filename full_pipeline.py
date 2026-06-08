@@ -18,6 +18,7 @@ os.environ['DEEPSEEK_API_KEY'] = 'sk-09562b1e562d480dacb33a1fe1fd8642'
 os.environ['GEMINI_API_KEY'] = 'AIzaSyDhHln47rXY_jqCgQbd8lZRf5HjdMfrj9o'
 
 from m1_engine import M1DiagnosisEngine
+from services.m1_m2_bridge import build_m2_process_kwargs
 from services.m2_prescription_service import M2PrescriptionService, HerbCandidate
 from services.m3_review_service import M3ReviewService
 
@@ -70,6 +71,11 @@ class PatientInfo:
     age: str
     gender: str
     symptoms: List[str] = field(default_factory=list)
+
+
+def m2_handoff_from_m1_result(m1_result: dict, **overrides) -> dict:
+    """Build stable kwargs for M2SyndromeSelector.process() from M1 output."""
+    return build_m2_process_kwargs(m1_result=m1_result, primary_disease=overrides.pop("primary_disease", ""), **overrides)
 
 
 class FullPipeline:
