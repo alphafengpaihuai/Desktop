@@ -6,3 +6,4 @@ data/disease_cache/runtime_cache.json
 data/disease_cache/external_fetch_trace.jsonl
 data/disease_cache/enrichment_progress.json
 session_summary.json
+.env.local

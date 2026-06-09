@@ -4,6 +4,7 @@ Test: DeepSeek Model Auto-Router
 import os
 import sys
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -21,13 +22,13 @@ class TestDeepSeekRouter(unittest.TestCase):
     def setUp(self):
         self.router = DeepSeekModelRouter()
         # 默认值
-        self.flash_default = "deepseek-v4-flash"
+        self.flash_default = "deepseek-v4-pro"
         self.pro_default = "deepseek-v4-pro"
 
     # ── 路由规则测试 ──
 
-    def test_flash_tasks_route_to_flash(self):
-        """简单任务 → flash"""
+    def test_flash_tasks_route_to_pro(self):
+        """简单任务 → pro（统一模型后 flash 路由同 pro）"""
         for task in FLASH_TASKS:
             model, reasoning = self.router.route(task)
             self.assertEqual(
@@ -56,15 +57,15 @@ class TestDeepSeekRouter(unittest.TestCase):
             )
             self.assertTrue(reasoning, f"{task}: expected reasoning=True")
 
-    def test_unknown_task_defaults_to_flash(self):
-        """未知任务 → flash（默认安全）"""
+    def test_unknown_task_defaults_to_pro(self):
+        """未知任务 → pro（默认安全）"""
         model, reasoning = self.router.route("unknown_task_type")
         self.assertEqual(model, self.flash_default)
         self.assertFalse(reasoning)
 
     # ── Payload 构建测试 ──
 
-    def test_build_payload_flash(self):
+    def test_build_payload_flash_tasks(self):
         """flash 任务 payload 不含 reasoning"""
         payload = self.router.build_payload("test prompt", "file_search")
         self.assertEqual(payload["model"], self.flash_default)
@@ -81,7 +82,7 @@ class TestDeepSeekRouter(unittest.TestCase):
         payload = self.router.build_payload("test prompt", "m2_syndrome_error")
         self.assertEqual(payload["model"], self.pro_default)
         self.assertEqual(payload.get("reasoning_effort"), "high")
-        self.assertTrue(payload.get("thinking", {}).get("enabled"))
+        self.assertEqual(payload.get("thinking", {}).get("type"), "enabled")
 
     def test_build_payload_with_system_prompt(self):
         """system_prompt 正确传递"""
@@ -104,7 +105,7 @@ class TestDeepSeekRouter(unittest.TestCase):
 
         info = self.router.get_model_info("run_test")
         self.assertEqual(info["model"], self.flash_default)
-        self.assertEqual(info["complexity"], "flash")
+        self.assertEqual(info["complexity"], "pro")
         self.assertFalse(info["use_reasoning"])
 
         info = self.router.get_model_info("architecture_judge")
@@ -119,6 +120,35 @@ class TestDeepSeekRouter(unittest.TestCase):
         all_tasks = FLASH_TASKS | PRO_TASKS | PRO_REASONING_TASKS
         total = len(FLASH_TASKS) + len(PRO_TASKS) + len(PRO_REASONING_TASKS)
         self.assertEqual(len(all_tasks), total)
+
+    # ── Flash 禁用验收（P0）──
+
+    def test_no_task_returns_flash_model(self):
+        """任何 task_type 都不得返回 deepseek-v4-flash"""
+        all_types = FLASH_TASKS | PRO_TASKS | PRO_REASONING_TASKS | {"unknown", "default", "summary", "quick", "cheap"}
+        for task in all_types:
+            model, _ = self.router.route(task)
+            self.assertNotIn(
+                "flash", model.lower(),
+                f"task={task!r}: model={model!r} 不应包含 'flash'",
+            )
+            self.assertEqual(model, "deepseek-v4-pro",
+                             f"task={task!r}: 期望 deepseek-v4-pro, 实际 {model}")
+
+    def test_env_var_cannot_inject_flash(self):
+        """即使 DEEPSEEK_FLASH_MODEL / DEEPSEEK_MODEL 设了 flash，路由结果也不得使用 flash"""
+        with patch.dict(os.environ, {
+            "DEEPSEEK_FLASH_MODEL": "deepseek-v4-flash",
+            "DEEPSEEK_MODEL": "deepseek-v4-flash",
+        }):
+            router = DeepSeekModelRouter()
+        all_types = FLASH_TASKS | PRO_TASKS | PRO_REASONING_TASKS | {"unknown"}
+        for task in all_types:
+            model, _ = router.route(task)
+            self.assertNotIn(
+                "flash", model.lower(),
+                f"task={task!r}: 环境变量注入 flash 后 model={model!r} 仍不应包含 'flash'",
+            )
 
 
 if __name__ == "__main__":
