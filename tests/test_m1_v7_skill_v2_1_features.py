@@ -109,7 +109,10 @@ class M1V7SkillV21FeaturesTest(unittest.TestCase):
         })
         self.assertIn("diagnosis_status", result,
                       "diagnose() 输出应包含 diagnosis_status")
-        self.assertIn(result.get("diagnosis_status"), ["PASS", "LOW_CONFIDENCE", "REQUEST_MORE_INFO", "NEED_EXTERNAL_SEARCH"],
+        self.assertIn(result.get("diagnosis_status"), [
+            "CONFIRMED", "PROBABLE", "LOW_CONFIDENCE", "REQUEST_MORE_INFO", "NO_CANDIDATE",
+            "PASS", "NEED_EXTERNAL_SEARCH",
+        ],
                       f"diagnosis_status 应为有效值，得到: {result.get('diagnosis_status')}")
 
     def test_diagnosis_status_not_empty_when_insufficient(self):
@@ -333,7 +336,7 @@ class M1V7SkillV21FeaturesTest(unittest.TestCase):
         })
         # 在无 API 环境下 code_fallback 可能返回 PASS；有 API 时应 REQUEST_MORE_INFO
         self.assertIn(result.get("diagnosis_status", ""),
-                      ("PASS", "REQUEST_MORE_INFO", "LOW_CONFIDENCE"),
+                      ("PASS", "CONFIRMED", "PROBABLE", "REQUEST_MORE_INFO", "LOW_CONFIDENCE"),
                       "信息不足时应有合理诊断状态")
 
 

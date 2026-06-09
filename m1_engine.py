@@ -1,26 +1,16 @@
 """
-M1 西医诊断引擎 v7 — 中医辅助诊疗系统「守一」
-=============================================
-核心设计：本地病名库优先 + 代码多维评分 + LLM 语义匹配器 + 代码约束校验
-遵循 Skill v2.1：docs/prompt_review/M1_diagnosis_prompt_review.md
+M1 西医诊断引擎 v8 — 西医诊断 + 病理分期 + M2 payload 生成引擎
+================================================================
+核心设计：标准化输入 → 代码预筛 → 双轨召回 → 候选合并 → LLM 独立诊断参考
+         → 知识库诊断标准逐条比对 → 病名 + stage 分期 → 本地/在线仲裁 → m2_payload
 
-流程：
-0. 标准化输入（含病名、症状、否定症状、检查、影像、病程、年龄、特殊状态）
-1. 本地候选病多轨召回（病名轨/症状轨/检查轨/风险轨）
-2. 代码多维评分 + diagnostic_criteria 结构化比对 + 否定症状扣分
-3. 决策：Tier1（精确病名 + 矛盾检查）→ Tier2（代码评分）→ LLM 语义匹配兜底 + 代码校验
-4. 搜索兜底：本地无匹配 / 低置信 → 在线查询（标记 NEED_EXTERNAL_SEARCH + LOW_CONFIDENCE）
-5. 追问机制：信息不足 → 生成追问 → 补充后重入
-6. 输出 Top 1-3 + structured_info + diagnosis_status + 主病/兼病/并发症/诊断关系
+遵循：docs/prompt_review/M1_diagnosis_prompt_review.md
 
 核心原则：
-- LLM 是本地候选的语义匹配器，不是自由诊断者
-- 代码负责召回、标准化、校验、排序、安全拦截
-- 本地匹配不上才低置信兜底在线查询
-- M1 只输出西医诊断和证据链，不出中医辨证/处方
-- LLM 输出必须经过代码二次校验，未通过不得进入 Top1
-- 否定症状必须参与评分扣减
-- REQUEST_MORE_INFO 不得直接进入 M2
+- 知识库标准诊断主判；LLM 仅作校对参考，不得直接拍板
+- 在线检索结果只能进入 staging cache，不得直接写正式库
+- REQUEST_MORE_INFO / NO_CANDIDATE 不得进入 M2
+- M1 只输出西医诊断、分期和证据链，不出中医辨证/处方/方剂/剂量
 """
 
 import json
@@ -37,7 +27,8 @@ from types import SimpleNamespace
 
 @dataclass
 class NormalizedInput:
-    """标准化患者输入（M1 v7 — Skill v2.1 完整字段）"""
+    """标准化患者输入（M1 v8）"""
+    patient_info: Dict = field(default_factory=dict)
     patient_mentioned_disease: str = ""
     known_diagnosis: str = ""
     chief_complaint: str = ""
@@ -57,6 +48,7 @@ class NormalizedInput:
     past_history: List[str] = field(default_factory=list)
     current_medications: List[str] = field(default_factory=list)
     special_status: List[str] = field(default_factory=list)
+    original_to_normalized_map: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -335,7 +327,7 @@ class M1DiagnosisEngine:
         }
 
     def normalize_input(self, raw: Dict) -> NormalizedInput:
-        """标准化患者输入（M1 v7 — Skill v2.1）"""
+        """标准化患者输入（M1 v8）"""
         if isinstance(raw, str):
             raw = {"chief_complaint": raw, "symptoms": [raw]}
         elif isinstance(raw, list):
@@ -344,10 +336,13 @@ class M1DiagnosisEngine:
             raw = {}
 
         ni = NormalizedInput()
+        original_map: Dict[str, str] = {}
 
         mentioned = raw.get("patient_mentioned_disease", "")
         if mentioned:
-            ni.patient_mentioned_disease = self.standardize_disease_name(mentioned)["standard_name"]
+            std = self.standardize_disease_name(mentioned)["standard_name"]
+            ni.patient_mentioned_disease = std
+            original_map[mentioned] = std
         else:
             ni.patient_mentioned_disease = ""
 
@@ -356,18 +351,31 @@ class M1DiagnosisEngine:
         chief = raw.get("chief_complaint", "")
         if isinstance(chief, list):
             chief = chief[0] if chief else ""
-        ni.chief_complaint = chief
+        ni.chief_complaint = normalize_text(chief) if chief else ""
+        if chief and chief != ni.chief_complaint:
+            original_map[chief] = ni.chief_complaint
 
         for key in ["symptoms", "signs", "labs", "imaging", "negative_findings", "pathology"]:
             vals = raw.get(key, [])
             if isinstance(vals, str):
                 vals = [vals]
-            setattr(ni, key, [normalize_text(v) for v in vals if isinstance(v, str) and v.strip()])
+            normalized_vals = []
+            for v in vals:
+                if not isinstance(v, str) or not v.strip():
+                    continue
+                original = v.strip()
+                normalized = normalize_text(original)
+                normalized_vals.append(normalized)
+                if normalized != original:
+                    original_map[original] = normalized
+            setattr(ni, key, normalized_vals)
 
         for key in ["duration", "onset", "severity", "location", "trigger_relief", "age", "sex"]:
-            setattr(ni, key, raw.get(key, ""))
+            val = raw.get(key, "")
+            if key == "sex" and not val:
+                val = raw.get("gender", "")
+            setattr(ni, key, val)
 
-        # 列表字段
         for key in ["past_history", "current_medications", "special_status"]:
             vals = raw.get(key, [])
             if isinstance(vals, str):
@@ -377,23 +385,33 @@ class M1DiagnosisEngine:
         if not ni.chief_complaint and ni.symptoms:
             ni.chief_complaint = ni.symptoms[0]
 
+        from services.m1_v8_helpers import filter_positive_symptoms
+
+        ni.symptoms = filter_positive_symptoms(ni.symptoms, ni.negative_findings)
+        ni.patient_info = {
+            "age": ni.age,
+            "sex": ni.sex,
+            "past_history": list(ni.past_history),
+            "special_status": list(ni.special_status),
+            "current_medications": list(ni.current_medications),
+        }
+        ni.original_to_normalized_map = original_map
         return ni
 
     # ══════════════════════════════════════════════════════
     #  症状轨：代码检索
 
     def _fill_missing_criteria(self, disease_cn_name: str, disease_en_name: str = "") -> bool:
-        """即时补齐单个疾病的诊断标准
+        """即时补齐单个疾病的诊断标准（P0-4：仅写 runtime_cache，不写 diseases_core.json）
 
         当 M1 诊断出某疾病后，发现该疾病在 diseases_core.json 中缺少
         diagnostic_criteria / typical_symptoms / differential_diagnosis 时，
-        调用 LLM 查询默沙东/MSD Manual 等循证医学网站并缓存回数据库。
+        调用 LLM 查询默沙东/MSD Manual 等循证医学网站并缓存回 runtime_cache。
 
         规则：
         - 只查未补齐过的疾病
         - LLM 只能搜索网上循证医学来源（默沙东、pubmed）
-        - 结果写回 diseases_core.json 和 runtime_cache.json
-        - 记录到 criteria_filled_log.json 避免重复查询
+        - 结果写入 runtime_cache.json 和 criteria_filled_log.json，不得污染 diseases_core.json
         """
         cache_key = disease_cn_name or disease_en_name
         if not cache_key or cache_key in self.criteria_filled_set:
@@ -462,22 +480,7 @@ class M1DiagnosisEngine:
         if not (has_criteria or has_symptoms):
             return False
 
-        if has_criteria:
-            target_entry["diagnostic_criteria"] = result["diagnostic_criteria"]
-        if has_symptoms:
-            target_entry["typical_symptoms"] = result["typical_symptoms"]
-        if has_diff:
-            target_entry["differential_diagnosis"] = result["differential_diagnosis"]
-
-        try:
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-            db_path = os.path.join(script_dir, "diseases_core.json")
-            with open(db_path, 'w', encoding='utf-8') as f:
-                json.dump(self.db, f, ensure_ascii=False, indent=4)
-        except Exception:
-            self.criteria_filled_set.add(cache_key)
-            return False
-
+        # P0-4: 仅写 runtime_cache，禁止修改 diseases_core.json
         import time
         self.criteria_fill_cache[cache_key] = {
             "disease_name": disease_name_display,
@@ -485,15 +488,21 @@ class M1DiagnosisEngine:
             "typical_symptoms": result.get("typical_symptoms", []),
             "differential_diagnosis": result.get("differential_diagnosis", []),
             "source_urls": result.get("source_urls", []),
-            "status": "llm_filled_on_demand",
+            "status": "llm_filled_on_demand_staging",
             "filled_at": time.strftime('%Y-%m-%d %H:%M:%S'),
+            "warning": "此数据为 LLM 在线补充，尚未人工审核，仅用于 reference",
         }
-        with open(self.criteria_fill_cache_path, 'w', encoding='utf-8') as f:
-            json.dump(self.criteria_fill_cache, f, ensure_ascii=False, indent=2)
+        try:
+            cache_dir = os.path.dirname(self.criteria_fill_cache_path)
+            os.makedirs(cache_dir, exist_ok=True)
+            with open(self.criteria_fill_cache_path, 'w', encoding='utf-8') as f:
+                json.dump(self.criteria_fill_cache, f, ensure_ascii=False, indent=2)
+        except Exception:
+            pass
 
         self.criteria_filled_set.add(cache_key)
         self._save_criteria_filled_log()
-        print(f"[M1] 诊断标准补齐: {disease_name_display} ({len(result.get('diagnostic_criteria', []))}条标准)")
+        print(f"[M1] 诊断标准补齐(staging): {disease_name_display} ({len(result.get('diagnostic_criteria', []))}条标准，写入runtime_cache)")
         return True
 
     def _save_criteria_filled_log(self):
@@ -505,6 +514,105 @@ class M1DiagnosisEngine:
                 json.dump(sorted(list(self.criteria_filled_set)), f, ensure_ascii=False, indent=2)
         except Exception:
             pass
+
+    _BRONCHITIS_PRIMARY_CANDIDATES = ("急性支气管炎", "支气管炎", "急性咳嗽", "咳嗽")
+    _RHINITIS_PRIMARY_NAMES = ("变应性鼻炎", "慢性鼻炎", "急性鼻炎", "过敏性鼻炎")
+
+    @staticmethod
+    def _clinical_text_blob(*parts) -> str:
+        return " ".join(str(p).strip() for p in parts if p and str(p).strip())
+
+    def _count_bronchitis_priority_signals(self, text: str, mentioned: str = "") -> int:
+        """咳嗽主轴优先：统计支气管炎强信号条数（≥2 条时应优先下气道入口）。"""
+        if not text:
+            return 0
+        count = 0
+        if "支气管炎" in text or "急性支气管炎" in (mentioned or ""):
+            count += 1
+        if "咳嗽" in text and any(k in text for k in ("一周", "3天", "十天", "两周", "多日", "夜间", "晚上", "频繁")):
+            count += 1
+        if any(k in text for k in ("双肺呼吸音粗", "呼吸音粗", "呼粗", "啰音", "肺部体征", "肺部感染")):
+            count += 1
+        if "输液" in text and any(k in text for k in ("无效", "无明显缓解", "未缓解", "无缓解", "不见好转")):
+            count += 1
+        if ("咽痛" in text or "咽痒" in text) and "咳嗽" in text:
+            count += 1
+        return count
+
+    @staticmethod
+    def _rhinitis_should_be_demoted(text: str) -> bool:
+        """鼻塞/流涕为轻症或咳嗽更重时，鼻炎不得反客为主。"""
+        if not text:
+            return False
+        demotion_markers = (
+            "鼻塞少", "鼻涕少", "流涕少", "鼻塞轻", "鼻涕不多", "流涕不多",
+            "无明显喷嚏", "无喷嚏", "无反复过敏", "无过敏史",
+        )
+        if any(m in text for m in demotion_markers):
+            return True
+        cough_markers = ("咳嗽", "夜间咳嗽", "晚上咳嗽", "咳频", "咳嗽频")
+        nasal_markers = ("鼻塞", "流涕", "鼻涕", "喷嚏", "鼻痒")
+        cough_hits = sum(1 for m in cough_markers if m in text)
+        nasal_hits = sum(1 for m in nasal_markers if m in text)
+        lower_airway = any(k in text for k in ("支气管炎", "双肺呼吸音粗", "呼吸音粗", "呼粗", "啰音"))
+        return cough_hits >= 2 and (nasal_hits <= 1 or lower_airway)
+
+    @staticmethod
+    def _is_rhinitis_primary_name(name: str) -> bool:
+        if not name:
+            return False
+        return any(k in name for k in ("鼻炎", "过敏性鼻炎", "变应性鼻炎"))
+
+    def _bronchitis_axis_need_human_review(self, text: str) -> bool:
+        return any(k in text for k in (
+            "夜间咳嗽", "晚上咳嗽", "咳嗽频繁", "输液", "无明显缓解", "无效",
+            "口干", "口苦", "咽痛", "舌暗红", "苔白腻", "苔白泥",
+        ))
+
+    def _apply_bronchitis_cough_axis_priority(
+        self,
+        ni,
+        primary: str,
+        cn_diagnoses: List[str],
+        relationships: Dict,
+    ) -> tuple:
+        """咳嗽主轴优先：支气管炎不得被轻症鼻炎覆盖。"""
+        text = self._clinical_text_blob(
+            getattr(ni, "patient_mentioned_disease", "") if ni else "",
+            getattr(ni, "known_diagnosis", "") if ni else "",
+            getattr(ni, "chief_complaint", "") if ni else "",
+            " ".join(getattr(ni, "symptoms", []) or []) if ni else "",
+            " ".join(getattr(ni, "signs", []) or []) if ni else "",
+            " ".join(getattr(ni, "labs", []) or []) if ni else "",
+            " ".join(getattr(ni, "imaging", []) or []) if ni else "",
+            " ".join(getattr(ni, "negative_findings", []) or []) if ni else "",
+        )
+        mentioned = (getattr(ni, "patient_mentioned_disease", "") or getattr(ni, "known_diagnosis", "") or "") if ni else ""
+        signal_count = self._count_bronchitis_priority_signals(text, mentioned)
+        if signal_count < 2:
+            return primary, cn_diagnoses, relationships, False
+
+        demote_rhinitis = self._is_rhinitis_primary_name(primary) or self._rhinitis_should_be_demoted(text)
+        if not demote_rhinitis and not self._is_rhinitis_primary_name(primary):
+            return primary, cn_diagnoses, relationships, self._bronchitis_axis_need_human_review(text)
+
+        bronchitis_primary = "急性支气管炎"
+        if "支气管炎" in mentioned and "急性" not in mentioned:
+            bronchitis_primary = "支气管炎"
+
+        old_primary = primary
+        new_diagnoses = [bronchitis_primary]
+        for d in cn_diagnoses:
+            if d and d not in new_diagnoses:
+                new_diagnoses.append(d)
+        if old_primary and self._is_rhinitis_primary_name(old_primary) and old_primary not in new_diagnoses:
+            new_diagnoses.append(old_primary)
+
+        relationships = dict(relationships or {})
+        relationships["united_airway_flag"] = True
+        relationships["diagnosis_relationship"] = "下气道咳嗽为主，上气道鼻咽症状为伴随表现"
+        print(f"[M1_BRONCHITIS_PRIORITY] {old_primary} -> {bronchitis_primary} (signals={signal_count})")
+        return bronchitis_primary, new_diagnoses, relationships, True
 
     def _keyword_fallback(self, mentioned: str, symptoms: List[str],
                            known_diagnosis: str = "") -> List[str]:
@@ -529,13 +637,37 @@ class M1DiagnosisEngine:
         }
 
         # 构建搜索文本
-        search_text = (mentioned or "") + " " + " ".join(symptoms or [])
+        search_text = (mentioned or "") + " " + (known_diagnosis or "") + " " + " ".join(symptoms or [])
         search_lower = search_text.lower()
 
+        bronchitis_signals = self._count_bronchitis_priority_signals(search_text, mentioned or known_diagnosis)
+        if bronchitis_signals >= 2:
+            if "急性支气管炎" in search_text or "急性支气管炎" in (mentioned or known_diagnosis):
+                return ["急性支气管炎"]
+            if "支气管炎" in search_text or "支气管炎" in (mentioned or known_diagnosis):
+                return ["支气管炎", "急性支气管炎"]
+            return ["急性支气管炎", "支气管炎", "咳嗽"]
+
         nasal_terms = ["鼻痒", "喷嚏", "打喷嚏", "清涕", "流清涕", "流鼻涕", "鼻塞", "遇冷"]
-        if any(term in search_text for term in nasal_terms):
+        if any(term in search_text for term in nasal_terms) and not self._rhinitis_should_be_demoted(search_text):
             if "发热" not in search_text and "高热" not in search_text:
                 return ["变应性鼻炎", "慢性鼻炎", "急性鼻炎"]
+
+        # 尿路感染关键词检测
+        uti_terms = ["尿频", "尿急", "尿痛", "尿白细胞", "尿路感染"]
+        if any(term in search_text for term in uti_terms):
+            if any(k in search_text for k in ("发热", "腰痛", "肾区叩痛", "寒战")):
+                return ["肾盂肾炎", "尿路感染", "复杂性尿路感染"]
+            return ["尿路感染"]
+
+        # 高血压关键词检测
+        if "血压" in search_text:
+            bp_match = re.search(r'(?:血压|bp)\s*[：:]*\s*(\d+)\s*[/／]\s*(\d+)', search_text)
+            if bp_match:
+                return ["原发性高血压", "高血压"]
+            if "高血压" in search_text:
+                return ["原发性高血压", "高血压"]
+            return ["原发性高血压", "高血压"]
 
         lower_airway_terms = ["咳痰", "黄痰", "白痰", "气促", "喘", "呼吸困难", "胸闷", "发热", "肺部", "啰音"]
         def _positive_term(term: str) -> bool:
@@ -926,8 +1058,118 @@ class M1DiagnosisEngine:
     #  Agent 主推理流程
     # ══════════════════════════════════════════════════════
 
+    def _local_disease_name_pool(self, limit: int = 200) -> List[str]:
+        names = []
+        for entry in self.db:
+            cn = entry.get("diseaseName_cn", "").strip()
+            if cn and cn not in names:
+                names.append(cn)
+            if len(names) >= limit:
+                break
+        return names
+
+    def _get_llm_pool_suggestions(self, ni, pool: Optional[List[str]] = None) -> List[str]:
+        """Step 3 轨道 B：LLM 只能在本地病名池内建议 3-5 个候选。"""
+        if not self.llm_api_available():
+            return []
+        pool = pool or self._local_disease_name_pool()
+        pool_text = "、".join(pool[:120])
+        prompt = f"""你是 M1 本地病名池辅助轨。根据患者资料，只能从下列本地标准中文病名中建议 3-5 个可能相关病名。
+不得创造池外病名；若高度怀疑池外病名，输出 OUT_OF_SCOPE_CANDIDATE。
+这些建议仅作召回参考，不是最终诊断。
+
+患者资料：
+- 主诉：{ni.chief_complaint}
+- 症状：{'；'.join(ni.symptoms)}
+- 否定：{'；'.join(ni.negative_findings)}
+- 体征：{'；'.join(ni.signs)}
+- 检查：{'；'.join(ni.labs)}
+- 影像：{'；'.join(ni.imaging)}
+- 病程：{ni.duration}
+- 年龄/性别：{ni.age}/{ni.sex}
+
+本地病名池（节选）：{pool_text}
+
+输出 JSON：
+{{"candidates":["病名1","病名2"],"out_of_scope":false}}
+或
+{{"candidates":[],"out_of_scope":true}}"""
+        text = self._call_llm(prompt, temperature=0.0, max_tokens=800, task_type="m1_diagnosis_error")
+        if not text:
+            return []
+        try:
+            m = re.search(r"\{.*\}", text, re.DOTALL)
+            parsed = json.loads(m.group()) if m else {}
+        except Exception:
+            return []
+        out = []
+        if parsed.get("out_of_scope"):
+            out.append("OUT_OF_SCOPE_CANDIDATE")
+        for name in parsed.get("candidates", []) or []:
+            if isinstance(name, str) and name.strip():
+                out.append(name.strip())
+        return out[:5]
+
+    def _get_llm_reference_diagnosis(self, ni, candidates: List[dict], scored: List[dict]) -> Dict:
+        """Step 5：LLM 独立诊断参考，仅校对，不作最终诊断。"""
+        if not self.llm_api_available():
+            return {"opinion": "", "names": [], "discrepancy": None}
+        criteria_section = ""
+        for i, s in enumerate((scored or candidates or [])[:6]):
+            cand = s["entry"] if isinstance(s, dict) and "entry" in s else s
+            cn_name = cand.get("diseaseName_cn", "").strip()
+            diag = cand.get("diagnostic_criteria", [])
+            typical = cand.get("typical_symptoms", [])
+            criteria_section += f"\n### {i+1}. {cn_name}"
+            if diag:
+                criteria_section += "\n标准：" + "；".join(diag[:4])
+            if typical:
+                criteria_section += "\n典型：" + "；".join(typical[:4])
+        prompt = f"""你是 M1 独立诊断参考轨。基于完整患者信息，给出 1-3 个可能西医病名。
+该结果只供人工/代码校对，不是最终诊断；不得输出中医证型、方剂、药物、剂量。
+
+患者资料：
+- 主诉：{ni.chief_complaint}
+- 症状：{'；'.join(ni.symptoms)}
+- 否定：{'；'.join(ni.negative_findings)}
+- 体征：{'；'.join(ni.signs)}
+- 实验室：{'；'.join(ni.labs)}
+- 影像：{'；'.join(ni.imaging)}
+- 病程：{ni.duration}
+- 年龄/性别：{ni.age}/{ni.sex}
+
+候选背景：
+{criteria_section}
+
+输出 JSON：
+{{"reference_diagnoses":["病名1","病名2"],"reason":"简述"}}"""
+        text = self._call_llm(prompt, temperature=0.1, max_tokens=1000, task_type="m1_diagnosis_error")
+        if not text:
+            return {"opinion": "", "names": [], "discrepancy": None}
+        try:
+            m = re.search(r"\{.*\}", text, re.DOTALL)
+            parsed = json.loads(m.group()) if m else {}
+        except Exception:
+            return {"opinion": "", "names": [], "discrepancy": None}
+        names = [n.strip() for n in parsed.get("reference_diagnoses", []) if isinstance(n, str) and n.strip()]
+        return {
+            "opinion": parsed.get("reason", "") or "；".join(names[:3]),
+            "names": names[:3],
+            "discrepancy": None,
+        }
+
+    def _resolve_disease_key_for_m2(self, primary: str) -> str:
+        try:
+            from m2_engine import M2SyndromeSelector
+
+            return M2SyndromeSelector().resolve_m2_disease_key(primary)
+        except Exception:
+            from services.m1_v8_helpers import resolve_disease_key
+
+            return resolve_disease_key(primary)
+
     def diagnose(self, raw_input: Dict, _followup_answers: Optional[Dict] = None) -> Dict:
-        """主诊断入口（M1 v7 — 本地病名库优先 + 代码评分 + LLM 语义匹配器）
+        """主诊断入口（M1 v8 — 知识库主判 + LLM 参考校对 + stage + m2_payload）
 
         流程（Skill v2.1）：
         0. 标准化输入
@@ -977,35 +1219,62 @@ class M1DiagnosisEngine:
                 cannot_decide_because="症状信息不足，无法进行可靠西医诊断。",
             )
 
-        if not self.llm_api_available():
-            fallback = self._keyword_fallback(ni.patient_mentioned_disease or ni.known_diagnosis, ni.symptoms)
-            status = "DIAGNOSIS_READY" if fallback else "NEED_MORE_INFO"
-            diag_status = "PASS" if fallback else "REQUEST_MORE_INFO"
-            primary = fallback[0] if fallback else ""
-
-            # ── 儿童轻症咳嗽保护（回归 3）──
-            # 当且仅当儿童、仅咳嗽、无明确病名时，降级为 LOW_CONFIDENCE
-            if diag_status == "PASS" and primary.lower() in ("喉源性咳嗽", "急性上呼吸道感染", "咳嗽"):
-                try:
-                    age_val = int(ni.age.replace("岁", "").strip()) if ni.age else 999
-                except (ValueError, AttributeError):
-                    age_val = 999
-                has_explicit_disease = bool(ni.patient_mentioned_disease or ni.known_diagnosis)
-                if age_val < 14 and not has_explicit_disease and not any(
-                    t in ni.chief_complaint.lower() for t in ["发热", "气促", "喘息", "痰", "检查", "ct", "胸片"]
-                ):
-                    diag_status = "LOW_CONFIDENCE"
-
-            return self._build_m1_result(
-                ni, [], [], fallback[:3] if fallback else [], "code_fallback", diag_status,
-                raw_for_output=raw_for_output,
-                scored_top=[],
+        # ── Step 3: 双轨召回 + Step 4: 合并去重 ──
+        # 代码召回优先（始终执行），LLM pool 建议作为可选增强
+        code_candidates = self._recall_candidates(ni)
+        # keyword_fallback 作为 recall supplement，确保常见病能被召回
+        # 即使 code_recall 已有结果，也补充 keyword 发现的关键疾病
+        kw_names = self._keyword_fallback(
+            ni.patient_mentioned_disease or ni.known_diagnosis,
+            ni.symptoms,
+        )
+        # 记录 keyword 推荐病名（用于 scoring 排序优先）
+        _kw_names_lower = set(n.strip().lower() for n in kw_names)
+        for kw_name in kw_names:
+            kw_lower = kw_name.strip().lower()
+            already = any(
+                e.get("diseaseName_cn", "").strip().lower() == kw_lower
+                or e.get("disease_name", "").lower() == kw_lower
+                for e in code_candidates
             )
+            if not already:
+                # 从 DB 查找完整条目
+                db_entry = self.cn_name_index.get(kw_lower) or self.name_index.get(kw_lower)
+                if not db_entry:
+                    for entry in self.db:
+                        cn = entry.get("diseaseName_cn", "").strip().lower()
+                        en = entry.get("disease_name", "").lower()
+                        if cn == kw_lower or en == kw_lower:
+                            db_entry = entry
+                            break
+                if db_entry:
+                    code_candidates.append(db_entry)
+                    print(f"[M1_KW_SUPPLEMENT] keyword 补充召回: {kw_name}")
+        # 去重
+        seen_keys = set()
+        deduped = []
+        for entry in code_candidates:
+            key = entry.get("disease_name") or entry.get("diseaseName_cn", "")
+            if key and key not in seen_keys:
+                seen_keys.add(key)
+                deduped.append(entry)
+        code_candidates = deduped
+        llm_pool = self._get_llm_pool_suggestions(ni)
+        from services.m1_v8_helpers import merge_candidate_tracks
 
-        # ── Step 1-2: 本地多轨召回 + 年龄性别硬筛 ──
-        candidates = self._recall_candidates(ni)
-        candidates = self._age_gender_hard_filter(candidates, ni)
+        candidates = merge_candidate_tracks(code_candidates, llm_pool, self.db)
+        candidates = self._prefilter_candidates(candidates, ni)
+        if not candidates and llm_pool:
+            print("[M1_V8] 本地召回为空，等待在线兜底或追问")
         scored = self._score_candidates(candidates, ni)
+        # 在评分结果中提升 keyword_fallback 匹配病的优先级，避免相同评分排名时误选
+        if _kw_names_lower:
+            def _kw_sort_key(s):
+                cn = s["entry"].get("diseaseName_cn", "").strip().lower()
+                en = s["entry"].get("disease_name", "").lower()
+                kw_boost = -50 if any(k in cn or cn in k or k in en or en in k for k in _kw_names_lower) else 0
+                return (kw_boost, s["score"])
+            scored.sort(key=_kw_sort_key, reverse=True)
         _scored_top = scored[:3] if scored else []
         _scored_diseases = [s["entry"].get("diseaseName_cn", "") for s in _scored_top]
         _scored_details = [s["detail"] for s in _scored_top]
@@ -1106,175 +1375,51 @@ class M1DiagnosisEngine:
                     diagnosis_status = "PASS"
                     print(f"[M1_BAYESIAN] 贝叶斯验证置信={top_conf} → 直接采用")
 
-            # Tier 3: LLM 语义匹配器（本地候选范围内）
-            # 当以下情况时进入：
-            #   A. 无已知诊断，且贝叶斯置信度不够 high → cn_diagnoses 为空，source 为空
-            #   B. 有已知诊断但未通过强先验验证（已知诊断置信不足或未精确匹配）
+            # Step 6: 知识库标准诊断主判 — 评分不足时使用代码 top scored，LLM 不作最终拍板
             if not cn_diagnoses:
-                print(f"[M1_BAYESIAN_NEED_LLM] 贝叶斯置信={top_conf} → LLM语义匹配")
-                criteria_section = ""
-                for i, s in enumerate(scored[:6]):
-                    cand = s["entry"]
-                    cn_name = cand.get("diseaseName_cn", "").strip()
-                    en_name = cand.get("disease_name", "").strip()
-                    diag = cand.get("diagnostic_criteria", [])
-                    typical = cand.get("typical_symptoms", [])
-                    diff = cand.get("differential_diagnosis", [])
-                    name_display = f"{cn_name} ({en_name})" if en_name else cn_name
-                    criteria_section += f"\n### 候选 {i+1}：{name_display}（置信={s.get('confidence', 'low')}，证据={len(s.get('evidence_for', []))}条）"
-                    if diag:
-                        criteria_section += "\n诊断标准：" + "；".join(diag[:5])
-                    if typical:
-                        criteria_section += "\n典型症状：" + "；".join(typical[:5])
-                    if diff:
-                        criteria_section += "\n需鉴别：" + "、".join(diff[:4])
-
-                    followup_history = ""
-                    if _followup_answers:
-                        followup_history = "\n## 上一轮追问的答案"
-                        for q, a in _followup_answers.items():
-                            followup_history += "\n追问：" + str(q) + "\n答案：" + str(a)
-
-                    # ── LLM 作为语义匹配器（Skill v2.1 Step 3.2）──
-                    prompt = f"""你是一个疾病诊断语义匹配器。根据患者的完整资料，从下方本地候选疾病中选出最匹配的西医病名。
-
-## 工作方式
-你是"语义匹配器"不是"自由诊断者"。
-你的职责是在已提供的本地候选疾病中做语义匹配和排序。
-你只能从下方候选疾病中选择，不能创造新的病名。
-
-## 患者资料
-- 主诉：{ni.chief_complaint}
-- 症状：{'；'.join(ni.symptoms)}
-- 否定症状：{'；'.join(ni.negative_findings)}
-- 体征：{'；'.join(ni.signs)}
-- 实验室：{'；'.join(ni.labs)}
-- 影像学：{'；'.join(ni.imaging)}
-- 患者提到的病名：{ni.patient_mentioned_disease}
-- 已知诊断：{ni.known_diagnosis}
-- 病程：{ni.duration}
-- 起病方式：{ni.onset}
-- 年龄：{ni.age}{followup_history}
-
-## 本地候选疾病（均来自知识库，附代码评分供参考）
-{criteria_section}
-
-## 匹配原则
-1. 【在本地候选范围内匹配】只能从下面的候选疾病中选择。不得在候选之外创造新病名。
-2. 【候选可见原则】如果患者症状支持候选之一，就在选候选内选。如果所有候选都不匹配，输出空列表。
-3. 【否定症状】不得将否定症状（无/无明显/未见）作为阳性证据。
-4. 【症状词不得作为疾病名】咳嗽、发热、腹泻等是症状，不是疾病名，除非患者明确说"诊断为咳嗽"。
-5. 【主诉优先】患者主诉和提到的病名优先。
-6. 【置信度排序】按匹配程度从高到低输出 Top 1-3。
-
-## 输出格式（严格 JSON，不要 Markdown）
-
-### 模式一：信息足够，且在候选中有明确匹配
-{{"status":"DIAGNOSIS_READY","diagnoses":[{{"name_cn":"病名","name_en":"","match_reason":"匹配理由（简述）"}}],"missing_info":[],"confidence":"high/medium/low"}}
-
-### 模式二：信息不足，或所有候选都不匹配
-{{"status":"NEED_MORE_INFO","current_top_candidates":[],"cannot_decide_because":"具体原因","questions":["追问1？","追问2？"],"missing_info":["标签"]}}"""
-
-                    result_text = self._call_llm(prompt, temperature=0.1, max_tokens=2000, task_type="m1_diagnosis_error")
-                    if not result_text:
-                        cn_diagnoses = _scored_diseases[:3]
-                        source = "code_scoring_llm_fallback"
-                        diagnosis_status = "LOW_CONFIDENCE"
-                        print("[M1_SCORE_LLM_FAIL] LLM 无返回，退回到代码评分结果")
+                print(f"[M1_KB_MAIN] 贝叶斯置信={top_conf} → 知识库主判")
+                if _scored_diseases:
+                    top_item = _scored_top[0] if _scored_top else None
+                    contradictions = (top_item or {}).get("criteria_struct", {}).get("contradicted_items", [])
+                    missing_required = (top_item or {}).get("criteria_struct", {}).get("missing_required", [])
+                    if contradictions and top_conf == "low" and len(missing_required) >= 2:
+                        source = "kb_all_excluded"
+                        diagnosis_status = "NO_CANDIDATE"
                     else:
-                        import json as _json
-                        try:
-                            m = re.search(r'\{.*\}', result_text, re.DOTALL)
-                            if not m:
-                                raise ValueError("no JSON")
-                            parsed = _json.loads(m.group())
-                        except Exception:
-                            cn_diagnoses = _scored_diseases[:3]
-                            source = "code_scoring_llm_fallback"
-                            diagnosis_status = "LOW_CONFIDENCE"
-                            print("[M1_SCORE_LLM_FAIL] LLM 输出解析失败，退回到代码评分结果")
-                        else:
-                            if parsed.get("status") == "NEED_MORE_INFO":
-                                return self._build_m1_result(
-                                    ni, candidates, scored, [], "llm_need_more_info", "REQUEST_MORE_INFO",
-                                    parsed_questions=parsed.get("questions", []),
-                                    parsed_need_info=parsed.get("missing_info", []),
-                                    followup_answers=_followup_answers,
-                                    raw_for_output=raw_for_output,
-                                    scored_top=_scored_top,
-                                    scored_details=_scored_details,
-                                    scored_diseases=_scored_diseases,
-                                    current_top_candidates=_scored_diseases[:3],
-                                    cannot_decide_because=parsed.get("cannot_decide_because", ""),
-                                )
+                        cn_diagnoses = _scored_diseases[:3]
+                        source = "code_kb_main_judgment"
+                        diagnosis_status = "PASS" if top_conf == "high" else "LOW_CONFIDENCE"
+                else:
+                    source = "kb_no_candidate"
+                    diagnosis_status = "NO_CANDIDATE"
 
-                        # LLM 语义匹配结果
-                        diagnoses_raw = parsed.get("diagnoses", [])
-                        cn_diagnoses = []
-                        for d in diagnoses_raw:
-                            cn = d.get("name_cn", "").strip() if isinstance(d, dict) else str(d).strip()
-                            if cn and cn not in cn_diagnoses:
-                                full = cn
-                                for e in self.db:
-                                    ecn = e.get("diseaseName_cn", "").strip()
-                                    if cn in ecn or ecn in cn or cn == e.get("disease_name", ""):
-                                        full = ecn
-                                        break
-                                cn_diagnoses.append(full if full else cn)
+        # keyword_fallback 兜底：当 KB 评分未能给出合理结果时，使用 keyword 结果
+        # 这确保高血压、尿路感染、变应性鼻炎等常见病即使评分不足也能被命中（P0-3）
+        if _kw_names_lower and (not cn_diagnoses or (
+            diagnosis_status in ("LOW_CONFIDENCE", "NO_CANDIDATE")
+            and not any(k in (cn_diagnoses[0] if cn_diagnoses else "").lower() or (cn_diagnoses[0] if cn_diagnoses else "").lower() in k for k in _kw_names_lower)
+        )):
+            kw_top = list(_kw_names_lower)
+            if kw_top:
+                print(f"[M1_KW_FALLBACK] KB 评分不足，使用 keyword 结果: {list(kw_top)[:3]}")
+                cn_diagnoses = list(kw_top)[:3]
+                source = "code_keyword_fallback"
+                diagnosis_status = "LOW_CONFIDENCE"
 
-                        if not cn_diagnoses:
-                            cn_diagnoses = _scored_diseases[:3]
-                            source = "code_scoring_llm_empty"
-                            diagnosis_status = "LOW_CONFIDENCE"
-                        else:
-                            # ── LLM 输出代码校验（Skill v2.1 Step 4）──
-                            validated, passed, reason = self._validate_llm_output(cn_diagnoses, scored, ni)
-                            if not passed:
-                                print(f"[M1_LLM_VALIDATE_FAIL] LLM 输出未通过代码校验: {reason}，回退至代码评分")
-                                cn_diagnoses = _scored_diseases[:3]
-                                source = "code_scoring_llm_validation_fail"
-                                diagnosis_status = "LOW_CONFIDENCE"
-                            else:
-                                source = "llm_semantic_matcher_code_checked"
-                                cn_diagnoses = validated[:3]
-                                llm_conf = parsed.get("confidence", "medium")
-                                diagnosis_status = "PASS" if llm_conf == "high" else "LOW_CONFIDENCE"
+        # Step 5 + Step 7: LLM 独立参考 + 双版本校对（不得直接采用 LLM 诊断）
+        llm_reference_raw = self._get_llm_reference_diagnosis(ni, candidates, scored)
+        from services.m1_v8_helpers import dual_version_check
 
-                # ── 已知诊断矛盾检查：LLM 输出不得替换已知诊断（P0-1）──
-                # 如果已知诊断存在且 LLM 输出了不同的 primary，检查后决定是否保留
-                _kd_name = (ni.known_diagnosis or "").strip().lower()
-                if _kd_name and cn_diagnoses and source.startswith("llm"):
-                    _kd_in_scored = False
-                    for _s in _scored_top:
-                        _scn = _s["entry"].get("diseaseName_cn", "").strip().lower()
-                        if _scn == _kd_name or _kd_name in _scn or _scn in _kd_name:
-                            _kd_in_scored = True
-                            break
-                    if _kd_in_scored:
-                        # 检查是否属于可覆盖的情况
-                        _can_override = bool(_tier1_conflict)  # Tier 1 冲突标记
-                        if not _can_override:
-                            _uncertainty_kw = {"疑似", "可能", "像是", "网上查", "感觉像", "好像", "不确定"}
-                            if any(kw in ni.known_diagnosis.lower() for kw in _uncertainty_kw):
-                                _can_override = True
-                        if not _can_override:
-                            # 已知诊断存在且未被标记为不确定，保留已知诊断作为 primary
-                            _llm_primary = cn_diagnoses[0].lower() if cn_diagnoses else ""
-                            _kd_in_diagnoses = any(
-                                _kd_name == d.lower() or _kd_name in d.lower() or d.lower() in _kd_name
-                                for d in cn_diagnoses
-                            )
-                            if not _kd_in_diagnoses:
-                                # LLM primary 不同，保留已知诊断
-                                _kd_full_name = next(
-                                    (s["entry"].get("diseaseName_cn", ni.known_diagnosis)
-                                     for s in _scored_top
-                                     if _kd_name in s["entry"].get("diseaseName_cn", "").strip().lower()
-                                     or s["entry"].get("diseaseName_cn", "").strip().lower() in _kd_name),
-                                    ni.known_diagnosis
-                                )
-                                cn_diagnoses = [_kd_full_name] + cn_diagnoses
-                                print(f"[M1_KNOWN_DIAG_CONTRADICT] 已知诊断 {_kd_full_name} 被 LLM 替换，已恢复为 primary")
+        llm_reference = dual_version_check(
+            cn_diagnoses[0] if cn_diagnoses else "",
+            llm_reference_raw.get("names", []),
+        )
+        if not llm_reference.get("opinion"):
+            llm_reference["opinion"] = llm_reference_raw.get("opinion", "")
+        if llm_reference.get("discrepancy"):
+            if diagnosis_status == "PASS":
+                diagnosis_status = "LOW_CONFIDENCE"
+            print(f"[M1_V8_DISCREPANCY] KB={cn_diagnoses[:1]} LLM={llm_reference_raw.get('names')}")
 
         # Tier 4: 本地无候选，或患者提到的病名不在本地库中 → 触发外部搜索
         _need_external_search = False
@@ -1324,81 +1469,22 @@ class M1DiagnosisEngine:
             scored_top=_scored_top,
             scored_details=_scored_details,
             scored_diseases=_scored_diseases,
+            llm_reference=llm_reference,
         )
 
     # ══════════════════════════════════════════════════════
     #  年龄/性别硬筛（Skill v2.3 Step 2）
     # ══════════════════════════════════════════════════════
 
+    def _prefilter_candidates(self, candidates: List[dict], ni) -> List[dict]:
+        """Step 2: 代码预筛 — 年龄/性别/病程/部位先验降权，不删除候选。"""
+        from services.m1_v8_helpers import apply_prefilter_penalty
+
+        return apply_prefilter_penalty(candidates, ni)
+
     def _age_gender_hard_filter(self, candidates: List[dict], ni) -> List[dict]:
-        """年龄和性别是硬边界，不是普通加分项。
-
-        规则：
-        - 成人（≥14）不得匹配儿科专属病名；
-        - 儿童（<14）保留儿科相关候选；
-        - 男性不得出现妊娠相关诊断；
-        - 女性不得出现男性专属诊断；
-        - 孕期标记 pregnancy_risk。
-
-        Returns:
-            过滤后的候选列表
-        """
-        if not candidates:
-            return []
-
-        age_val = None
-        if ni.age:
-            try:
-                age_val = int(ni.age.replace("岁", "").strip())
-            except (ValueError, AttributeError):
-                pass
-
-        is_child = age_val is not None and age_val < 14
-        is_female = ni.sex and ni.sex in ("女", "女性", "female", "F")
-        is_male = ni.sex and ni.sex in ("男", "男性", "male", "M")
-
-        # 儿科专属病名关键词（本地库中儿科病名的标记）
-        _pediatric_keywords = ["儿童", "小儿", "新生儿", "婴儿", "幼年", "早产"]
-
-        # 妊娠相关关键词
-        _pregnancy_keywords = ["妊娠", "孕期", "产科", "分娩", "先兆流产", "宫外孕",
-                               "子痫", "前置胎盘", "胎膜", "羊水", "产后",
-                               "妊娠期", "哺乳期", "孕", "葡萄胎"]
-
-        # 男性专属关键词
-        _male_only_keywords = ["前列腺", "睾丸", "精囊", "阴茎", "阴囊", "包皮",
-                               "精索", "输精管", "射精", "勃起", "男性不育"]
-
-        filtered = []
-        for entry in candidates:
-            cn = entry.get("diseaseName_cn", "").strip().lower()
-            en = entry.get("disease_name", "").strip().lower()
-            system = entry.get("system", "")
-
-            excluded = False
-
-            # 规则1：成人不得匹配儿科专属病名
-            if age_val is not None and not is_child:
-                if any(kw in cn for kw in _pediatric_keywords):
-                    print(f"[M1_AGE_FILTER] 成人 {age_val} 岁，排除儿科病名: {entry.get('diseaseName_cn','')}")
-                    excluded = True
-
-            # 规则2：男性不得出现妊娠相关诊断
-            if is_male:
-                if any(kw in cn for kw in _pregnancy_keywords):
-                    print(f"[M1_GENDER_FILTER] 男性，排除妊娠相关: {entry.get('diseaseName_cn','')}")
-                    excluded = True
-
-            # 规则3：女性不得出现男性专属诊断
-            if is_female:
-                if any(kw in cn for kw in _male_only_keywords):
-                    print(f"[M1_GENDER_FILTER] 女性，排除男性专属: {entry.get('diseaseName_cn','')}")
-                    excluded = True
-
-            if not excluded:
-                filtered.append(entry)
-
-        return filtered
+        """兼容旧调用：v8 改为软降权，不再硬删。"""
+        return self._prefilter_candidates(candidates, ni)
 
     # ══════════════════════════════════════════════════════
     #  紧急征和高危鉴别（Skill v2.3 Step 8）
@@ -1442,6 +1528,10 @@ class M1DiagnosisEngine:
             (["高热", "颈强", "喷射", "意识", "抽搐", "脑膜"], "中枢神经系统感染", "建议紧急腰穿、头颅CT/脑脊液检查"),
             (["咯血", "大量", "窒息", "呼吸衰竭"], "大咯血", "建议紧急气道管理、胸外科会诊"),
             (["过敏", "休克", "喉头水肿", "荨麻疹", "呼吸困难"], "过敏性休克", "建议紧急肾上腺素、抗过敏、气道支持"),
+            # 高血压急症风险（P0-3A）
+            (["血压", "胸痛", "气促", "神经缺损", "肢体无力", "意识障碍"], "高血压急症", "血压≥180/120伴靶器官损伤，建议紧急降压、心脑血管评估"),
+            # 上尿路感染/肾盂肾炎风险（P0-3B）
+            (["尿痛", "发热", "腰痛", "肾区叩痛", "寒战"], "复杂性尿路感染/肾盂肾炎", "发热+腰痛+尿路症状提示上尿路感染，建议尿培养、肾功、影像评估"),
         ]
         # 宽松匹配条件：只要存在任一模式的「核心关键词组合」就触发
         for keywords, pattern, recommendation in _emergency_patterns:
@@ -1464,6 +1554,30 @@ class M1DiagnosisEngine:
             cn = entry.get("diseaseName_cn", "").strip()
             if any(kw in cn for kw in _high_risk_disease_keywords):
                 result["exclusion_diseases"].append(cn)
+
+        # 额外检查：高血压急症 — 血压数值 ≥180/120 + 靶器官症状（P0-3A）
+        if not result["triggered"]:
+            bp_match = re.search(r'(?:血压|bp)\s*[：:]*\s*(\d{2,3})\s*[/／]\s*(\d{2,3})', search_text)
+            if bp_match:
+                sys_bp, dia_bp = int(bp_match.group(1)), int(bp_match.group(2))
+                if sys_bp >= 180 and dia_bp >= 120:
+                    target_symptoms = any(k in search_text for k in (
+                        "胸痛", "气促", "神经缺损", "肢体无力", "意识障碍",
+                        "意识异常", "视物异常", "少尿", "抽搐", "言语不清",
+                    ))
+                    if target_symptoms:
+                        result["triggered"] = True
+                        result["pattern"] = "高血压急症"
+                        result["recommendation"] = "血压≥180/120伴靶器官损伤表现，建议紧急降压、心脑血管评估"
+
+        # 额外检查：复杂 UTI / 肾盂肾炎 — 尿路症状 + 发热/腰痛（P0-3B）
+        if not result["triggered"]:
+            uti_symptoms = any(k in search_text for k in ("尿频", "尿急", "尿痛", "尿白细胞"))
+            uti_complex = any(k in search_text for k in ("发热", "腰痛", "肾区叩痛", "寒战"))
+            if uti_symptoms and uti_complex:
+                result["triggered"] = True
+                result["pattern"] = "复杂性尿路感染/肾盂肾炎"
+                result["recommendation"] = "尿路症状伴发热/腰痛，提示上尿路感染，建议尿培养、肾功、影像评估"
 
         return result
 
@@ -1985,6 +2099,7 @@ class M1DiagnosisEngine:
 
             # 兼容分数（供旧调用方使用）
             score = len(ev_for) * 10 - negative_finding_penalty - len(ev_against) * 5
+            score -= entry.get("_prefilter_penalty", 0)
             score = max(0, score)
             # 精确病名匹配额外加分（贝叶斯先验强度）
             bayesian_prior = 30 if name_exact else (15 if name_match else 0)
@@ -2328,7 +2443,8 @@ class M1DiagnosisEngine:
                          parsed_questions=None, parsed_need_info=None,
                          followup_answers=None, raw_for_output=None,
                          scored_top=None, scored_details=None, scored_diseases=None,
-                         current_top_candidates=None, cannot_decide_because=None) -> Dict:
+                         current_top_candidates=None, cannot_decide_because=None,
+                         llm_reference=None) -> Dict:
         """统一构建 M1 诊断结果，消除 4 个 return 路径的重复代码
 
         Args:
@@ -2424,6 +2540,23 @@ class M1DiagnosisEngine:
         structured["tumor_progression_flag"] = relationships.get("tumor_progression_flag", False)
         structured["infection_progression_flag"] = relationships.get("infection_progression_flag", False)
 
+        # 5b. 咳嗽主轴优先：支气管炎不得被轻症鼻炎覆盖
+        bronchitis_axis_review = False
+        if ni:
+            primary, cn_diagnoses, relationships, bronchitis_axis_review = self._apply_bronchitis_cough_axis_priority(
+                ni, primary, cn_diagnoses, relationships,
+            )
+            if bronchitis_axis_review:
+                structured["united_airway_flag"] = relationships.get("united_airway_flag", False)
+                if self._bronchitis_axis_need_human_review(
+                    self._clinical_text_blob(
+                        ni.patient_mentioned_disease, ni.known_diagnosis, ni.chief_complaint,
+                        " ".join(ni.symptoms or []), " ".join(ni.signs or []),
+                        " ".join(ni.labs or []), " ".join(ni.negative_findings or []),
+                    )
+                ):
+                    diagnosis_status = diagnosis_status if diagnosis_status != "PASS" else "LOW_CONFIDENCE"
+
         # 6. 紧急征和高危鉴别
         emergency = self._detect_emergency(ni, candidates)
         if emergency.get("triggered"):
@@ -2479,9 +2612,9 @@ class M1DiagnosisEngine:
                 external_search["need_human_review"] = True
                 diagnosis_status = "NEED_EXTERNAL_SEARCH"
 
-        # 8. M2 gate: emergency 或 NEED_MORE_INFO 状态不得进入 M2
+        # 8. M2 gate: emergency / REQUEST_MORE_INFO / NO_CANDIDATE 不得进入 M2
         m2_allowed = not emergency.get("triggered") and diagnosis_status not in (
-            "REQUEST_MORE_INFO", "NEED_EXTERNAL_SEARCH")
+            "REQUEST_MORE_INFO", "NEED_EXTERNAL_SEARCH", "NO_CANDIDATE")
 
         # 9. top_diagnoses 构建
         top_diagnoses = []
@@ -2592,13 +2725,69 @@ class M1DiagnosisEngine:
                     if q not in parsed_questions:
                         parsed_questions.append(q)
 
-        need_more_info = diagnosis_status in ("REQUEST_MORE_INFO", "NEED_EXTERNAL_SEARCH")
-        require_manual_review = diagnosis_status in ("LOW_CONFIDENCE", "NEED_EXTERNAL_SEARCH")
+        need_more_info = diagnosis_status in ("REQUEST_MORE_INFO", "NEED_EXTERNAL_SEARCH", "NO_CANDIDATE")
+        require_manual_review = diagnosis_status in ("LOW_CONFIDENCE", "NEED_EXTERNAL_SEARCH", "NO_CANDIDATE") or bronchitis_axis_review
+
+        from services.m1_v8_helpers import (
+            aggregate_kb_evidence,
+            infer_severity,
+            infer_stage,
+            legacy_diagnosis_status,
+            map_v8_confidence,
+            needs_online_staleness_review,
+        )
+
+        llm_reference = llm_reference or {"opinion": "", "discrepancy": None, "online_arbitration_needed": False}
+        primary_entry = _scored_top[0]["entry"] if _scored_top else None
+        stage, stage_confidence, stage_reason = infer_stage(primary, ni, primary_entry)
+        kb_evidence = aggregate_kb_evidence(_scored_top[0] if _scored_top else None)
+        red_flags = list(structured.get("risk_flags", []) or [])
+        if emergency.get("triggered"):
+            red_flags.append(emergency.get("pattern") or "emergency")
+
+        if diagnosis_status == "PASS":
+            v8_status = "CONFIRMED"
+        elif diagnosis_status == "LOW_CONFIDENCE":
+            top_conf = (_scored_top[0].get("confidence") if _scored_top else "low")
+            v8_status = "PROBABLE" if top_conf == "medium" else "LOW_CONFIDENCE"
+        elif diagnosis_status in ("NEED_EXTERNAL_SEARCH", "NO_CANDIDATE"):
+            v8_status = "NO_CANDIDATE"
+        else:
+            v8_status = diagnosis_status
+
+        if llm_reference.get("discrepancy") and v8_status == "CONFIRMED":
+            v8_status = "LOW_CONFIDENCE"
+        if llm_reference.get("online_arbitration_needed"):
+            require_manual_review = True
+
+        kb_conf = _scored_top[0].get("confidence", "low") if _scored_top else "low"
+        confidence_band = map_v8_confidence(kb_conf, bool(llm_reference.get("discrepancy")))
+        severity = infer_severity(ni, stage, red_flags)
+        disease_key = self._resolve_disease_key_for_m2(primary)
+        icd11_code = (primary_entry or {}).get("icd11_code", "") or (primary_entry or {}).get("icd_11", "")
+        if needs_online_staleness_review(primary_entry):
+            llm_reference["online_arbitration_needed"] = True
+            require_manual_review = True
+
+        need_human_review = require_manual_review or bool(red_flags) or stage_confidence == "LOW"
+        m2_allowed = m2_allowed and v8_status not in ("REQUEST_MORE_INFO", "NO_CANDIDATE")
+        result_source = "local_db"
+        if external_search_used:
+            result_source = "online_staging"
+        elif llm_reference.get("online_arbitration_needed"):
+            result_source = "mixed"
 
         # 10. 构建完整返回结构
         return DiagnosisResultDict({
             "status": "DIAGNOSIS_READY" if not need_more_info else "NEED_MORE_INFO",
+            "primary_disease": primary,
             "primary_diagnosis": primary,
+            "standard_disease_name": primary,
+            "icd11_code": icd11_code,
+            "stage": stage,
+            "stage_confidence": stage_confidence,
+            "stage_reason": stage_reason,
+            "severity": severity,
             "secondary_diagnoses": [d for d in cn_diagnoses[1:]] if len(cn_diagnoses) > 1 else [],
             "comorbidities": [],
             "complications": [],
@@ -2614,11 +2803,25 @@ class M1DiagnosisEngine:
             "questions": parsed_questions or [],
             "missing_info": parsed_need_info or [],
             "exclusion_diseases": exclusion_diseases,
-            "diagnosis_status": diagnosis_status,
+            "diagnosis_calibration": {
+                "calibrated_diagnosis": cn_diagnoses[:3],
+                "primary_diagnosis": primary,
+            },
+            "diagnosis_boundary_trace": {
+                "local_disease_kb_loaded": bool(self.db),
+                "alias_mapping_loaded": True,
+            },
+            "diagnosis_status": v8_status,
+            "diagnosis_status_legacy": legacy_diagnosis_status(v8_status),
+            "confidence": confidence_band,
+            "llm_reference": llm_reference,
+            "evidence": kb_evidence,
+            "red_flags": red_flags,
             "evidence_for": evidence_for,
             "evidence_against": evidence_against,
             "need_more_info": need_more_info,
             "require_manual_review": require_manual_review,
+            "need_human_review": need_human_review,
             "followup_questions": parsed_questions or [],
             "external_search": external_search,
             "structured_info": structured,
@@ -2628,14 +2831,20 @@ class M1DiagnosisEngine:
                 primary=primary,
                 cn_diagnoses=cn_diagnoses,
                 top_diagnoses=top_diagnoses if m2_allowed else [],
-                diagnosis_status=diagnosis_status,
+                diagnosis_status=v8_status,
                 relationships=relationships,
                 structured=structured,
                 evidence_for=evidence_for,
                 evidence_against=evidence_against,
-            ),
-            "source": source or "",
-            "cache_hit": False,
+                stage=stage,
+                stage_confidence=stage_confidence,
+                stage_reason=stage_reason,
+                disease_key=disease_key,
+                red_flags=red_flags,
+                need_human_review=need_human_review,
+            ) if m2_allowed else {},
+            "source": result_source,
+            "cache_hit": True,
         })
 
     def _build_m2_payload(
@@ -2650,8 +2859,18 @@ class M1DiagnosisEngine:
         structured: dict,
         evidence_for: list,
         evidence_against: list,
+        stage: str = "",
+        stage_confidence: str = "",
+        stage_reason: str = "",
+        disease_key: str = "",
+        red_flags: Optional[List[str]] = None,
+        need_human_review: bool = False,
     ) -> Dict:
-        """Stable M1→M2 handoff payload with normalized list fields."""
+        """Stable M1→M2 handoff payload with normalized list fields.
+        Note: signs MUST come only from ni.signs (not ni.symptoms) to avoid
+        symptom leakage into positive_signs. Tongue/pulse extraction is done
+        on signs alone; symptoms stay in payload["symptoms"] only.
+        """
         from services.m1_m2_bridge import extract_tongue_pulse, normalize_string_list
 
         signs = normalize_string_list(getattr(ni, "signs", []))
@@ -2659,7 +2878,8 @@ class M1DiagnosisEngine:
         labs = normalize_string_list(getattr(ni, "labs", []))
         imaging = normalize_string_list(getattr(ni, "imaging", []))
         negative_findings = normalize_string_list(getattr(ni, "negative_findings", []))
-        tongue, pulse, _ = extract_tongue_pulse(signs, symptoms)
+        # 仅从 signs 中提取舌脉，不混入 symptoms（P0-2）
+        tongue, pulse, positive_signs = extract_tongue_pulse(signs, [])
         secondary = [d for d in cn_diagnoses[1:]] if len(cn_diagnoses) > 1 else []
         comorbidities = normalize_string_list(structured.get("complications_or_comorbidities", []))
 
@@ -2667,6 +2887,10 @@ class M1DiagnosisEngine:
             "primary_disease": primary,
             "primary_diagnosis": primary,
             "standard_disease_name": primary,
+            "disease_key": disease_key or primary,
+            "stage": stage,
+            "stage_confidence": stage_confidence,
+            "stage_reason": stage_reason,
             "top_diagnoses": top_diagnoses,
             "secondary_diseases": secondary,
             "secondary_diagnoses": secondary,
@@ -2683,12 +2907,14 @@ class M1DiagnosisEngine:
             "risk_flags": structured.get("risk_flags", []),
             "evidence_trace": evidence_for + evidence_against,
             "symptoms": symptoms,
-            "signs": signs,
+            "signs": positive_signs,
             "tongue": tongue,
             "pulse": pulse,
             "labs": labs,
             "imaging": imaging,
             "negative_findings": negative_findings,
+            "red_flags": red_flags or [],
+            "need_human_review": need_human_review,
             "age": getattr(ni, "age", "") if ni else "",
             "weight": "",
         }

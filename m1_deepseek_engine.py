@@ -27,7 +27,7 @@ class M1WithDeepSeek(M1DiagnosisEngine):
         self,
         db_path=None,
         api_key=None,
-        model="deepseek-v4-flash",
+        model="deepseek-v4-pro",
         api_base="https://api.deepseek.com",
     ):
         self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY", "")

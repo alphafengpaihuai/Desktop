@@ -132,13 +132,16 @@ def should_gate_m2(m1_result: Optional[Dict]) -> Tuple[bool, str]:
     if not isinstance(m1_result, dict):
         return False, ""
     status = m1_result.get("diagnosis_status", "")
+    legacy = m1_result.get("diagnosis_status_legacy", "")
     emergency = (m1_result.get("emergency_alert") or {}).get("triggered", False)
-    if status in ("REQUEST_MORE_INFO",) or emergency:
-        return True, status or "REQUEST_MORE_INFO"
-    if status in ("NEED_EXTERNAL_SEARCH",):
-        return True, status
+    blocked_statuses = ("REQUEST_MORE_INFO", "NO_CANDIDATE", "NEED_EXTERNAL_SEARCH")
+    if status in blocked_statuses or legacy in blocked_statuses or emergency:
+        return True, status or legacy or "REQUEST_MORE_INFO"
     payload = m1_result.get("m2_payload") or {}
-    if payload.get("diagnosis_status") in ("REQUEST_MORE_INFO", "NEED_EXTERNAL_SEARCH"):
+    if not payload:
+        if status not in ("CONFIRMED", "PROBABLE", "LOW_CONFIDENCE", "PASS"):
+            return True, status or "REQUEST_MORE_INFO"
+    if payload.get("diagnosis_status") in blocked_statuses:
         return True, payload.get("diagnosis_status")
     return False, ""
 
