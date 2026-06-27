@@ -1,0 +1,135 @@
+{
+  "version": "1.1.0",
+  "regions": {
+    "low_back_leg": {
+      "label": "腰臀腿",
+      "icon": "🦴",
+      "description": "腰部、臀部、腿部不适",
+      "svg_hotspot_id": "hotspot-lowback",
+      "priority_questions": [
+        {"question_id":"RF-LB-001","display_text":"最近有没有明显摔伤、碰撞，或者突然不能负重？","fact_key":"major_trauma","answer_options":["yes","no","uncertain"],"priority":1,"confirm_on_yes":true,"policy_input_key":"major_trauma","risk_level":"hard","enabled":true},
+        {"question_id":"RF-LB-002","display_text":"有没有新出现排尿困难、尿不出来或大小便失控？","fact_key":"bowel_bladder_abnormality","answer_options":["yes","no","uncertain"],"priority":2,"confirm_on_yes":true,"policy_input_key":"bowel_bladder_abnormality","risk_level":"hard","enabled":true},
+        {"question_id":"RF-LB-003","display_text":"最近有没有新出现，或越来越明显的腿无力？","fact_key":"progressive_weakness","answer_options":["yes","no","uncertain"],"priority":3,"confirm_on_yes":false,"policy_input_key":"progressive_weakness","risk_level":"onset_confirm","needs_onset_confirmation":true,"onset_fields":["weakness_onset","weakness_progressive","weakness_unilateral"],"enabled":true},
+        {"question_id":"RF-LB-004","display_text":"最近有没有新出现，或明显加重的走路不稳？","fact_key":"gait_instability","answer_options":["yes","no","uncertain"],"priority":4,"confirm_on_yes":false,"policy_input_key":"gait_instability","risk_level":"onset_confirm","needs_onset_confirmation":true,"onset_fields":["gait_onset","gait_progressive","gait_unilateral"],"enabled":true},
+        {"question_id":"RF-LB-005","display_text":"有没有会阴或臀部中间区域麻木？","fact_key":"perineal_numbness","answer_options":["yes","no","uncertain"],"priority":5,"confirm_on_yes":true,"policy_input_key":"perineal_numbness","risk_level":"hard","enabled":true},
+        {"question_id":"RF-LB-006","display_text":"有没有发热、寒战，或近期明显感染？","fact_key":"fever","answer_options":["yes","no","uncertain"],"priority":6,"confirm_on_yes":false,"policy_input_key":"fever","risk_level":"hard","enabled":true}
+      ],
+      "background_questions": [
+        {"question_id":"RF-LB-B01","display_text":"有没有肿瘤史或癌症病史？","fact_key":"cancer_history","answer_options":["yes","no","uncertain"],"priority":101,"confirm_on_yes":false,"policy_input_key":"cancer_history","risk_level":"hard","enabled":true},
+        {"question_id":"RF-LB-B02","display_text":"近期有没有不明原因的体重明显下降？","fact_key":"weight_loss","answer_options":["yes","no","uncertain"],"priority":102,"confirm_on_yes":false,"policy_input_key":"weight_loss","risk_level":"soft","enabled":true},
+        {"question_id":"RF-LB-B03","display_text":"有没有持续夜间疼痛或痛醒？","fact_key":"night_pain","answer_options":["yes","no","uncertain"],"priority":103,"confirm_on_yes":false,"policy_input_key":"night_pain","risk_level":"soft","enabled":true}
+      ],
+      "common_inquiry": [
+        {"question_id":"CI-LB-001","display_text":"疼痛是酸痛、刺痛还是胀痛？","fact_key":"pain_quality_lowback","category":"detail"},
+        {"question_id":"CI-LB-002","display_text":"什么时候开始的？持续多久了？","fact_key":"pain_onset_lowback","category":"detail"},
+        {"question_id":"CI-LB-003","display_text":"有没有向腿部放射的感觉？","fact_key":"radiating_pain_leg","category":"detail"},
+        {"question_id":"CI-LB-004","display_text":"坐久了会加重还是活动后会加重？","fact_key":"aggravating_factor_lowback","category":"detail"},
+        {"question_id":"CI-LB-005","display_text":"有没有下肢麻木或刺痛感？","fact_key":"leg_numbness","category":"detail"}
+      ]
+    },
+    "neck_shoulder_arm": {
+      "label": "颈肩臂",
+      "icon": "💪",
+      "description": "颈部、肩部、手臂不适",
+      "svg_hotspot_id": "hotspot-neckshoulder",
+      "priority_questions": [
+        {"question_id":"RF-NS-001","display_text":"最近有没有颈部明显外伤或车祸？","fact_key":"neck_trauma","answer_options":["yes","no","uncertain"],"priority":1,"confirm_on_yes":true,"policy_input_key":"major_trauma","risk_level":"hard","enabled":true},
+        {"question_id":"RF-NS-002","display_text":"有没有手臂麻木、无力或抓握困难？","fact_key":"arm_weakness","answer_options":["yes","no","uncertain"],"priority":2,"confirm_on_yes":false,"policy_input_key":"progressive_weakness","risk_level":"hard","enabled":true},
+        {"question_id":"RF-NS-003","display_text":"有没有头晕、走路不稳或平衡感下降？","fact_key":"dizziness_balance","answer_options":["yes","no","uncertain"],"priority":3,"confirm_on_yes":false,"policy_input_key":"gait_instability","risk_level":"hard","enabled":true},
+        {"question_id":"RF-NS-004","display_text":"有没有视力模糊或复视？","fact_key":"vision_change","answer_options":["yes","no","uncertain"],"priority":4,"confirm_on_yes":true,"policy_input_key":"vision_change","risk_level":"hard","enabled":true},
+        {"question_id":"RF-NS-005","display_text":"有没有颈部剧烈疼痛伴随发烧？","fact_key":"neck_pain_fever","answer_options":["yes","no","uncertain"],"priority":5,"confirm_on_yes":false,"policy_input_key":"fever","risk_level":"hard","enabled":true}
+      ],
+      "background_questions": [
+        {"question_id":"RF-NS-B01","display_text":"有没有肿瘤史或癌症病史？","fact_key":"cancer_history","answer_options":["yes","no","uncertain"],"priority":101,"confirm_on_yes":false,"policy_input_key":"cancer_history","risk_level":"hard","enabled":true},
+        {"question_id":"RF-NS-B02","display_text":"有没有长期低头工作或姿势不良？","fact_key":"poor_posture","answer_options":["yes","no","uncertain"],"priority":102,"confirm_on_yes":false,"policy_input_key":"poor_posture","risk_level":"soft","enabled":true},
+        {"question_id":"RF-NS-B03","display_text":"近期有没有体重明显下降？","fact_key":"weight_loss","answer_options":["yes","no","uncertain"],"priority":103,"confirm_on_yes":false,"policy_input_key":"weight_loss","risk_level":"soft","enabled":true}
+      ],
+      "common_inquiry": [
+        {"question_id":"CI-NS-001","display_text":"疼痛有没有向手臂或手指放射？","fact_key":"radiating_pain_arm","category":"detail"},
+        {"question_id":"CI-NS-002","display_text":"转动脖子时会不会加重？","fact_key":"neck_motion_pain","category":"detail"},
+        {"question_id":"CI-NS-003","display_text":"有没有手指麻木或发凉？","fact_key":"finger_numbness","category":"detail"},
+        {"question_id":"CI-NS-004","display_text":"这种不适对睡眠有影响吗？","fact_key":"sleep_impact","category":"detail"}
+      ]
+    },
+    "chest_back": {
+      "label": "胸背",
+      "icon": "🫁",
+      "description": "胸部、背部不适",
+      "svg_hotspot_id": "hotspot-chestback",
+      "priority_questions": [
+        {"question_id":"RF-CB-001","display_text":"有没有胸痛、胸闷或压迫感？","fact_key":"chest_pain","answer_options":["yes","no","uncertain"],"priority":1,"confirm_on_yes":true,"policy_input_key":"chest_pain","risk_level":"hard","enabled":true},
+        {"question_id":"RF-CB-002","display_text":"有没有呼吸困难或喘不上气？","fact_key":"breathing_difficulty","answer_options":["yes","no","uncertain"],"priority":2,"confirm_on_yes":true,"policy_input_key":"breathing_difficulty","risk_level":"hard","enabled":true},
+        {"question_id":"RF-CB-003","display_text":"有没有背部明显外伤史？","fact_key":"back_trauma","answer_options":["yes","no","uncertain"],"priority":3,"confirm_on_yes":true,"policy_input_key":"major_trauma","risk_level":"hard","enabled":true},
+        {"question_id":"RF-CB-004","display_text":"有没有伴随发烧或寒战？","fact_key":"fever","answer_options":["yes","no","uncertain"],"priority":4,"confirm_on_yes":false,"policy_input_key":"fever","risk_level":"hard","enabled":true},
+        {"question_id":"RF-CB-005","display_text":"有没有下肢无力或行走困难？","fact_key":"leg_weakness","answer_options":["yes","no","uncertain"],"priority":5,"confirm_on_yes":false,"policy_input_key":"progressive_weakness","risk_level":"hard","enabled":true}
+      ],
+      "background_questions": [
+        {"question_id":"RF-CB-B01","display_text":"有没有肿瘤史或癌症病史？","fact_key":"cancer_history","answer_options":["yes","no","uncertain"],"priority":101,"confirm_on_yes":false,"policy_input_key":"cancer_history","risk_level":"hard","enabled":true},
+        {"question_id":"RF-CB-B02","display_text":"近期有没有体重明显下降？","fact_key":"weight_loss","answer_options":["yes","no","uncertain"],"priority":102,"confirm_on_yes":false,"policy_input_key":"weight_loss","risk_level":"soft","enabled":true},
+        {"question_id":"RF-CB-B03","display_text":"有没有心脏病、高血压等基础疾病？","fact_key":"cardio_history","answer_options":["yes","no","uncertain"],"priority":103,"confirm_on_yes":false,"policy_input_key":"cardio_history","risk_level":"soft","enabled":true}
+      ],
+      "common_inquiry": [
+        {"question_id":"CI-CB-001","display_text":"疼痛是持续性的还是阵发性的？","fact_key":"pain_pattern_chest","category":"detail"},
+        {"question_id":"CI-CB-002","display_text":"深呼吸或咳嗽时会不会加重？","fact_key":"breath_pain","category":"detail"},
+        {"question_id":"CI-CB-003","display_text":"有没有向前胸放射的感觉？","fact_key":"chest_radiation","category":"detail"},
+        {"question_id":"CI-CB-004","display_text":"什么姿势最舒服？什么姿势最难受？","fact_key":"comfort_position_chest","category":"detail"}
+      ]
+    },
+    "knee_ankle_foot": {
+      "label": "膝踝足",
+      "icon": "🦶",
+      "description": "膝盖、脚踝、脚部不适",
+      "svg_hotspot_id": "hotspot-kneeankle",
+      "priority_questions": [
+        {"question_id":"RF-KA-001","display_text":"有没有明显外伤、扭伤或摔伤史？","fact_key":"leg_trauma","answer_options":["yes","no","uncertain"],"priority":1,"confirm_on_yes":true,"policy_input_key":"major_trauma","risk_level":"hard","enabled":true},
+        {"question_id":"RF-KA-002","display_text":"有没有关节红肿、发热或明显肿胀？","fact_key":"joint_swelling","answer_options":["yes","no","uncertain"],"priority":2,"confirm_on_yes":false,"policy_input_key":"fever","risk_level":"hard","enabled":true},
+        {"question_id":"RF-KA-003","display_text":"有没有无法站立或无法负重行走？","fact_key":"cannot_bear_weight","answer_options":["yes","no","uncertain"],"priority":3,"confirm_on_yes":true,"policy_input_key":"cannot_bear_weight","risk_level":"hard","enabled":true},
+        {"question_id":"RF-KA-004","display_text":"有没有膝盖突然锁住或卡住的感觉？","fact_key":"knee_locking","answer_options":["yes","no","uncertain"],"priority":4,"confirm_on_yes":false,"policy_input_key":"knee_locking","risk_level":"hard","enabled":true},
+        {"question_id":"RF-KA-005","display_text":"有没有伴随发烧？","fact_key":"fever","answer_options":["yes","no","uncertain"],"priority":5,"confirm_on_yes":false,"policy_input_key":"fever","risk_level":"hard","enabled":true}
+      ],
+      "background_questions": [
+        {"question_id":"RF-KA-B01","display_text":"有没有糖尿病史？","fact_key":"diabetes_history","answer_options":["yes","no","uncertain"],"priority":101,"confirm_on_yes":false,"policy_input_key":"diabetes_history","risk_level":"soft","enabled":true},
+        {"question_id":"RF-KA-B02","display_text":"有没有痛风史或高尿酸？","fact_key":"gout_history","answer_options":["yes","no","uncertain"],"priority":102,"confirm_on_yes":false,"policy_input_key":"gout_history","risk_level":"soft","enabled":true},
+        {"question_id":"RF-KA-B03","display_text":"近期有没有过度运动或活动量骤增？","fact_key":"overuse","answer_options":["yes","no","uncertain"],"priority":103,"confirm_on_yes":false,"policy_input_key":"overuse","risk_level":"soft","enabled":true}
+      ],
+      "common_inquiry": [
+        {"question_id":"CI-KA-001","display_text":"什么时候开始疼痛的？有没有明确诱因？","fact_key":"pain_onset_knee","category":"detail"},
+        {"question_id":"CI-KA-002","display_text":"上下楼梯时疼痛加重吗？","fact_key":"stair_pain","category":"detail"},
+        {"question_id":"CI-KA-003","display_text":"早上起来会不会僵硬？","fact_key":"morning_stiffness","category":"detail"},
+        {"question_id":"CI-KA-004","display_text":"有没有听到或感觉到关节响声？","fact_key":"joint_crepitus","category":"detail"}
+      ]
+    },
+    "head_neck": {
+      "label": "头颈",
+      "icon": "🧠",
+      "description": "头部、颈部不适",
+      "svg_hotspot_id": "hotspot-headneck",
+      "priority_questions": [
+        {"question_id":"RF-HN-001","display_text":"最近有没有头部外伤？","fact_key":"head_trauma","answer_options":["yes","no","uncertain"],"priority":1,"confirm_on_yes":true,"policy_input_key":"major_trauma","risk_level":"hard","enabled":true},
+        {"question_id":"RF-HN-002","display_text":"有没有剧烈头痛、突然发作？","fact_key":"severe_headache","answer_options":["yes","no","uncertain"],"priority":2,"confirm_on_yes":true,"policy_input_key":"severe_headache","risk_level":"hard","enabled":true},
+        {"question_id":"RF-HN-003","display_text":"有没有头晕、视物旋转或站立不稳？","fact_key":"vertigo","answer_options":["yes","no","uncertain"],"priority":3,"confirm_on_yes":false,"policy_input_key":"vertigo","risk_level":"hard","enabled":true},
+        {"question_id":"RF-HN-004","display_text":"有没有言语不清或面部麻木？","fact_key":"speech_facial","answer_options":["yes","no","uncertain"],"priority":4,"confirm_on_yes":true,"policy_input_key":"speech_facial","risk_level":"hard","enabled":true},
+        {"question_id":"RF-HN-005","display_text":"有没有发热？","fact_key":"fever","answer_options":["yes","no","uncertain"],"priority":5,"confirm_on_yes":false,"policy_input_key":"fever","risk_level":"hard","enabled":true}
+      ],
+      "background_questions": [
+        {"question_id":"RF-HN-B01","display_text":"有没有高血压病史？","fact_key":"hypertension","answer_options":["yes","no","uncertain"],"priority":101,"confirm_on_yes":false,"policy_input_key":"hypertension","risk_level":"soft","enabled":true},
+        {"question_id":"RF-HN-B02","display_text":"有没有颈椎病或颈部不适史？","fact_key":"cervical_history","answer_options":["yes","no","uncertain"],"priority":102,"confirm_on_yes":false,"policy_input_key":"cervical_history","risk_level":"soft","enabled":true},
+        {"question_id":"RF-HN-B03","display_text":"近期有没有睡眠不足或压力过大？","fact_key":"sleep_stress","answer_options":["yes","no","uncertain"],"priority":103,"confirm_on_yes":false,"policy_input_key":"sleep_stress","risk_level":"soft","enabled":true}
+      ],
+      "common_inquiry": [
+        {"question_id":"CI-HN-001","display_text":"头痛是搏动性的还是钝痛？","fact_key":"headache_quality","category":"detail"},
+        {"question_id":"CI-HN-002","display_text":"什么情况下会加重？","fact_key":"headache_aggravator","category":"detail"},
+        {"question_id":"CI-HN-003","display_text":"有没有恶心、怕光或怕声音？","fact_key":"migraine_features","category":"detail"},
+        {"question_id":"CI-HN-004","display_text":"颈部活动受限吗？转到哪个方向最不舒服？","fact_key":"neck_rom","category":"detail"}
+      ]
+    }
+  },
+  "default_region": "low_back_leg",
+  "svg_viewbox": "0 0 200 420",
+  "answer_labels": {
+    "yes": "有",
+    "no": "没有",
+    "uncertain": "不确定",
+    "unanswered": "未回答"
+  }
+}

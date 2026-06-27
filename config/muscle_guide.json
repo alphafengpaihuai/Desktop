@@ -1,0 +1,712 @@
+{
+  "_comment": "肌肉知识库 & 病理成因配置（V2 — 9区 TCM 治疗分区）。",
+  "version": "2.0",
+  "regions": {
+    "occiput_neck": {
+      "display_name": "后枕区",
+      "pathology_summary": "后枕区不适主要由枕下肌群及颈后深肌群痉挛引起，持续低头使枕大神经受压，产生枕部至头顶的牵涉痛，常伴随头晕及睡眠问题。",
+      "primary_muscles": [
+        {
+          "name": "枕下肌群",
+          "role": "连接颅骨与上颈椎，紧绷时牵拉枕大神经，引发枕部头痛和眼后酸胀",
+          "symptom_keywords": [
+            "枕部头痛",
+            "颈后痛",
+            "眼后痛",
+            "低头头痛"
+          ],
+          "image_hint": "occipital_neck",
+          "priority": 1
+        },
+        {
+          "name": "胸锁乳突肌",
+          "role": "触发点可引发太阳穴痛、眩晕、耳鸣和眼眶酸胀，常被误诊为偏头痛",
+          "symptom_keywords": [
+            "偏头痛",
+            "太阳穴痛",
+            "头晕",
+            "耳鸣",
+            "颈侧痛"
+          ],
+          "image_hint": "sternocleidomastoid",
+          "priority": 2
+        },
+        {
+          "name": "头夹肌",
+          "role": "后伸旋转肌，姿势不良引发颈后外侧疼痛，转头时加重",
+          "symptom_keywords": [
+            "颈后侧痛",
+            "转头痛",
+            "颈肌痛"
+          ],
+          "image_hint": "posterior_cervical",
+          "priority": 3
+        },
+        {
+          "name": "斜方肌上束",
+          "role": "上束触发点向上牵涉至颞部，引发颞侧头痛和耳周不适",
+          "symptom_keywords": [
+            "颞部头痛",
+            "耳周痛",
+            "肩颈紧"
+          ],
+          "image_hint": "trapezius",
+          "priority": 4
+        },
+        {
+          "name": "头半棘肌",
+          "role": "深层脊柱肌，枕部紧张时引发头重感及后脑压迫痛",
+          "symptom_keywords": [
+            "头重",
+            "后脑痛",
+            "枕骨下痛"
+          ],
+          "image_hint": "posterior_cervical",
+          "priority": 5
+        }
+      ],
+      "secondary_keywords": {
+        "头晕": {
+          "muscles": [
+            "胸锁乳突肌",
+            "枕下肌群"
+          ],
+          "pathology_addon": "颈源性眩晕与椎动脉受压或本体感觉紊乱有关，需先排除血压异常和耳石症。",
+          "image_hint": "sternocleidomastoid"
+        },
+        "头痛": {
+          "muscles": [
+            "胸锁乳突肌",
+            "枕下肌群",
+            "颞肌"
+          ],
+          "pathology_addon": "颈源性头痛多为单侧枕部或颞部持续性钝痛，颈部活动可诱发加重。",
+          "image_hint": "occipital_neck"
+        }
+      }
+    },
+    "neck_shoulder": {
+      "display_name": "颈肩区",
+      "pathology_summary": "颈肩区症状常源于长期低头伏案导致斜方肌上束与肩胛提肌慢性紧绷，压迫颈神经根或臂丛，引发肩颈酸痛及上肢放射感。",
+      "primary_muscles": [
+        {
+          "name": "斜方肌上束",
+          "role": "连接颈部与肩峰，长期低头使其疲劳，触发点可牵涉至头颞部",
+          "symptom_keywords": [
+            "肩颈酸",
+            "肩膀痛",
+            "颈肩紧",
+            "头痛"
+          ],
+          "image_hint": "trapezius",
+          "priority": 1
+        },
+        {
+          "name": "肩胛提肌",
+          "role": "提拉肩胛骨，紧张引发颈侧至肩胛内上角深层酸痛，转头受限",
+          "symptom_keywords": [
+            "转头痛",
+            "颈侧痛",
+            "肩胛痛",
+            "落枕"
+          ],
+          "image_hint": "levator_scapulae",
+          "priority": 2
+        },
+        {
+          "name": "斜角肌",
+          "role": "前/中斜角肌紧张可卡压臂丛神经，引发上肢放射麻木",
+          "symptom_keywords": [
+            "手麻",
+            "手臂麻",
+            "上肢放射",
+            "手指麻"
+          ],
+          "image_hint": "scalenes",
+          "priority": 3
+        },
+        {
+          "name": "冈上肌",
+          "role": "肩袖肌，外展起始肌，损伤时肩外侧60-120度痛弧",
+          "symptom_keywords": [
+            "上举痛",
+            "肩外侧痛",
+            "举臂困难"
+          ],
+          "image_hint": "supraspinatus",
+          "priority": 4
+        },
+        {
+          "name": "胸锁乳突肌",
+          "role": "颈部最大表浅肌，紧绷引发颈侧痛及前胸紧张感",
+          "symptom_keywords": [
+            "颈前侧痛",
+            "转头困难",
+            "颈侧牵拉"
+          ],
+          "image_hint": "sternocleidomastoid",
+          "priority": 5
+        }
+      ],
+      "secondary_keywords": {
+        "手麻": {
+          "muscles": [
+            "斜角肌",
+            "肱二头肌"
+          ],
+          "pathology_addon": "手部麻木多由颈神经根（C6-C8）受压或腕管综合征引起。",
+          "image_hint": "scalenes"
+        },
+        "手臂麻": {
+          "muscles": [
+            "斜角肌",
+            "胸小肌"
+          ],
+          "pathology_addon": "臂丛神经卡压（胸廓出口综合征），斜角肌或胸小肌紧张是常见压迫部位。",
+          "image_hint": "scalenes"
+        },
+        "肩井": {
+          "muscles": [
+            "斜方肌上束",
+            "肩胛提肌"
+          ],
+          "pathology_addon": "肩井穴深处对应斜方肌上束与肩胛提肌交汇处，按压此处可缓解颈肩紧张。",
+          "image_hint": "trapezius"
+        }
+      }
+    },
+    "scapular_back": {
+      "display_name": "肩背区",
+      "pathology_summary": "肩背不适多由呼吸浅短、驼背导致菱形肌和中下斜方肌离心性过度拉伸，肩胛间区的慢性酸胀常伴随深吸气时的牵拉感。",
+      "primary_muscles": [
+        {
+          "name": "菱形肌",
+          "role": "连接脊柱与肩胛骨内缘，驼背时被动拉伸，引发肩胛间深层酸痛",
+          "symptom_keywords": [
+            "肩胛间痛",
+            "背中部痛",
+            "驼背",
+            "肩胛痛"
+          ],
+          "image_hint": "rhomboids",
+          "priority": 1
+        },
+        {
+          "name": "斜方肌中下束",
+          "role": "稳定肩胛骨，长期低头使其被动拉长萎缩，导致广泛上背酸痛",
+          "symptom_keywords": [
+            "背痛",
+            "肩胛下移",
+            "上背酸"
+          ],
+          "image_hint": "trapezius",
+          "priority": 2
+        },
+        {
+          "name": "竖脊肌（胸段）",
+          "role": "胸椎伸展肌，紧张时深吸气或后仰时疼痛明显",
+          "symptom_keywords": [
+            "胸椎痛",
+            "弯腰后仰痛",
+            "深呼吸痛"
+          ],
+          "image_hint": "erector_spinae",
+          "priority": 3
+        },
+        {
+          "name": "前锯肌",
+          "role": "固定肩胛骨贴近胸壁，无力时出现翼状肩胛",
+          "symptom_keywords": [
+            "肩胛骨突出",
+            "上举无力",
+            "肋间酸"
+          ],
+          "image_hint": "pectoralis_major",
+          "priority": 4
+        },
+        {
+          "name": "大圆肌",
+          "role": "肩内收内旋肌，紧绷后引发腋后和肩胛下角区域疼痛",
+          "symptom_keywords": [
+            "腋后痛",
+            "肩胛下痛",
+            "背外侧酸"
+          ],
+          "image_hint": "pectoralis_major",
+          "priority": 5
+        }
+      ],
+      "secondary_keywords": {
+        "胸闷": {
+          "muscles": [
+            "胸大肌",
+            "前锯肌"
+          ],
+          "pathology_addon": "肌肉源性胸闷多与胸大肌紧张压迫胸廓有关，需先排除心肺问题。",
+          "image_hint": "pectoralis_major"
+        },
+        "深呼吸痛": {
+          "muscles": [
+            "肋间肌",
+            "前锯肌"
+          ],
+          "pathology_addon": "深吸气时疼痛可能是肋间肌触发点，需先排除胸膜或心包问题。",
+          "image_hint": "pectoralis_major"
+        }
+      }
+    },
+    "shoulder_joint": {
+      "display_name": "肩周区",
+      "pathology_summary": "肩周区不适以肩袖肌群为核心的关节稳定肌失衡为主，肱二头肌长头腱炎与肩峰下撞击是最常见病因，常表现为抬手困难、肩外侧弹响和夜间痛。",
+      "primary_muscles": [
+        {
+          "name": "三角肌",
+          "role": "肩外展主动肌，过度使用后局部酸胀",
+          "symptom_keywords": [
+            "肩膀酸",
+            "肩关节痛",
+            "上臂酸"
+          ],
+          "image_hint": "deltoid",
+          "priority": 1
+        },
+        {
+          "name": "冈上肌",
+          "role": "肩袖核心肌，外展启动肌，60-120度痛弧征特",
+          "symptom_keywords": [
+            "上举痛",
+            "肩外侧痛",
+            "举臂困难"
+          ],
+          "image_hint": "supraspinatus",
+          "priority": 2
+        },
+        {
+          "name": "冈下肌",
+          "role": "肩外旋主动肌，触发点可牵涉至上臂前侧",
+          "symptom_keywords": [
+            "肩后侧痛",
+            "上臂前痛",
+            "外旋受限"
+          ],
+          "image_hint": "infraspinatus",
+          "priority": 3
+        },
+        {
+          "name": "肱二头肌长头",
+          "role": "长头腱走行于肱骨结节间沟，过度使用后腱鞘炎引发肩前侧痛",
+          "symptom_keywords": [
+            "肩前痛",
+            "抬臂痛",
+            "夜间肩痛"
+          ],
+          "image_hint": "biceps_brachii",
+          "priority": 4
+        },
+        {
+          "name": "肩胛下肌",
+          "role": "肩内旋主动肌，紧张时内旋受限，肩前深层酸胀",
+          "symptom_keywords": [
+            "内旋痛",
+            "肩前深层痛",
+            "脱外衣困难"
+          ],
+          "image_hint": "pectoralis_major",
+          "priority": 5
+        }
+      ],
+      "secondary_keywords": {
+        "抬手困难": {
+          "muscles": [
+            "冈上肌",
+            "三角肌"
+          ],
+          "pathology_addon": "抬手困难常见于肩峰下撞击或肩袖撕裂，Ranger Motion（ROM）减少需与冻结肩鉴别。",
+          "image_hint": "supraspinatus"
+        },
+        "肩弹响": {
+          "muscles": [
+            "肱二头肌长头",
+            "冈上肌"
+          ],
+          "pathology_addon": "肩部弹响若无痛多为肌腱滑动；若伴疼痛需排除肱二头肌长头腱半脱位或盂唇损伤。",
+          "image_hint": "biceps_brachii"
+        }
+      }
+    },
+    "lumbar_back": {
+      "display_name": "腰背区",
+      "pathology_summary": "腰背区不适多与体姿不良和竖脊肌慢性劳损有关，骶棘肌与腰方肌持续紧张使胸腰段脊柱活动受限，常伴发背部广泛疲劳感和引痛。",
+      "primary_muscles": [
+        {
+          "name": "竖脊肌",
+          "role": "沿脊柱走行的长肌群，劳损后引发广泛腰背酸痛，弯腰时加重",
+          "symptom_keywords": [
+            "背痛",
+            "脊柱痛",
+            "弯腰痛",
+            "腰背痛"
+          ],
+          "image_hint": "erector_spinae",
+          "priority": 1
+        },
+        {
+          "name": "背阔肌",
+          "role": "连接脊柱与肱骨，紧绷引发腰侧至上臂的牵涉痛",
+          "symptom_keywords": [
+            "腰侧痛",
+            "上臂牵拉",
+            "背外侧酸"
+          ],
+          "image_hint": "thoracolumbar_back",
+          "priority": 2
+        },
+        {
+          "name": "腰方肌",
+          "role": "腰椎侧向稳定肌，久坐或单侧受力时持续收缩引发腰侧和腰骶痛",
+          "symptom_keywords": [
+            "腰酸",
+            "腰痛",
+            "腰侧痛",
+            "腰部不适"
+          ],
+          "image_hint": "quadratus_lumborum",
+          "priority": 3
+        },
+        {
+          "name": "多裂肌",
+          "role": "脊柱深层稳定肌，萎缩后是慢性腰痛反复发作的核心因素",
+          "symptom_keywords": [
+            "慢性腰痛",
+            "反复腰痛",
+            "腰不稳"
+          ],
+          "image_hint": "multifidus_rotatores",
+          "priority": 4
+        },
+        {
+          "name": "前锯肌",
+          "role": "肋间与肩胛联动肌，紧张时深呼气和侧屈受限",
+          "symptom_keywords": [
+            "肋间酸",
+            "侧屈痛",
+            "呼吸背痛"
+          ],
+          "image_hint": "pectoralis_major",
+          "priority": 5
+        }
+      ],
+      "secondary_keywords": {
+        "疲劳": {
+          "muscles": [
+            "竖脊肌",
+            "多裂肌"
+          ],
+          "pathology_addon": "背部广泛疲劳多与核心肌群耐力不足有关，长期代偿可导致脊柱稳定性下降。",
+          "image_hint": "erector_spinae"
+        },
+        "背僵": {
+          "muscles": [
+            "竖脊肌",
+            "背阔肌"
+          ],
+          "pathology_addon": "背部僵硬常与晨僵型肌筋膜紧张有关，热敷和拉伸后通常能明显缓解。",
+          "image_hint": "erector_spinae"
+        }
+      }
+    },
+    "lumbosacral": {
+      "display_name": "腰骶区",
+      "pathology_summary": "腰骶区为腰椎活动的应力集中点，多裂肌与竖脊肌的慢性痉挛可导致L5-S1椎间盘压力增大，骶骨前倾加剧时骶尾部产生顽固性酸痛和下肢牵涉。",
+      "primary_muscles": [
+        {
+          "name": "竖脊肌",
+          "role": "腰骶段脊柱伸展肌，痉挛时引起深层腰骶痛并向下肢牵涉",
+          "symptom_keywords": [
+            "腰骶痛",
+            "脊柱痛",
+            "弯腰痛"
+          ],
+          "image_hint": "erector_spinae",
+          "priority": 1
+        },
+        {
+          "name": "多裂肌",
+          "role": "腰骶段最重要的节段稳定肌，萎缩后椎间盘剪切力增大",
+          "symptom_keywords": [
+            "腰深层痛",
+            "反复腰痛",
+            "骶部酸"
+          ],
+          "image_hint": "multifidus_rotatores",
+          "priority": 2
+        },
+        {
+          "name": "腰方肌",
+          "role": "连接髂嵴与腰椎，单侧紧绷导致骨盆倾斜和慢性腰骶痛",
+          "symptom_keywords": [
+            "腰侧痛",
+            "骶部牵拉",
+            "骨盆倾斜"
+          ],
+          "image_hint": "quadratus_lumborum",
+          "priority": 3
+        },
+        {
+          "name": "臀大肌（骶部附着）",
+          "role": "骶骨边缘为臀大肌起点，肌肉紧张牵拉骶骨引发骶尾部酸痛",
+          "symptom_keywords": [
+            "骶尾痛",
+            "臀上痛",
+            "坐久骶痛"
+          ],
+          "image_hint": "gluteus_maximus",
+          "priority": 4
+        },
+        {
+          "name": "回旋肌",
+          "role": "腰椎椎节间深层小肌，痉挛后引发局限的深层腰骶点痛",
+          "symptom_keywords": [
+            "腰骶点痛",
+            "深部酸",
+            "转腰痛"
+          ],
+          "image_hint": "multifidus_rotatores",
+          "priority": 5
+        }
+      ],
+      "secondary_keywords": {
+        "骶痛": {
+          "muscles": [
+            "多裂肌",
+            "臀大肌"
+          ],
+          "pathology_addon": "骶部痛需排除骶髂关节功能障碍，骶部深层按压需轻柔避免加重炎症。",
+          "image_hint": "multifidus_rotatores"
+        },
+        "下肢放射": {
+          "muscles": [
+            "竖脊肌",
+            "多裂肌"
+          ],
+          "pathology_addon": "下肢放射痛提示神经根受压可能（L4-S1），需确认是否为节段性皮节分布。",
+          "image_hint": "erector_spinae"
+        }
+      }
+    },
+    "lumbar_gluteal": {
+      "display_name": "腰臀区",
+      "pathology_summary": "腰臀区不适多因久坐、体姿不良或过度劳损，引起腰部深层肌群持续紧张，压迫腰椎小关节或椎间盘，牵涉至臀部及下肢，形成放射性酸胀或麻木感。核心肌肉包括臀大肌、臀中肌、梨状肌和髂腰肌。",
+      "primary_muscles": [
+        {
+          "name": "臀大肌",
+          "role": "髋关节伸展主动肌，久坐痉挛引发臀部深层和骶尾部酸痛",
+          "symptom_keywords": [
+            "臀痛",
+            "臀部",
+            "坐久痛",
+            "骶旁"
+          ],
+          "image_hint": "gluteus_maximus",
+          "priority": 1
+        },
+        {
+          "name": "臀中肌",
+          "role": "骨盆侧方稳定核心，无力时步态代偿引起髋侧疼痛",
+          "symptom_keywords": [
+            "髋痛",
+            "臀部痛",
+            "臀侧痛",
+            "走路痛"
+          ],
+          "image_hint": "gluteus_medius",
+          "priority": 2
+        },
+        {
+          "name": "梨状肌",
+          "role": "髋外旋肌，紧张可压迫坐骨神经引发臀部深层痛和下肢放射",
+          "symptom_keywords": [
+            "臀深部痛",
+            "坐骨神经",
+            "放射痛",
+            "坐久痛"
+          ],
+          "image_hint": "piriformis",
+          "priority": 3
+        },
+        {
+          "name": "腘绳肌",
+          "role": "大腿后侧肌群，紧张引发坐骨结节痛及屈髋受限",
+          "symptom_keywords": [
+            "大腿后痛",
+            "坐骨痛",
+            "前屈受限"
+          ],
+          "image_hint": "hamstrings",
+          "priority": 4
+        },
+        {
+          "name": "髂腰肌",
+          "role": "髋屈曲主动肌，久坐变短引起骨盆前倾和腰前侧痛",
+          "symptom_keywords": [
+            "腹股沟痛",
+            "弯腰困难",
+            "骨盆前倾"
+          ],
+          "image_hint": "iliopsoas",
+          "priority": 5
+        },
+        {
+          "name": "股方肌",
+          "role": "髋外旋深层小肌，痉挛引发臀深部局限痛",
+          "symptom_keywords": [
+            "臀底痛",
+            "坐骨内侧",
+            "深部臀痛"
+          ],
+          "image_hint": "piriformis",
+          "priority": 6
+        }
+      ],
+      "secondary_keywords": {
+        "坐骨": {
+          "muscles": [
+            "梨状肌",
+            "腘绳肌"
+          ],
+          "pathology_addon": "坐骨神经痛可由梨状肌痉挛压迫或腰椎间盘突出压迫L4-S1神经根引起。",
+          "image_hint": "piriformis"
+        },
+        "腿麻": {
+          "muscles": [
+            "腘绳肌",
+            "梨状肌"
+          ],
+          "pathology_addon": "下肢麻木多提示坐骨神经受压，需注意是否伴随肌力减退。",
+          "image_hint": "hamstrings"
+        }
+      }
+    },
+    "lateral_thigh": {
+      "display_name": "臀腿膝踝区",
+      "pathology_summary": "大腿外侧疼痛多因阔筋膜张肌及髂胫束过度紧张引起；膝踝区域不适常与腓肠肌、比目鱼肌及胫骨前后肌相关。踝关节外侧扭伤多涉及腓骨肌群和胫骨前肌。",
+      "primary_muscles": [
+        {
+          "name": "阔筋膜张肌",
+          "role": "张力调节肌，紧张通过髂胫束传递到胫骨，引发髋外侧和膝外侧痛",
+          "symptom_keywords": [
+            "髋外侧痛",
+            "膝外侧痛",
+            "大腿外侧酸"
+          ],
+          "image_hint": "gluteus_medius",
+          "priority": 1
+        },
+        {
+          "name": "髂胫束",
+          "role": "大腿外侧深筋膜，紧张磨擦股骨外髁导致髂胫束综合征",
+          "symptom_keywords": [
+            "膝外侧痛",
+            "跑步膝痛",
+            "下蹲膝外侧"
+          ],
+          "image_hint": "gluteus_medius",
+          "priority": 2
+        },
+        {
+          "name": "股外侧肌",
+          "role": "股四头肌外侧头，过度使用后引发大腿前外侧酸痛",
+          "symptom_keywords": [
+            "大腿前外痛",
+            "上楼痛",
+            "膝盖上外侧"
+          ],
+          "image_hint": "quadriceps",
+          "priority": 3
+        },
+        {
+          "name": "臀中肌",
+          "role": "骨盆稳定核心，无力时阔筋膜张肌过度代偿加重髂胫束紧张",
+          "symptom_keywords": [
+            "臀中无力",
+            "走路跛",
+            "晨起髋外侧"
+          ],
+          "image_hint": "gluteus_medius",
+          "priority": 4
+        },
+        {
+          "name": "缝匠肌",
+          "role": "全身最长肌跨越髋膝，紧张引发大腿前外侧和膝内侧牵涉",
+          "symptom_keywords": [
+            "大腿内侧牵拉",
+            "膝内侧痛",
+            "盘腿受限"
+          ],
+          "image_hint": "quadriceps",
+          "priority": 5
+        },
+        {
+          "name": "腓骨肌群",
+          "role": "小腿外侧肌群，受伤时导致踝外侧痛和足背痛。踝外侧扭伤时最常受累",
+          "symptom_keywords": [
+            "崴脚",
+            "踝痛",
+            "脚踝",
+            "脚外侧痛"
+          ],
+          "image_hint": "peroneal_group",
+          "priority": 6
+        },
+        {
+          "name": "胫骨前肌",
+          "role": "小腿前侧肌，过度使用引发胫前痛和足背牵涉痛",
+          "symptom_keywords": [
+            "脚背痛",
+            "足痛",
+            "脚踝前侧"
+          ],
+          "image_hint": "tibialis_anterior",
+          "priority": 7
+        },
+        {
+          "name": "腓肠肌",
+          "role": "小腿后侧浅层肌，抽筋、拉伤导致小腿后方剧痛",
+          "symptom_keywords": [
+            "小腿抽筋",
+            "腿抽筋",
+            "小腿痛"
+          ],
+          "image_hint": "gastrocnemius",
+          "priority": 8
+        }
+      ],
+      "secondary_keywords": {
+        "膝外痛": {
+          "muscles": [
+            "阔筋膜张肌",
+            "髂胫束"
+          ],
+          "pathology_addon": "膝外侧痛最多见为髂胫束综合征，与跑步姿势、髋外展肌无力直接相关。",
+          "image_hint": "gluteus_medius"
+        },
+        "腿外侧胀痛": {
+          "muscles": [
+            "阔筋膜张肌",
+            "股外侧肌"
+          ],
+          "pathology_addon": "大腿外侧胀痛感与深筋膜紧张度增加有关，按摩需沿髂胫束纵向推揉。",
+          "image_hint": "gluteus_medius"
+        },
+        "脚踝": {
+          "muscles": [
+            "腓骨肌群",
+            "胫骨前肌"
+          ],
+          "pathology_addon": "踝外侧扭伤多见于内翻损伤，腓骨肌群和胫骨前肌是首要保护目标。急性期勿按摩、先冷敷。",
+          "image_hint": "peroneal_group"
+        }
+      }
+    }
+  }
+}

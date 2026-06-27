@@ -1,0 +1,313 @@
+{
+  "version": "1.1.0",
+  "description": "解剖部位按摩手法注意事项 — 数据来源：backup_before_6_primary_images/LINK_触发点肌骨联动.csv（79条触发点记录），按5部位去重提取",
+  "data_source": "LINK_触发点肌骨联动.csv",
+  "render_rules": {
+    "blocked": "仅显示不操作提示，隐藏所有操作性建议",
+    "limited": "显示P1/P2级注意事项，禁止P0级强禁忌",
+    "allowed": "显示所有注意事项作为参考提醒",
+    "stop_current": "仅显示stop_conditions，隐藏所有操作性内容",
+    "max_visible": 3,
+    "load_order": "先显示含P0/P1关键词的禁忌，再显示通用注意"
+  },
+  "regions": {
+    "head_neck": {
+      "label": "头颈",
+      "cautions": [
+        {
+          "caution_id": "CAU-HE-001",
+          "caution_title": "咬肌",
+          "caution_text": "急性外伤、张口受限明显、感染肿胀禁用。",
+          "applicable_structure": "咬肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "masseter",
+          "source_body_region": "颌面",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-HE-002",
+          "caution_title": "胸锁乳突肌",
+          "caution_text": "颈动脉区禁深压；头晕呕吐/神经症状阻断。",
+          "applicable_structure": "枕下肌群、头半棘肌、头夹肌、胸锁乳突肌后缘、上斜方肌、肩胛提肌；可伴枕大神经通路敏感。",
+          "technique_pathway": "以枕下肌群、头夹肌、上斜方肌轻柔松解；风池、天柱周围轻揉，不做强刺激。",
+          "source_trigger_point": "sternocleidomastoid",
+          "source_body_region": "后枕/颈肩",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-HE-003",
+          "caution_title": "后颈肌群",
+          "caution_text": "突发剧烈头痛、神经症状、外伤禁用。",
+          "applicable_structure": "枕下肌群、头半棘肌、头夹肌、胸锁乳突肌后缘、上斜方肌、肩胛提肌；可伴枕大神经通路敏感。",
+          "technique_pathway": "以枕下肌群、头夹肌、上斜方肌轻柔松解；风池、天柱周围轻揉，不做强刺激。",
+          "source_trigger_point": "posterior_cervical",
+          "source_body_region": "后枕/颈肩",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-HE-004",
+          "caution_title": "头夹肌/颈夹肌",
+          "caution_text": "头晕恶心、神经症状、外伤禁用。",
+          "applicable_structure": "枕下肌群、头半棘肌、头夹肌、胸锁乳突肌后缘、上斜方肌、肩胛提肌；可伴枕大神经通路敏感。",
+          "technique_pathway": "以枕下肌群、头夹肌、上斜方肌轻柔松解；风池、天柱周围轻揉，不做强刺激。",
+          "source_trigger_point": "splenius",
+          "source_body_region": "后枕/颈肩",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-HE-005",
+          "caution_title": "枕额肌",
+          "caution_text": "突发剧烈头痛、呕吐、神经症状禁门店处理。",
+          "applicable_structure": "额枕肌、颞肌、咬肌、枕下肌群、上斜方肌、肩胛提肌、胸锁乳突肌；常见头颈肌筋膜高张。",
+          "technique_pathway": "轻柔头面部、颞肌、咬肌、枕下肌群、上斜方肌；配合肩颈舒缓，不强刺激。",
+          "source_trigger_point": "epicranius",
+          "source_body_region": "头面/后枕",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        }
+      ]
+    },
+    "neck_shoulder_arm": {
+      "label": "颈肩臂",
+      "cautions": [
+        {
+          "caution_id": "CAU-NE-001",
+          "caution_title": "斜角肌群",
+          "caution_text": "颈前外侧血管神经区禁深压；麻木无力需P1/P0。",
+          "applicable_structure": "斜角肌、胸小肌、锁骨下肌、上斜方肌、肩胛提肌；涉及臂丛/锁骨下血管通道，不是普通肩颈酸痛。",
+          "technique_pathway": "只能轻柔松斜角肌周边、胸小肌、肩胛带；不深压锁骨上窝/腋窝血管神经束。",
+          "source_trigger_point": "scalenes",
+          "source_body_region": "颈肩/上肢",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-NE-002",
+          "caution_title": "胸大肌",
+          "caution_text": "胸痛胸闷、乳腺急性红肿、皮损禁用。",
+          "applicable_structure": "冈上肌腱、冈下肌、小圆肌、胸小肌、三角肌、前锯肌、斜方肌中下束；常有肩胛上旋不足和胸小肌紧张。",
+          "technique_pathway": "松胸小肌、冈下肌、小圆肌、三角肌后束、肩胛内侧缘；促进肩胛上旋/后倾，不做疼痛弧内强刺激。",
+          "source_trigger_point": "pectoralis_major",
+          "source_body_region": "肩/胸",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-NE-003",
+          "caution_title": "肱二头肌",
+          "caution_text": "肩前急性疼痛、明显无力、外伤禁用。",
+          "applicable_structure": "肱二头肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "biceps_brachii",
+          "source_body_region": "上肢/肩",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-NE-004",
+          "caution_title": "三角肌",
+          "caution_text": "急性外伤、抬臂明显无力需复核。",
+          "applicable_structure": "三角肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "deltoid",
+          "source_body_region": "肩",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-NE-005",
+          "caution_title": "冈上肌",
+          "caution_text": "夜间痛、外展无力、外伤后疼痛需P1。",
+          "applicable_structure": "冈上肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "supraspinatus",
+          "source_body_region": "肩",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        }
+      ]
+    },
+    "chest_back": {
+      "label": "胸背",
+      "cautions": [
+        {
+          "caution_id": "CAU-CH-001",
+          "caution_title": "多裂肌/回旋肌",
+          "caution_text": "深部强压禁用；红旗先排除。",
+          "applicable_structure": "多裂肌/回旋肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "multifidus_rotatores",
+          "source_body_region": "胸腰背/腰背",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-CH-002",
+          "caution_title": "腰方肌",
+          "caution_text": "肾区叩痛、发热、血尿、外伤禁用。",
+          "applicable_structure": "竖脊肌、多裂肌、腰方肌、臀中肌、胸腰筋膜、背阔肌下部；常有条索、压痛、牵涉痛。",
+          "technique_pathway": "大面积热敷；先松胸腰筋膜和竖脊肌，再松腰方肌/臀中肌；避免单点暴力深压。",
+          "source_trigger_point": "quadratus_lumborum",
+          "source_body_region": "腰背/腰骶",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-CH-003",
+          "caution_title": "竖脊肌",
+          "caution_text": "急性外伤、大小便异常、夜间痛、发热禁门店处理。",
+          "applicable_structure": "竖脊肌、多裂肌、腰方肌、臀中肌、胸腰筋膜、背阔肌下部；常有条索、压痛、牵涉痛。",
+          "technique_pathway": "大面积热敷；先松胸腰筋膜和竖脊肌，再松腰方肌/臀中肌；避免单点暴力深压。",
+          "source_trigger_point": "erector_spinae",
+          "source_body_region": "胸腰背/腰背",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-CH-004",
+          "caution_title": "膈肌",
+          "caution_text": "胸痛、呼吸困难、腹痛急症禁门店处理。",
+          "applicable_structure": "膈肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "diaphragm",
+          "source_body_region": "胸腹/呼吸",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        }
+      ]
+    },
+    "low_back_leg": {
+      "label": "腰臀腿",
+      "cautions": [
+        {
+          "caution_id": "CAU-LO-001",
+          "caution_title": "髂腰肌",
+          "caution_text": "腹部深压、孕期、腹痛发热禁用。",
+          "applicable_structure": "髂腰肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "iliopsoas",
+          "source_body_region": "腰臀/髋",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-LO-002",
+          "caution_title": "梨状肌",
+          "caution_text": "下肢麻木无力、进行性加重需P1/P0；禁暴力深压。",
+          "applicable_structure": "梨状肌、臀中肌、臀大肌、闭孔内外肌、孖肌、股方肌、腘绳肌近端；可刺激坐骨神经。",
+          "technique_pathway": "先松臀大肌/臀中肌，再轻柔处理梨状肌投影区；配合髋外旋肌群松解和热敷。",
+          "source_trigger_point": "piriformis",
+          "source_body_region": "腰臀/下肢",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-LO-003",
+          "caution_title": "臀中肌",
+          "caution_text": "明显跛行、外伤、夜间痛需复核。",
+          "applicable_structure": "臀中肌、臀小肌、阔筋膜张肌、梨状肌、腰方肌；常见髋外侧/臀外侧压痛和骨盆稳定不足。",
+          "technique_pathway": "重点松臀中肌、臀小肌、阔筋膜张肌、腰方肌；大转子周围轻柔，不做强刮。",
+          "source_trigger_point": "gluteus_medius",
+          "source_body_region": "腰臀/下肢",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        }
+      ]
+    },
+    "knee_ankle_foot": {
+      "label": "膝踝足",
+      "cautions": [
+        {
+          "caution_id": "CAU-KN-001",
+          "caution_title": "股四头肌",
+          "caution_text": "外伤后不能负重、明显肿胀发热禁用。",
+          "applicable_structure": "股四头肌、股内侧肌VMO、腘绳肌、腓肠肌、腘肌、髂胫束、内收肌群；常有保护性紧张和力量不足。",
+          "technique_pathway": "轻柔松股四头肌、腘绳肌、腓肠肌、髂胫束；膝周热敷；避免直接重压关节线和骨赘区。",
+          "source_trigger_point": "quadriceps",
+          "source_body_region": "膝周/下肢",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-KN-002",
+          "caution_title": "腓肠肌",
+          "caution_text": "小腿红肿热痛、单侧肿胀、胸闷气急禁用并转评估。",
+          "applicable_structure": "腓肠肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "gastrocnemius",
+          "source_body_region": "小腿/踝足",
+          "severity_level": "P0",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-KN-003",
+          "caution_title": "腘肌",
+          "caution_text": "膝后血管神经区禁深压。",
+          "applicable_structure": "腘肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "popliteus",
+          "source_body_region": "膝周",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        },
+        {
+          "caution_id": "CAU-KN-004",
+          "caution_title": "胫骨后肌",
+          "caution_text": "明显肿胀、外伤、不能负重需转评估。",
+          "applicable_structure": "胫骨后肌",
+          "technique_pathway": "按触诊定位紧张带/压痛点，轻柔软组织放松；禁强刺激。",
+          "source_trigger_point": "tibialis_posterior",
+          "source_body_region": "踝足/下肢",
+          "severity_level": "P1",
+          "blocked_when": "service_permission=blocked 或 对应红旗阳性",
+          "technician_visible": true,
+          "customer_visible": false
+        }
+      ]
+    }
+  }
+}
